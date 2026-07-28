@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — AltSpot Capital</title>
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+
+    <div class="page-head">
+      <div class="titles">
+        <div class="eyebrow">Dashboard</div>
+        <h1 class="display" id="greet">Welcome back.</h1>
+      </div>
+      <a class="btn btn-ghost" href="marketplace.html">Browse the marketplace</a>
+    </div>
+
+    <div id="setupPrompt"></div>
+    <div id="pendingWrap"></div>
+
+    <div class="grid c4" style="margin-bottom:22px" id="stats"></div>
+
+    <div class="card" style="margin-bottom:22px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <h3>Portfolio value</h3>
+        <span class="tiny num">Trailing 8 quarters · marks per AltSpot reporting</span>
+      </div>
+      <div id="chart"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:4px">Your positions</h3>
+      <p class="small" style="margin-bottom:14px">Every investment you hold through AltSpot deal vehicles.</p>
+      <div id="positions"></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="assets/store.js"></script>
+<script src="data/deals.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const u = ASC.requireAuth(); if (!u) throw new Error('auth');
+  ASCUI.shell('dashboard');
+  document.getElementById('greet').textContent = 'Welcome back, ' + u.name.split(' ')[0] + '.';
+
+  const S = ASC.STATES;
+  const inv = ASC.investments();
+  const held = inv.filter(function (i) { return i.state === S.FUNDED || i.state === S.ACCEPTED || i.state === S.CLOSED; });
+  const pending = inv.filter(function (i) { return i.state === S.SIGNED; });
+  const expired = inv.filter(function (i) { return i.state === S.EXPIRED; });
+
+  /* ---- setup prompt if wizard incomplete ---- */
+  (function () {
+    const gate = ASC.canInvest();
+    const w = ASC.wizard();
+    if (!gate.ok) {
+      const first = gate.missing[0];
+      document.getElementById('setupPrompt').innerHTML =
+        '<div class="card gold" style="margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap">' +
+        '<div><h3>Finish your account setup</h3><p class="small" style="margin-top:4px">Next up: <b style="color:var(--gold-bright)">' + first.label + '</b>. You can browse every deal now — investing unlocks when setup is complete.</p></div>' +
+        '<a class="btn btn-gold" href="wizard.html?step=' + first.step + '">Continue setup</a></div>';
+    } else if (!w.bankDone) {
+      document.getElementById('setupPrompt').innerHTML =
+        '<div class="card" style="margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap">' +
+        '<div><h3>Link your bank for one-click funding</h3><p class="small" style="margin-top:4px">Optional — you can also link at your first funding.</p></div>' +
+        '<a class="btn btn-ghost btn-sm" href="wizard.html?step=5">Link bank</a></div>';
+    }
+  })();
+
+  /* ---- pending investments (10-day window) ---- */
+  (function () {
+    if (!pending.length && !expired.length) return;
+    let html = '';
+    pending.forEach(function (p) {
+      const d = dealById(p.dealId); if (!d) return;
+      const left = ASC.daysLeft(p.fundingDeadline);
+      html += '<div class="card gold pending" style="margin-bottom:22px">' +
+        '<div class="count"><span class="n num">' + left + '</span><span class="small">day' + (left === 1 ? '' : 's') + ' left<br>to fund</span></div>' +
+        '<div class="info"><div class="chip warn" style="margin-bottom:8px"><span class="dot"></span>Pending investment</div>' +
+        '<h3>' + d.name + ' — ' + ASC.money(p.amount) + '</h3>' +
+        '<p class="small" style="margin-top:4px">Documents signed ' + ASC.dateStr(p.signedAt) + '. Fund by ' + ASC.dateStr(p.fundingDeadline) + ' to secure your allocation — after that, your spot is released. Reminders go out every other day.</p></div>' +
+        '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+        '<a class="btn btn-gold" href="payment.html?inv=' + p.id + '">Fund now</a>' +
+        '<button class="btn btn-quiet btn-sm" onclick="cancelPending(\'' + p.id + '\')">Cancel</button></div></div>';
+    });
+    expired.forEach(function (p) {
+      const d = dealById(p.dealId); if (!d) return;
+      html += '<div class="card" style="margin-bottom:22px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">' +
+        '<div><div class="chip neutral" style="margin-bottom:8px">Expired</div>' +
+        '<p class="small">Your commitment to <b style="color:var(--paper)">' + d.name + '</b> (' + ASC.money(p.amount) + ') lapsed unfunded and the allocation was released.</p></div>' +
+        '<a class="btn btn-ghost btn-sm" href="deal.html?id=' + d.id + '">Re-open deal</a></div>';
+    });
+    document.getElementById('pendingWrap').innerHTML = html;
+  })();
+  function cancelPending(id) {
+    ASC.cancelInvestment(id);
+    ASCUI.toast('Commitment cancelled — allocation released.');
+    setTimeout(function () { location.reload(); }, 900);
+  }
+
+  /* ---- stats ---- */
+  (function () {
+    const investedNow = held.reduce(function (s, i) { return s + i.amount; }, 0);
+    const value = held.reduce(function (s, i) { return s + (i.currentValue || i.amount); }, 0);
+    const gain = value - investedNow;
+    const pendingAmt = pending.reduce(function (s, i) { return s + i.amount; }, 0);
+    const pct = investedNow ? (gain / investedNow * 100) : 0;
+    document.getElementById('stats').innerHTML =
+      stat('Net invested', ASC.money(investedNow), held.length + ' position' + (held.length === 1 ? '' : 's')) +
+      stat('Estimated value', ASC.money(value), 'Latest reported marks') +
+      stat('Unrealized gain', (gain >= 0 ? '+' : '−') + ASC.money(Math.abs(gain)),
+        '<span class="' + (gain >= 0 ? 'up' : 'down') + '">' + (gain >= 0 ? '▲ +' : '▼ ') + pct.toFixed(1) + '%</span>') +
+      stat('Pending funding', ASC.money(pendingAmt), pending.length ? pending.length + ' commitment' + (pending.length === 1 ? '' : 's') + ' awaiting ACH' : 'Nothing outstanding');
+    function stat(k, v, d) {
+      return '<div class="card stat"><div class="k">' + k + '</div><div class="v num">' + v + '</div><div class="d">' + d + '</div></div>';
+    }
+  })();
+
+  /* ---- chart: build a plausible value curve ending at current value ---- */
+  (function () {
+    const value = held.reduce(function (s, i) { return s + (i.currentValue || i.amount); }, 0);
+    const base = held.reduce(function (s, i) { return s + i.amount; }, 0) || 25000;
+    const end = value || base;
+    const shape = [0, .05, .04, .12, .17, .26, .35, 1];
+    const series = shape.map(function (f) { return Math.round(base + (end - base) * f); });
+    document.getElementById('chart').innerHTML = ASCUI.lineChart(series, { w: 900, h: 220 });
+  })();
+
+  /* ---- positions table ---- */
+  (function () {
+    if (!held.length) {
+      document.getElementById('positions').innerHTML =
+        '<div class="dz" style="cursor:default"><b style="color:var(--paper)">No positions yet</b><br><span class="tiny">Your first investment will appear here the moment it funds.</span><br><br><a class="btn btn-gold btn-sm" href="marketplace.html">Open the marketplace</a></div>';
+      return;
+    }
+    let rows = held.map(function (i) {
+      const d = dealById(i.dealId) || { name: i.dealId, sector: '', tag: '' };
+      const cur = i.currentValue || i.amount;
+      const pct = ((cur - i.amount) / i.amount * 100);
+      const status = i.state === S.FUNDED ? '<span class="chip warn"><span class="dot"></span>Funded · awaiting countersign</span>'
+        : '<span class="chip good"><span class="dot"></span>Active</span>';
+      return '<tr><td><b>' + d.name + '</b><br><span class="tiny">' + d.tag + '</span></td>' +
+        '<td class="num">' + ASC.money(i.amount) + '</td>' +
+        '<td class="num">' + ASC.money(cur) + '</td>' +
+        '<td class="num"><span class="' + (pct >= 0 ? 'up' : 'down') + '">' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%</span></td>' +
+        '<td>' + status + '</td>' +
+        '<td><a class="btn btn-quiet btn-sm" href="deal.html?id=' + i.dealId + '">View deal</a></td></tr>';
+    }).join('');
+    document.getElementById('positions').innerHTML =
+      '<table class="tbl"><thead><tr><th>Position</th><th class="num">Invested</th><th class="num">Est. value</th><th class="num">Return</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+  })();
+</script>
+</body>
+</html>

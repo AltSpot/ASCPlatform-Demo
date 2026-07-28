@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account Setup — AltSpot Capital</title>
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="wiz-shell">
+
+  <!-- rail -->
+  <aside class="wiz-rail">
+    <div class="brand"><div class="orb"></div><div class="brand-name">Alt<span>Spot</span></div></div>
+    <div>
+      <div class="eyebrow">Account setup</div>
+      <h1 class="display" style="font-size:26px;margin-top:8px">Welcome to the community.</h1>
+      <p class="small" style="margin-top:8px">A few steps before your first investment. Your answers save automatically and pre-fill every document you'll ever sign here.</p>
+    </div>
+    <div class="wiz-steps" id="rail"></div>
+    <div style="margin-top:auto" class="tiny">Rising tides raise all ships.</div>
+  </aside>
+
+  <!-- panels -->
+  <main class="wiz-main">
+
+    <!-- STEP 1 · Accreditation -->
+    <section class="wiz-panel" data-step="1">
+      <div class="eyebrow">Step 1 of 5</div>
+      <h2 class="display" style="margin:10px 0 12px">Accreditation verification</h2>
+      <p class="sub" style="margin-bottom:24px">AltSpot offerings are made under SEC Rule 506(c), which requires us to verify — not just ask — that you're an accredited investor. The simplest path: a one-page certification signed by your attorney or CPA. <b style="color:var(--paper)">You only do this once every five years.</b></p>
+
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px">
+            <h3>Professional certification letter</h3>
+            <p class="small" style="margin-top:6px">Download the letter, have your attorney or CPA complete and sign it, and return it through this portal. On download, a secure verification request is opened with <b style="color:var(--gold-bright)">Parallel Markets</b>, our accreditation partner.</p>
+          </div>
+          <button class="btn btn-gold" id="dlLetter" onclick="downloadLetter()">Download certification letter</button>
+        </div>
+        <div id="pmStatus" style="display:none;margin-top:16px" class="chip good"><span class="dot"></span> Sent to Parallel Markets — verification in progress</div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin-bottom:10px">What your certifier confirms</h3>
+        <p class="small">That you meet at least one accredited-investor standard under Rule 501 — for example, individual income over $200,000 (or $300,000 jointly) in each of the last two years, or net worth over $1,000,000 excluding your primary residence. The letter takes a professional about five minutes.</p>
+      </div>
+
+      <div class="wiz-actions">
+        <button class="btn btn-gold" id="s1next" disabled onclick="completeAccreditation()">Mark verified &amp; continue</button>
+        <span class="tiny" id="s1hint">Download the letter to continue.</span>
+      </div>
+    </section>
+
+    <!-- STEP 2 · Your information -->
+    <section class="wiz-panel" data-step="2">
+      <div class="eyebrow">Step 2 of 5</div>
+      <h2 class="display" style="margin:10px 0 12px">Your information</h2>
+      <p class="sub" style="margin-bottom:24px">Standard W-9 details, captured once. This becomes your saved profile — it pre-fills every subscription document, so you never re-type it.</p>
+
+      <form id="infoForm" onsubmit="return saveInfoStep(event)">
+        <div class="card" style="margin-bottom:16px">
+          <div class="eyebrow" style="margin-bottom:14px">Identity</div>
+          <div class="form-row">
+            <label class="field"><span>Legal first name</span><input class="input" id="w9_first" required></label>
+            <label class="field"><span>Legal last name</span><input class="input" id="w9_last" required></label>
+          </div>
+          <label class="field"><span>Federal tax classification</span>
+            <select class="input" id="w9_class">
+              <option>Individual / sole proprietor</option>
+              <option>Trust / estate</option>
+              <option>LLC — single member</option>
+              <option>LLC — partnership</option>
+              <option>C corporation</option>
+              <option>S corporation</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="eyebrow" style="margin-bottom:14px">Address</div>
+          <label class="field"><span>Street address</span><input class="input" id="w9_street" required></label>
+          <div class="form-row">
+            <label class="field"><span>City</span><input class="input" id="w9_city" required></label>
+            <label class="field"><span>State &nbsp;/&nbsp; ZIP</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <input class="input" id="w9_state" placeholder="CA" required>
+                <input class="input" id="w9_zip" placeholder="91506" required>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="eyebrow" style="margin-bottom:14px">Taxpayer identification</div>
+          <label class="field"><span>SSN or EIN</span><input class="input" id="w9_tin" placeholder="Demo — enter anything, e.g. 000-00-0000" required></label>
+          <div class="demo-note">Demo environment — never enter a real SSN or EIN here. Production uses tokenized, encrypted capture.</div>
+        </div>
+
+        <div class="wiz-actions">
+          <button class="btn btn-gold" type="submit">Save &amp; continue</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- STEP 3 · KYC -->
+    <section class="wiz-panel" data-step="3">
+      <div class="eyebrow">Step 3 of 5</div>
+      <h2 class="display" style="margin:10px 0 12px">Identity verification</h2>
+      <p class="sub" style="margin-bottom:24px">Two quick captures — a photo of your government ID, and a live photo from your camera. Screening runs against KYC / AML / OFAC requirements.</p>
+
+      <div class="grid c2" style="margin-bottom:16px">
+        <div>
+          <div class="eyebrow" style="margin-bottom:10px">1 · Government ID</div>
+          <div class="dz" id="idDrop" onclick="document.getElementById('idFile').click()">
+            <div style="font-size:26px;margin-bottom:8px">&#128196;</div>
+            <div id="idLabel"><b style="color:var(--paper)">Upload your driver's license</b><br><span class="tiny">Front side · JPG, PNG or PDF</span></div>
+          </div>
+          <input type="file" id="idFile" accept="image/*,.pdf" style="display:none" onchange="idUploaded(this)">
+        </div>
+        <div>
+          <div class="eyebrow" style="margin-bottom:10px">2 · Live photo</div>
+          <div class="cam-frame" id="camFrame">
+            <video id="cam" autoplay playsinline muted style="display:none"></video>
+            <canvas id="shot" style="display:none"></canvas>
+            <div id="camIdle" style="position:absolute;inset:0;display:grid;place-items:center;color:var(--dim);text-align:center;padding:20px;font-size:13px">Camera preview appears here</div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button class="btn btn-ghost btn-sm" id="camStart" onclick="startCam()">Start camera</button>
+            <button class="btn btn-gold btn-sm" id="camSnap" onclick="snap()" disabled>Capture</button>
+            <button class="skip" onclick="simulateSelfie()">Camera blocked? Simulate</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wiz-actions">
+        <button class="btn btn-gold" id="s3next" disabled onclick="completeKyc()">Submit for screening &amp; continue</button>
+        <span class="tiny" id="s3hint">Both captures are required.</span>
+      </div>
+    </section>
+
+    <!-- STEP 4 · Investment profile -->
+    <section class="wiz-panel" data-step="4">
+      <div class="eyebrow">Step 4 of 5 · Optional for now</div>
+      <h2 class="display" style="margin:10px 0 12px">Your first investment profile</h2>
+      <p class="sub" style="margin-bottom:24px">An investment profile is the entity your investments are held under. You can create several over time — personal, an LLC or trust, a self-directed IRA — and choose between them at checkout.</p>
+
+      <div class="choice-grid" style="margin-bottom:18px" id="ptypes">
+        <div class="choice" data-t="Personal"><b>Personal</b><span>Invest as an individual under your own name and SSN.</span></div>
+        <div class="choice" data-t="Entity"><b>Entity</b><span>An LLC, trust, or corporation you control.</span></div>
+        <div class="choice" data-t="IRA / 401(k)"><b>IRA / 401(k)</b><span>Eligible retirement capital via a self-directed custodian.</span></div>
+      </div>
+
+      <div class="card" id="pnameCard" style="display:none;margin-bottom:16px">
+        <label class="field" style="margin-bottom:0"><span>Profile name</span>
+          <input class="input" id="pname" placeholder="e.g. Jordan Hale — Personal">
+        </label>
+      </div>
+
+      <div class="wiz-actions">
+        <button class="btn btn-gold" id="s4next" disabled onclick="createProfileStep()">Create profile &amp; continue</button>
+        <button class="skip" onclick="skipStep(4)">Finish this later</button>
+      </div>
+    </section>
+
+    <!-- STEP 5 · Link bank -->
+    <section class="wiz-panel" data-step="5">
+      <div class="eyebrow">Step 5 of 5 · Optional for now</div>
+      <h2 class="display" style="margin:10px 0 12px">Link your bank</h2>
+      <p class="sub" style="margin-bottom:24px">Connect the account you'll fund investments from. Saved once, reused on every deal — funding a commitment later takes one click. In production this runs through <b style="color:var(--gold-bright)">Plaid</b>; credentials never touch AltSpot.</p>
+
+      <div class="choice-grid" style="margin-bottom:18px" id="banks">
+        <div class="choice" data-b="Chase"><b>Chase</b><span>Checking · savings</span></div>
+        <div class="choice" data-b="Bank of America"><b>Bank of America</b><span>Checking · savings</span></div>
+        <div class="choice" data-b="Wells Fargo"><b>Wells Fargo</b><span>Checking · savings</span></div>
+        <div class="choice" data-b="Charles Schwab"><b>Charles Schwab</b><span>Brokerage-linked</span></div>
+        <div class="choice" data-b="First Republic"><b>Mercury</b><span>Business checking</span></div>
+        <div class="choice" data-b="Other bank"><b>Other bank</b><span>11,000+ institutions</span></div>
+      </div>
+      <div id="bankLinked" style="display:none;margin-bottom:16px" class="chip good"><span class="dot"></span> <span id="bankLinkedTxt"></span></div>
+
+      <div class="wiz-actions">
+        <button class="btn btn-gold" id="s5next" disabled onclick="finishWizard()">Finish setup</button>
+        <button class="skip" onclick="skipStep(5)">Link at first funding instead</button>
+      </div>
+    </section>
+
+    <!-- DONE -->
+    <section class="wiz-panel" data-step="6" style="text-align:center;padding-top:40px">
+      <div class="orb" style="width:74px;height:74px;margin:0 auto 26px"></div>
+      <h2 class="display" style="font-size:34px;margin-bottom:12px">You're set.</h2>
+      <p class="sub" style="margin:0 auto 30px">Your profile is saved, your documents will pre-fill themselves, and the marketplace is open. Welcome in.</p>
+      <a class="btn btn-gold" href="dashboard.html" id="doneBtn">Enter your dashboard</a>
+    </section>
+
+  </main>
+</div>
+
+<script src="assets/store.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const u = ASC.requireAuth(); if (!u) throw new Error('auth');
+  let W = ASC.wizard();
+  const STEPS = [
+    { n: 1, t: 'Accreditation', s: 'Certify once · valid 5 years' },
+    { n: 2, t: 'Your information', s: 'W-9 details, captured once' },
+    { n: 3, t: 'Identity', s: 'ID photo + live capture' },
+    { n: 4, t: 'Investment profile', s: 'Personal · entity · IRA' },
+    { n: 5, t: 'Link bank', s: 'One-click funding later' }
+  ];
+  let current = parseInt(ASC.qs('step') || firstIncomplete(), 10);
+  const thenDeal = ASC.qs('then');
+
+  function firstIncomplete() {
+    if (W.accreditation.status !== 'verified') return 1;
+    if (!W.info.complete) return 2;
+    if (!W.kyc.complete) return 3;
+    if (!W.profileDone) return 4;
+    if (!W.bankDone) return 5;
+    return 1;
+  }
+  function stepDone(n) {
+    if (n === 1) return W.accreditation.status === 'verified';
+    if (n === 2) return W.info.complete;
+    if (n === 3) return W.kyc.complete;
+    if (n === 4) return W.profileDone;
+    if (n === 5) return W.bankDone;
+    return false;
+  }
+  function renderRail() {
+    document.getElementById('rail').innerHTML = STEPS.map(function (s) {
+      const done = stepDone(s.n), now = s.n === current;
+      return '<div class="wiz-step' + (done ? ' done' : '') + (now ? ' now' : '') + '">' +
+        '<div class="mark">' + (done ? '&#10003;' : (now ? '<div class="orb orb-dot"></div>' : s.n)) + '</div>' +
+        '<div class="st"><b>' + s.t + '</b><span>' + s.s + '</span></div></div>';
+    }).join('');
+  }
+  function show(n) {
+    current = n;
+    document.querySelectorAll('.wiz-panel').forEach(function (p) {
+      p.classList.toggle('on', parseInt(p.dataset.step, 10) === n);
+    });
+    renderRail();
+    window.scrollTo(0, 0);
+  }
+  function persist() { ASC.saveWizard(W); }
+  function next() {
+    /* if the user came from an Invest gate, return once requirements are met */
+    if (thenDeal && ASC.canInvest().ok) { location.href = 'invest.html?deal=' + thenDeal; return; }
+    show(current + 1);
+  }
+  function skipStep(n) {
+    if (n === 4) W.profileDone = false;
+    if (n === 5) { W.bankDone = false; return finishWizard(true); }
+    persist(); next();
+  }
+
+  /* ----- step 1: accreditation ----- */
+  function downloadLetter() {
+    const info = ASC.savedInfo();
+    const nm = (info.first ? info.first + ' ' + info.last : u.name);
+    const html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Accredited Investor Certification</title>' +
+      '<style>body{font-family:Georgia,serif;max-width:680px;margin:60px auto;color:#222;line-height:1.7;font-size:15px;padding:0 24px}' +
+      'h1{font-size:19px;letter-spacing:.04em;text-transform:uppercase;text-align:center}.b{border-bottom:1px solid #333;display:inline-block;min-width:260px}' +
+      '.foot{margin-top:60px;font-size:12px;color:#777}</style></head><body>' +
+      '<h1>Third-Party Verification of Accredited Investor Status</h1>' +
+      '<p style="text-align:center;color:#777;font-size:13px">Pursuant to Rule 506(c)(2)(ii)(C) under Regulation D · AltSpot Capital LLC</p>' +
+      '<p>To: AltSpot Capital LLC</p>' +
+      '<p>I am a licensed attorney, certified public accountant, SEC-registered investment adviser, or registered broker-dealer. Within the preceding three months, I have taken reasonable steps to verify, and hereby confirm, that:</p>' +
+      '<p style="margin:26px 0">Investor: <span class="b">&nbsp;' + nm + '&nbsp;</span></p>' +
+      '<p>is an <b>accredited investor</b> as defined in Rule 501(a) of Regulation D under the Securities Act of 1933.</p>' +
+      '<p>Basis of verification (check one):</p>' +
+      '<p>&#9634;&nbsp; Income exceeding $200,000 individually (or $300,000 jointly) in each of the two most recent years, with a reasonable expectation of the same this year<br>' +
+      '&#9634;&nbsp; Net worth exceeding $1,000,000, excluding primary residence<br>' +
+      '&#9634;&nbsp; Professional certification or other qualifying status under Rule 501(a)</p>' +
+      '<p style="margin-top:40px">Certifier name: <span class="b"></span><br><br>Firm &amp; license: <span class="b"></span><br><br>Signature: <span class="b"></span> &nbsp;&nbsp; Date: <span class="b" style="min-width:120px"></span></p>' +
+      '<p class="foot">Return the completed letter through your AltSpot investor portal. Certification remains valid for five years from the date of signature. AltSpot Capital LLC partners with Parallel Markets for verification processing. This template is provided for convenience and does not constitute legal advice.</p>' +
+      '</body></html>';
+    const blob = new Blob([html], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'AltSpot_Accreditation_Certification.html';
+    a.click();
+    W.accreditation.status = 'downloaded'; persist();
+    document.getElementById('pmStatus').style.display = 'inline-flex';
+    document.getElementById('s1next').disabled = false;
+    document.getElementById('s1hint').textContent = 'For the demo, continuing marks you verified instantly.';
+    ASCUI.toast('Letter downloaded — verification request opened with <b>Parallel Markets</b>.');
+  }
+  function completeAccreditation() {
+    W.accreditation.status = 'verified';
+    W.accreditation.method = 'professional_letter';
+    W.accreditation.verifiedAt = Date.now();
+    W.accreditation.expiresAt = Date.now() + 5 * 365 * 86400000;
+    persist();
+    ASCUI.toast('<b>Accreditation verified</b> — valid for five years.');
+    next();
+  }
+
+  /* ----- step 2: info ----- */
+  function saveInfoStep(e) {
+    e.preventDefault();
+    ASC.saveInfo({
+      first: val('w9_first'), last: val('w9_last'), taxClass: val('w9_class'),
+      street: val('w9_street'), city: val('w9_city'), state: val('w9_state'),
+      zip: val('w9_zip'), tin: val('w9_tin')
+    });
+    W.info.complete = true; persist();
+    ASCUI.toast('Saved. Your documents will now pre-fill themselves.');
+    next(); return false;
+  }
+  function val(id) { return document.getElementById(id).value.trim(); }
+
+  /* ----- step 3: kyc ----- */
+  let idOk = false, selfieOk = false, stream = null;
+  function idUploaded(inp) {
+    if (!inp.files.length) return;
+    idOk = true;
+    const dz = document.getElementById('idDrop');
+    dz.classList.add('done');
+    document.getElementById('idLabel').innerHTML = '<b>&#10003; ' + inp.files[0].name + '</b><br><span class="tiny">Received — replace by clicking again</span>';
+    checkKyc();
+  }
+  function startCam() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { simulateSelfie(); return; }
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } }).then(function (s) {
+      stream = s;
+      const v = document.getElementById('cam');
+      v.srcObject = s; v.style.display = 'block';
+      document.getElementById('camIdle').style.display = 'none';
+      document.getElementById('camSnap').disabled = false;
+    }).catch(function () {
+      ASCUI.toast('Camera unavailable — using simulated capture.');
+      simulateSelfie();
+    });
+  }
+  function snap() {
+    const v = document.getElementById('cam'), c = document.getElementById('shot');
+    c.width = v.videoWidth || 640; c.height = v.videoHeight || 480;
+    c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+    v.style.display = 'none'; c.style.display = 'block';
+    if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+    selfieOk = true; checkKyc();
+    ASCUI.toast('Live photo captured.');
+  }
+  function simulateSelfie() {
+    const c = document.getElementById('shot');
+    c.width = 640; c.height = 480;
+    const g = c.getContext('2d');
+    const grad = g.createLinearGradient(0, 0, 640, 480);
+    grad.addColorStop(0, '#1B1813'); grad.addColorStop(1, '#3B2E12');
+    g.fillStyle = grad; g.fillRect(0, 0, 640, 480);
+    g.fillStyle = '#C9A14A'; g.font = '20px Georgia'; g.textAlign = 'center';
+    g.fillText('Simulated live capture', 320, 240);
+    document.getElementById('cam').style.display = 'none';
+    document.getElementById('camIdle').style.display = 'none';
+    c.style.display = 'block';
+    selfieOk = true; checkKyc();
+  }
+  function checkKyc() {
+    if (idOk && selfieOk) {
+      document.getElementById('s3next').disabled = false;
+      document.getElementById('s3hint').textContent = 'Ready to submit.';
+    }
+  }
+  function completeKyc() {
+    W.kyc = { idUploaded: true, selfieCaptured: true, complete: true }; persist();
+    ASCUI.toast('<b>Identity submitted</b> — KYC / AML / OFAC screening in progress.');
+    next();
+  }
+
+  /* ----- step 4: profile ----- */
+  let ptype = null;
+  document.querySelectorAll('#ptypes .choice').forEach(function (c) {
+    c.addEventListener('click', function () {
+      document.querySelectorAll('#ptypes .choice').forEach(function (x) { x.classList.remove('sel'); });
+      c.classList.add('sel'); ptype = c.dataset.t;
+      document.getElementById('pnameCard').style.display = 'block';
+      const info = ASC.savedInfo();
+      const base = info.first ? info.first + ' ' + info.last : u.name;
+      document.getElementById('pname').value = base + ' — ' + ptype;
+      document.getElementById('s4next').disabled = false;
+    });
+  });
+  function createProfileStep() {
+    const info = ASC.savedInfo();
+    ASC.addProfile({
+      type: ptype, name: document.getElementById('pname').value.trim() || (u.name + ' — ' + ptype),
+      taxClass: info.taxClass || 'Individual / sole proprietor', isDefault: ASC.profiles().length === 0
+    });
+    W.profileDone = true; persist();
+    ASCUI.toast('Investment profile created.');
+    next();
+  }
+
+  /* ----- step 5: bank ----- */
+  document.querySelectorAll('#banks .choice').forEach(function (c) {
+    c.addEventListener('click', function () {
+      document.querySelectorAll('#banks .choice').forEach(function (x) { x.classList.remove('sel'); });
+      c.classList.add('sel');
+      const mask = String(Math.floor(1000 + Math.random() * 9000));
+      ASC.linkBank({ institution: c.dataset.b, mask: mask, type: 'Checking' });
+      document.getElementById('bankLinked').style.display = 'inline-flex';
+      document.getElementById('bankLinkedTxt').textContent = c.dataset.b + ' — checking ····' + mask + ' linked';
+      document.getElementById('s5next').disabled = false;
+      W.bankDone = true; persist();
+    });
+  });
+  function finishWizard(skippedBank) {
+    W.complete = true; persist();
+    if (thenDeal && ASC.canInvest().ok) { location.href = 'invest.html?deal=' + thenDeal; return; }
+    show(6);
+  }
+
+  show(isNaN(current) ? firstIncomplete() : current);
+</script>
+</body>
+</html>

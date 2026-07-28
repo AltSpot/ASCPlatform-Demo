@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funding — AltSpot Capital</title>
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="page"></main>
+</div>
+
+<script src="assets/store.js"></script>
+<script src="data/deals.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const u = ASC.requireAuth(); if (!u) throw new Error('auth');
+  ASCUI.shell('dashboard');
+
+  let inv = ASC.investmentById(ASC.qs('inv'));
+  if (!inv) { location.href = 'dashboard.html'; throw new Error('noinv'); }
+  const d = dealById(inv.dealId);
+  const f = ASCUI.feeBreakdown(d, inv.amount);
+  const bank = ASC.bank();
+  const left = inv.fundingDeadline ? ASC.daysLeft(inv.fundingDeadline) : 10;
+
+  function render() {
+    if (inv.state === ASC.STATES.FUNDED) { renderFunded(); return; }
+    document.getElementById('page').innerHTML =
+      '<div class="crumbs"><a href="dashboard.html">Dashboard</a><span class="sep">/</span><span class="here">Fund your investment</span></div>' +
+
+      '<div class="page-head"><div class="titles">' +
+        '<div class="eyebrow">Final step</div>' +
+        '<h1 class="display">Your allocation is reserved.</h1>' +
+        '<p class="sub">Documents are signed and a copy is in your Docs. Fund by <b style="color:var(--gold-bright)">' + ASC.dateStr(inv.fundingDeadline) + '</b> to secure your spot in ' + d.name + '.</p>' +
+      '</div></div>' +
+
+      '<div class="grid c2" style="align-items:start">' +
+        '<div style="display:grid;gap:18px">' +
+
+          '<div class="card gold">' +
+            '<div class="qhead" style="display:flex;justify-content:space-between;margin-bottom:8px"><h3>Fund now — Same-Day ACH</h3><span class="chip">Recommended</span></div>' +
+            (bank
+              ? '<p class="small" style="margin-bottom:16px">Transfer from your linked account. In production this settles through Modern Treasury to a per-deal virtual account at J.P. Morgan.</p>' +
+                '<div class="choice sel" style="margin-bottom:16px"><b>' + bank.institution + ' — ' + bank.type + ' ····' + bank.mask + '</b><span>Linked ' + ASC.dateStr(bank.linkedAt) + ' · verified via Plaid</span></div>' +
+                '<button class="btn btn-gold btn-block" onclick="fundNow()">Transfer ' + ASC.money(f.allIn) + ' now</button>'
+              : '<p class="small" style="margin-bottom:16px">Link your bank once and fund in one click — now and on every future deal.</p>' +
+                '<a class="btn btn-gold btn-block" href="wizard.html?step=5&then=' + d.id + '" onclick="sessionStorage.setItem(\'asc.returnInv\',inv.id)">Link bank &amp; fund</a>' +
+                '<div class="hr"></div>' +
+                '<p class="small" style="margin-bottom:12px">Or enter ACH details manually:</p>' +
+                '<div class="form-row">' +
+                  '<label class="field"><span>Routing number</span><input class="input num" id="routing" placeholder="Demo — enter anything"></label>' +
+                  '<label class="field"><span>Account number</span><input class="input num" id="acct" placeholder="Demo — enter anything"></label>' +
+                '</div>' +
+                '<div class="demo-note" style="margin-bottom:14px">Demo environment — never enter real bank details here.</div>' +
+                '<button class="btn btn-ghost btn-block" onclick="fundNow()">Transfer ' + ASC.money(f.allIn) + '</button>'
+            ) +
+          '</div>' +
+
+          '<div class="card">' +
+            '<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">' +
+              '<div class="count"><span class="n num">' + left + '</span><span class="small">day' + (left === 1 ? '' : 's') + '<br>remaining</span></div>' +
+              '<div style="flex:1;min-width:220px"><h3>Or fund within 10 days</h3>' +
+              '<p class="small" style="margin-top:4px">Your spot stays reserved until ' + ASC.dateStr(inv.fundingDeadline) + '. We\u2019ll remind you every other day. Unfunded commitments release automatically — no penalty, no obligation.</p></div>' +
+              '<a class="btn btn-quiet" href="dashboard.html">I\u2019ll fund later</a>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="card">' +
+          '<h3 style="margin-bottom:12px">Transfer summary</h3>' +
+          '<div class="fee-row"><span class="l">' + d.name + ' — subscription</span><span class="r">' + ASC.money(inv.amount) + '</span></div>' +
+          '<div class="fee-row"><span class="l">Platform fee (' + d.fees.platform + '%)</span><span class="r">' + ASC.money(f.platform) + '</span></div>' +
+          '<div class="fee-row"><span class="l">Admin reserve (up to ' + d.fees.adminMax + '%)</span><span class="r">' + ASC.money(f.adminTotal) + '</span></div>' +
+          f.adminItems.map(function (it) { return '<div class="fee-sub">· ' + it.label + ' — ' + ASC.money(it.amt) + '</div>'; }).join('') +
+          '<div class="fee-row total"><span class="l">Total transfer</span><span class="r">' + ASC.money(f.allIn) + '</span></div>' +
+          '<div class="fee-sub" style="padding-left:0">Unused admin reserve returned at close · ' + d.fees.carry + '% carry on profits at exit · no capital calls, ever.</div>' +
+          '<div class="hr"></div>' +
+          '<p class="tiny">Funds are held in the deal\u2019s segregated account through the hold period and returned in full if the deal does not close.</p>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function fundNow() {
+    inv = ASC.fundInvestment(inv.id, bank ? 'ACH — linked account' : 'ACH — manual');
+    renderFunded(true);
+  }
+
+  function renderFunded(justNow) {
+    document.getElementById('page').innerHTML =
+      '<div style="max-width:640px;margin:60px auto;text-align:center">' +
+        '<div class="orb" style="width:84px;height:84px;margin:0 auto 30px"></div>' +
+        '<div class="eyebrow" style="margin-bottom:12px">Transfer initiated</div>' +
+        '<h1 class="display" style="font-size:36px;margin-bottom:14px">You\u2019re in, pending countersign.</h1>' +
+        '<p class="sub" style="margin:0 auto 10px">' + ASC.money(f.allIn) + ' is on its way to the ' + d.name + ' account. AltSpot countersigns at close — you\u2019ll get confirmation, and the position will appear in your portfolio.</p>' +
+        '<p class="small" style="margin-bottom:34px">Signed documents live in your <a href="docs.html">Docs</a>. Deal updates begin after close — reporting after the wire is the whole point.</p>' +
+        '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">' +
+          '<a class="btn btn-gold" href="dashboard.html">Back to dashboard</a>' +
+          '<a class="btn btn-ghost" href="marketplace.html">Browse more deals</a>' +
+        '</div></div>';
+    if (justNow) ASCUI.toast('<b>Funding confirmed.</b> Status: funded · awaiting countersign.');
+  }
+
+  render();
+</script>
+</body>
+</html>

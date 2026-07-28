@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — AltSpot Capital</title>
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+
+    <div class="page-head">
+      <div class="titles">
+        <div class="eyebrow">Settings</div>
+        <h1 class="display">Account settings.</h1>
+      </div>
+    </div>
+
+    <div class="grid c2" style="align-items:start">
+      <div style="display:grid;gap:18px">
+        <div class="card">
+          <h3 style="margin-bottom:14px">Account</h3>
+          <label class="field"><span>Email</span><input class="input" id="email"></label>
+          <label class="field"><span>New password</span><input class="input" type="password" placeholder="••••••••••"></label>
+          <button class="btn btn-ghost btn-sm" onclick="saveAccount()">Save changes</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:4px">Notifications</h3>
+          <p class="small" style="margin-bottom:14px">Delivered by email in production (Postmark).</p>
+          <label class="check" style="margin-bottom:12px"><input type="checkbox" checked> New deals matching my interests</label>
+          <label class="check" style="margin-bottom:12px"><input type="checkbox" checked> Funding reminders (every other day until funded)</label>
+          <label class="check" style="margin-bottom:12px"><input type="checkbox" checked> Deal updates &amp; valuation marks</label>
+          <label class="check"><input type="checkbox" checked> Tax document delivery</label>
+        </div>
+      </div>
+
+      <div style="display:grid;gap:18px">
+        <div class="card">
+          <h3 style="margin-bottom:14px">Session</h3>
+          <button class="btn btn-quiet" onclick="ASC.logout()">Sign out</button>
+        </div>
+        <div class="card" style="border-color:rgba(184,92,92,.35)">
+          <h3 style="margin-bottom:4px">Demo controls</h3>
+          <p class="small" style="margin-bottom:14px">Wipe everything stored in this browser — account, wizard progress, profiles, investments, and docs — and start the demo fresh.</p>
+          <button class="btn btn-ghost" style="border-color:rgba(184,92,92,.5);color:var(--bad)" onclick="resetDemo()">Reset demo data</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="assets/store.js"></script>
+<script src="data/deals.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const u = ASC.requireAuth(); if (!u) throw new Error('auth');
+  ASCUI.shell('settings');
+  document.getElementById('email').value = u.email || '';
+
+  function saveAccount() {
+    const email = document.getElementById('email').value.trim();
+    if (email) { u.email = email; ASC.set('user', u); }
+    ASCUI.toast('Account updated.');
+  }
+  function resetDemo() {
+    if (confirm('Reset all demo data in this browser?')) ASC.resetAll();
+  }
+</script>
+</body>
+</html>

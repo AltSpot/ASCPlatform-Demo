@@ -1,0 +1,307 @@
+// ============================================================
+//  ASCPlatform — data model
+//
+//  Design notes (this is a demo, but the schema is production-shaped):
+//   * SQLite is the demo store. Every model below maps 1:1 onto a
+//     Postgres schema — swap the datasource provider and the adapter,
+//     nothing in the application layer changes.
+//   * SQLite supports neither Prisma enums nor the Json scalar, so
+//     status columns are String (union types live in lib/domain.ts) and
+//     structured editorial blobs are String holding JSON. The repository
+//     layer in lib/repositories/ is the only place that parses them.
+//   * No real PII is ever stored. Taxpayer IDs keep last-4 only, beside a
+//     surrogate token standing in for the tokenization vault that a
+//     production build would call.
+// ============================================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ---------------- identity ----------------
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions      Session[]
+  accreditation Accreditation?
+  kyc           KycRecord?
+  vault         VaultInfo?
+  wizard        WizardState?
+  profiles      InvestmentProfile[]
+  bankAccounts  BankAccount[]
+  subscriptions Subscription[]
+  documents     Document[]
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+/// Opaque, server-issued session tokens held in an httpOnly cookie.
+/// Swapping in a real IdP means replacing lib/auth.ts only.
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+// ---------------- verification / onboarding ----------------
+
+/// Rule 506(c) accredited-investor verification.
+/// status: not_started | downloaded | pending | verified | expired
+model Accreditation {
+  id         String    @id @default(cuid())
+  userId     String    @unique
+  status     String    @default("not_started")
+  method     String?
+  provider   String?
+  verifiedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accreditations")
+}
+
+/// KYC / AML / OFAC screening record.
+/// status: not_started | pending | cleared | rejected
+model KycRecord {
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  status         String    @default("not_started")
+  idUploaded     Boolean   @default(false)
+  idFileName     String?
+  selfieCaptured Boolean   @default(false)
+  submittedAt    DateTime?
+  clearedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("kyc_records")
+}
+
+/// "The Vault" — W-9 information captured once; pre-fills every document.
+/// The taxpayer ID is never stored in full: last 4 + surrogate token only.
+model VaultInfo {
+  id       String  @id @default(cuid())
+  userId   String  @unique
+  first    String?
+  last     String?
+  taxClass String?
+  street   String?
+  city     String?
+  state    String?
+  zip      String?
+  tinLast4 String?
+  tinToken String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("vault_info")
+}
+
+/// Progress through the 5-step setup wizard. Accreditation, W-9 and KYC
+/// completion are derived from their own records; these two are not.
+model WizardState {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  profileDone Boolean   @default(false)
+  bankDone    Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("wizard_state")
+}
+
+// ---------------- investor entities ----------------
+
+/// The entity an investment is held under: Personal, Entity, IRA / 401(k).
+model InvestmentProfile {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  name      String
+  taxClass  String?
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+
+  @@index([userId])
+  @@map("investment_profiles")
+}
+
+/// Linked funding source. Production links through Plaid; only the
+/// institution and a 4-digit mask are ever persisted.
+model BankAccount {
+  id          String   @id @default(cuid())
+  userId      String
+  institution String
+  mask        String
+  type        String   @default("Checking")
+  isDefault   Boolean  @default(true)
+  linkedAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("bank_accounts")
+}
+
+// ---------------- marketplace ----------------
+
+/// A deal on the shelf. The JSON-shaped columns hold editorial content
+/// (thesis, deck slides, SpotBot Q&A) that a CMS would own in production.
+model Deal {
+  id                  String @id
+  name                String
+  entity              String
+  tag                 String
+  kind                String
+  sector              String
+  stage               String
+  art                 String
+  blurb               String
+  risks               String
+  minInvestment       Int
+  allocationTotal     Int
+  allocationRemaining Int
+  targetClose         String
+  altspotCommitted    Int
+  committedNote       String
+  status              String @default("open")
+  sortOrder           Int    @default(0)
+
+  // JSON-encoded — see the note at the top of this file.
+  thesisJson  String
+  feesJson    String
+  mediaJson   String
+  docsJson    String
+  spotbotJson String
+  deckJson    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subscriptions Subscription[]
+  documents     Document[]
+
+  @@map("deals")
+}
+
+// ---------------- the subscription state machine ----------------
+
+/// started -> docs_signed -> funded -> accepted -> closed
+/// exits:   expired (10-day funding window lapsed) | refunded | cut_back
+model Subscription {
+  id        String  @id @default(cuid())
+  userId    String
+  dealId    String
+  profileId String?
+  amount    Int
+
+  state String @default("started")
+
+  /// Per-section confirmations captured during document review.
+  answersJson String @default("{}")
+
+  signature       String?
+  signedAt        DateTime?
+  fundingDeadline DateTime?
+  fundedAt        DateTime?
+  fundingMethod   String?
+  acceptedAt      DateTime?
+  closedAt        DateTime?
+
+  /// Latest reported mark. Null until the position is accepted.
+  currentValue Int?
+
+  /// True for demo-seeded positions, so a fresh login feels lived-in.
+  seeded Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deal      Deal               @relation(fields: [dealId], references: [id])
+  profile   InvestmentProfile? @relation(fields: [profileId], references: [id])
+  documents Document[]
+
+  @@index([userId])
+  @@index([dealId])
+  @@index([state])
+  @@map("subscriptions")
+}
+
+// ---------------- documents ----------------
+
+/// type: agreement | tax | verification | statement
+model Document {
+  id             String   @id @default(cuid())
+  userId         String
+  dealId         String?
+  subscriptionId String?
+  name           String
+  type           String   @default("agreement")
+  note           String?
+  /// Rendered body, stored so Docs can re-open exactly what was signed.
+  bodyHtml       String?
+  savedAt        DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deal         Deal?         @relation(fields: [dealId], references: [id])
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("documents")
+}
+
+// ---------------- audit ----------------
+
+/// Append-only. Every transition that would need books-and-records
+/// treatment in production is written here.
+model AuditLog {
+  id           String   @id @default(cuid())
+  userId       String?
+  actor        String   @default("investor")
+  action       String
+  entity       String?
+  entityId     String?
+  metadataJson String?
+  createdAt    DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@map("audit_logs")
+}

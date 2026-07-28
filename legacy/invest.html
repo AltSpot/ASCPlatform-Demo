@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invest — AltSpot Capital</title>
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+
+    <div class="crumbs" id="crumbs"></div>
+
+    <!-- PHASE A · profile + amount -->
+    <section id="phaseA">
+      <div class="page-head">
+        <div class="titles">
+          <div class="eyebrow">Begin investment</div>
+          <h1 class="display" id="aTitle"></h1>
+          <p class="sub">Choose the profile this investment is held under and the amount you're committing. Everything else is already filled in.</p>
+        </div>
+      </div>
+
+      <div class="grid c2" style="align-items:start">
+        <div class="card">
+          <h3 style="margin-bottom:4px">Investment profile</h3>
+          <p class="small" style="margin-bottom:14px">Documents are titled in this profile's name.</p>
+          <div id="profList" class="choice-grid" style="grid-template-columns:1fr"></div>
+          <button class="btn btn-quiet btn-sm" style="margin-top:12px" onclick="toggleNewProf()">+ New profile</button>
+          <div id="newProf" style="display:none;margin-top:14px">
+            <div class="form-row">
+              <label class="field"><span>Type</span>
+                <select class="input" id="npType"><option>Personal</option><option>Entity</option><option>IRA / 401(k)</option></select>
+              </label>
+              <label class="field"><span>Name</span><input class="input" id="npName" placeholder="e.g. Hale Family Trust"></label>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="createProf()">Create profile</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:4px">Amount</h3>
+          <p class="small" style="margin-bottom:14px" id="minNote"></p>
+          <label class="field"><span>Investment amount (USD)</span>
+            <input class="input num" id="amount" type="number" step="1000" style="font-size:22px;font-family:var(--mono)">
+          </label>
+          <div id="allocNote"></div>
+          <div class="hr"></div>
+          <div id="quickFees" class="small"></div>
+          <button class="btn btn-gold btn-block" style="margin-top:18px" id="toDocs" onclick="beginDocs()">Continue to documents</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE B · split-screen docs -->
+    <section id="phaseB" style="display:none">
+      <div class="page-head" style="margin-bottom:14px">
+        <div class="titles">
+          <div class="eyebrow">Subscription documents</div>
+          <h1 class="display" style="font-size:30px" id="bTitle"></h1>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span class="tiny" id="saveState">Saved just now</span>
+          <button class="btn btn-quiet btn-sm" onclick="downloadDoc()">Download document</button>
+        </div>
+      </div>
+
+      <div class="progress"><div class="p" id="prog" style="width:20%"></div></div>
+
+      <div class="split">
+
+        <!-- live document -->
+        <div class="docpane" id="docpane">
+          <h4>Subscription Agreement</h4>
+          <div class="docsub" id="docEntity"></div>
+
+          <div class="sec filled" id="sec0">
+            <span class="tick">&#10003; Complete</span>
+            <h5>I. Subscriber</h5>
+            <p>The undersigned, <span class="f set" id="d_name"></span>, a <span class="f set" id="d_class"></span> with principal address at <span class="f set" id="d_addr"></span> (Taxpayer ID <span class="f set" id="d_tin"></span>), acting through the investment profile <span class="f set" id="d_prof"></span>, hereby subscribes for membership interests in <span class="f set" id="d_entity2"></span> in the amount of <span class="f set" id="d_amt"></span>.</p>
+          </div>
+
+          <div class="sec" id="sec1">
+            <span class="tick">&#10003; Confirmed</span>
+            <h5>II. Investor representations</h5>
+            <p>The Subscriber represents that they are an <span class="f" id="d_acc">accredited investor</span> as defined in Rule 501(a) of Regulation D, verified by <span class="f" id="d_accm">third-party certification</span> dated <span class="f" id="d_accd">____</span>; that all information provided through the AltSpot portal is true and complete; that they are acquiring the interests for their own account for investment purposes and not with a view to distribution; and that they have had the opportunity to review the offering materials and ask questions of the Manager. <span class="f" id="d_r1">Pending confirmation.</span></p>
+          </div>
+
+          <div class="sec" id="sec2">
+            <span class="tick">&#10003; Confirmed</span>
+            <h5>III. Anti-money-laundering &amp; source of funds</h5>
+            <p>The Subscriber certifies that the funds used for this investment are derived from lawful sources; that the Subscriber is not, and is not acting on behalf of, any person or entity named on any list maintained by the U.S. Office of Foreign Assets Control (OFAC); that the Subscriber is not a foreign shell bank and is not acting for one; that the Subscriber is not a senior foreign political figure or an immediate family member or close associate of one; and that the Subscriber will provide any further documentation reasonably requested to satisfy anti-money-laundering obligations. <span class="f" id="d_r2">Pending confirmation.</span></p>
+          </div>
+
+          <div class="sec" id="sec3">
+            <span class="tick">&#10003; Confirmed</span>
+            <h5>IV. Risk acknowledgment &amp; fee schedule</h5>
+            <p>The Subscriber acknowledges that this investment is speculative and illiquid, that no public market exists or is promised for the interests, and that the entire investment may be lost. The Subscriber acknowledges the following fees, collected once at closing: a platform fee of <span class="f" id="d_fp"></span>; an administrative reserve of up to <span class="f" id="d_fa"></span>, itemized as <span class="f" id="d_fitems"></span>, with any unused reserve returned to investors at close; and carried interest of <span class="f" id="d_fc"></span> of profits upon realization. No management fees accrue thereafter, and no capital calls will ever follow the initial funding. <span class="f" id="d_r3">Pending confirmation.</span></p>
+          </div>
+
+          <div class="sec" id="sec4">
+            <span class="tick">&#10003; Signed</span>
+            <h5>V. Execution</h5>
+            <p>In witness whereof, the Subscriber has executed this Subscription Agreement electronically as of <span class="f" id="d_date"></span>.</p>
+            <p style="margin-top:16px">Signature: <span class="sig-line" id="d_sig">&nbsp;</span></p>
+            <p style="margin-top:10px">ALTSPOT CAPITAL LLC, Manager — countersignature upon acceptance.</p>
+          </div>
+        </div>
+
+        <!-- guided track -->
+        <div>
+          <div class="card qcard" id="q1">
+            <div class="qhead"><h3>Who you are</h3><span class="n">1 / 3</span></div>
+            <p>Confirm your investor representations in one step: you're a verified accredited investor, the information in your saved profile is true and current, and you're investing for your own account after reviewing the offering materials. One click answers every representation in Section II.</p>
+            <button class="btn btn-ghost btn-block" onclick="confirmQ(1)">I confirm — complete Section II</button>
+          </div>
+
+          <div class="card qcard" id="q2">
+            <div class="qhead"><h3>Where the money comes from</h3><span class="n">2 / 3</span></div>
+            <p>The anti-money-laundering certifications, grouped into one plain statement: your funds come from lawful sources, you're not on any OFAC list or acting for anyone who is, and you'll provide follow-up documentation if ever asked. One click completes every AML item in Section III.</p>
+            <button class="btn btn-ghost btn-block" onclick="confirmQ(2)">I confirm — complete Section III</button>
+          </div>
+
+          <div class="card qcard" id="q3">
+            <div class="qhead"><h3>Risk &amp; your all-in cost</h3><span class="n">3 / 3</span></div>
+            <p>This is a speculative, illiquid investment that can go to zero. Here is every dollar you'll ever pay — known on day one, no capital calls, ever:</p>
+            <div id="feeTable"></div>
+            <button class="btn btn-ghost btn-block" style="margin-top:14px" onclick="confirmQ(3)">I understand — complete Section IV</button>
+          </div>
+
+          <div class="card gold" id="signCard" style="opacity:.45;pointer-events:none">
+            <div class="qhead"><h3>Sign all</h3><span class="n">Final step</span></div>
+            <p class="small" style="margin-bottom:14px">Type your full legal name. One signature executes the complete agreement.</p>
+            <label class="field"><span>Signature</span>
+              <input class="input" id="sigInput" placeholder="Your full legal name" style="font-family:var(--serif);font-size:19px">
+            </label>
+            <button class="btn btn-gold btn-block" id="signBtn" onclick="signAll()">Sign all &amp; continue to funding</button>
+            <p class="tiny" style="margin-top:12px">A copy saves to your Docs automatically. Production signing runs through Anvil e-sign; this demo simulates it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="assets/store.js"></script>
+<script src="data/deals.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const u = ASC.requireAuth(); if (!u) throw new Error('auth');
+  ASCUI.shell('marketplace');
+
+  const d = dealById(ASC.qs('deal'));
+  if (!d) { location.href = 'marketplace.html'; throw new Error('nodeal'); }
+  const gate = ASC.canInvest();
+  if (!gate.ok) { location.href = 'wizard.html?step=' + gate.missing[0].step + '&then=' + d.id; throw new Error('gated'); }
+
+  document.getElementById('crumbs').innerHTML =
+    '<a href="marketplace.html">Marketplace</a><span class="sep">/</span>' +
+    '<a href="deal.html?id=' + d.id + '">' + d.name + '</a><span class="sep">/</span><span class="here">Invest</span>';
+  document.getElementById('aTitle').textContent = d.name;
+  document.getElementById('bTitle').textContent = d.name;
+  document.getElementById('minNote').textContent = 'Minimum ' + ASC.money(d.minInvestment) + ' · ' + ASC.money(d.allocationRemaining) + ' of allocation remaining.';
+
+  const info = ASC.savedInfo();
+  let inv = ASC.activeFor(d.id);
+  /* already signed? funding is the only remaining step */
+  if (inv && inv.state === ASC.STATES.SIGNED) { location.href = 'payment.html?inv=' + inv.id; throw new Error('signed'); }
+  let selProfile = inv ? ASC.profileById(inv.profileId) : null;
+
+  /* ---------- phase A ---------- */
+  function renderProfiles() {
+    const list = ASC.profiles();
+    const el = document.getElementById('profList');
+    if (!list.length) {
+      el.innerHTML = '<p class="small">No profiles yet — create your first below.</p>';
+      return;
+    }
+    el.innerHTML = list.map(function (p) {
+      const sel = selProfile && selProfile.id === p.id;
+      return '<div class="choice' + (sel ? ' sel' : '') + '" onclick="pickProf(\'' + p.id + '\')"><b>' + p.name + '</b><span>' + p.type + (p.isDefault ? ' · default' : '') + '</span></div>';
+    }).join('');
+  }
+  function pickProf(id) { selProfile = ASC.profileById(id); renderProfiles(); }
+  function toggleNewProf() {
+    const el = document.getElementById('newProf');
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+  function createProf() {
+    const p = ASC.addProfile({
+      type: document.getElementById('npType').value,
+      name: document.getElementById('npName').value.trim() || (u.name + ' — ' + document.getElementById('npType').value),
+      isDefault: ASC.profiles().length === 0
+    });
+    selProfile = p;
+    document.getElementById('newProf').style.display = 'none';
+    renderProfiles();
+    ASCUI.toast('Profile created.');
+  }
+  /* default select */
+  (function () {
+    if (!selProfile) {
+      const list = ASC.profiles();
+      selProfile = list.find(function (p) { return p.isDefault; }) || list[0] || null;
+    }
+    renderProfiles();
+  })();
+
+  const amtInput = document.getElementById('amount');
+  amtInput.value = inv ? inv.amount : d.minInvestment;
+  amtInput.addEventListener('input', quickFees);
+  function quickFees() {
+    const amt = parseFloat(amtInput.value) || 0;
+    const f = ASCUI.feeBreakdown(d, amt);
+    document.getElementById('quickFees').innerHTML =
+      '<div class="fee-row"><span class="l">Investment</span><span class="r">' + ASC.money(amt) + '</span></div>' +
+      '<div class="fee-row"><span class="l">Platform fee (' + d.fees.platform + '%)</span><span class="r">' + ASC.money(f.platform) + '</span></div>' +
+      '<div class="fee-row"><span class="l">Admin reserve (up to ' + d.fees.adminMax + '%)</span><span class="r">' + ASC.money(f.adminTotal) + '</span></div>' +
+      '<div class="fee-row total"><span class="l">All-in today</span><span class="r">' + ASC.money(f.allIn) + '</span></div>' +
+      '<div class="fee-sub" style="padding-left:0">Plus ' + d.fees.carry + '% carry on profits at exit — ' + d.fees.carryNote.toLowerCase() + '. Unused admin reserve returned at close.</div>';
+    const warn = document.getElementById('allocNote');
+    if (amt && amt < d.minInvestment) warn.innerHTML = '<div class="demo-note">Minimum for this deal is ' + ASC.money(d.minInvestment) + '.</div>';
+    else if (amt > d.allocationRemaining) warn.innerHTML = '<div class="demo-note">Only ' + ASC.money(d.allocationRemaining) + ' of allocation remains — amounts above this join the waitlist at close.</div>';
+    else warn.innerHTML = '';
+  }
+  quickFees();
+
+  function beginDocs() {
+    const amt = parseFloat(amtInput.value) || 0;
+    if (!selProfile) { ASCUI.toast('Choose or create an investment profile first.'); return; }
+    if (amt < d.minInvestment) { ASCUI.toast('Minimum for this deal is <b>' + ASC.money(d.minInvestment) + '</b>.'); return; }
+    if (!inv) inv = ASC.startInvestment(d.id, selProfile.id, amt);
+    else inv = ASC.updateInvestment(inv.id, { amount: amt, profileId: selProfile.id });
+    showDocs();
+  }
+
+  /* ---------- phase B ---------- */
+  const confirms = { 1: false, 2: false, 3: false };
+  function showDocs() {
+    document.getElementById('phaseA').style.display = 'none';
+    document.getElementById('phaseB').style.display = 'block';
+    window.scrollTo(0, 0);
+
+    /* hydrate the document from saved info — the moment of magic */
+    const p = ASC.profileById(inv.profileId) || { name: u.name, type: 'Personal' };
+    setF('d_name', (info.first || u.name.split(' ')[0]) + ' ' + (info.last || ''));
+    setF('d_class', (info.taxClass || 'Individual / sole proprietor').toLowerCase());
+    setF('d_addr', [info.street, info.city, info.state, info.zip].filter(Boolean).join(', ') || 'on file');
+    setF('d_tin', maskTin(info.tin));
+    setF('d_prof', p.name + ' (' + p.type + ')');
+    setF('d_entity2', d.entity);
+    setF('d_amt', ASC.money(inv.amount));
+    document.getElementById('docEntity').textContent = d.entity + ' · Managed by AltSpot Capital LLC';
+    setF('d_fp', d.fees.platform + '% (' + ASC.money(inv.amount * d.fees.platform / 100) + ')');
+    setF('d_fa', d.fees.adminMax + '% (' + ASC.money(inv.amount * d.fees.adminMax / 100) + ')');
+    const f = ASCUI.feeBreakdown(d, inv.amount);
+    setF('d_fitems', f.adminItems.map(function (it) { return it.label.toLowerCase() + ' ' + it.pct + '%'; }).join('; '));
+    setF('d_fc', d.fees.carry + '%');
+
+    /* fee table on the right */
+    document.getElementById('feeTable').innerHTML =
+      '<div class="fee-row"><span class="l">Investment</span><span class="r">' + ASC.money(inv.amount) + '</span></div>' +
+      '<div class="fee-row"><span class="l">Platform fee — ' + d.fees.platform + '%</span><span class="r">' + ASC.money(f.platform) + '</span></div>' +
+      '<div class="fee-row"><span class="l">Admin reserve — up to ' + d.fees.adminMax + '%</span><span class="r">' + ASC.money(f.adminTotal) + '</span></div>' +
+      f.adminItems.map(function (it) { return '<div class="fee-sub">· ' + it.label + ' — ' + it.pct + '% (' + ASC.money(it.amt) + ')</div>'; }).join('') +
+      '<div class="fee-sub">Unused admin reserve is returned to investors at close.</div>' +
+      '<div class="fee-row total"><span class="l">All-in today</span><span class="r">' + ASC.money(f.allIn) + '</span></div>' +
+      '<div class="fee-row"><span class="l">Carry at exit — ' + d.fees.carryNote.toLowerCase() + '</span><span class="r">' + d.fees.carry + '% of profits</span></div>';
+
+    /* restore prior confirmations if resuming */
+    const a = inv.answers || {};
+    [1, 2, 3].forEach(function (n) { if (a['q' + n]) confirmQ(n, true); });
+
+    /* pre-fill signature */
+    document.getElementById('sigInput').value = ((info.first || '') + ' ' + (info.last || '')).trim() || u.name;
+  }
+  function setF(id, txt) {
+    const el = document.getElementById(id);
+    el.textContent = txt; el.classList.add('set');
+  }
+  function maskTin(t) {
+    if (!t) return '···-··-····';
+    const digits = t.replace(/\D/g, '');
+    return '···-··-' + (digits.slice(-4) || '····');
+  }
+  function confirmQ(n, silent) {
+    if (confirms[n]) return;
+    confirms[n] = true;
+    const card = document.getElementById('q' + n);
+    card.classList.add('confirmed');
+    const btn = card.querySelector('.btn');
+    btn.textContent = '✓ Confirmed'; btn.disabled = true;
+    const sec = document.getElementById('sec' + n);
+    sec.classList.add('filled');
+    if (n === 1) {
+      setF('d_acc', 'accredited investor (verified)');
+      setF('d_accm', 'professional certification via Parallel Markets');
+      setF('d_accd', ASC.dateStr(ASC.wizard().accreditation.verifiedAt || Date.now()));
+      setF('d_r1', 'Confirmed by Subscriber.');
+    }
+    if (n === 2) setF('d_r2', 'Certified by Subscriber.');
+    if (n === 3) setF('d_r3', 'Acknowledged by Subscriber.');
+    if (!silent) {
+      sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      autosave(n);
+    }
+    const done = [1, 2, 3].filter(function (k) { return confirms[k]; }).length;
+    document.getElementById('prog').style.width = (20 + done * 22) + '%';
+    if (done === 3) {
+      const sc = document.getElementById('signCard');
+      sc.style.opacity = '1'; sc.style.pointerEvents = 'auto';
+      document.getElementById('prog').style.width = '88%';
+    }
+  }
+  function autosave(n) {
+    const a = inv.answers || {};
+    a['q' + n] = true;
+    inv = ASC.updateInvestment(inv.id, { answers: a });
+    const el = document.getElementById('saveState');
+    el.textContent = 'Saved just now';
+    ASCUI.toast('Progress saved — you can leave and resume anytime.');
+  }
+  function signAll() {
+    const sig = document.getElementById('sigInput').value.trim();
+    if (!sig) { ASCUI.toast('Type your full legal name to sign.'); return; }
+    document.getElementById('sec4').classList.add('filled');
+    setF('d_date', ASC.dateStr(Date.now()));
+    document.getElementById('d_sig').textContent = sig;
+    document.getElementById('prog').style.width = '100%';
+    inv = ASC.signInvestment(inv.id, sig);
+    ASC.addDoc({
+      name: 'Subscription Agreement — ' + d.entity, dealId: d.id, invId: inv.id,
+      type: 'agreement', note: 'Signed · awaiting funding'
+    });
+    ASCUI.toast('<b>Signed.</b> A copy is in your Docs. Continuing to funding…');
+    setTimeout(function () { location.href = 'payment.html?inv=' + inv.id; }, 1500);
+  }
+  function downloadDoc() {
+    const pane = document.getElementById('docpane').innerHTML;
+    const html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Subscription Agreement — ' + d.entity + '</title>' +
+      '<style>body{font-family:Georgia,serif;max-width:720px;margin:50px auto;line-height:1.7;color:#241E12;font-size:14px;padding:0 24px}' +
+      'h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-align:center;color:#7A6E55;font-size:12px}' +
+      '.sec{margin:22px 0}.tick{display:none}h5{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#5A4E36}' +
+      '.f{border-bottom:1px solid #999;padding:0 2px}.f.set{font-weight:bold;border-bottom-color:#333}.sig-line{border-bottom:1.5px solid #000;min-width:220px;display:inline-block;font-size:18px}</style>' +
+      '</head><body><h4>Subscription Agreement</h4>' + pane + '<p style="margin-top:40px;font-size:11px;color:#888">Generated by the AltSpot Capital investor portal (demo). Auto-saved to your Docs.</p></body></html>';
+    const blob = new Blob([html], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'AltSpot_Subscription_' + d.id + '.html';
+    a.click();
+    ASCUI.toast('Document downloaded.');
+  }
+
+  /* resume directly into docs if a started subscription exists with a chosen profile */
+  if (inv && inv.state === ASC.STATES.STARTED && inv.answers && Object.keys(inv.answers).length) {
+    showDocs();
+  }
+</script>
+</body>
+</html>

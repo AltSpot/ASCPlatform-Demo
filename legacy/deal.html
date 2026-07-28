@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal — AltSpot Capital</title>
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="page"></main>
+</div>
+
+<script src="assets/store.js"></script>
+<script src="data/deals.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const u = ASC.requireAuth(); if (!u) throw new Error('auth');
+  ASCUI.shell('marketplace');
+
+  const d = dealById(ASC.qs('id'));
+  if (!d) { document.getElementById('page').innerHTML = '<p class="sub">Deal not found. <a href="marketplace.html">Back to marketplace</a>.</p>'; throw new Error('nodeal'); }
+  document.title = d.name + ' — AltSpot Capital';
+
+  const resume = ASC.activeFor(d.id);
+  const cta = resume
+    ? (resume.state === ASC.STATES.SIGNED
+        ? '<a class="btn btn-gold" href="payment.html?inv=' + resume.id + '">Fund your commitment</a>'
+        : '<a class="btn btn-gold" href="invest.html?deal=' + d.id + '">Resume your investment</a>')
+    : '<button class="btn btn-gold" onclick="ASCUI.gateInvest(\'' + d.id + '\')">Begin investment</button>';
+
+  const metric = ASCUI.lineChart(d.media.series, { w: 760, h: 190 });
+
+  document.getElementById('page').innerHTML =
+    '<div class="crumbs"><a href="marketplace.html">Marketplace</a><span class="sep">/</span><span class="here">' + d.name + '</span></div>' +
+
+    '<div class="card" style="padding:0;overflow:hidden;margin-bottom:22px">' +
+      '<div class="thumb" style="background:' + d.art + ';height:190px"><span class="chip">' + d.tag + '</span></div>' +
+      '<div style="padding:28px">' +
+        '<div class="page-head" style="margin-bottom:14px">' +
+          '<div class="titles"><h1 class="display">' + d.name + '</h1>' +
+          '<p class="small">' + d.sector + ' · ' + d.stage + ' · Offered through ' + d.entity + '</p></div>' +
+          '<div style="display:flex;gap:10px;flex-wrap:wrap">' + cta +
+            '<a class="btn btn-ghost" href="deck.html?id=' + d.id + '">Open pitch deck</a></div>' +
+        '</div>' +
+        '<p class="sub" style="max-width:none">' + d.blurb + '</p>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="card gold" style="margin-bottom:22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">' +
+      '<div class="orb" style="width:44px;height:44px;flex:none"></div>' +
+      '<div style="flex:1;min-width:240px"><div class="eyebrow" style="margin-bottom:5px">Our capital is in this deal</div>' +
+      '<h3 style="font-family:var(--serif);font-size:21px">AltSpot has committed <span class="num" style="color:var(--gold-bright)">' + ASC.money(d.altspotCommitted) + '</span> of its own capital</h3>' +
+      '<p class="small" style="margin-top:4px">' + d.committedNote + ' We never merely collect a fee to place someone else\u2019s listing.</p></div>' +
+    '</div>' +
+
+    '<div class="grid c2" style="margin-bottom:22px;align-items:start">' +
+      '<div style="display:grid;gap:18px">' +
+        '<div class="card"><h3 style="margin-bottom:12px">Why we underwrote it</h3>' +
+          d.thesis.map(function (p) { return '<p class="small" style="margin-bottom:12px;font-size:14px">' + p + '</p>'; }).join('') +
+        '</div>' +
+        '<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><h3>' + d.media.label + '</h3></div>' +
+          '<div style="margin:14px 0 8px">' + metric + '</div>' +
+          '<p class="tiny">' + d.media.caption + '</p></div>' +
+        '<div class="card"><h3 style="margin-bottom:10px">Risk, plainly</h3><p class="small" style="font-size:14px">' + d.risks + '</p></div>' +
+      '</div>' +
+
+      '<div style="display:grid;gap:18px">' +
+        '<div class="card"><h3 style="margin-bottom:12px">Terms</h3>' +
+          '<div class="fee-row"><span class="l">Minimum investment</span><span class="r">' + ASC.money(d.minInvestment) + '</span></div>' +
+          '<div class="fee-row"><span class="l">Vehicle</span><span class="r">' + d.entity + '</span></div>' +
+          '<div class="fee-row"><span class="l">Allocation remaining</span><span class="r">' + ASC.money(d.allocationRemaining) + '</span></div>' +
+          '<div class="fee-row"><span class="l">Target close</span><span class="r">' + d.targetClose + '</span></div>' +
+          ASCUI.allocBar(d) +
+        '</div>' +
+        '<div class="card"><h3 style="margin-bottom:4px">Fees — all-in, known on day one</h3>' +
+          '<p class="tiny" style="margin-bottom:10px">Collected once at closing. No annual fees. No capital calls, ever.</p>' +
+          '<div class="fee-row"><span class="l">Platform fee</span><span class="r">' + d.fees.platform + '%</span></div>' +
+          '<div class="fee-row"><span class="l">Admin reserve (itemized at checkout)</span><span class="r">up to ' + d.fees.adminMax + '%</span></div>' +
+          '<div class="fee-sub">Unused admin reserve is returned to investors at close.</div>' +
+          '<div class="fee-row"><span class="l">Carried interest — ' + d.fees.carryNote.toLowerCase() + '</span><span class="r">' + d.fees.carry + '% of profits</span></div>' +
+        '</div>' +
+        '<div class="card"><h3 style="margin-bottom:12px">Data room</h3>' +
+          d.docs.map(function (doc) {
+            return '<div class="fee-row"><span class="l" style="color:var(--paper)">' + doc + '</span>' +
+              '<a href="#" class="small" onclick="ASCUI.toast(\'Document viewer is simulated in this demo.\');return false" style="white-space:nowrap">View →</a></div>';
+          }).join('') +
+          '<p class="tiny" style="margin-top:10px">Access is logged. Materials shown are the admin-approved mirror of AltSpot\u2019s internal diligence.</p>' +
+        '</div>' +
+        ASCUI.spotbot(d) +
+      '</div>' +
+    '</div>' +
+
+    '<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">' +
+      '<div><h3>Ready to participate?</h3><p class="small" style="margin-top:4px">Your saved profile pre-fills every document. Most members complete a subscription in under four minutes.</p></div>' +
+      cta +
+    '</div>' +
+    '<p class="tiny" style="margin-top:18px">Investment subject to eligibility, documentation, and final acceptance. Demo environment — this company is fictional.</p>';
+
+  ASCUI.bindSpotbot();
+</script>
+</body>
+</html>
