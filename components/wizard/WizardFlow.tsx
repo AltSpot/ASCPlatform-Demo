@@ -226,7 +226,7 @@ export default function WizardFlow({
                 const { api } = await import('@/lib/client/api');
                 await api.completeWizard();
               } catch {
-                toast('Could not save setup completion — continuing anyway.');
+                toast('Could not save setup completion. Continuing anyway.');
               }
               router.push('/dashboard');
               router.refresh();

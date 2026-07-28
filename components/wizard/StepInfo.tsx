@@ -16,8 +16,8 @@ import type { VaultView, WizardView } from '@/lib/domain';
 const TAX_CLASSES = [
   'Individual / sole proprietor',
   'Trust / estate',
-  'LLC — single member',
-  'LLC — partnership',
+  'LLC (single member)',
+  'LLC (partnership)',
   'C corporation',
   'S corporation',
 ];
@@ -57,7 +57,7 @@ export default function StepInfo({
       toast('Saved. Your documents will now pre-fill themselves.');
       onComplete(next);
     } catch {
-      toast('Could not save your information — check the fields and try again.');
+      toast('Could not save your information. Check the fields and try again.');
     } finally {
       setBusy(false);
     }
@@ -70,7 +70,7 @@ export default function StepInfo({
         Your information
       </h2>
       <p className="sub" style={{ marginBottom: 24 }}>
-        Standard W-9 details, captured once. This becomes your saved profile — it
+        Standard W-9 details, captured once. This becomes your saved profile. It
         pre-fills every subscription document, so you never re-type it.
       </p>
 
@@ -166,14 +166,14 @@ export default function StepInfo({
             <span>SSN or EIN</span>
             <input
               className="input"
-              placeholder="Demo — enter anything, e.g. 000-00-0000"
+              placeholder="Demo mode, enter anything, e.g. 000-00-0000"
               value={form.tin}
               onChange={(e) => set('tin')(e.target.value)}
               required
             />
           </label>
           <div className="demo-note">
-            Demo environment — never enter a real SSN or EIN here. Only the last four
+            Demo environment. Never enter a real SSN or EIN here. Only the last four
             digits are stored; production uses tokenized, encrypted capture.
           </div>
         </div>

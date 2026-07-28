@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import type { BankView, ProfileView, VaultView } from '@/lib/domain';
-import { maskTin } from '@/lib/format';
+import { EMPTY, maskTin } from '@/lib/format';
 
 export default function ProfileManager({
   userName,
@@ -36,7 +36,7 @@ export default function ProfileManager({
     try {
       const created = await api.createProfile({
         type: draft.type,
-        name: draft.name.trim() || `${userName} — ${draft.type}`,
+        name: draft.name.trim() || `${userName} · ${draft.type}`,
       });
       setProfiles((list) => [...list, created]);
       setAdding(false);
@@ -142,7 +142,7 @@ export default function ProfileManager({
                 <span>
                   {p.type}
                   {p.isDefault
-                    ? ' · default — used at checkout unless you choose another'
+                    ? ' · default, used at checkout unless you choose another'
                     : ' · tap to make default'}
                 </span>
               </div>
@@ -162,7 +162,7 @@ export default function ProfileManager({
             gap: 10,
           }}
         >
-          <h3>The Vault — saved information</h3>
+          <h3>The Vault: saved information</h3>
           <Link className="btn btn-quiet btn-sm" href="/wizard?step=2">
             Edit
           </Link>
@@ -180,7 +180,7 @@ export default function ProfileManager({
         />
         <div className="fee-row">
           <span className="l">Linked bank</span>
-          <span className="r" style={{ fontFamily: 'var(--sans)' }}>
+          <span className="r">
             {bank ? (
               `${bank.institution} ····${bank.mask}`
             ) : (
@@ -197,8 +197,8 @@ function VaultRow({ label, value }: { label: string; value: string | null }) {
   return (
     <div className="fee-row">
       <span className="l">{label}</span>
-      <span className="r" style={{ fontFamily: 'var(--sans)' }}>
-        {value ? value : <span style={{ color: 'var(--dim)' }}>—</span>}
+      <span className="r">
+        {value ? value : <span style={{ color: 'var(--dim)' }}>{EMPTY}</span>}
       </span>
     </div>
   );

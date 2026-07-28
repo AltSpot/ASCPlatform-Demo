@@ -5,7 +5,7 @@ import { ToastProvider } from '@/components/Toast';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AltSpot Capital — Investor Portal',
+  title: 'AltSpot Capital · Investor Portal',
   description:
     'The private room. Sourced, underwritten, and co-invested private-market opportunities for approved AltSpot members.',
 };

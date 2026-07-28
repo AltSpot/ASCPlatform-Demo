@@ -44,7 +44,7 @@ export default function StepProfile({
 
   function choose(type: string) {
     setSelected(type);
-    setName(`${baseName} — ${type}`);
+    setName(`${baseName} · ${type}`);
   }
 
   async function create() {
@@ -53,13 +53,13 @@ export default function StepProfile({
     try {
       await api.createProfile({
         type: selected,
-        name: name.trim() || `${baseName} — ${selected}`,
+        name: name.trim() || `${baseName} · ${selected}`,
       });
       const next = await api.wizard();
       toast('Investment profile created.');
       onComplete(next);
     } catch {
-      toast('Could not create that profile — try again.');
+      toast('Could not create that profile. Try again.');
     } finally {
       setBusy(false);
     }
@@ -73,7 +73,7 @@ export default function StepProfile({
       </h2>
       <p className="sub" style={{ marginBottom: 24 }}>
         An investment profile is the entity your investments are held under. You can
-        create several over time — personal, an LLC or trust, a self-directed IRA — and
+        create several over time: personal, an LLC or trust, a self-directed IRA, and
         choose between them at checkout.
       </p>
 
@@ -98,7 +98,7 @@ export default function StepProfile({
               className="input"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={`e.g. ${baseName} — Personal`}
+              placeholder={`e.g. ${baseName} · Personal`}
             />
           </label>
         </div>

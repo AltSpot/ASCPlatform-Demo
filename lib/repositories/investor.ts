@@ -66,7 +66,7 @@ async function seedOpeningPosition(userId: string): Promise<void> {
       signedAt: new Date(now - SEED_POSITION.signedDaysAgo * DAY_MS),
       fundedAt: new Date(now - SEED_POSITION.fundedDaysAgo * DAY_MS),
       acceptedAt: new Date(now - SEED_POSITION.acceptedDaysAgo * DAY_MS),
-      fundingMethod: 'ACH — linked account',
+      fundingMethod: 'ACH · linked account',
       createdAt: new Date(now - SEED_POSITION.signedDaysAgo * DAY_MS),
     },
   });
@@ -76,7 +76,7 @@ async function seedOpeningPosition(userId: string): Promise<void> {
       userId,
       dealId: deal.id,
       subscriptionId: subscription.id,
-      name: `Subscription Agreement — ${deal.entity}`,
+      name: `Subscription Agreement: ${deal.entity}`,
       type: 'agreement',
       note: 'Countersigned · closed',
       savedAt: new Date(now - SEED_POSITION.acceptedDaysAgo * DAY_MS),
@@ -129,13 +129,37 @@ export async function markWizardComplete(userId: string): Promise<void> {
 
 // ---------------- accreditation ----------------
 
+/**
+ * Verification is performed in-house: the signed letter is read
+ * automatically and confirmed by an AltSpot reviewer, so `provider` names
+ * us rather than a third-party verification vendor.
+ */
+const ACCREDITATION_PROVIDER = 'AltSpot review';
+
 export async function recordLetterDownload(userId: string): Promise<void> {
   await prisma.accreditation.update({
     where: { userId },
-    data: { status: 'downloaded', provider: 'Parallel Markets' },
+    data: { status: 'downloaded' },
   });
 }
 
+/**
+ * The investor returned a completed letter. The file itself is never
+ * stored; only the fact of the upload, which puts the record in front of
+ * a reviewer. The filename lives in the audit trail at the call site.
+ */
+export async function recordLetterUpload(userId: string): Promise<void> {
+  await prisma.accreditation.update({
+    where: { userId },
+    data: {
+      status: 'pending',
+      method: 'professional_letter',
+      provider: ACCREDITATION_PROVIDER,
+    },
+  });
+}
+
+/** The reviewer's confirmation. Good for five years from this moment. */
 export async function verifyAccreditation(userId: string): Promise<void> {
   const now = new Date();
   await prisma.accreditation.update({
@@ -143,7 +167,7 @@ export async function verifyAccreditation(userId: string): Promise<void> {
     data: {
       status: 'verified',
       method: 'professional_letter',
-      provider: 'Parallel Markets',
+      provider: ACCREDITATION_PROVIDER,
       verifiedAt: now,
       expiresAt: new Date(now.getTime() + ACCREDITATION_VALIDITY_DAYS * DAY_MS),
     },
@@ -307,34 +331,66 @@ export async function setDefaultProfile(
 
 // ---------------- bank ----------------
 
+/**
+ * One account as it comes back from the link flow. Mirrors the shape
+ * Plaid returns for a selected account, so the real integration fills
+ * this in unchanged.
+ */
+export interface LinkedAccountInput {
+  /** Last four digits, as reported by the institution. */
+  mask: string;
+  /** Checking, Savings, and so on. */
+  type: string;
+}
+
+/**
+ * Link every account the investor selected. The first selection becomes
+ * the default funding source, which is what `getBank` hands the payment
+ * page. Masks come from the selection; nothing is fabricated here.
+ */
 export async function linkBank(
   userId: string,
   institution: string,
-): Promise<BankView> {
-  // Demo masks are random; production reads them back from Plaid.
-  const mask = String(Math.floor(1000 + Math.random() * 9000));
+  accounts: LinkedAccountInput[],
+): Promise<BankView[]> {
+  // One transaction so a partial selection can never land, and so the
+  // "exactly one default" invariant holds at every readable moment.
+  const rows = await prisma.$transaction(async (tx) => {
+    await tx.bankAccount.updateMany({
+      where: { userId },
+      data: { isDefault: false },
+    });
 
-  await prisma.bankAccount.updateMany({
-    where: { userId },
-    data: { isDefault: false },
+    const created = [];
+    for (const [index, account] of accounts.entries()) {
+      created.push(
+        await tx.bankAccount.create({
+          data: {
+            userId,
+            institution,
+            mask: account.mask,
+            type: account.type,
+            isDefault: index === 0,
+          },
+        }),
+      );
+    }
+
+    await tx.wizardState.update({
+      where: { userId },
+      data: { bankDone: true },
+    });
+
+    return created;
   });
 
-  const row = await prisma.bankAccount.create({
-    data: { userId, institution, mask, type: 'Checking', isDefault: true },
-  });
-
-  await prisma.wizardState.update({
-    where: { userId },
-    data: { bankDone: true },
-  });
-
-  return {
+  return rows.map((row) => ({
     id: row.id,
     institution: row.institution,
     mask: row.mask,
     type: row.type,
     linkedAt: row.linkedAt.toISOString(),
-  };
+  }));
 }
 
 export async function getBank(userId: string): Promise<BankView | null> {

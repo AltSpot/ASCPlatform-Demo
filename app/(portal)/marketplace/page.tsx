@@ -116,13 +116,18 @@ export default async function MarketplacePage() {
 
                 <div className="deal-actions">
                   {primary}
-                  <Link
-                    className="btn btn-ghost btn-sm"
-                    style={{ flex: 1 }}
-                    href={`/deals/${deal.id}/deck`}
-                  >
-                    Pitch deck
-                  </Link>
+                  {/* The deal page is the pitch, so a member mid-subscription
+                      still gets a way back to it. Otherwise the primary
+                      button already goes there and a second one is noise. */}
+                  {resume && (
+                    <Link
+                      className="btn btn-ghost btn-sm"
+                      style={{ flex: 1 }}
+                      href={`/deals/${deal.id}`}
+                    >
+                      View deal
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -134,7 +139,7 @@ export default async function MarketplacePage() {
         Private investments involve substantial risk, including possible loss of the
         entire amount invested, and are available only to verified accredited
         investors. Participation is subject to eligibility, documentation, and final
-        acceptance. Demo environment — companies shown are fictional.
+        acceptance. Demo environment. Companies shown are fictional.
       </p>
     </>
   );

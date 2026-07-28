@@ -57,8 +57,8 @@ export default function SetupBanner({
           <p className="small" style={{ marginTop: 4 }}>
             {blocking ? (
               <>
-                Explore everything below — the marketplace, every deal, and the full
-                pitch decks are open to you now.{' '}
+                Explore everything below. The marketplace and every deal page, in full,
+                are open to you now.{' '}
                 <b style={{ color: 'var(--gold-bright)' }}>
                   Investing unlocks once these are complete.
                 </b>

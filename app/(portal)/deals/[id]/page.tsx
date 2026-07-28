@@ -1,18 +1,33 @@
 /**
- * Deal page — thesis, metric, risk, itemized fees, data room, SpotBot,
- * and AltSpot's committed position.
+ * The deal page IS the pitch deck.
+ *
+ * There used to be two destinations: an overview of cards and a separate
+ * deck route of slides. Investors had to choose which one to read, and
+ * neither told the whole story. This is one scrollable narrative instead:
+ * the claim, the numbers, the story, our underwriting, the trend, the
+ * risk, the terms, the fees, the materials, the ask.
+ *
+ * Every section degrades to nothing when its content is missing, because
+ * the deals behind the lead carry far thinner editorial than Simphonic.
  */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import AllocBar from '@/components/AllocBar';
-import DataRoom from '@/components/DataRoom';
+import ClosingCta from '@/components/deal/ClosingCta';
+import CommittedBand from '@/components/deal/CommittedBand';
+import DealHero from '@/components/deal/DealHero';
+import Diligence from '@/components/deal/Diligence';
+import FeeModel from '@/components/deal/FeeModel';
+import MetricChart from '@/components/deal/MetricChart';
+import Narrative from '@/components/deal/Narrative';
+import RiskPanel from '@/components/deal/RiskPanel';
+import StatBand from '@/components/deal/StatBand';
+import TermsTable from '@/components/deal/TermsTable';
+import Thesis from '@/components/deal/Thesis';
+import s from '@/components/deal/Deal.module.css';
 import InvestButton from '@/components/InvestButton';
-import LineChart from '@/components/LineChart';
-import SpotBot from '@/components/SpotBot';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
-import { money } from '@/lib/format';
 import { getDeal } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getResumable } from '@/lib/repositories/subscriptions';
@@ -26,7 +41,7 @@ export async function generateMetadata({
 }) {
   const { id } = await params;
   const deal = await getDeal(id);
-  return { title: deal ? `${deal.name} — AltSpot Capital` : 'Deal — AltSpot Capital' };
+  return { title: deal ? `${deal.name} · AltSpot Capital` : 'Deal · AltSpot Capital' };
 }
 
 export default async function DealPage({
@@ -68,179 +83,54 @@ export default async function DealPage({
         <span className="here">{deal.name}</span>
       </div>
 
-      <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 22 }}>
-        <div className="thumb" style={{ background: deal.art, height: 190 }}>
-          <span className="chip">{deal.tag}</span>
-        </div>
-        <div style={{ padding: 28 }}>
-          <div className="page-head" style={{ marginBottom: 14 }}>
-            <div className="titles">
-              <h1 className="display">{deal.name}</h1>
-              <p className="small">
-                {deal.sector} · {deal.stage} · Offered through {deal.entity}
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              {cta}
-              <Link className="btn btn-ghost" href={`/deals/${deal.id}/deck`}>
-                Open pitch deck
-              </Link>
-            </div>
-          </div>
-          <p className="sub" style={{ maxWidth: 'none' }}>
-            {deal.blurb}
-          </p>
-        </div>
+      <DealHero
+        deal={deal}
+        cta={
+          <>
+            {cta}
+            {/* Only offered when there is a risk section to land on. */}
+            {deal.risks.trim() && (
+              <a className="btn btn-ghost" href="#risk">
+                Read the risks
+              </a>
+            )}
+          </>
+        }
+      />
+
+      <CommittedBand amount={deal.altspotCommitted} note={deal.committedNote} />
+
+      <StatBand metrics={deal.metrics} />
+
+      <Narrative chapters={deal.deck} />
+
+      <Thesis points={deal.thesis} />
+
+      <MetricChart media={deal.media} dealId={deal.id} />
+
+      <RiskPanel risks={deal.risks} />
+
+      <TermsTable deal={deal} />
+
+      <FeeModel fees={deal.fees} />
+
+      <Diligence docs={deal.docs} spotbot={deal.spotbot} />
+
+      <div className={s.section}>
+        <ClosingCta
+          minInvestment={deal.minInvestment}
+          targetClose={deal.targetClose}
+          cta={cta}
+        />
+
+        <p className={s.disclosure}>
+          Prepared by AltSpot Capital from company-provided materials and AltSpot
+          diligence. Not an offer to sell securities. Any offer is made only through
+          definitive documents. Investment is subject to eligibility, documentation,
+          and final acceptance. Private investments involve substantial risk,
+          including loss of the entire amount invested. Demo environment.
+        </p>
       </div>
-
-      <div
-        className="card gold"
-        style={{
-          marginBottom: 22,
-          display: 'flex',
-          gap: 20,
-          alignItems: 'center',
-          flexWrap: 'wrap',
-        }}
-      >
-        <div className="orb" style={{ width: 44, height: 44, flex: 'none' }} />
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <div className="eyebrow" style={{ marginBottom: 5 }}>
-            Our capital is in this deal
-          </div>
-          <h3 style={{ fontFamily: 'var(--serif)', fontSize: 21 }}>
-            AltSpot has committed{' '}
-            <span className="num" style={{ color: 'var(--gold-bright)' }}>
-              {money(deal.altspotCommitted)}
-            </span>{' '}
-            of its own capital
-          </h3>
-          <p className="small" style={{ marginTop: 4 }}>
-            {deal.committedNote} We don&rsquo;t place listings. We take positions.
-          </p>
-        </div>
-      </div>
-
-      <div className="grid c2" style={{ marginBottom: 22, alignItems: 'start' }}>
-        <div style={{ display: 'grid', gap: 18 }}>
-          <div className="card">
-            <h3 style={{ marginBottom: 12 }}>Why we underwrote it</h3>
-            {deal.thesis.map((paragraph, i) => (
-              <p
-                className="small"
-                style={{ marginBottom: 12, fontSize: 14 }}
-                key={i}
-              >
-                {paragraph}
-              </p>
-            ))}
-          </div>
-
-          <div className="card">
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                flexWrap: 'wrap',
-                gap: 8,
-              }}
-            >
-              <h3>{deal.media.label}</h3>
-            </div>
-            <div style={{ margin: '14px 0 8px' }}>
-              <LineChart
-                series={deal.media.series}
-                width={760}
-                height={190}
-                id={`deal-${deal.id}`}
-              />
-            </div>
-            <p className="tiny">{deal.media.caption}</p>
-          </div>
-
-          <div className="card">
-            <h3 style={{ marginBottom: 10 }}>Risk, plainly</h3>
-            <p className="small" style={{ fontSize: 14 }}>
-              {deal.risks}
-            </p>
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gap: 18 }}>
-          <div className="card">
-            <h3 style={{ marginBottom: 12 }}>Terms</h3>
-            <FeeRow label="Minimum investment" value={money(deal.minInvestment)} />
-            <FeeRow label="Vehicle" value={deal.entity} />
-            <FeeRow
-              label="Allocation remaining"
-              value={money(deal.allocationRemaining)}
-            />
-            <FeeRow label="Target close" value={deal.targetClose} />
-            <AllocBar
-              allocationTotal={deal.allocationTotal}
-              allocationRemaining={deal.allocationRemaining}
-            />
-          </div>
-
-          <div className="card">
-            <h3 style={{ marginBottom: 4 }}>Fees — all-in, known on day one</h3>
-            <p className="tiny" style={{ marginBottom: 10 }}>
-              Collected once at closing. No annual fees. No capital calls, ever.
-            </p>
-            <FeeRow
-              label="Management fee, charged once"
-              value={`${deal.fees.management}%`}
-            />
-            <FeeRow
-              label="Carried interest at exit"
-              value={`${deal.fees.carry}% of profits`}
-            />
-            <div className="fee-sub" style={{ paddingLeft: 0 }}>
-              That is the whole model. No annual fees, no admin reserve, no capital
-              calls.
-            </div>
-          </div>
-
-          <DataRoom documents={deal.docs} />
-
-          <SpotBot entries={deal.spotbot} />
-        </div>
-      </div>
-
-      <div
-        className="card"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 16,
-          flexWrap: 'wrap',
-        }}
-      >
-        <div>
-          <h3>Ready to participate?</h3>
-          <p className="small" style={{ marginTop: 4 }}>
-            Your saved profile pre-fills every document. Most members complete a
-            subscription in under four minutes.
-          </p>
-        </div>
-        {cta}
-      </div>
-
-      <p className="tiny" style={{ marginTop: 18 }}>
-        Investment subject to eligibility, documentation, and final acceptance. Demo
-        environment — this company is fictional.
-      </p>
     </>
-  );
-}
-
-function FeeRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="fee-row">
-      <span className="l">{label}</span>
-      <span className="r">{value}</span>
-    </div>
   );
 }

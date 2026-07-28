@@ -1,0 +1,80 @@
+/* One grouped confirmation panel. Structure only — colour and type come
+   from the tokens in globals.css, never from values invented here. */
+
+.points {
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0;
+  display: grid;
+  gap: 11px;
+}
+
+.point {
+  position: relative;
+  padding-left: 17px;
+  font-size: 13.4px;
+  line-height: 1.62;
+  color: var(--soft);
+}
+
+.point::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--orange);
+  opacity: 0.8;
+}
+
+/* A conspicuous term. The label carries the weight, so the eye cannot
+   skim past a power of attorney or a jury-trial waiver. */
+.lead {
+  display: block;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 5px;
+}
+
+.leadPoint::before {
+  top: 0.42em;
+}
+
+.prompt {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--soft);
+  margin: 20px 0 11px;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.extra {
+  margin: 16px 0 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+/* The mapping back to the paper agreement. Legal reads this line. */
+.source {
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--faint);
+  line-height: 1.8;
+  margin: 18px 0 13px;
+}

@@ -23,7 +23,7 @@ export default function SpotBot({ entries }: { entries: SpotbotEntry[] }) {
       </div>
       <p className="small" style={{ marginBottom: 14 }}>
         Plain-language answers about this deal, drawn only from approved materials.
-        SpotBot explains — it never advises.
+        SpotBot explains. It never advises.
       </p>
 
       {entries.map((entry, i) => (
@@ -48,7 +48,7 @@ export default function SpotBot({ entries }: { entries: SpotbotEntry[] }) {
       ))}
 
       <p className="tiny" style={{ marginTop: 6 }}>
-        Demo preview — canned responses. The production SpotBot answers live from the
+        Demo preview with canned responses. The production SpotBot answers live from the
         deal&rsquo;s approved data room.
       </p>
     </div>

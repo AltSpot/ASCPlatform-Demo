@@ -6,7 +6,7 @@ import { getBank, getVault, listProfiles } from '@/lib/repositories/investor';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Profiles — AltSpot Capital' };
+export const metadata = { title: 'Profiles · AltSpot Capital' };
 
 export default async function ProfilesPage() {
   const user = await requireUser();
@@ -25,7 +25,7 @@ export default async function ProfilesPage() {
           <h1 className="display">Profiles &amp; saved information.</h1>
           <p className="sub">
             Investment profiles are the entities your deals are held under. The Vault is
-            the information that pre-fills your documents — captured once, reused
+            the information that pre-fills your documents. Captured once, reused
             everywhere.
           </p>
         </div>

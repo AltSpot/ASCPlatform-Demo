@@ -1,12 +1,19 @@
 /**
- * Presentation helpers. Pure, isomorphic, no locale surprises —
+ * Presentation helpers. Pure, isomorphic, no locale surprises:
  * everything is explicitly en-US so server and client render identically
  * and React never reports a hydration mismatch.
  */
 import { DAY_MS } from './domain';
 
+/**
+ * The glyph for "no value here". A typographic mark, not copy: the brand
+ * voice bans em dashes in prose, so keep the placeholder distinct from
+ * anything a writer would type in a sentence.
+ */
+export const EMPTY = '–';
+
 export function money(value: number | null | undefined, decimals = 0): string {
-  if (value === null || value === undefined || Number.isNaN(value)) return '—';
+  if (value === null || value === undefined || Number.isNaN(value)) return EMPTY;
   return `$${Number(value).toLocaleString('en-US', {
     maximumFractionDigits: decimals,
     minimumFractionDigits: 0,
@@ -14,9 +21,9 @@ export function money(value: number | null | undefined, decimals = 0): string {
 }
 
 export function dateStr(value: string | number | Date | null | undefined): string {
-  if (value === null || value === undefined) return '—';
+  if (value === null || value === undefined) return EMPTY;
   const d = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return EMPTY;
   return d.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',

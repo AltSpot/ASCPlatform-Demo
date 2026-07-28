@@ -21,9 +21,14 @@ export const SESSION_COOKIE = 'asc_session';
 /** Sessions last 30 days; refreshed on use. */
 export const SESSION_TTL_DAYS = 30;
 
-/** Named third parties the product surface references. */
+/**
+ * Named third parties the product surface references.
+ *
+ * Accreditation is deliberately absent: AltSpot reviews certification
+ * letters itself (automated read, confirmed by a reviewer) rather than
+ * handing the investor off to a verification vendor.
+ */
 export const PARTNERS = {
-  accreditation: 'Parallel Markets',
   banking: 'Plaid',
   payments: 'Modern Treasury',
   custody: 'J.P. Morgan',

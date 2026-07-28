@@ -1,0 +1,541 @@
+/* ============================================================
+   Deal page — the pitch deck as one scrollable narrative.
+
+   The old deck route stacked slide-shaped boxes. This is the
+   opposite bet: rhythm over density. Each section owns its own
+   air, carries one idea, and is separated by a hairline rather
+   than a border-radius. Everything a reader's eye lands on for
+   orientation (kickers, labels, figures, sources) is JetBrains
+   Mono; everything they read at length is Figtree; every
+   statement is Borna.
+
+   Consumes tokens from app/globals.css. No new colours here.
+   ============================================================ */
+
+/* ---------- shared section rhythm ---------- */
+
+.section {
+  padding: 62px 0;
+  border-top: 1px solid var(--hair);
+}
+
+.sectionHead {
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--orange);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.sectionTitle {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: clamp(25px, 3vw, 32px);
+  line-height: 1.13;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  max-width: 24ch;
+}
+
+.sectionLede {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--soft);
+  max-width: 62ch;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  padding: 46px 48px 38px;
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+}
+
+/* The deal's own colour, pushed far enough back that type still wins. */
+.heroWash {
+  position: absolute;
+  inset: -55% -20% auto -20%;
+  height: 420px;
+  opacity: 0.34;
+  filter: blur(52px);
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  flex: none;
+  border-radius: 11px;
+  object-fit: contain;
+  padding: 6px;
+  background: rgba(10, 8, 6, 0.55);
+  border: 1px solid var(--hair);
+}
+
+.name {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 21px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.headline {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: clamp(30px, 4.4vw, 46px);
+  line-height: 1.07;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  max-width: 20ch;
+}
+
+.heroLede {
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+
+.heroMeta {
+  margin-top: 24px;
+  font-family: var(--fm);
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--soft);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.heroMeta i {
+  color: var(--faint);
+  opacity: 0.7;
+  font-style: normal;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.heroFacts {
+  display: flex;
+  gap: 44px;
+  flex-wrap: wrap;
+  margin-top: 34px;
+  padding-top: 26px;
+  border-top: 1px solid var(--hair);
+}
+
+.fact {
+  min-width: 128px;
+}
+
+.factK {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 8px;
+}
+
+.factV {
+  font-family: var(--fm);
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.heroAlloc {
+  margin-top: 22px;
+}
+
+/* ---------- AltSpot's own capital ---------- */
+
+.committed {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+  padding: 22px 26px;
+  border: 1px solid var(--hairg);
+  border-radius: var(--r);
+  background: linear-gradient(180deg, rgba(243, 152, 7, 0.09), rgba(243, 152, 7, 0.02));
+}
+
+.committedOrb {
+  width: 42px;
+  height: 42px;
+}
+
+.committedBody {
+  flex: 1;
+  min-width: 250px;
+}
+
+.committedLine {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.committedFigure {
+  font-family: var(--fm);
+  font-variant-numeric: tabular-nums;
+  color: var(--orange-b);
+}
+
+.committedNote {
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--soft);
+}
+
+/* ---------- stat band ---------- */
+
+/* Hairline grid rather than eight separate cards: the numbers read as
+   one instrument panel, which is the point of the band. Rules are drawn
+   by the cells, not by a filled container, so a short final row leaves
+   air rather than an empty grey block. */
+.statBand {
+  display: grid;
+  /* Wide tracks on purpose: four across at desktop width, so the eight
+     figures of a lead deal land as two full rows rather than a ragged one. */
+  grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.statCell {
+  padding: 24px 22px 26px;
+  box-shadow: inset -1px 0 0 var(--hair), inset 0 -1px 0 var(--hair);
+}
+
+.statK {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.statV {
+  font-family: var(--fm);
+  font-variant-numeric: tabular-nums;
+  font-size: 27px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.statNote {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--soft);
+}
+
+/* ---------- narrative chapters ---------- */
+
+.chapter {
+  padding: 68px 0;
+  border-top: 1px solid var(--hair);
+}
+
+.chapterKicker {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--orange);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.chapterTitle {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: clamp(27px, 3.4vw, 37px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  max-width: 21ch;
+  margin-bottom: 24px;
+}
+
+.chapterBody p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  max-width: 64ch;
+}
+
+.chapterBody p + p {
+  margin-top: 17px;
+}
+
+.inlineStats {
+  display: flex;
+  gap: 54px;
+  flex-wrap: wrap;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--hair);
+}
+
+.inlineStat {
+  min-width: 132px;
+}
+
+.inlineStatV {
+  font-family: var(--fm);
+  font-variant-numeric: tabular-nums;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-top: 10px;
+}
+
+/* ---------- thesis ---------- */
+
+.thesis {
+  display: grid;
+  gap: 26px;
+}
+
+.thesisItem {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.thesisNum {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--orange);
+  padding-top: 6px;
+  border-top: 1px solid var(--hairg);
+}
+
+.thesisText {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  max-width: 66ch;
+}
+
+/* ---------- chart ---------- */
+
+.chart {
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  background: var(--panel);
+  padding: 26px 26px 20px;
+}
+
+.source {
+  margin-top: 14px;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  line-height: 1.7;
+}
+
+/* ---------- risk ---------- */
+
+/* Ember rather than orange: this is the one section that should read
+   as a caution and not as an accent. */
+.risk {
+  border: 1px solid rgba(229, 102, 26, 0.32);
+  border-radius: var(--r);
+  padding: 34px 36px;
+  background: linear-gradient(180deg, rgba(229, 102, 26, 0.07), rgba(229, 102, 26, 0.015));
+}
+
+.riskBody {
+  font-size: 15.5px;
+  line-height: 1.78;
+  color: var(--ink-2);
+  max-width: 74ch;
+}
+
+/* ---------- terms ---------- */
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  background: var(--panel);
+}
+
+.tableWrap table {
+  min-width: 460px;
+}
+
+.tableWrap td:last-child {
+  font-family: var(--fm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------- fees ---------- */
+
+.feeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  gap: 18px;
+}
+
+.feeCard {
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  background: var(--panel);
+  padding: 28px 26px;
+}
+
+.feeV {
+  font-family: var(--fm);
+  font-variant-numeric: tabular-nums;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--orange-b);
+}
+
+.feeK {
+  margin-top: 14px;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.feeNote {
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--soft);
+}
+
+/* ---------- diligence pair ---------- */
+
+.diligence {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* ---------- closing ---------- */
+
+.closing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  padding: 34px 36px;
+  border: 1px solid var(--hairg);
+  border-radius: var(--r);
+  background: linear-gradient(180deg, rgba(243, 152, 7, 0.08), rgba(243, 152, 7, 0.02));
+}
+
+.closingTitle {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 25px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.closingNote {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--soft);
+  max-width: 52ch;
+}
+
+/* Read at length, so body type rather than the monospace source style. */
+.disclosure {
+  margin-top: 26px;
+  font-size: 12px;
+  color: var(--faint);
+  line-height: 1.65;
+  max-width: 84ch;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .hero {
+    padding: 32px 22px 28px;
+  }
+  .section,
+  .chapter {
+    padding: 44px 0;
+  }
+  .risk {
+    padding: 26px 22px;
+  }
+  .closing {
+    padding: 26px 22px;
+  }
+  .diligence {
+    grid-template-columns: 1fr;
+  }
+  .inlineStats {
+    gap: 30px;
+  }
+  .thesisItem {
+    grid-template-columns: 42px 1fr;
+    gap: 14px;
+  }
+}

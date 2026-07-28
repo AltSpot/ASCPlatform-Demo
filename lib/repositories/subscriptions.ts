@@ -20,6 +20,11 @@ import {
   type SubscriptionView,
 } from '../domain';
 import type { Subscription } from '../generated/prisma/client';
+import {
+  choiceKey,
+  decodeConfirmationCode,
+  sectionKey,
+} from '../subscription-sections';
 
 export function toSubscriptionView(row: Subscription): SubscriptionView {
   let answers: Record<string, boolean> = {};
@@ -177,12 +182,28 @@ export async function updateDraft(
   return toSubscriptionView(row);
 }
 
-/** Record one of the three grouped document confirmations. */
+/**
+ * Record one grouped document confirmation.
+ *
+ * `code` is a confirmation code from lib/subscription-sections.ts, which
+ * carries the section and, where the section is a selection of fact, which
+ * option the investor picked. The choice is written as its own key so the
+ * answers map stays a flat set of checked boxes — the same shape as the
+ * paper questionnaire it stands in for.
+ *
+ * Selections are single-valued: re-picking a category clears the previous
+ * one, so an investor can never be recorded as claiming two accreditation
+ * standards or both ERISA answers at once.
+ */
 export async function confirmSection(
   userId: string,
   id: string,
-  section: number,
+  code: number,
 ): Promise<SubscriptionView> {
+  const decoded = decodeConfirmationCode(code);
+  if (!decoded) throw new Error('Unknown confirmation code');
+  const { section, choice } = decoded;
+
   const current = await prisma.subscription.findFirst({ where: { id, userId } });
   if (!current) throw new Error('Subscription not found');
 
@@ -192,7 +213,14 @@ export async function confirmSection(
   } catch {
     answers = {};
   }
-  answers[`q${section}`] = true;
+
+  answers[sectionKey(section.id)] = true;
+  if (section.choices) {
+    for (const option of section.choices) {
+      delete answers[choiceKey(section.id, option.key)];
+    }
+  }
+  if (choice) answers[choiceKey(section.id, choice.key)] = true;
 
   const row = await prisma.subscription.update({
     where: { id },
@@ -204,7 +232,12 @@ export async function confirmSection(
     action: 'subscription.section_confirmed',
     entity: 'subscription',
     entityId: id,
-    metadata: { section },
+    metadata: {
+      section: section.id,
+      title: section.documentTitle,
+      covers: section.covers,
+      choice: choice?.key ?? null,
+    },
   });
 
   return toSubscriptionView(row);

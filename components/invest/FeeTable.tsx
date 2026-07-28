@@ -27,7 +27,7 @@ export default function FeeTable({
       </div>
 
       <div className="fee-row">
-        <span className="l">Management fee — {fees.management}%, one time</span>
+        <span className="l">Management fee · {fees.management}%, one time</span>
         <span className="r">{money(breakdown.management)}</span>
       </div>
 

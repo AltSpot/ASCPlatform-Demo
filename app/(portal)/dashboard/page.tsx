@@ -11,7 +11,7 @@ import PendingCommitments from '@/components/PendingCommitments';
 import SetupBanner from '@/components/SetupBanner';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate, HELD_STATES } from '@/lib/domain';
-import { dateStr, daysLeft, money } from '@/lib/format';
+import { dateStr, daysLeft, EMPTY, money } from '@/lib/format';
 import { getDealsByIds } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
@@ -183,7 +183,7 @@ export default async function DashboardPage() {
                     </td>
                     <td className="num">{money(s.amount)}</td>
                     <td className="num">
-                      {live ? money(current) : <span style={{ color: 'var(--faint)' }}>—</span>}
+                      {live ? money(current) : <span style={{ color: 'var(--faint)' }}>{EMPTY}</span>}
                     </td>
                     <td className="num">
                       {live ? (
@@ -192,7 +192,7 @@ export default async function DashboardPage() {
                           {rowPct.toFixed(1)}%
                         </span>
                       ) : (
-                        <span style={{ color: 'var(--faint)' }}>—</span>
+                        <span style={{ color: 'var(--faint)' }}>{EMPTY}</span>
                       )}
                     </td>
                     <td>
@@ -243,7 +243,7 @@ export default async function DashboardPage() {
 
       {held.some((s) => s.seeded) && (
         <p className="tiny" style={{ marginTop: 18 }}>
-          Demo environment — the Meridian position is seeded so the portfolio has
+          Demo environment. The Meridian position is seeded so the portfolio has
           history. Signed {dateStr(held.find((s) => s.seeded)?.signedAt)}.
         </p>
       )}

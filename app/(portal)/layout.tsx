@@ -7,6 +7,7 @@
 import { redirect } from 'next/navigation';
 
 import Sidebar from '@/components/Sidebar';
+import SpotBotDock from '@/components/spotbot/SpotBotDock';
 import { getSessionUser } from '@/lib/auth';
 
 export default async function PortalLayout({
@@ -19,6 +20,9 @@ export default async function PortalLayout({
     <div className="layout">
       <Sidebar user={user} />
       <main className="main">{children}</main>
+      {/* The guide follows the investor: mounted once, so it persists
+          across navigation and is present on every signed-in page. */}
+      <SpotBotDock />
     </div>
   );
 }

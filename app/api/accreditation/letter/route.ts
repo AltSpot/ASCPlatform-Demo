@@ -1,8 +1,9 @@
 /**
  * POST /api/accreditation/letter
  *
- * Records that the investor pulled the certification letter, which in
- * production opens a verification request with the accreditation partner.
+ * Records that the investor pulled the certification letter template.
+ * Nothing is verified here; verification starts when the signed letter
+ * comes back through /api/accreditation/upload.
  */
 import { audit } from '@/lib/audit';
 import { requireUser } from '@/lib/auth';

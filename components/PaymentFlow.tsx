@@ -43,7 +43,7 @@ export default function PaymentFlow({
     try {
       const next = await api.fundSubscription(
         subscription.id,
-        bank ? 'ACH — linked account' : 'ACH — manual',
+        bank ? 'ACH · linked account' : 'ACH · manual',
       );
       setState(next.state);
       toast(
@@ -71,12 +71,12 @@ export default function PaymentFlow({
         </h1>
         <p className="sub" style={{ margin: '0 auto 10px' }}>
           {money(fees.allIn)} is on its way to the {deal.name} account. AltSpot
-          countersigns at close — you&rsquo;ll get confirmation, and the position will
+          countersigns at close. You&rsquo;ll get confirmation, and the position will
           appear in your portfolio.
         </p>
         <p className="small" style={{ marginBottom: 34 }}>
           Signed documents live in your <Link href="/docs">Docs</Link>. Deal updates
-          begin after close — reporting after the wire is the whole point.
+          begin after close. Reporting after the wire is the whole point.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link className="btn btn-gold" href="/dashboard">
@@ -119,7 +119,7 @@ export default function PaymentFlow({
               className="qhead"
               style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}
             >
-              <h3>Fund now — Same-Day ACH</h3>
+              <h3>Fund now with Same-Day ACH</h3>
               <span className="chip">Recommended</span>
             </div>
 
@@ -131,7 +131,7 @@ export default function PaymentFlow({
                 </p>
                 <div className="choice sel" style={{ marginBottom: 16 }}>
                   <b>
-                    {bank.institution} — {bank.type} ····{bank.mask}
+                    {bank.institution} · {bank.type} ····{bank.mask}
                   </b>
                   <span>
                     Linked {dateStr(bank.linkedAt)} · verified via {PARTNERS.banking}
@@ -148,7 +148,7 @@ export default function PaymentFlow({
             ) : (
               <>
                 <p className="small" style={{ marginBottom: 16 }}>
-                  Link your bank once and fund in one click — now and on every future
+                  Link your bank once and fund in one click, now and on every future
                   deal.
                 </p>
                 <Link
@@ -166,15 +166,15 @@ export default function PaymentFlow({
                 <div className="form-row">
                   <label className="field">
                     <span>Routing number</span>
-                    <input className="input num" placeholder="Demo — enter anything" />
+                    <input className="input num" placeholder="Demo mode, enter anything" />
                   </label>
                   <label className="field">
                     <span>Account number</span>
-                    <input className="input num" placeholder="Demo — enter anything" />
+                    <input className="input num" placeholder="Demo mode, enter anything" />
                   </label>
                 </div>
                 <div className="demo-note" style={{ marginBottom: 14 }}>
-                  Demo environment — never enter real bank details here.
+                  Demo environment. Never enter real bank details here.
                 </div>
                 <button
                   className="btn btn-ghost btn-block"
@@ -202,7 +202,7 @@ export default function PaymentFlow({
                 <p className="small" style={{ marginTop: 4 }}>
                   Your spot stays reserved until {dateStr(subscription.fundingDeadline)}.
                   We&rsquo;ll remind you every other day. Unfunded commitments release
-                  automatically — no penalty, no obligation.
+                  automatically. No penalty, no obligation.
                 </p>
               </div>
               <Link className="btn btn-quiet" href="/dashboard">
@@ -215,7 +215,7 @@ export default function PaymentFlow({
         <div className="card">
           <h3 style={{ marginBottom: 12 }}>Transfer summary</h3>
           <div className="fee-row">
-            <span className="l">{deal.name} — subscription</span>
+            <span className="l">{deal.name} subscription</span>
             <span className="r">{money(subscription.amount)}</span>
           </div>
           <FeeTable fees={deal.fees} amount={subscription.amount} />

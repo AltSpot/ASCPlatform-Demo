@@ -10,7 +10,7 @@ import { getSubscription } from '@/lib/repositories/subscriptions';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Funding — AltSpot Capital' };
+export const metadata = { title: 'Funding · AltSpot Capital' };
 
 export default async function PaymentPage({
   params,

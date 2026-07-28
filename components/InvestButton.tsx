@@ -40,7 +40,7 @@ export default function InvestButton({
     const first = gate.missing[0];
     toast(
       <>
-        Before investing, complete <b>{first.label}</b> — taking you there.
+        Before investing, complete <b>{first.label}</b>. Taking you there.
       </>,
     );
     setTimeout(() => {

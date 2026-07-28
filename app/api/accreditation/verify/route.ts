@@ -1,9 +1,10 @@
 /**
  * POST /api/accreditation/verify
  *
- * Demo mode clears verification instantly. Production leaves the record
- * pending until the partner's webhook confirms it, which is why the
- * status is written here rather than by the client.
+ * The reviewer's confirmation, written server-side so the browser can
+ * never set the status itself. Demo mode reaches verification through
+ * the upload route, which clears on the spot; in production a
+ * back-office action calls this once a reviewer has read the letter.
  */
 import { audit } from '@/lib/audit';
 import { requireUser } from '@/lib/auth';
@@ -18,7 +19,7 @@ export const POST = route(async () => {
     userId: user.id,
     action: 'accreditation.verified',
     entity: 'accreditation',
-    metadata: { method: 'professional_letter', simulated: true },
+    metadata: { method: 'professional_letter', reviewer: 'altspot' },
   });
 
   return ok(await getWizardView(user.id));

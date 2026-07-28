@@ -36,7 +36,7 @@ export default function LoginForm() {
       router.refresh();
     } catch (error) {
       const message =
-        error instanceof ApiError ? error.message : 'Could not sign in — try again.';
+        error instanceof ApiError ? error.message : 'Could not sign in. Try again.';
       toast(message);
       setBusy(false);
     }
@@ -100,7 +100,7 @@ export default function LoginForm() {
 
       <hr className="hr" />
       <div className="demo-note">
-        Functional demo — all money is simulated and any email and password will sign
+        Functional demo. All money is simulated and any email and password will sign
         you in. Do not enter real passwords, tax IDs, or bank details.
       </div>
     </>

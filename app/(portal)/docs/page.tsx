@@ -3,14 +3,14 @@ import Link from 'next/link';
 
 import DocRow from '@/components/DocRow';
 import { requireUser } from '@/lib/auth';
-import { dateStr } from '@/lib/format';
+import { dateStr, EMPTY } from '@/lib/format';
 import { getDealsByIds } from '@/lib/repositories/deals';
 import { listDocuments } from '@/lib/repositories/documents';
 import { getVault, getWizardView } from '@/lib/repositories/investor';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Docs — AltSpot Capital' };
+export const metadata = { title: 'Docs · AltSpot Capital' };
 
 export default async function DocsPage() {
   const user = await requireUser();
@@ -71,7 +71,7 @@ export default async function DocsPage() {
                   <td>
                     <b>{doc.name}</b>
                   </td>
-                  <td>{doc.dealId ? (deals.get(doc.dealId)?.name ?? '—') : '—'}</td>
+                  <td>{doc.dealId ? (deals.get(doc.dealId)?.name ?? EMPTY) : EMPTY}</td>
                   <td className="num">{dateStr(doc.savedAt)}</td>
                   <td>
                     <span className="chip neutral">{doc.note ?? 'Saved'}</span>
@@ -119,7 +119,7 @@ export default async function DocsPage() {
           <div className="fee-row">
             <span className="l" style={wizard.info.complete ? { color: 'var(--paper)' } : undefined}>
               {wizard.info.complete
-                ? `W-9 — ${vault.first ?? ''} ${vault.last ?? ''}`.trim()
+                ? `W-9 · ${vault.first ?? ''} ${vault.last ?? ''}`.trim()
                 : 'W-9 information'}
             </span>
             {wizard.info.complete ? (

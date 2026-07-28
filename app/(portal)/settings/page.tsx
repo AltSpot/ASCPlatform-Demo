@@ -4,7 +4,7 @@ import { requireUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Settings — AltSpot Capital' };
+export const metadata = { title: 'Settings · AltSpot Capital' };
 
 export default async function SettingsPage() {
   const user = await requireUser();

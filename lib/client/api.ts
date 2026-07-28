@@ -68,6 +68,14 @@ const put = <T>(path: string, body?: unknown) =>
 
 const del = <T>(path: string) => request<T>(path, { method: 'DELETE' });
 
+/** One account chosen in the bank link flow. */
+export interface LinkedAccount {
+  /** Last four digits, as reported by the institution. */
+  mask: string;
+  /** Checking, Savings, and so on. */
+  type: string;
+}
+
 export interface SessionPayload {
   user: SessionUser | null;
   wizard: WizardView | null;
@@ -89,6 +97,9 @@ export const api = {
   completeWizard: () => post<WizardView>('/wizard/complete'),
 
   accreditationDownloaded: () => post<WizardView>('/accreditation/letter'),
+  /** The file never leaves the browser; only its name is sent. */
+  uploadAccreditationLetter: (fileName: string) =>
+    post<WizardView>('/accreditation/upload', { fileName }),
   verifyAccreditation: () => post<WizardView>('/accreditation/verify'),
 
   vault: () => request<VaultView>('/vault'),
@@ -105,7 +116,9 @@ export const api = {
   setDefaultProfile: (id: string) => post<void>(`/profiles/${id}/default`),
 
   bank: () => request<BankView | null>('/bank'),
-  linkBank: (institution: string) => post<BankView>('/bank', { institution }),
+  /** Links every selected account; the first becomes the default source. */
+  linkBank: (institution: string, accounts: LinkedAccount[]) =>
+    post<BankView[]>('/bank', { institution, accounts }),
 
   // ---- marketplace ----
   deals: () => request<DealView[]>('/deals'),

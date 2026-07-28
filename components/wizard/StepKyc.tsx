@@ -69,7 +69,7 @@ export default function StepKyc({
       }
       setCameraLive(true);
     } catch {
-      toast('Camera unavailable — using simulated capture.');
+      toast('Camera unavailable. Using simulated capture.');
       simulateCapture();
     }
   }
@@ -131,12 +131,12 @@ export default function StepKyc({
       const next = await api.submitKyc();
       toast(
         <>
-          <b>Identity submitted</b> — KYC / AML / OFAC screening in progress.
+          <b>Identity submitted.</b> KYC / AML / OFAC screening in progress.
         </>,
       );
       onComplete(next);
     } catch {
-      toast('Could not submit for screening — try again.');
+      toast('Could not submit for screening. Try again.');
     } finally {
       setBusy(false);
     }
@@ -151,7 +151,7 @@ export default function StepKyc({
         Identity verification
       </h2>
       <p className="sub" style={{ marginBottom: 24 }}>
-        Two quick captures — a photo of your government ID, and a live photo from your
+        Two quick captures: a photo of your government ID, and a live photo from your
         camera. Screening runs against KYC / AML / OFAC requirements.
       </p>
 
@@ -169,7 +169,7 @@ export default function StepKyc({
               <div>
                 <b>✓ {idName}</b>
                 <br />
-                <span className="tiny">Received — replace by clicking again</span>
+                <span className="tiny">Received. Replace by clicking again</span>
               </div>
             ) : (
               <div>

@@ -2,7 +2,7 @@
  * Marketplace seed.
  *
  * Fee model, every deal: 5% management fee charged once at closing,
- * 10% carried interest on profits at exit. No admin reserve, no annual
+ * 10% carried interest on profits at exit. Nothing else: no annual
  * fees, no capital calls.
  *
  * Simphonic is the real lead deal, ported from the AltSpot deal package.
@@ -89,10 +89,10 @@ const DEALS: SeedDeal[] = [
     blurb:
       'AI-native platform replacing three to five disconnected systems per facility. $840K contracted ARR, up ~68% in a month, with a large regional operator that dropped PointClickCare to adopt it.',
     thesis: [
-      'A large regional senior care operator dropped PointClickCare — the industry’s dominant legacy platform — and chose Simphonic across 50+ facilities and 1,000+ licenses. When a major operator replaces the market leader with an AI-native platform, that is the clearest adoption signal the category produces.',
-      'The market is 60,000+ U.S. facilities, 90%+ of them small operators running on paper and disconnected point solutions. Simphonic replaces eMAR, scheduling, billing, care tracking and assessments with one system, at net-neutral or lower cost — a budget-neutral swap that removes vendors rather than adding a line item.',
+      'A large regional senior care operator dropped PointClickCare, the industry’s dominant legacy platform, and chose Simphonic across 50+ facilities and 1,000+ licenses. When a major operator replaces the market leader with an AI-native platform, that is the clearest adoption signal the category produces.',
+      'The market is 60,000+ U.S. facilities, 90%+ of them small operators running on paper and disconnected point solutions. Simphonic replaces eMAR, scheduling, billing, care tracking and assessments with one system, at net-neutral or lower cost. It is a budget-neutral swap that removes vendors rather than adding a line item.',
       'Distribution compounds through pharmacies. Incumbents charge pharmacies to integrate; Simphonic integrates free, turning every pharmacy into a warm channel into the dozens of facilities it already serves. Every integration also feeds a proprietary medication and care dataset that grows with scale.',
-      'AltSpot led the pre-seed at $5.5M pre-money and is doubling down at $11M. We hold a board observer seat, receive monthly financials, and have direct CEO access — our investors see what we see.',
+      'AltSpot led the pre-seed at $5.5M pre-money and is doubling down at $11M. We hold a board observer seat, receive monthly financials, and have direct CEO access. Our investors see what we see.',
     ],
     metrics: [
       { k: 'Contracted ARR', v: '$840K', note: '12 companies · ~70 facilities' },
@@ -105,7 +105,7 @@ const DEALS: SeedDeal[] = [
       { k: 'Close rate', v: '~70%', note: 'from decision stage forward' },
     ],
     terms: [
-      { k: 'Security', v: 'Series Seed Preferred' },
+      { k: 'Security', v: 'Series Seed Preferred Stock' },
       { k: 'Pre-money valuation', v: '$11,000,000' },
       { k: 'Round size', v: '$2,000,000' },
       { k: 'Liquidation preference', v: '1x non-participating' },
@@ -133,20 +133,20 @@ const DEALS: SeedDeal[] = [
         'Contracted ARR in $K, monthly. Contracted figures verified with the company; pipeline figures are modeled and excluded here.',
     },
     docs: [
-      'Private Placement Memorandum — ASC Simphonic II, LLC',
-      'Subscription Agreement — ASC Simphonic II, LLC',
-      'Operating Agreement — ASC Simphonic II, LLC',
+      'Private Placement Memorandum: ASC Simphonic II, LLC',
+      'Subscription Agreement: ASC Simphonic II, LLC',
+      'Operating Agreement: ASC Simphonic II, LLC',
       'Accredited Investor Questionnaire (Exhibit A)',
       'Funding Instructions',
     ],
     spotbot: [
       {
         q: 'What exactly am I buying?',
-        a: 'Class B Common Units in ASC Simphonic II, LLC — a Delaware special-purpose vehicle formed by AltSpot to hold Series Seed Preferred stock in Simphonic, Inc. along with associated warrants. You own units in the SPV, not shares of Simphonic directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+        a: 'Class B Common Units in ASC Simphonic II, LLC, a Delaware special-purpose vehicle formed by AltSpot to hold Series Seed Preferred Stock in Simphonic, Inc. along with associated warrants. You own units in the SPV, not shares of Simphonic directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
       },
       {
         q: 'How is AltSpot paid on this deal?',
-        a: 'A 5% management fee, charged once at closing — not annually. Then 10% carried interest on profits at exit. That is the entire fee model: no admin reserve, no annual fees, no hidden charges. Separately, the SPV holds a 5% revenue share in Simphonic to a 1.5x cap, which is a term of the investment rather than a fee paid to AltSpot. Not legal, tax, or investment advice.',
+        a: 'A 5% management fee, charged once at closing, not annually. Then 10% carried interest on profits at exit. That is the entire fee model: no annual fees, no capital calls, no hidden charges. Separately, the SPV holds a 5% revenue share in Simphonic to a 1.5x cap, which is a term of the investment rather than a fee paid to AltSpot. Not legal, tax, or investment advice.',
       },
       {
         q: 'What are the biggest risks?',
@@ -191,7 +191,7 @@ const DEALS: SeedDeal[] = [
         kicker: 'Unit economics',
         title: 'One operator lands many facilities.',
         body: [
-          'The average pipeline company brings ~28.5 facilities. The average facility carries ~50 licenses at $30–40 per user per month — roughly $18–24K ARR per facility.',
+          'The average pipeline company brings ~28.5 facilities. The average facility carries ~50 licenses at $30–40 per user per month, roughly $18–24K ARR per facility.',
           'Landing a single multi-facility operator compounds into dozens of facilities and thousands of licenses: enterprise leverage on a facility-level sales cadence.',
         ],
         stats: [
@@ -212,7 +212,7 @@ const DEALS: SeedDeal[] = [
         kicker: 'Exit',
         title: 'Vertical AI SaaS trades at a premium.',
         body: [
-          'PointClickCare is valued above $5B at roughly 7–8x revenue and has made 10+ acquisitions. Comparable vertical SaaS — Veeva, ServiceTitan, Toast, Procore — trades between 6x and 13x revenue.',
+          'PointClickCare is valued above $5B at roughly 7–8x revenue and has made 10+ acquisitions. Comparable vertical SaaS trades between 6x and 13x revenue: Veeva, ServiceTitan, Toast, Procore.',
           'At an $11M entry, $5M ARR implies a 3–7x return and $10M ARR implies 5–14x, before the revenue share. Illustrative only; returns depend on exit timing, dilution and valuation.',
         ],
         stats: [
@@ -239,7 +239,7 @@ const DEALS: SeedDeal[] = [
     art: 'linear-gradient(135deg,#3B2E12 0%,#8F6B25 55%,#C9A14A 100%)',
     headline: 'Warehouse automation the mid-market can actually buy.',
     blurb:
-      'Autonomous picking systems for mid-market warehouses — 14 paid deployments, 3.1x net revenue retention, and a lead order book into 2027.',
+      'Autonomous picking systems for mid-market warehouses, with 14 paid deployments, 3.1x net revenue retention, and a lead order book into 2027.',
     thesis: [
       'Mid-market logistics operators are priced out of enterprise robotics. Aurora sells a contained, per-lane system that pays back in under 14 months, with deployments live across 14 facilities.',
       'Revenue has compounded 3.1x year over year on retention-led expansion; existing customers account for 68% of new lane orders.',
@@ -252,7 +252,7 @@ const DEALS: SeedDeal[] = [
       { k: 'Expansion share of orders', v: '68%' },
     ],
     terms: [
-      { k: 'Security', v: 'Series A Preferred' },
+      { k: 'Security', v: 'Series A Preferred Stock' },
       { k: 'Round size', v: '$1,500,000' },
       { k: 'Liquidation preference', v: '1x non-participating' },
       { k: 'AltSpot role', v: 'Lead investor' },
@@ -274,15 +274,15 @@ const DEALS: SeedDeal[] = [
       caption: 'Indexed NRR by quarter, Q3 2024 – Q2 2026 (company data, AltSpot memo)',
     },
     docs: [
-      'Investment Memo — Aurora Robotics (AltSpot)',
-      'Subscription Agreement — ASC Aurora SPV',
+      'Investment Memo: Aurora Robotics (AltSpot)',
+      'Subscription Agreement: ASC Aurora SPV',
       'Series A Term Summary',
       'Risk Factors & Disclosures',
     ],
     spotbot: [
       {
         q: 'What exactly am I buying?',
-        a: 'Membership interests in ASC Aurora SPV, LLC — a special purpose vehicle formed by AltSpot to invest in Aurora Robotics’ Series A preferred stock. You own interests in the SPV, not shares of Aurora directly. Subject to AltSpot review, required documents, and final acceptance. Not legal, tax, or investment advice.',
+        a: 'Membership interests in ASC Aurora SPV, LLC, a special purpose vehicle formed by AltSpot to invest in Aurora Robotics’ Series A Preferred Stock. You own interests in the SPV, not shares of Aurora directly. Subject to AltSpot review, required documents, and final acceptance. Not legal, tax, or investment advice.',
       },
       {
         q: 'How is AltSpot paid on this deal?',
@@ -295,14 +295,14 @@ const DEALS: SeedDeal[] = [
         title: 'Labor is the largest line item nobody can staff.',
         body: [
           'Mid-market warehouses run 30–80 pick lanes with turnover above 60% a year. They cannot underwrite enterprise automation, and they cannot hire their way out.',
-          'The segment is 41,000 facilities in North America alone — effectively unserved.',
+          'The segment is 41,000 facilities in North America alone, effectively unserved.',
         ],
       },
       {
         kicker: 'The product',
         title: 'One lane. One weekend. One invoice.',
         body: [
-          'A self-contained cell — arm, perception stack, and conveyor interface — priced per lane per month. No systems integrator, no facility redesign.',
+          'A self-contained cell with an arm, a perception stack and a conveyor interface, priced per lane per month. No systems integrator, no facility redesign.',
           'Customers start with two lanes and expand: 68% of new lane orders come from existing accounts.',
         ],
       },
@@ -332,7 +332,7 @@ const DEALS: SeedDeal[] = [
       { k: 'TTM ARR growth', v: '2.1x' },
     ],
     terms: [
-      { k: 'Security', v: 'Series B Preferred' },
+      { k: 'Security', v: 'Series B Preferred Stock' },
       { k: 'Round size', v: '$2,000,000' },
       { k: 'Liquidation preference', v: '1x non-participating' },
       { k: 'AltSpot role', v: 'Co-investor' },
@@ -355,8 +355,8 @@ const DEALS: SeedDeal[] = [
         'Indexed contracted ARR by quarter, Q3 2024 – Q2 2026 (company data, AltSpot memo)',
     },
     docs: [
-      'Investment Memo — Meridian Health AI (AltSpot)',
-      'Subscription Agreement — ASC Meridian SPV',
+      'Investment Memo: Meridian Health AI (AltSpot)',
+      'Subscription Agreement: ASC Meridian SPV',
       'Series B Term Summary',
       'Risk Factors & Disclosures',
     ],
@@ -382,7 +382,7 @@ const DEALS: SeedDeal[] = [
   },
   {
     id: 'summit',
-    name: 'Summit Aerospace — Secondary',
+    name: 'Summit Aerospace Secondary',
     entity: 'ASC Summit SPV, LLC',
     tag: 'Late-stage secondary',
     kind: 'secondary',
@@ -393,7 +393,7 @@ const DEALS: SeedDeal[] = [
     blurb:
       'Issuer-approved secondary interest in a late-stage launch-services company, acquired as principal at a 22% discount to the last primary round.',
     thesis: [
-      'AltSpot acquired this position as principal directly from an early employee block, with issuer approval and full transfer documentation — no forward contracts, no synthetic exposure.',
+      'AltSpot acquired this position as principal directly from an early employee block, with issuer approval and full transfer documentation. No forward contracts, no synthetic exposure.',
       'The block was purchased at a 22% discount to the company’s most recent primary round price.',
       'Late-stage secondaries give investors exposure to established, revenue-scaled private companies at a $10,000 minimum.',
     ],
@@ -425,8 +425,8 @@ const DEALS: SeedDeal[] = [
         'AltSpot entry price indexed against last primary round (100). Source: transfer documentation.',
     },
     docs: [
-      'Investment Memo — Summit Secondary (AltSpot)',
-      'Subscription Agreement — ASC Summit SPV',
+      'Investment Memo: Summit Secondary (AltSpot)',
+      'Subscription Agreement: ASC Summit SPV',
       'Transfer & Issuer Approval Summary',
       'Risk Factors & Disclosures',
     ],
@@ -441,7 +441,7 @@ const DEALS: SeedDeal[] = [
         kicker: 'The structure',
         title: 'Real shares. Clean title. One vehicle.',
         body: [
-          'The company approved the transfer under its ROFR process. AltSpot holds the shares inside ASC Summit SPV with full transfer documentation — no forwards, no synthetics.',
+          'The company approved the transfer under its ROFR process. AltSpot holds the shares inside ASC Summit SPV with full transfer documentation. No forwards, no synthetics.',
         ],
       },
     ],

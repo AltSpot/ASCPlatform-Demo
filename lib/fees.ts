@@ -3,7 +3,7 @@
  *
  *   5% management fee, charged ONCE at closing
  *   10% carried interest on profits at exit, on every deal
- *   no annual fees · no admin reserve · no capital calls
+ *   nothing else: no annual fees, no capital calls
  *
  * That is the whole model. If a second fee ever appears here, it has to
  * appear in the subscription documents too — this module and the

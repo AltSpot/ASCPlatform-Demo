@@ -49,7 +49,7 @@ export default function PendingCommitments({
     setBusyId(id);
     try {
       await api.cancelSubscription(id);
-      toast('Commitment cancelled — allocation released.');
+      toast('Commitment cancelled. Allocation released.');
       router.refresh();
     } catch {
       toast('Could not cancel that commitment.');
@@ -77,11 +77,11 @@ export default function PendingCommitments({
               Pending investment
             </div>
             <h3>
-              {p.dealName} — {money(p.amount)}
+              {p.dealName} · {money(p.amount)}
             </h3>
             <p className="small" style={{ marginTop: 4 }}>
               Documents signed {dateStr(p.signedAt)}. Fund by{' '}
-              {dateStr(p.fundingDeadline)} to secure your allocation — after that, your
+              {dateStr(p.fundingDeadline)} to secure your allocation. After that, your
               spot is released. Reminders go out every other day.
             </p>
           </div>

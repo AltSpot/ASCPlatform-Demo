@@ -7,7 +7,8 @@ accreditation & KYC setup → marketplace → deal → subscription document sig
 ACH funding → docs, profiles, settings.
 
 **Right now it is a demo.** Logins accept anything, all money is fake, and every
-third party (accreditation, KYC/AML/OFAC, Plaid, ACH, e-sign) is simulated.
+third party (accreditation review, KYC/AML/OFAC, Plaid, ACH, e-sign) is
+simulated. SpotBot answers from a local knowledge base, not a model.
 
 **It is not throwaway code.** This is the foundation of an enterprise-grade
 platform that will handle real securities transactions, real investor PII, and
@@ -22,9 +23,12 @@ that most of it does.
 Concretely:
 
 - **Never** scatter `if (demo)` through business logic. Demo behaviour lives
-  behind `DEMO_MODE` in `lib/config.ts` and the seams it guards. Today that is
-  exactly one place in `lib/auth.ts` (`authenticate`) plus the simulated
-  third-party calls.
+  behind `DEMO_MODE` in `lib/config.ts` and the seams it guards: `authenticate`
+  in `lib/auth.ts`, the simulated third-party calls, and the accreditation
+  upload route that collapses the reviewer step. `components/wizard/
+  PlaidDemoModal.tsx` is the one whole-file stand-in — it mimics Plaid Link and
+  hands back the same contract the real Link callback provides, so it deletes
+  cleanly. Every seam carries a `DEMO SEAM` comment.
 - **Never** trust the client. Every rule enforced in the UI is enforced again
   server-side. The invest gate, the state machine and ownership checks are all
   re-checked in route handlers — the UI versions are courtesies, not controls.
@@ -48,7 +52,7 @@ npm run serve:restart  # restart
 npm run serve:stop     # stop
 npm run serve:status   # is it up?
 npm run serve:logs     # tail the log
-npm run db:reset       # wipe the database and re-seed the three deals
+npm run db:reset       # wipe the database and re-seed the four deals
 npm run typecheck      # tsc --noEmit
 ```
 
@@ -69,17 +73,24 @@ app/
   page.tsx                  login (redirects if already signed in)
   wizard/                   5-step setup — own rail layout, outside the portal shell
   (portal)/                 everything behind auth; the layout enforces it
-    dashboard/  marketplace/  deals/[id]/  deals/[id]/deck/
-    invest/[dealId]/  payment/[id]/  docs/  profiles/  settings/
-  api/                      the REST surface
+    dashboard/  marketplace/  deals/[id]/  invest/[dealId]/
+    payment/[id]/  docs/  profiles/  settings/
+    deals/[id]/deck/        permanent redirect; the deck IS the deal page now
+  api/                      the REST surface, including /api/spotbot
   globals.css               THE design system — single source of visual truth
 
 components/                 presentational components + client islands
+  deal/                     the deal page sections + Deal.module.css
+  invest/                   the split-screen subscription flow
+  spotbot/                  the portal-wide SpotBot dock
+  wizard/                   the 5 setup steps, including the Plaid stand-in
 lib/
-  config.ts                 DEMO_MODE and every other production/demo switch
+  config.ts                 DEMO_MODE, PARTNERS, and every production/demo switch
   domain.ts                 types, the subscription state machine, the invest gate
   fees.ts                   fee math (pure, isomorphic)
   format.ts                 money/date/mask helpers (pure, isomorphic)
+  subscription-sections.ts  the subscription document, defined once
+  spotbot/                  gate, knowledge, page contexts, answer engine
   auth.ts                   sessions + credentials (server-only)
   audit.ts                  append-only audit trail
   http.ts                   route handler wrapper + validation helpers
@@ -88,7 +99,7 @@ lib/
   client/api.ts             the ONLY place the browser calls fetch
 prisma/
   schema.prisma             production-shaped; SQLite today, Postgres later
-  seed.ts                   the three fictional deals
+  seed.ts                   Simphonic (real) plus three fictional deals
 scripts/                    dev-server supervisor, db reset, optional autostart
 legacy/                     the original static HTML demo, kept as visual reference
 ```
@@ -118,23 +129,77 @@ Two behaviours that are easy to get wrong:
   user's subscriptions lapses overdue commitments first. In production, move this
   to a job and keep the read-side sweep as a backstop.
 
+### The deal page
+
+One scrollable narrative, not an overview plus a deck. `components/deal/*`
+renders it in a fixed order so deals compare like for like: hero, AltSpot's
+committed capital, the stat band, the story chapters, the thesis, the trend
+chart, risk, terms, the two fees, the data room, the ask. Every section returns
+`null` when its content is missing, because the deals behind the lead carry far
+thinner editorial than Simphonic. `/deals/[id]/deck` is a permanent redirect
+kept only so old links land somewhere sensible.
+
+### The subscription document
+
+`lib/subscription-sections.ts` defines the agreement once. The confirmation
+panels, the live document pane, `/api/subscriptions/[id]/confirm` validation and
+the sign endpoint's completeness check all read it, so a section cannot exist in
+the UI and be missing from the executed text. Two of the six sections are
+selections of fact (accredited investor category, benefit plan status) and
+record *which* option was chosen, not merely that the panel was seen. `covers`
+names the clauses each panel discharges so counsel can audit the mapping without
+reading a component.
+
+### SpotBot
+
+A portal-wide dock (`components/spotbot/`), mounted once in the portal shell so
+the conversation survives client navigation. It reads the pathname, which is
+what makes the greeting, the brief and the suggested questions match the page.
+
+`lib/spotbot/gate.ts` is the part that matters: it classifies the question and
+refuses **before** the answer engine is called, so the "explains, never advises"
+line holds no matter what later produces the answers. `engine.ts` retrieves from
+`knowledge.ts` today and is the single function to replace when a model goes in.
+Every answer carries a `source`, and the API route is authenticated like
+everything else. `components/SpotBot.tsx` is the separate per-deal Q&A card.
+
 ## Design system
 
-`app/globals.css` is ported verbatim from the original demo and is the single
-source of visual truth: dark ink, gold identity, Cormorant Garamond display,
-Archivo body, Spline Sans Mono for numbers.
+`app/globals.css` is the single source of visual truth. AltSpot Brand Identity
+v1.2:
+
+- **Borna** (`--fd`) for display type. **Figtree** (`--fb`) for body and UI.
+  **JetBrains Mono** (`--fm`) for every eyebrow, label, table header, source line
+  and data figure, always uppercase and letter-spaced. If the eyebrow is not
+  monospace, it is not AltSpot.
+- **Orange `--orange` #F39807 is the primary accent.** Gold is the gradient
+  origin, not where the eye lands. The orb stays gold.
+- `--serif` / `--sans` / `--mono` are aliases of `--fd` / `--fb` / `--fm`, kept
+  so older markup still resolves. Prefer the `--f*` names in new code.
 
 **Add tokens to `:root` before introducing one-off values.** Components consume
 these classes; they do not invent their own colours, radii or type scales. Inline
-`style` is for layout one-offs only, never for colour.
+`style` is for layout one-offs only, never for colour or type. A component that
+genuinely needs new rules gets a CSS Module beside it (`components/deal/`,
+`components/spotbot/` and `components/invest/` all do), never a new global.
+
+### Voice
+
+Candid, not arrogant. Operator-first, not finance-first. Convicted, not
+promotional. Short sentences. Specific about process and structure, **never**
+about returns. **No em dashes in user-facing copy** — rewrite the sentence with a
+period, a comma or a colon. (Code comments may use them; this paragraph is not
+user-facing.) `EMPTY` in `lib/format.ts` is the placeholder glyph for a missing
+value, so a dash never has to be typed into a string.
 
 ## Product invariants
 
 These are the claims the product makes. Do not let a change quietly break them.
 
-- 5% platform fee · up to 2% admin reserve, **itemized**, unused remainder
-  returned at close · 10% carry, 20% on AltSpot-led deals
-- Collected **once at closing**. No annual fees. **No capital calls, ever.**
+- **One 5% management fee, charged once at closing.** Not annual.
+- **10% carried interest on profits at exit**, on every deal.
+- Nothing else. No annual fees, **no capital calls, ever**, and no admin
+  reserve — do not reintroduce either concept, including in document text.
 - Every deal shows **AltSpot's own committed capital**
 - Signed documents file themselves into Docs automatically
 - The Vault is captured once and pre-fills every document thereafter
@@ -177,13 +242,18 @@ What it means in practice:
 ## Going to production
 
 1. `ASC_DEMO_MODE=false` — real credentials required; simulated calls refuse.
-2. Implement real adapters in `lib/integrations/` for Parallel Markets, the KYC
-   vendor, Plaid, Modern Treasury and Anvil.
-3. Swap the datasource in `prisma/schema.prisma` to `postgresql` and the adapter
+2. Implement real adapters in `lib/integrations/` for the KYC vendor, Plaid,
+   Modern Treasury and Anvil. Accreditation stays in-house: AltSpot reviews the
+   certification letter itself, so there is no verification vendor to wire.
+3. Swap `components/wizard/PlaidDemoModal.tsx` for Plaid Link, then delete it and
+   its stylesheet.
+4. Swap the datasource in `prisma/schema.prisma` to `postgresql` and the adapter
    in `lib/db.ts`. Repository call sites do not change.
-4. Replace `lib/auth.ts` sessions with the chosen IdP.
-5. Move expiry sweeping to a scheduled job.
-6. Real tokenization for taxpayer IDs, replacing the `tinToken` stand-in.
+5. Replace `lib/auth.ts` sessions with the chosen IdP.
+6. Move expiry sweeping to a scheduled job.
+7. Real tokenization for taxpayer IDs, replacing the `tinToken` stand-in.
+8. Replace the body of `generateAnswer` in `lib/spotbot/engine.ts` with the model
+   call. Do not move the gate.
 
 ## Known housekeeping
 

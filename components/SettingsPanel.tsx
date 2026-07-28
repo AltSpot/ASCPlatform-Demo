@@ -111,8 +111,8 @@ export default function SettingsPanel({ email }: { email: string }) {
           <div className="card" style={{ borderColor: 'rgba(184,92,92,.35)' }}>
             <h3 style={{ marginBottom: 4 }}>Demo controls</h3>
             <p className="small" style={{ marginBottom: 14 }}>
-              Wipe this account entirely — onboarding, profiles, commitments and
-              documents — and start the demo fresh. Any allocation your signed
+              Wipe this account entirely, including onboarding, profiles, commitments and
+              documents, and start the demo fresh. Any allocation your signed
               commitments were holding is returned to the deal.
             </p>
 
@@ -124,7 +124,7 @@ export default function SettingsPanel({ email }: { email: string }) {
                   onClick={resetDemo}
                   disabled={busy}
                 >
-                  {busy ? 'Resetting…' : 'Yes — wipe everything'}
+                  {busy ? 'Resetting…' : 'Yes, wipe everything'}
                 </button>
                 <button
                   className="btn btn-quiet"

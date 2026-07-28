@@ -104,7 +104,7 @@ export default function Sidebar({ user }: { user: SessionUser }) {
         );
       })}
 
-      <div className="nav-item soon" title="Secondary liquidity — in design">
+      <div className="nav-item soon" title="Secondary liquidity, in design">
         <Icon d="M7 17l4-6 3 3 4-7" />
         Secondaries
         <span className="badge-soon">Soon</span>
