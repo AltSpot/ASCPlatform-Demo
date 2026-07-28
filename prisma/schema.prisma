@@ -201,6 +201,12 @@ model Deal {
   status              String @default("open")
   sortOrder           Int    @default(0)
 
+  /// Company mark, served from /public. Null falls back to the gradient.
+  logoUrl String?
+
+  /// One-line pull quote used at the top of the deal page.
+  headline String?
+
   // JSON-encoded — see the note at the top of this file.
   thesisJson  String
   feesJson    String
@@ -208,6 +214,10 @@ model Deal {
   docsJson    String
   spotbotJson String
   deckJson    String
+  /// Headline figures shown as the stat band on the deal page.
+  metricsJson String @default("[]")
+  /// Structured deal terms (security, valuation, pref, rights).
+  termsJson   String @default("[]")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

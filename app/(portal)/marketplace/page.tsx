@@ -79,10 +79,13 @@ export default async function MarketplacePage() {
             <div className="card deal-card" key={deal.id}>
               <div className="thumb" style={{ background: deal.art }}>
                 <span className="chip">{deal.tag}</span>
+                {deal.logoUrl && (
+                  <img className="deal-logo" src={deal.logoUrl} alt="" aria-hidden="true" />
+                )}
                 <span
                   className="tiny"
                   style={{
-                    color: 'rgba(255,255,255,.8)',
+                    color: 'rgba(255,255,255,.82)',
                     textShadow: '0 1px 6px rgba(0,0,0,.5)',
                   }}
                 >
@@ -94,20 +97,15 @@ export default async function MarketplacePage() {
                 <h3>{deal.name}</h3>
                 <p className="small">{deal.blurb}</p>
 
-                <div className="committed">
-                  <div className="orb orb-dot" /> AltSpot has{' '}
-                  {money(deal.altspotCommitted)} of its own capital in this deal
-                </div>
-
                 <div className="deal-meta">
                   <div className="m">
                     Minimum<b>{money(deal.minInvestment)}</b>
                   </div>
                   <div className="m">
-                    Carry<b>{deal.fees.carry}%</b>
+                    Management fee<b>{deal.fees.management}% one time</b>
                   </div>
                   <div className="m">
-                    Target close<b>{deal.targetClose}</b>
+                    Carry<b>{deal.fees.carry}%</b>
                   </div>
                 </div>
 

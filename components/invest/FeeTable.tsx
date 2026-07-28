@@ -1,8 +1,10 @@
 'use client';
 
 /**
- * The all-in cost, itemized. Every dollar the investor will ever pay,
- * known on day one — this component is the promise the product makes.
+ * The all-in cost. Every dollar the investor will ever pay, known on
+ * day one — this component is the promise the product makes.
+ *
+ * One fee today, one fee at exit. Nothing else belongs in this table.
  */
 import { feeBreakdown } from '@/lib/fees';
 import { money } from '@/lib/format';
@@ -11,11 +13,9 @@ import type { DealFees } from '@/lib/domain';
 export default function FeeTable({
   fees,
   amount,
-  itemized = true,
 }: {
   fees: DealFees;
   amount: number;
-  itemized?: boolean;
 }) {
   const breakdown = feeBreakdown(fees, amount);
 
@@ -27,24 +27,8 @@ export default function FeeTable({
       </div>
 
       <div className="fee-row">
-        <span className="l">Platform fee — {fees.platform}%</span>
-        <span className="r">{money(breakdown.platform)}</span>
-      </div>
-
-      <div className="fee-row">
-        <span className="l">Admin reserve — up to {fees.adminMax}%</span>
-        <span className="r">{money(breakdown.adminTotal)}</span>
-      </div>
-
-      {itemized &&
-        breakdown.adminItems.map((item) => (
-          <div className="fee-sub" key={item.label}>
-            · {item.label} — {item.pct}% ({money(item.amt)})
-          </div>
-        ))}
-
-      <div className="fee-sub">
-        Unused admin reserve is returned to investors at close.
+        <span className="l">Management fee — {fees.management}%, one time</span>
+        <span className="r">{money(breakdown.management)}</span>
       </div>
 
       <div className="fee-row total">
@@ -52,9 +36,9 @@ export default function FeeTable({
         <span className="r">{money(breakdown.allIn)}</span>
       </div>
 
-      <div className="fee-row">
-        <span className="l">Carry at exit — {fees.carryNote.toLowerCase()}</span>
-        <span className="r">{fees.carry}% of profits</span>
+      <div className="fee-sub" style={{ paddingLeft: 0 }}>
+        Plus {fees.carry}% carried interest on profits at exit. No annual fees. No
+        capital calls.
       </div>
     </>
   );

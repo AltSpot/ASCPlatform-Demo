@@ -56,7 +56,23 @@ export default function InvestFlow({
       initialProfiles[0]?.id ??
       null,
   );
-  const [amount, setAmount] = useState<number>(existing?.amount ?? deal.minInvestment);
+  /**
+   * The amount is held as the raw string the investor typed, not as a
+   * number. With `type="number"` and numeric state, React compares the
+   * previous value to the next one, sees no change, and leaves the DOM
+   * alone, so a stray leading zero can never be deleted. Owning the
+   * string means what is on screen is always exactly what is in state.
+   */
+  const [amountInput, setAmountInput] = useState<string>(
+    String(existing?.amount ?? deal.minInvestment),
+  );
+  const amount = Number(amountInput) || 0;
+
+  function handleAmountChange(raw: string) {
+    const digits = raw.replace(/[^\d]/g, '');
+    // Trim leading zeros but keep a lone "0" so the field can be cleared.
+    setAmountInput(digits.replace(/^0+(?=\d)/, ''));
+  }
   const [showNewProfile, setShowNewProfile] = useState(false);
   const [newProfile, setNewProfile] = useState({ type: 'Personal', name: '' });
 
@@ -333,11 +349,17 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 <span>Investment amount (USD)</span>
                 <input
                   className="input num"
-                  type="number"
-                  step={1000}
-                  style={{ fontSize: 22, fontFamily: 'var(--mono)' }}
-                  value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value) || 0)}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  style={{ fontSize: 22, fontFamily: 'var(--fm)' }}
+                  value={amountInput}
+                  onChange={(e) => handleAmountChange(e.target.value)}
+                  onBlur={() => {
+                    if (amountInput === '' || amount === 0) {
+                      setAmountInput(String(deal.minInvestment));
+                    }
+                  }}
                 />
               </label>
 
@@ -356,27 +378,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
               <div className="hr" />
 
               <div className="small">
-                <div className="fee-row">
-                  <span className="l">Investment</span>
-                  <span className="r">{money(amount)}</span>
-                </div>
-                <div className="fee-row">
-                  <span className="l">Platform fee ({deal.fees.platform}%)</span>
-                  <span className="r">{money(fees.platform)}</span>
-                </div>
-                <div className="fee-row">
-                  <span className="l">Admin reserve (up to {deal.fees.adminMax}%)</span>
-                  <span className="r">{money(fees.adminTotal)}</span>
-                </div>
-                <div className="fee-row total">
-                  <span className="l">All-in today</span>
-                  <span className="r">{money(fees.allIn)}</span>
-                </div>
-                <div className="fee-sub" style={{ paddingLeft: 0 }}>
-                  Plus {deal.fees.carry}% carry on profits at exit —{' '}
-                  {deal.fees.carryNote.toLowerCase()}. Unused admin reserve returned at
-                  close.
-                </div>
+                <FeeTable fees={deal.fees} amount={amount} />
               </div>
 
               <button
@@ -498,25 +500,14 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                   The Subscriber acknowledges that this investment is speculative and
                   illiquid, that no public market exists or is promised for the
                   interests, and that the entire investment may be lost. The Subscriber
-                  acknowledges the following fees, collected once at closing: a platform
+                  acknowledges the following compensation to the Manager: a management
                   fee of{' '}
                   <span className="f set">
-                    {deal.fees.platform}% ({money(fees.platform)})
+                    {deal.fees.management}% ({money(fees.management)})
                   </span>
-                  ; an administrative reserve of up to{' '}
-                  <span className="f set">
-                    {deal.fees.adminMax}% ({money(fees.adminTotal)})
-                  </span>
-                  , itemized as{' '}
-                  <span className="f set">
-                    {fees.adminItems
-                      .map((i) => `${i.label.toLowerCase()} ${i.pct}%`)
-                      .join('; ')}
-                  </span>
-                  , with any unused reserve returned to investors at close; and carried
-                  interest of <span className="f set">{deal.fees.carry}%</span> of
-                  profits upon realization. No management fees accrue thereafter, and no
-                  capital calls will ever follow the initial funding.{' '}
+                  , charged once at closing and not annually; and carried interest of{' '}
+                  <span className="f set">{deal.fees.carry}%</span> of profits upon
+                  realization. No further management fees accrue.{' '}
                   <span className={confirms[3] ? 'f set' : 'f'}>
                     {confirms[3] ? 'Acknowledged by Subscriber.' : 'Pending confirmation.'}
                   </span>

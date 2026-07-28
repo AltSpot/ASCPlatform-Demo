@@ -33,6 +33,18 @@ export default async function DashboardPage() {
   const pending = subscriptions.filter((s) => s.state === 'docs_signed');
   const expired = subscriptions.filter((s) => s.state === 'expired');
 
+  /**
+   * Anything in flight also belongs in the positions table. An investor
+   * who started a subscription and walked away should see it on the
+   * dashboard rather than having to remember which deal they were in.
+   * These carry no value yet, so they are listed but excluded from the
+   * invested and value totals.
+   */
+  const inFlight = subscriptions.filter(
+    (s) => s.state === 'started' || s.state === 'docs_signed',
+  );
+  const positions = [...held, ...inFlight];
+
   const invested = held.reduce((sum, s) => sum + s.amount, 0);
   const value = held.reduce((sum, s) => sum + (s.currentValue ?? s.amount), 0);
   const gain = value - invested;
@@ -130,7 +142,7 @@ export default async function DashboardPage() {
           Every investment you hold through AltSpot deal vehicles.
         </p>
 
-        {held.length === 0 ? (
+        {positions.length === 0 ? (
           <div className="dz" style={{ cursor: 'default' }}>
             <b style={{ color: 'var(--paper)' }}>No positions yet</b>
             <br />
@@ -156,8 +168,9 @@ export default async function DashboardPage() {
               </tr>
             </thead>
             <tbody>
-              {held.map((s) => {
+              {positions.map((s) => {
                 const deal = deals.get(s.dealId);
+                const live = HELD_STATES.includes(s.state);
                 const current = s.currentValue ?? s.amount;
                 const rowPct = ((current - s.amount) / s.amount) * 100;
 
@@ -169,15 +182,31 @@ export default async function DashboardPage() {
                       <span className="tiny">{deal?.tag ?? ''}</span>
                     </td>
                     <td className="num">{money(s.amount)}</td>
-                    <td className="num">{money(current)}</td>
                     <td className="num">
-                      <span className={rowPct >= 0 ? 'up' : 'down'}>
-                        {rowPct >= 0 ? '+' : ''}
-                        {rowPct.toFixed(1)}%
-                      </span>
+                      {live ? money(current) : <span style={{ color: 'var(--faint)' }}>—</span>}
+                    </td>
+                    <td className="num">
+                      {live ? (
+                        <span className={rowPct >= 0 ? 'up' : 'down'}>
+                          {rowPct >= 0 ? '+' : ''}
+                          {rowPct.toFixed(1)}%
+                        </span>
+                      ) : (
+                        <span style={{ color: 'var(--faint)' }}>—</span>
+                      )}
                     </td>
                     <td>
-                      {s.state === 'funded' ? (
+                      {s.state === 'started' ? (
+                        <span className="chip neutral">
+                          <span className="dot" />
+                          Pending · documents unsigned
+                        </span>
+                      ) : s.state === 'docs_signed' ? (
+                        <span className="chip warn">
+                          <span className="dot" />
+                          Pending · awaiting funding
+                        </span>
+                      ) : s.state === 'funded' ? (
                         <span className="chip warn">
                           <span className="dot" />
                           Funded · awaiting countersign
@@ -190,9 +219,19 @@ export default async function DashboardPage() {
                       )}
                     </td>
                     <td>
-                      <Link className="btn btn-quiet btn-sm" href={`/deals/${s.dealId}`}>
-                        View deal
-                      </Link>
+                      {s.state === 'started' ? (
+                        <Link className="btn btn-quiet btn-sm" href={`/invest/${s.dealId}`}>
+                          Resume
+                        </Link>
+                      ) : s.state === 'docs_signed' ? (
+                        <Link className="btn btn-quiet btn-sm" href={`/payment/${s.id}`}>
+                          Fund
+                        </Link>
+                      ) : (
+                        <Link className="btn btn-quiet btn-sm" href={`/deals/${s.dealId}`}>
+                          View deal
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 );

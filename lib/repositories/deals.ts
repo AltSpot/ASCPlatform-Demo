@@ -9,6 +9,8 @@ import { prisma } from '../db';
 import type {
   DealFees,
   DealMedia,
+  DealMetric,
+  DealTerm,
   DealView,
   DeckSlide,
   SpotbotEntry,
@@ -28,12 +30,7 @@ function parseJson<T>(raw: string, fallback: T, context: string): T {
   }
 }
 
-const FALLBACK_FEES: DealFees = {
-  platform: 5,
-  adminMax: 2,
-  carry: 10,
-  carryNote: 'Standard',
-};
+const FALLBACK_FEES: DealFees = { management: 5, carry: 10 };
 
 const FALLBACK_MEDIA: DealMedia = {
   type: 'metric',
@@ -52,6 +49,10 @@ export function toDealView(row: Deal): DealView {
     sector: row.sector,
     stage: row.stage,
     art: row.art,
+    logoUrl: row.logoUrl,
+    headline: row.headline,
+    metrics: parseJson<DealMetric[]>(row.metricsJson, [], `${row.id}.metrics`),
+    terms: parseJson<DealTerm[]>(row.termsJson, [], `${row.id}.terms`),
     blurb: row.blurb,
     risks: row.risks,
     minInvestment: row.minInvestment,

@@ -116,8 +116,7 @@ export default async function DealPage({
             of its own capital
           </h3>
           <p className="small" style={{ marginTop: 4 }}>
-            {deal.committedNote} We never merely collect a fee to place someone
-            else&rsquo;s listing.
+            {deal.committedNote} We don&rsquo;t place listings. We take positions.
           </p>
         </div>
       </div>
@@ -189,18 +188,18 @@ export default async function DealPage({
             <p className="tiny" style={{ marginBottom: 10 }}>
               Collected once at closing. No annual fees. No capital calls, ever.
             </p>
-            <FeeRow label="Platform fee" value={`${deal.fees.platform}%`} />
             <FeeRow
-              label="Admin reserve (itemized at checkout)"
-              value={`up to ${deal.fees.adminMax}%`}
+              label="Management fee, charged once"
+              value={`${deal.fees.management}%`}
             />
-            <div className="fee-sub">
-              Unused admin reserve is returned to investors at close.
-            </div>
             <FeeRow
-              label={`Carried interest — ${deal.fees.carryNote.toLowerCase()}`}
+              label="Carried interest at exit"
               value={`${deal.fees.carry}% of profits`}
             />
+            <div className="fee-sub" style={{ paddingLeft: 0 }}>
+              That is the whole model. No annual fees, no admin reserve, no capital
+              calls.
+            </div>
           </div>
 
           <DataRoom documents={deal.docs} />
