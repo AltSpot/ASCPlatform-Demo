@@ -1,0 +1,30 @@
+# ============================================================
+#  ASCPlatform on Netlify
+#
+#  Netlify runs Next.js server routes as serverless functions.
+#  They have no persistent writable disk and no shared memory
+#  between instances, so the local SQLite file CANNOT be used
+#  here: an investor created on one instance would not exist on
+#  the next request. DATABASE_URL must point at a hosted
+#  Postgres. See README, "Deploying".
+# ============================================================
+
+[build]
+  command = "prisma generate && prisma migrate deploy && next build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Demo behaviour. Any credentials sign in, money is simulated,
+  # accounts are swept, and allocation is isolated per visitor.
+  ASC_DEMO_MODE = "true"
+  ASC_EPHEMERAL = "true"
+
+# The demo is not for search engines.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
