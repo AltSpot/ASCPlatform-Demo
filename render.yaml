@@ -1,0 +1,41 @@
+# ============================================================
+#  ASCPlatform demo deployment
+#
+#  Render runs this as ONE long-lived Node process with a real
+#  filesystem, which is why SQLite works here untouched and no
+#  database service is needed. That is the whole reason this
+#  file exists rather than a serverless config: Vercel and
+#  Netlify would require a hosted Postgres.
+#
+#  The disk is ephemeral. A redeploy or a restart wipes the
+#  database and reseeds it, which is exactly the behaviour the
+#  demo wants: every visitor starts from zero.
+# ============================================================
+
+services:
+  - type: web
+    name: ascplatform-demo
+    runtime: node
+    plan: free
+    branch: main
+
+    # Migrations and the seed run at START, not at build. The build
+    # filesystem is not the runtime filesystem, so a database created
+    # during build would not be there when the server boots.
+    buildCommand: npm ci && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npx tsx prisma/seed.ts && npx next start -p $PORT
+
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        value: file:./ascplatform.db
+      # Any credentials sign in, money is simulated, third parties are stubbed.
+      - key: ASC_DEMO_MODE
+        value: "true"
+      # Accounts are swept and allocation is isolated per visitor, so a link
+      # sent to a whole team never shows a picked-over shelf.
+      - key: ASC_EPHEMERAL
+        value: "true"
+      - key: ASC_DEMO_TTL_HOURS
+        value: "6"
