@@ -36,8 +36,12 @@ export default function LegalDocument({
   confirmedPanels: number[];
   focusPanel?: number | null;
 }) {
-  // The executed instrument leads, since it is the one being signed.
-  const [activeSlug, setActiveSlug] = useState('subscription-agreement');
+  /**
+   * Open on the memorandum, which is the document counsel expects read
+   * first. Confirming a panel switches to the subscription agreement,
+   * since that is the instrument being executed.
+   */
+  const [activeSlug, setActiveSlug] = useState('ppm');
   const paneRef = useRef<HTMLDivElement | null>(null);
   const confirmed = new Set(confirmedPanels);
 
