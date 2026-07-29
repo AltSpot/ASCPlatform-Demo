@@ -301,6 +301,10 @@ model Document {
   note           String?
   /// Rendered body, stored so Docs can re-open exactly what was signed.
   bodyHtml       String?
+  /// Content hashes of every instrument in the binder at execution.
+  /// A signed record must stay reproducible even after counsel reissues
+  /// a document, so the version is pinned rather than looked up later.
+  binderVersion  String?
   savedAt        DateTime @default(now())
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)

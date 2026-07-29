@@ -77,7 +77,7 @@ export default async function DocsPage() {
                     <span className="chip neutral">{doc.note ?? 'Saved'}</span>
                   </td>
                   <td>
-                    <DocRow />
+                    <DocRow documentId={doc.id} />
                   </td>
                 </tr>
               ))}

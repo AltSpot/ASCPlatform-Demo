@@ -46,6 +46,7 @@ export async function saveDocument(
     type?: string;
     note?: string | null;
     bodyHtml?: string | null;
+    binderVersion?: string | null;
   },
 ): Promise<DocumentView> {
   const row = await prisma.document.create({
@@ -57,6 +58,7 @@ export async function saveDocument(
       type: input.type ?? 'agreement',
       note: input.note ?? null,
       bodyHtml: input.bodyHtml ?? null,
+      binderVersion: input.binderVersion ?? null,
     },
   });
 

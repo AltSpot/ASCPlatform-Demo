@@ -15,9 +15,8 @@
   border-radius:var(--r);
   padding:44px 48px 36px;
   box-shadow:var(--shadow);
-  max-height:calc(100vh - 170px);
+  max-height:calc(100vh - 210px);
   overflow:auto;
-  position:sticky;top:28px;
   font-family:Georgia,'Times New Roman',serif;
   font-size:14px;line-height:1.75;
   scroll-behavior:smooth;
@@ -112,3 +111,46 @@
 @media (max-width:1080px){
   .pane{position:static;max-height:620px;padding:32px 26px}
 }
+
+/* ---------- binder: three instruments, one surface ---------- */
+.wrap{position:sticky;top:28px}
+.tabs{
+  display:flex;gap:4px;margin-bottom:10px;
+  background:rgba(0,0,0,.28);border:1px solid var(--hair);
+  border-radius:10px;padding:4px;
+}
+.tab{
+  flex:1;padding:9px 10px;border:none;background:none;cursor:pointer;
+  border-radius:7px;color:var(--soft);
+  font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;transition:background .12s,color .12s;
+}
+.tab:hover{color:var(--ink)}
+.tabOn{background:rgba(243,152,7,.13);color:var(--orange-b)}
+
+/* What this instrument is, and whether it gets signed. */
+.roleTag{
+  display:inline-block;margin-top:14px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:#A07A22;
+  border:1px solid rgba(184,146,74,.4);border-radius:99px;padding:4px 11px;
+}
+.purpose{
+  margin:14px auto 0;max-width:60ch;
+  font-family:var(--fb);font-size:12.5px;line-height:1.6;color:#5A5044;
+}
+
+/* Counsel's emphasis. Bold marks defined terms; do not restyle it away. */
+.bold{font-weight:700;color:#12100C}
+.italic{font-style:italic}
+
+.clauseHead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+
+/* Tables carry the questionnaire, so they must stay tabular. */
+.tableWrap{margin:18px 0;overflow-x:auto}
+.table{width:100%;border-collapse:collapse;font-size:12.5px}
+.table td{
+  border:1px solid rgba(0,0,0,.16);padding:9px 11px;
+  vertical-align:top;line-height:1.55;
+}
+.table tr:first-child td{background:rgba(184,146,74,.09);font-weight:700}

@@ -7,7 +7,15 @@
  * clause and the confirmation panel that discharges it.
  */
 
-export type BlockType = 'section' | 'p' | 'item';
+export type BlockType = 'section' | 'p' | 'item' | 'table';
+
+/** A span of text with consistent formatting. Bold marks defined terms. */
+export interface TextRun {
+  text: string;
+  /** Bold. Legal drafting uses it for defined terms. */
+  b?: boolean;
+  i?: boolean;
+}
 
 export interface DocumentBlock {
   type: BlockType;
@@ -15,7 +23,10 @@ export interface DocumentBlock {
   n?: string;
   /** Clause heading, e.g. "Accredited Investor Verification". */
   title?: string;
-  text: string;
+  /** Formatted runs. Absent on table blocks. */
+  runs?: TextRun[];
+  /** Table rows, present only on table blocks. */
+  rows?: string[][];
   /** A value rendered beside a label, e.g. the Subscription Amount line. */
   mergeValue?: string;
   /** Confirmation panel that covers this clause, if any. */
@@ -31,9 +42,15 @@ export interface DocumentArticle {
 }
 
 export interface LegalDocument {
+  slug?: string;
   title: string | null;
-  subtitle: string[];
+  subtitle?: string[];
   articles: DocumentArticle[];
+  /** SHA-256 over the words only, truncated. Pins an executed version. */
+  contentHash?: string;
+  wordCount?: number;
+  /** Approved text normalisations applied at import, for the audit trail. */
+  substitutions?: Record<string, number>;
 }
 
 /** Values merged into {{tokens}} as the investor completes the flow. */
