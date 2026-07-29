@@ -148,9 +148,14 @@ export default function InvestFlow({
     const first = SUBSCRIPTION_SECTIONS.findIndex(
       (section) => !isSectionConfirmed(existing?.answers ?? {}, section.id),
     );
-    return first === -1 ? SUBSCRIPTION_SECTION_COUNT - 1 : first;
+    // Everything already confirmed lands on the signature step.
+    return first === -1 ? SUBSCRIPTION_SECTION_COUNT : first;
   });
-  const currentSection = SUBSCRIPTION_SECTIONS[stepIndex];
+
+  /** Signing is the last step, one past the confirmations. */
+  const LAST_STEP = SUBSCRIPTION_SECTION_COUNT;
+  const onSignStep = stepIndex === LAST_STEP;
+  const currentSection = SUBSCRIPTION_SECTIONS[stepIndex] ?? null;
 
   const progressWidth = signed
     ? '100%'
@@ -249,13 +254,24 @@ export default function InvestFlow({
       setSubscription(next);
       setAnswers(next.answers);
 
-      // Move to the next outstanding confirmation. Held briefly so the
-      // investor sees the clause light up before the panel changes.
+      /**
+       * Advance. Held briefly so the investor sees the clause light up in
+       * the document before the panel changes under them.
+       *
+       * When the last confirmation lands, the signature step comes forward
+       * on its own. Leaving it to quietly unlock further down the page
+       * meant nobody knew the flow had finished.
+       */
       const following = SUBSCRIPTION_SECTIONS.findIndex(
         (s, i) => i > stepIndex && !isSectionConfirmed(next.answers, s.id),
       );
-      if (following !== -1) {
-        setTimeout(() => setStepIndex(following), 650);
+      const everythingIn = SUBSCRIPTION_SECTIONS.every((s) =>
+        isSectionConfirmed(next.answers, s.id),
+      );
+
+      const target = following !== -1 ? following : everythingIn ? LAST_STEP : -1;
+      if (target !== -1) {
+        setTimeout(() => setStepIndex(target), 650);
       }
 
       toast('Progress saved. You can leave and resume anytime.');
@@ -505,20 +521,22 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
             <div>
               {/* One panel at a time. Six stacked down the page buried the
                   signature block and made the flow feel endless. */}
-              <ConfirmPanel
-                key={currentSection.id}
-                section={currentSection}
-                index={stepIndex + 1}
-                total={SUBSCRIPTION_SECTION_COUNT}
-                confirmed={done(currentSection.id)}
-                chosenKey={selectedChoice(answers, currentSection)?.key ?? null}
-                onConfirm={confirm}
-              >
-                {/* The all-in cost belongs beside the risk it buys. */}
-                {currentSection.id === 3 && (
-                  <FeeTable fees={deal.fees} amount={amount} />
-                )}
-              </ConfirmPanel>
+              {currentSection && (
+                <ConfirmPanel
+                  key={currentSection.id}
+                  section={currentSection}
+                  index={stepIndex + 1}
+                  total={SUBSCRIPTION_SECTION_COUNT + 1}
+                  confirmed={done(currentSection.id)}
+                  chosenKey={selectedChoice(answers, currentSection)?.key ?? null}
+                  onConfirm={confirm}
+                >
+                  {/* The all-in cost belongs beside the risk it buys. */}
+                  {currentSection.id === 3 && (
+                    <FeeTable fees={deal.fees} amount={amount} />
+                  )}
+                </ConfirmPanel>
+              )}
 
               <div className="wiz-actions" style={{ marginTop: 4, marginBottom: 22 }}>
                 <button
@@ -529,7 +547,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                   ← Back
                 </button>
 
-                <div className={styles.dots} role="tablist" aria-label="Confirmations">
+                <div className={styles.dots} role="tablist" aria-label="Steps">
                   {SUBSCRIPTION_SECTIONS.map((section, i) => (
                     <button
                       key={section.id}
@@ -547,59 +565,81 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                         .join(' ')}
                     />
                   ))}
+
+                  {/* Signing gets its own marker, reachable only once every
+                      confirmation is in. */}
+                  <button
+                    role="tab"
+                    aria-selected={onSignStep}
+                    aria-label="Sign"
+                    title={allConfirmed ? 'Sign' : 'Confirm every section first'}
+                    onClick={() => allConfirmed && setStepIndex(LAST_STEP)}
+                    disabled={!allConfirmed}
+                    className={[
+                      styles.dot,
+                      styles.dotSign,
+                      signed ? styles.dotDone : '',
+                      onSignStep ? styles.dotNow : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                  />
                 </div>
 
                 <button
                   className="btn btn-quiet btn-sm"
                   onClick={() =>
                     setStepIndex((i) =>
-                      Math.min(SUBSCRIPTION_SECTION_COUNT - 1, i + 1),
+                      Math.min(allConfirmed ? LAST_STEP : LAST_STEP - 1, i + 1),
                     )
                   }
-                  disabled={stepIndex >= SUBSCRIPTION_SECTION_COUNT - 1}
+                  disabled={onSignStep || (!allConfirmed && stepIndex >= LAST_STEP - 1)}
                 >
                   Next →
                 </button>
               </div>
 
-              <div
-                className="card gold"
-                style={{
-                  opacity: allConfirmed ? 1 : 0.45,
-                  pointerEvents: allConfirmed ? 'auto' : 'none',
-                }}
-              >
-                <div className="qhead">
-                  <h3>Sign all</h3>
-                  <span className="n">Final step</span>
+              {/* The signature is the seventh step, not a block that
+                  quietly unlocks below. It appears in the same place the
+                  confirmations did, so the flow never asks the investor to
+                  go hunting for what to do next. */}
+              {onSignStep && (
+                <div className="card gold">
+                  <div className="qhead">
+                    <h3>Sign all</h3>
+                    <span className="n">
+                      {SUBSCRIPTION_SECTION_COUNT + 1} / {SUBSCRIPTION_SECTION_COUNT + 1}
+                    </span>
+                  </div>
+                  <p className="small" style={{ marginBottom: 14 }}>
+                    Type your full legal name. One signature executes the subscription
+                    agreement, the accredited investor questionnaire and the operating
+                    agreement counterpart. Your offer becomes irrevocable when you do.
+                  </p>
+                  <label className="field">
+                    <span>Signature</span>
+                    <input
+                      className="input"
+                      placeholder="Your full legal name"
+                      style={{ fontFamily: 'var(--fd)', fontSize: 19 }}
+                      value={signature}
+                      onChange={(e) => setSignature(e.target.value)}
+                      autoFocus
+                    />
+                  </label>
+                  <button
+                    className="btn btn-gold btn-block"
+                    onClick={signAll}
+                    disabled={busy || signed}
+                  >
+                    {signed ? 'Signed' : 'Sign all & continue to funding'}
+                  </button>
+                  <p className="tiny" style={{ marginTop: 12 }}>
+                    A copy saves to your Docs automatically. Production signing runs
+                    through {PARTNERS.esign} e-sign; this demo simulates it.
+                  </p>
                 </div>
-                <p className="small" style={{ marginBottom: 14 }}>
-                  Type your full legal name. One signature executes the subscription
-                  agreement, the accredited investor questionnaire and the operating
-                  agreement counterpart. Your offer becomes irrevocable when you do.
-                </p>
-                <label className="field">
-                  <span>Signature</span>
-                  <input
-                    className="input"
-                    placeholder="Your full legal name"
-                    style={{ fontFamily: 'var(--fd)', fontSize: 19 }}
-                    value={signature}
-                    onChange={(e) => setSignature(e.target.value)}
-                  />
-                </label>
-                <button
-                  className="btn btn-gold btn-block"
-                  onClick={signAll}
-                  disabled={busy || signed}
-                >
-                  {signed ? 'Signed' : 'Sign all & continue to funding'}
-                </button>
-                <p className="tiny" style={{ marginTop: 12 }}>
-                  A copy saves to your Docs automatically. Production signing runs
-                  through {PARTNERS.esign} e-sign; this demo simulates it.
-                </p>
-              </div>
+              )}
             </div>
           </div>
         </section>

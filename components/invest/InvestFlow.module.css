@@ -20,3 +20,17 @@
   box-shadow:0 0 0 3px rgba(243,152,7,.16);
   transform:scale(1.15);
 }
+
+/* The signature step. Set apart from the confirmation dots by a hairline
+   and a slightly larger mark, because it is a different kind of action:
+   the others record an answer, this one executes. */
+.dotSign{
+  width:11px;height:11px;margin-left:6px;
+  position:relative;
+}
+.dotSign::before{
+  content:"";position:absolute;left:-9px;top:50%;
+  width:1px;height:12px;margin-top:-6px;background:var(--hair);
+}
+.dotSign:disabled{opacity:.35;cursor:not-allowed}
+.dotSign:disabled:hover{transform:none;border-color:var(--hair)}
