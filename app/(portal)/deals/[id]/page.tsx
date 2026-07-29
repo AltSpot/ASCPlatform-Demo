@@ -17,11 +17,11 @@ import { notFound } from 'next/navigation';
 
 import ClosingCta from '@/components/deal/ClosingCta';
 import DealHero from '@/components/deal/DealHero';
-import Diligence from '@/components/deal/Diligence';
 import MetricChart from '@/components/deal/MetricChart';
 import Outcomes from '@/components/deal/Outcomes';
 import RiskPanel from '@/components/deal/RiskPanel';
-import StatBand from '@/components/deal/StatBand';
+import KeyIndicators from '@/components/deal/KeyIndicators';
+import RoundHistory from '@/components/deal/RoundHistory';
 import SummaryMedia from '@/components/deal/SummaryMedia';
 import TermsTable from '@/components/deal/TermsTable';
 import WhatWeLike from '@/components/deal/WhatWeLike';
@@ -90,9 +90,11 @@ export default async function DealPage({
 
       <WhatWeLike points={deal.whatWeLike} />
 
-      <StatBand metrics={deal.metrics} />
+      <KeyIndicators indicators={deal.indicators} extras={deal.metrics} />
 
       <MetricChart media={deal.media} dealId={deal.id} />
+
+      <RoundHistory rounds={deal.rounds} />
 
       <Outcomes outcomes={deal.outcomes} />
 
@@ -100,7 +102,6 @@ export default async function DealPage({
 
       <TermsTable deal={deal} />
 
-      <Diligence docs={deal.docs} spotbot={deal.spotbot} />
 
       <div className={s.section}>
         <ClosingCta minInvestment={deal.minInvestment} cta={cta} />

@@ -150,6 +150,29 @@ export interface Comparable {
   multiple: string;
 }
 
+/** A value supplied for one of the standard indicators. */
+export interface IndicatorValue {
+  value: string;
+  note?: string;
+}
+
+/**
+ * One priced round in the company's history.
+ *
+ * Private valuations move in steps, not curves. Each entry is a real
+ * priced event, so the page can show progression without implying a
+ * continuously traded price.
+ */
+export interface FundingRound {
+  round: string;
+  date: string;
+  preMoney: string;
+  pricePerShare?: string;
+  note?: string;
+  /** The round being offered here. Rendered as the current step. */
+  current?: boolean;
+}
+
 /**
  * Illustrative outcomes. Presented with the same caveat the deal package
  * carries: these depend on exit timing, dilution and valuation, and are
@@ -180,6 +203,8 @@ export interface DealView {
   preferredTerms: DealTerm[];
   whatWeLike: string[];
   outcomes: DealOutcomes;
+  indicators: Record<string, IndicatorValue>;
+  rounds: FundingRound[];
   blurb: string;
   risks: string;
   minInvestment: number;

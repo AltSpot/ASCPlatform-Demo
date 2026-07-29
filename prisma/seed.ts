@@ -60,6 +60,8 @@ interface SeedDeal {
   terms: Term[];
   preferredTerms?: Term[];
   whatWeLike?: string[];
+  indicators?: Record<string,{value:string;note?:string}>;
+  rounds?: Record<string,unknown>[];
   outcomes?: Record<string, unknown>;
   fees: { management: number; carry: number };
   media: { type: string; label: string; series: number[]; caption: string };
@@ -98,6 +100,30 @@ const DEALS: SeedDeal[] = [
       'The market is 60,000+ U.S. facilities, 90%+ of them small operators running on paper and disconnected point solutions. Simphonic replaces eMAR, scheduling, billing, care tracking and assessments with one system, at net-neutral or lower cost. It is a budget-neutral swap that removes vendors rather than adding a line item.',
       'Distribution compounds through pharmacies. Incumbents charge pharmacies to integrate; Simphonic integrates free, turning every pharmacy into a warm channel into the dozens of facilities it already serves. Every integration also feeds a proprietary medication and care dataset that grows with scale.',
       'AltSpot led the pre-seed at $5.5M pre-money and is doubling down at $11M. We hold a board observer seat, receive monthly financials, and have direct CEO access. Our investors see what we see.',
+    ],
+    // The standard set. Gaps are left genuinely empty rather than guessed:
+    // they render as "Not disclosed" and are the diligence list to close.
+    indicators: {
+      revenue: { value: '$840K', note: 'Contracted ARR. 12 companies, ~70 facilities.' },
+      growth: { value: '~68%', note: 'Contracted ARR growth in the last month.' },
+      grossMargin: { value: '70%+', note: 'At scale. Software gross margin above 80%.' },
+      burn: { value: '~$65K', note: 'Per month. Lean and pre-scale.' },
+      entryMultiple: { value: '~13x', note: '$11M pre-money on $840K contracted ARR.' },
+    },
+    rounds: [
+      {
+        round: 'Pre-seed',
+        date: '2025',
+        preMoney: '$5,500,000',
+        note: 'AltSpot led. First money in.',
+      },
+      {
+        round: 'Series Seed',
+        date: 'Jun 2026',
+        preMoney: '$11,000,000',
+        note: 'AltSpot leading again with $500,000 of its own capital.',
+        current: true,
+      },
     ],
     metrics: [
       { k: 'Contracted ARR', v: '$840K', note: '12 companies · ~70 facilities' },
@@ -521,6 +547,8 @@ async function main() {
       preferredTermsJson: JSON.stringify(deal.preferredTerms ?? []),
       whatWeLikeJson: JSON.stringify(deal.whatWeLike ?? []),
       outcomesJson: JSON.stringify(deal.outcomes ?? {}),
+      indicatorsJson: JSON.stringify(deal.indicators ?? {}),
+      roundsJson: JSON.stringify(deal.rounds ?? []),
     };
 
     await prisma.deal.upsert({

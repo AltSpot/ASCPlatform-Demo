@@ -13,6 +13,8 @@ import type {
   DealOutcomes,
   DealTerm,
   DealView,
+  FundingRound,
+  IndicatorValue,
   DeckSlide,
   SpotbotEntry,
 } from '../domain';
@@ -63,6 +65,12 @@ export function toDealView(row: Deal): DealView {
     ),
     whatWeLike: parseJson<string[]>(row.whatWeLikeJson, [], `${row.id}.whatWeLike`),
     outcomes: parseJson<DealOutcomes>(row.outcomesJson, {}, `${row.id}.outcomes`),
+    indicators: parseJson<Record<string, IndicatorValue>>(
+      row.indicatorsJson,
+      {},
+      `${row.id}.indicators`,
+    ),
+    rounds: parseJson<FundingRound[]>(row.roundsJson, [], `${row.id}.rounds`),
     blurb: row.blurb,
     risks: row.risks,
     minInvestment: row.minInvestment,

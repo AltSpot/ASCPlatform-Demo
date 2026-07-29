@@ -230,6 +230,10 @@ model Deal {
   whatWeLikeJson     String @default("[]")
   /// Comparables and illustrative return scenarios.
   outcomesJson       String @default("{}")
+  /// The standard revenue-company indicator set. See lib/indicators.ts.
+  indicatorsJson     String @default("{}")
+  /// Priced-round history: valuation and price per share, round by round.
+  roundsJson         String @default("[]")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
