@@ -56,7 +56,6 @@ export default async function InvestPage({
       vault={vault}
       initialProfiles={profiles}
       existing={resume}
-      accreditationVerifiedAt={wizard.accreditation.verifiedAt}
     />
   );
 }

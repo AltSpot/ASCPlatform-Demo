@@ -1,0 +1,114 @@
+/* ============================================================
+   The subscription agreement as a document.
+
+   This is the one surface in the portal that is read at length,
+   so it uses the brand's LIGHT system: white ground, dark ink,
+   gold accents. A legal instrument should look like one.
+
+   Measure is held near 70 characters and the type is set in a
+   serif at a comfortable size, because the alternative is an
+   investor scrolling past text they were meant to read.
+   ============================================================ */
+
+.pane{
+  background:#FFFFFF;color:#221E18;
+  border-radius:var(--r);
+  padding:44px 48px 36px;
+  box-shadow:var(--shadow);
+  max-height:calc(100vh - 170px);
+  overflow:auto;
+  position:sticky;top:28px;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:14px;line-height:1.75;
+  scroll-behavior:smooth;
+}
+
+.head{text-align:center;padding-bottom:26px;border-bottom:1px solid rgba(184,146,74,.3);margin-bottom:28px}
+.docTitle{
+  font-family:var(--fd);font-size:19px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;color:#12100C;margin-bottom:10px;
+}
+.docSub{
+  font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:#8A7B5E;line-height:1.7;
+}
+
+.article{margin-bottom:30px}
+.articleHead{
+  font-family:var(--fm);font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:#12100C;font-weight:500;
+  margin:32px 0 16px;padding-bottom:9px;
+  border-bottom:1px solid rgba(0,0,0,.12);
+}
+.exhibitHead{
+  font-family:var(--fd);font-size:15px;letter-spacing:.1em;
+  text-transform:uppercase;color:#12100C;text-align:center;
+  margin:44px 0 20px;padding-top:26px;
+  border-top:2px solid rgba(184,146,74,.4);
+}
+
+/* A numbered clause heading. Turns gold once its panel is confirmed. */
+.clause{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  margin:22px 0 8px;padding:7px 10px;margin-left:-10px;
+  border-radius:6px;border:1px solid transparent;
+  transition:background .35s ease,border-color .35s ease;
+}
+.clauseDone{background:rgba(184,146,74,.11);border-color:rgba(184,146,74,.34)}
+.clauseN{
+  font-family:var(--fm);font-size:11px;color:#A07A22;
+  letter-spacing:.06em;font-weight:500;min-width:34px;
+}
+.clauseTitle{
+  font-family:var(--fd);font-size:14.5px;font-weight:500;
+  color:#12100C;letter-spacing:-.005em;
+}
+.tick{
+  margin-left:auto;font-family:var(--fm);font-size:9px;
+  letter-spacing:.14em;text-transform:uppercase;color:#A07A22;
+}
+
+.body{margin:0 0 14px;max-width:70ch;color:#221E18}
+/* Confirmed text stays fully legible; only the ground shifts. */
+.bodyDone{color:#12100C}
+.item{
+  margin:0 0 12px 26px;max-width:66ch;position:relative;color:#393530;
+}
+.item::before{
+  content:"";position:absolute;left:-16px;top:.72em;
+  width:5px;height:5px;border-radius:1px;background:#B8924A;
+}
+
+/* A merged value. Blank tokens render as a rule, as on paper. */
+.merge{
+  border-bottom:1px solid #C9BFA8;padding:0 3px;
+  color:#8A7B5E;font-style:italic;
+  display:inline-block;min-width:40px;
+}
+.mergeFilled{
+  color:#12100C;font-style:normal;font-weight:700;
+  background:rgba(184,146,74,.16);
+  border-bottom-color:#A07A22;border-radius:2px;
+}
+
+/* Signature-page summary lines: label left, value right. */
+.summaryRow{
+  display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+  padding:11px 0;border-bottom:1px solid rgba(0,0,0,.1);
+}
+.summaryK{
+  font-family:var(--fm);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:#8A7B5E;
+}
+.summaryV{font-size:15px}
+
+.foot{
+  margin-top:34px;padding-top:18px;
+  border-top:1px solid rgba(0,0,0,.1);
+  font-family:var(--fm);font-size:9.5px;line-height:1.7;
+  letter-spacing:.04em;color:#8A7B5E;
+}
+
+@media (max-width:1080px){
+  .pane{position:static;max-height:620px;padding:32px 26px}
+}
