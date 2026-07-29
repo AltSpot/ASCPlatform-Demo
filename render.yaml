@@ -23,7 +23,7 @@ services:
     # filesystem is not the runtime filesystem, so a database created
     # during build would not be there when the server boots.
     buildCommand: npm ci && npx prisma generate && npm run build
-    startCommand: npx prisma migrate deploy && npx tsx prisma/seed.ts && npx next start -p $PORT
+    startCommand: npm run start:demo
 
     envVars:
       - key: NODE_VERSION
