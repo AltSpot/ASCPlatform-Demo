@@ -3,6 +3,11 @@
  *
  * The deal's gradient is blurred back behind the type rather than run
  * as a banner: the headline is the hero here, not the artwork.
+ *
+ * The fact strip carries what an investor actually decides on: cheque
+ * size, the round, what is left, and the entire cost of participating.
+ * There is no target close, because these are back-raises. The SPV
+ * already holds the shares, so a close date is not a real deadline.
  */
 import type { ReactNode } from 'react';
 
@@ -50,7 +55,8 @@ export default function DealHero({
           <Fact k="Minimum" v={money(deal.minInvestment)} />
           <Fact k="Round size" v={money(deal.allocationTotal)} />
           <Fact k="Remaining" v={money(deal.allocationRemaining)} />
-          <Fact k="Target close" v={deal.targetClose} />
+          <Fact k="Management fee" v={`${deal.fees.management}%`} note="one time" />
+          <Fact k="Carry" v={`${deal.fees.carry}%`} note="at exit" />
         </div>
 
         <div className={s.heroAlloc}>
@@ -64,11 +70,12 @@ export default function DealHero({
   );
 }
 
-function Fact({ k, v }: { k: string; v: string }) {
+function Fact({ k, v, note }: { k: string; v: string; note?: string }) {
   return (
     <div className={s.fact}>
       <div className={s.factK}>{k}</div>
       <div className={s.factV}>{v}</div>
+      {note && <div className={s.factNote}>{note}</div>}
     </div>
   );
 }

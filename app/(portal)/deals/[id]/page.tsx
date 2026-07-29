@@ -1,29 +1,30 @@
 /**
  * The deal page IS the pitch deck.
  *
- * There used to be two destinations: an overview of cards and a separate
- * deck route of slides. Investors had to choose which one to read, and
- * neither told the whole story. This is one scrollable narrative instead:
- * the claim, the numbers, the story, our underwriting, the trend, the
- * risk, the terms, the fees, the materials, the ask.
+ * One scrollable narrative, in the order an investor actually reads:
+ * the claim and the cost, a short summary beside the media, why we like
+ * it, the numbers, what the range of outcomes looks like, the risks, and
+ * only then the terms and the materials.
  *
- * Every section degrades to nothing when its content is missing, because
+ * Fees live in the hero fact strip rather than in a section of their own,
+ * because the whole model is two numbers and it belongs next to the ask.
+ *
+ * Every section degrades to nothing when its content is missing, since
  * the deals behind the lead carry far thinner editorial than Simphonic.
  */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import ClosingCta from '@/components/deal/ClosingCta';
-import CommittedBand from '@/components/deal/CommittedBand';
 import DealHero from '@/components/deal/DealHero';
 import Diligence from '@/components/deal/Diligence';
-import FeeModel from '@/components/deal/FeeModel';
 import MetricChart from '@/components/deal/MetricChart';
-import Narrative from '@/components/deal/Narrative';
+import Outcomes from '@/components/deal/Outcomes';
 import RiskPanel from '@/components/deal/RiskPanel';
 import StatBand from '@/components/deal/StatBand';
+import SummaryMedia from '@/components/deal/SummaryMedia';
 import TermsTable from '@/components/deal/TermsTable';
-import Thesis from '@/components/deal/Thesis';
+import WhatWeLike from '@/components/deal/WhatWeLike';
 import s from '@/components/deal/Deal.module.css';
 import InvestButton from '@/components/InvestButton';
 import { requireUser } from '@/lib/auth';
@@ -83,45 +84,26 @@ export default async function DealPage({
         <span className="here">{deal.name}</span>
       </div>
 
-      <DealHero
-        deal={deal}
-        cta={
-          <>
-            {cta}
-            {/* Only offered when there is a risk section to land on. */}
-            {deal.risks.trim() && (
-              <a className="btn btn-ghost" href="#risk">
-                Read the risks
-              </a>
-            )}
-          </>
-        }
-      />
+      <DealHero deal={deal} cta={cta} />
 
-      <CommittedBand amount={deal.altspotCommitted} note={deal.committedNote} />
+      <SummaryMedia summary={deal.summary} dealName={deal.name} />
+
+      <WhatWeLike points={deal.whatWeLike} />
 
       <StatBand metrics={deal.metrics} />
 
-      <Narrative chapters={deal.deck} />
-
-      <Thesis points={deal.thesis} />
-
       <MetricChart media={deal.media} dealId={deal.id} />
+
+      <Outcomes outcomes={deal.outcomes} />
 
       <RiskPanel risks={deal.risks} />
 
       <TermsTable deal={deal} />
 
-      <FeeModel fees={deal.fees} />
-
       <Diligence docs={deal.docs} spotbot={deal.spotbot} />
 
       <div className={s.section}>
-        <ClosingCta
-          minInvestment={deal.minInvestment}
-          targetClose={deal.targetClose}
-          cta={cta}
-        />
+        <ClosingCta minInvestment={deal.minInvestment} cta={cta} />
 
         <p className={s.disclosure}>
           Prepared by AltSpot Capital from company-provided materials and AltSpot

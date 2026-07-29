@@ -44,6 +44,8 @@ interface SeedDeal {
   art: string;
   logoUrl?: string;
   headline: string;
+  summary?: string;
+  pricePerShare?: string;
   blurb: string;
   risks: string;
   minInvestment: number;
@@ -56,6 +58,9 @@ interface SeedDeal {
   thesis: string[];
   metrics: Metric[];
   terms: Term[];
+  preferredTerms?: Term[];
+  whatWeLike?: string[];
+  outcomes?: Record<string, unknown>;
   fees: { management: number; carry: number };
   media: { type: string; label: string; series: number[]; caption: string };
   docs: string[];
@@ -104,19 +109,52 @@ const DEALS: SeedDeal[] = [
       { k: 'Total addressable market', v: '$26.5B' },
       { k: 'Close rate', v: '~70%', note: 'from decision stage forward' },
     ],
+    summary:
+      'Simphonic replaces the three to five disconnected systems a senior care facility runs today with one AI-native platform. Contracted ARR is $840K across 12 companies and roughly 70 facilities, up about 68% in a month. AltSpot led the pre-seed and is leading this round with $500,000 of its own capital.',
+    // TODO: confirm with Ryan. Placeholder until the real figure is supplied.
+    pricePerShare: 'Confirm before send',
+    whatWeLike: [
+      'A large regional operator dropped PointClickCare, the category’s dominant platform, and chose Simphonic across 50+ facilities and 1,000+ licenses.',
+      'It is a budget-neutral swap. Simphonic replaces three to five systems at net-neutral or lower cost, so it removes vendors instead of adding a line item.',
+      'Pharmacies are the distribution wedge. Incumbents charge them to integrate; Simphonic integrates free, turning each one into a warm channel into dozens of facilities.',
+      'One operator lands many facilities. The average pipeline company brings roughly 28.5 facilities at about 50 licenses each.',
+      'We have been inside this deal since the pre-seed at $5.5M pre-money, with a board observer seat, monthly financials and direct CEO access.',
+    ],
     terms: [
       { k: 'Security', v: 'Series Seed Preferred Stock' },
       { k: 'Pre-money valuation', v: '$11,000,000' },
       { k: 'Round size', v: '$2,000,000' },
+    ],
+    preferredTerms: [
       { k: 'Liquidation preference', v: '1x non-participating' },
       { k: 'Pro-rata rights', v: 'Yes' },
       { k: 'Revenue share', v: '5% of top line to a 1.5x cap' },
       { k: 'Warrant coverage', v: '30% at seed price' },
-      { k: 'AltSpot role', v: 'Lead investor · board observer' },
+      { k: 'Board rights', v: 'Observer seat held by AltSpot' },
+      { k: 'Reporting', v: 'Monthly financials to investors' },
     ],
+    outcomes: {
+      intro:
+        'Vertical AI SaaS trades at a premium and the buyer universe is deep. PointClickCare has made 10+ acquisitions and a large regional operator just left it for Simphonic.',
+      scenarios: [
+        { k: '$5M ARR', v: '3 to 7x', note: 'at 6 to 8x revenue' },
+        { k: '$10M ARR', v: '5 to 14x', note: 'at 8 to 15x revenue' },
+        { k: '$20M ARR', v: '11 to 27x', note: 'at 6 to 15x revenue' },
+      ],
+      comparables: [
+        { company: 'PointClickCare', context: 'Senior care EHR, 10+ acquisitions', valuation: '$5B+', multiple: '~7 to 8x rev' },
+        { company: 'MatrixCare', context: 'Acquired by ResMed', valuation: '$750M', multiple: '~6x rev' },
+        { company: 'Veeva Systems', context: 'Vertical SaaS, life sciences', valuation: '$35B+', multiple: '~12x rev' },
+        { company: 'ServiceTitan', context: 'Vertical SaaS, trades', valuation: '$9B+', multiple: '~13x rev' },
+        { company: 'Toast', context: 'Vertical SaaS, restaurants', valuation: '$18B+', multiple: '~8x rev' },
+        { company: 'Procore', context: 'Vertical SaaS, construction', valuation: '$12B+', multiple: '~11x rev' },
+      ],
+      note:
+        'Illustrative only, based on an $11M entry. Outcomes depend on exit timing, dilution and valuation, and no return is promised. The 5% revenue share pays before any exit.',
+    },
     risks:
       'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: revenue is concentrated in a small number of operators, and losing one materially changes the picture; the "in final negotiations" and pipeline figures are modeled from operator averages and are not signed contracts; senior care is regulated and reimbursement-sensitive, and rule changes can slow adoption; incumbents including PointClickCare are well capitalized and acquisitive; and the position is illiquid with no public market and no promised exit timeline. AltSpot’s own $500,000 carries these same risks.',
-    minInvestment: 25000,
+    minInvestment: 10000,
     allocationTotal: 2000000,
     allocationRemaining: 640000,
     targetClose: 'Aug 29, 2026',
@@ -460,6 +498,8 @@ async function main() {
       art: deal.art,
       logoUrl: deal.logoUrl ?? null,
       headline: deal.headline,
+      summary: deal.summary ?? null,
+      pricePerShare: deal.pricePerShare ?? null,
       blurb: deal.blurb,
       risks: deal.risks,
       minInvestment: deal.minInvestment,
@@ -478,6 +518,9 @@ async function main() {
       deckJson: JSON.stringify(deal.deck),
       metricsJson: JSON.stringify(deal.metrics),
       termsJson: JSON.stringify(deal.terms),
+      preferredTermsJson: JSON.stringify(deal.preferredTerms ?? []),
+      whatWeLikeJson: JSON.stringify(deal.whatWeLike ?? []),
+      outcomesJson: JSON.stringify(deal.outcomes ?? {}),
     };
 
     await prisma.deal.upsert({

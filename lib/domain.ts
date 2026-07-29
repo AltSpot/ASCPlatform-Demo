@@ -136,10 +136,30 @@ export interface DealMetric {
   note?: string;
 }
 
-/** A row in the deal terms table. */
+/** A row in a deal terms table. */
 export interface DealTerm {
   k: string;
   v: string;
+}
+
+/** A comparable company used to frame the exit landscape. */
+export interface Comparable {
+  company: string;
+  context: string;
+  valuation: string;
+  multiple: string;
+}
+
+/**
+ * Illustrative outcomes. Presented with the same caveat the deal package
+ * carries: these depend on exit timing, dilution and valuation, and are
+ * not a projection of returns.
+ */
+export interface DealOutcomes {
+  intro?: string;
+  scenarios?: DealMetric[];
+  comparables?: Comparable[];
+  note?: string;
 }
 
 export interface DealView {
@@ -153,8 +173,13 @@ export interface DealView {
   art: string;
   logoUrl: string | null;
   headline: string | null;
+  summary: string | null;
+  pricePerShare: string | null;
   metrics: DealMetric[];
   terms: DealTerm[];
+  preferredTerms: DealTerm[];
+  whatWeLike: string[];
+  outcomes: DealOutcomes;
   blurb: string;
   risks: string;
   minInvestment: number;

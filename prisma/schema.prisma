@@ -207,6 +207,12 @@ model Deal {
   /// One-line pull quote used at the top of the deal page.
   headline String?
 
+  /// Two or three sentences under the media slot. Not the blurb.
+  summary String?
+
+  /// Per-share price for the round. Null hides the row.
+  pricePerShare String?
+
   // JSON-encoded — see the note at the top of this file.
   thesisJson  String
   feesJson    String
@@ -216,8 +222,14 @@ model Deal {
   deckJson    String
   /// Headline figures shown as the stat band on the deal page.
   metricsJson String @default("[]")
-  /// Structured deal terms (security, valuation, pref, rights).
+  /// Economic terms: security, valuation, round size, price per share.
   termsJson   String @default("[]")
+  /// Preferred terms: liquidation preference, pro-rata, warrants, rights.
+  preferredTermsJson String @default("[]")
+  /// Short bullets. Why we like it, one to three lines each.
+  whatWeLikeJson     String @default("[]")
+  /// Comparables and illustrative return scenarios.
+  outcomesJson       String @default("{}")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
