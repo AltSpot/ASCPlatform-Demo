@@ -1674,7 +1674,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "By: _______________________________",
+              "text": "By: {{blank}}",
               "b": false,
               "i": false
             }
@@ -1734,7 +1734,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "By: _______________________________",
+              "text": "By: {{blank}}",
               "b": false,
               "i": false
             }
@@ -1774,6 +1774,6 @@
     }
   ],
   "substitutions": {},
-  "contentHash": "8a09fb9fd8298822",
+  "contentHash": "d6a0ced57db33cca",
   "wordCount": 9447
 }

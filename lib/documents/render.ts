@@ -88,6 +88,8 @@ tr:first-child td { background: #f3ecd9; font-weight: 700; }
 .summary .k { font-size: 9pt; letter-spacing: .12em; text-transform: uppercase; color: #8A7B5E; }
 .foot { margin-top: 36px; padding-top: 14px; border-top: 1px solid #ddd;
         font-size: 8pt; line-height: 1.6; color: #8A7B5E; }
+.marker { text-align: center; font-style: italic; color: #8A7B5E;
+          font-size: 9.5pt; margin: 22px 0; }
 .hint { background: #f6f1e4; border: 1px solid #ddd0ad; padding: 12px 16px;
         font-family: system-ui, sans-serif; font-size: 9.5pt; margin-bottom: 26px; }
 @media print { .hint { display: none; } }
@@ -130,6 +132,10 @@ export function renderBinder(
                 )
                 .join('');
               return `<table><tbody>${rows}</tbody></table>`;
+            }
+
+            if (block.type === 'marker') {
+              return `<p class="marker">${renderRuns(block.runs, values)}</p>`;
             }
 
             if (block.type === 'section') {

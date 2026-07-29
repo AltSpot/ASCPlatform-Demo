@@ -7,7 +7,7 @@
  * clause and the confirmation panel that discharges it.
  */
 
-export type BlockType = 'section' | 'p' | 'item' | 'table';
+export type BlockType = 'section' | 'p' | 'item' | 'table' | 'marker';
 
 /** A span of text with consistent formatting. Bold marks defined terms. */
 export interface TextRun {

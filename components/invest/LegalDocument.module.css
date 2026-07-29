@@ -154,3 +154,11 @@
   vertical-align:top;line-height:1.55;
 }
 .table tr:first-child td{background:rgba(184,146,74,.09);font-weight:700}
+
+/* Typesetting markers, e.g. "[Signature page follows]". Centred and
+   quiet, as a typesetter would set them, rather than reading as an
+   import artifact in the middle of body text. */
+.marker{
+  text-align:center;font-style:italic;color:#8A7B5E;
+  font-size:12px;margin:24px 0;
+}

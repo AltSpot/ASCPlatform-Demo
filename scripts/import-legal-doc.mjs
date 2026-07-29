@@ -145,6 +145,25 @@ const SUBSTITUTIONS = [
   { from: /Series B Preferred Stock/g, to: 'Series Seed Preferred Stock' },
   { from: /Series B Preferred/g, to: 'Series Seed Preferred' },
   { from: /Series B Financing/g, to: 'Series Seed Financing' },
+  // Counsel's unset date placeholder. The documents are dated 15 May 2026.
+  { from: /\[●\]/g, to: 'May 15' },
+];
+
+/**
+ * Fill-in lines, normalised so they render as ruled fields rather than
+ * runs of underscores.
+ *
+ * Where the label tells us what belongs there, it becomes a merge field
+ * and fills itself from the investor's record. Everything else becomes a
+ * neutral blank, which still renders as a rule but is never filled: those
+ * are the lines a countersigning Manager completes, not the investor.
+ */
+const LABEL_FIELDS = [
+  { from: /\b(Print Name|Name of Subscriber|Name)\s*:\s*_{3,}/g, to: '$1: {{legalName}}' },
+  { from: /\bSignature\s*:\s*_{3,}/g, to: 'Signature: {{signature}}' },
+  { from: /\bDate\s*:\s*_{3,}/g, to: 'Date: {{date}}' },
+  { from: /\b(Subscription Amount|Amount)\s*:\s*_{3,}/g, to: '$1: {{amount}}' },
+  { from: /\b(Address|Residence Address|Mailing Address)\s*:\s*_{3,}/g, to: '$1: {{address}}' },
 ];
 
 const doc = { slug, title: title ?? null, articles: [] };
@@ -302,6 +321,49 @@ for (const article of doc.articles) {
     }
   }
 }
+// Normalise fill-in lines after the substitutions, so a label that was
+// itself normalised still gets matched.
+let fieldsFilled = 0;
+let blanksRuled = 0;
+for (const article of doc.articles) {
+  for (const block of article.blocks) {
+    // Table cells carry fill-in lines too, in the questionnaire.
+    if (block.type === 'table') {
+      block.rows = block.rows.map((row) =>
+        row.map((cell) => {
+          const hits = cell.match(/_{3,}/g);
+          if (hits) blanksRuled += hits.length;
+          return cell.replace(/_{3,}/g, '{{blank}}');
+        }),
+      );
+      continue;
+    }
+
+    for (const run of block.runs ?? []) {
+      for (const field of LABEL_FIELDS) {
+        const before = run.text;
+        run.text = run.text.replace(field.from, field.to);
+        if (run.text !== before) fieldsFilled++;
+      }
+      // Whatever underscores remain are blanks nobody can pre-fill.
+      const remaining = run.text.match(/_{3,}/g);
+      if (remaining) {
+        blanksRuled += remaining.length;
+        run.text = run.text.replace(/_{3,}/g, '{{blank}}');
+      }
+    }
+
+    // Typesetting markers read as artifacts in body type. Tag them so the
+    // renderer can centre and quieten them, as a typesetter would.
+    const flat = (block.runs ?? []).map((r) => r.text).join('').trim();
+    if (/^\[(Signature page follows|End of [^\]]+)\]$/i.test(flat)) {
+      block.type = 'marker';
+    }
+  }
+}
+if (fieldsFilled) console.error(`  filled ${fieldsFilled} labelled field(s)`);
+if (blanksRuled) console.error(`  ruled ${blanksRuled} unlabelled blank(s)`);
+
 doc.substitutions = applied;
 for (const [to, count] of Object.entries(applied)) {
   console.error(`  normalised ${count} occurrence(s) to "${to}"`);

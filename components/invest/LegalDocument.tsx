@@ -157,6 +157,14 @@ export default function LegalDocument({
                   );
                 }
 
+                if (block.type === 'marker') {
+                  return (
+                    <p key={blockIndex} className={s.marker}>
+                      {renderRuns(block.runs)}
+                    </p>
+                  );
+                }
+
                 if (block.type === 'section') {
                   return (
                     <div
