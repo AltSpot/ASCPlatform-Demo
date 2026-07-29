@@ -59,11 +59,25 @@ export default function LegalDocument({
   }
 
   useEffect(() => {
-    if (!focusPanel || !paneRef.current) return;
+    const pane = paneRef.current;
+    if (!focusPanel || !pane) return;
     if (activeSlug !== 'subscription-agreement') return;
 
-    const target = paneRef.current.querySelector(`[data-panel="${focusPanel}"]`);
-    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const target = pane.querySelector<HTMLElement>(`[data-panel="${focusPanel}"]`);
+    if (!target) return;
+
+    /**
+     * Scroll the pane, not the page.
+     *
+     * scrollIntoView walks every scrollable ancestor including the window,
+     * so it was yanking the whole page up to the document each time a
+     * panel was confirmed. Setting scrollTop on the pane keeps the
+     * movement where it belongs and leaves the investor's place alone.
+     */
+    const offset =
+      target.offsetTop - pane.clientHeight / 2 + target.clientHeight / 2;
+
+    pane.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
   }, [focusPanel, activeSlug]);
 
   function renderRuns(runs: TextRun[] | undefined) {

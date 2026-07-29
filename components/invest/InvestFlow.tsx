@@ -21,6 +21,8 @@ import { useRef, useState } from 'react';
 import ConfirmPanel from '@/components/invest/ConfirmPanel';
 import FeeTable from '@/components/invest/FeeTable';
 import LegalDocument from '@/components/invest/LegalDocument';
+
+import styles from './InvestFlow.module.css';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import { PARTNERS } from '@/lib/config';
@@ -138,6 +140,18 @@ export default function InvestFlow({
   /** The clause group to scroll to when a panel is confirmed. */
   const [focusPanel, setFocusPanel] = useState<number | null>(null);
 
+  /**
+   * Which confirmation is on screen. One at a time, resuming at the first
+   * outstanding one, so an investor coming back lands where they stopped.
+   */
+  const [stepIndex, setStepIndex] = useState(() => {
+    const first = SUBSCRIPTION_SECTIONS.findIndex(
+      (section) => !isSectionConfirmed(existing?.answers ?? {}, section.id),
+    );
+    return first === -1 ? SUBSCRIPTION_SECTION_COUNT - 1 : first;
+  });
+  const currentSection = SUBSCRIPTION_SECTIONS[stepIndex];
+
   const progressWidth = signed
     ? '100%'
     : allConfirmed
@@ -234,6 +248,16 @@ export default function InvestFlow({
       const next = await api.confirmSection(subscription.id, code);
       setSubscription(next);
       setAnswers(next.answers);
+
+      // Move to the next outstanding confirmation. Held briefly so the
+      // investor sees the clause light up before the panel changes.
+      const following = SUBSCRIPTION_SECTIONS.findIndex(
+        (s, i) => i > stepIndex && !isSectionConfirmed(next.answers, s.id),
+      );
+      if (following !== -1) {
+        setTimeout(() => setStepIndex(following), 650);
+      }
+
       toast('Progress saved. You can leave and resume anytime.');
     } catch {
       setAnswers(previous);
@@ -479,22 +503,64 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
 
             {/* ---- the guided track ---- */}
             <div>
-              {SUBSCRIPTION_SECTIONS.map((section, i) => (
-                <ConfirmPanel
-                  key={section.id}
-                  section={section}
-                  index={i + 1}
-                  total={SUBSCRIPTION_SECTION_COUNT}
-                  confirmed={done(section.id)}
-                  chosenKey={selectedChoice(answers, section)?.key ?? null}
-                  onConfirm={confirm}
+              {/* One panel at a time. Six stacked down the page buried the
+                  signature block and made the flow feel endless. */}
+              <ConfirmPanel
+                key={currentSection.id}
+                section={currentSection}
+                index={stepIndex + 1}
+                total={SUBSCRIPTION_SECTION_COUNT}
+                confirmed={done(currentSection.id)}
+                chosenKey={selectedChoice(answers, currentSection)?.key ?? null}
+                onConfirm={confirm}
+              >
+                {/* The all-in cost belongs beside the risk it buys. */}
+                {currentSection.id === 3 && (
+                  <FeeTable fees={deal.fees} amount={amount} />
+                )}
+              </ConfirmPanel>
+
+              <div className="wiz-actions" style={{ marginTop: 4, marginBottom: 22 }}>
+                <button
+                  className="btn btn-quiet btn-sm"
+                  onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
+                  disabled={stepIndex === 0}
                 >
-                  {/* The all-in cost belongs beside the risk it buys. */}
-                  {section.id === 3 && (
-                    <FeeTable fees={deal.fees} amount={amount} />
-                  )}
-                </ConfirmPanel>
-              ))}
+                  ← Back
+                </button>
+
+                <div className={styles.dots} role="tablist" aria-label="Confirmations">
+                  {SUBSCRIPTION_SECTIONS.map((section, i) => (
+                    <button
+                      key={section.id}
+                      role="tab"
+                      aria-selected={i === stepIndex}
+                      aria-label={section.panelTitle}
+                      title={section.panelTitle}
+                      onClick={() => setStepIndex(i)}
+                      className={[
+                        styles.dot,
+                        done(section.id) ? styles.dotDone : '',
+                        i === stepIndex ? styles.dotNow : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  className="btn btn-quiet btn-sm"
+                  onClick={() =>
+                    setStepIndex((i) =>
+                      Math.min(SUBSCRIPTION_SECTION_COUNT - 1, i + 1),
+                    )
+                  }
+                  disabled={stepIndex >= SUBSCRIPTION_SECTION_COUNT - 1}
+                >
+                  Next →
+                </button>
+              </div>
 
               <div
                 className="card gold"

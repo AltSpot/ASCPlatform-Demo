@@ -1,0 +1,22 @@
+/* Step indicator for the confirmation panels.
+
+   Six panels stacked down the page buried the signature block and made
+   the flow read as endless. One at a time, with these dots as the map:
+   filled means confirmed, ringed means where you are. */
+
+.dots{
+  display:flex;align-items:center;gap:8px;
+  margin:0 auto;
+}
+.dot{
+  width:9px;height:9px;padding:0;border-radius:50%;cursor:pointer;
+  border:1px solid var(--hair);background:transparent;
+  transition:background .15s,border-color .15s,transform .15s;
+}
+.dot:hover{border-color:var(--hairg);transform:scale(1.2)}
+.dotDone{background:linear-gradient(135deg,var(--gold),var(--orange));border-color:transparent}
+.dotNow{
+  border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(243,152,7,.16);
+  transform:scale(1.15);
+}
