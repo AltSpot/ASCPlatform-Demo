@@ -6,6 +6,7 @@
 import 'server-only';
 
 import { prisma } from '../db';
+import { ISOLATED_ALLOCATION } from '../config';
 import type {
   DealFees,
   DealMedia,
@@ -89,17 +90,69 @@ export function toDealView(row: Deal): DealView {
   };
 }
 
-export async function listDeals(): Promise<DealView[]> {
+/**
+ * How much allocation this investor has personally taken off the table.
+ *
+ * Under isolated allocation the deal row is never decremented, so what a
+ * visitor sees as "remaining" is the seeded figure minus their own live
+ * commitments. Everyone else's view stays pristine, which is what makes
+ * the demo safe to send to a room full of people at once.
+ */
+async function reservedByUser(
+  userId: string,
+  dealIds: string[],
+): Promise<Map<string, number>> {
+  if (!ISOLATED_ALLOCATION || dealIds.length === 0) return new Map();
+
+  const rows = await prisma.subscription.groupBy({
+    by: ['dealId'],
+    where: {
+      userId,
+      dealId: { in: dealIds },
+      state: { in: ['docs_signed', 'funded', 'accepted', 'closed'] },
+    },
+    _sum: { amount: true },
+  });
+
+  return new Map(rows.map((r) => [r.dealId, r._sum.amount ?? 0]));
+}
+
+function applyReserved(deal: DealView, reserved: number): DealView {
+  if (reserved <= 0) return deal;
+  return {
+    ...deal,
+    allocationRemaining: Math.max(0, deal.allocationRemaining - reserved),
+  };
+}
+
+export async function listDeals(userId?: string): Promise<DealView[]> {
   const rows = await prisma.deal.findMany({
     where: { status: 'open' },
     orderBy: { sortOrder: 'asc' },
   });
-  return rows.map(toDealView);
+  const deals = rows.map(toDealView);
+
+  if (!userId) return deals;
+
+  const reserved = await reservedByUser(
+    userId,
+    deals.map((d) => d.id),
+  );
+  return deals.map((d) => applyReserved(d, reserved.get(d.id) ?? 0));
 }
 
-export async function getDeal(id: string): Promise<DealView | null> {
+export async function getDeal(
+  id: string,
+  userId?: string,
+): Promise<DealView | null> {
   const row = await prisma.deal.findUnique({ where: { id } });
-  return row ? toDealView(row) : null;
+  if (!row) return null;
+
+  const deal = toDealView(row);
+  if (!userId) return deal;
+
+  const reserved = await reservedByUser(userId, [id]);
+  return applyReserved(deal, reserved.get(id) ?? 0);
 }
 
 /** Deals referenced by a set of subscriptions, keyed by id. */

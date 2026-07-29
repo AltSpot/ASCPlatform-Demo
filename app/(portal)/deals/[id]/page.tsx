@@ -53,7 +53,7 @@ export default async function DealPage({
   const user = await requireUser();
   const { id } = await params;
 
-  const deal = await getDeal(id);
+  const deal = await getDeal(id, user.id);
   if (!deal) notFound();
 
   const [wizard, resume] = await Promise.all([

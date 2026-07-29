@@ -19,7 +19,7 @@ export default async function MarketplacePage() {
   const user = await requireUser();
 
   const [deals, subscriptions] = await Promise.all([
-    listDeals(),
+    listDeals(user.id),
     listSubscriptions(user.id),
   ]);
 

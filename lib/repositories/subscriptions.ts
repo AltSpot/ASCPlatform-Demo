@@ -9,6 +9,7 @@
 import 'server-only';
 
 import { prisma } from '../db';
+import { ISOLATED_ALLOCATION } from '../config';
 import { audit } from '../audit';
 import {
   assertTransition,
@@ -70,16 +71,17 @@ export async function expireSweep(userId: string): Promise<void> {
   if (stale.length === 0) return;
 
   for (const row of stale) {
-    await prisma.$transaction([
-      prisma.subscription.update({
-        where: { id: row.id },
-        data: { state: SUBSCRIPTION_STATES.EXPIRED },
-      }),
-      prisma.deal.update({
+    await prisma.subscription.update({
+      where: { id: row.id },
+      data: { state: SUBSCRIPTION_STATES.EXPIRED },
+    });
+    // Isolated allocation never decremented the deal, so nothing to return.
+    if (!ISOLATED_ALLOCATION) {
+      await prisma.deal.update({
         where: { id: row.dealId },
         data: { allocationRemaining: { increment: row.amount } },
-      }),
-    ]);
+      });
+    }
 
     await audit({
       userId,
@@ -269,10 +271,17 @@ export async function signSubscription(
         fundingDeadline: new Date(now.getTime() + FUNDING_WINDOW_DAYS * DAY_MS),
       },
     }),
-    prisma.deal.update({
-      where: { id: current.dealId },
-      data: { allocationRemaining: { decrement: current.amount } },
-    }),
+    // Under isolated allocation the deal row is never touched: each
+    // visitor's view is reduced by their own commitments only, so a demo
+    // link cannot drain the shelf for the next person.
+    ...(ISOLATED_ALLOCATION
+      ? []
+      : [
+          prisma.deal.update({
+            where: { id: current.dealId },
+            data: { allocationRemaining: { decrement: current.amount } },
+          }),
+        ]),
   ]);
 
   await audit({
@@ -327,7 +336,7 @@ export async function cancelSubscription(
   const current = await prisma.subscription.findFirst({ where: { id, userId } });
   if (!current) throw new Error('Subscription not found');
 
-  if (current.state === SUBSCRIPTION_STATES.SIGNED) {
+  if (current.state === SUBSCRIPTION_STATES.SIGNED && !ISOLATED_ALLOCATION) {
     await prisma.deal.update({
       where: { id: current.dealId },
       data: { allocationRemaining: { increment: current.amount } },

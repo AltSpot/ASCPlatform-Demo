@@ -5,10 +5,11 @@ import { getDeal } from '@/lib/repositories/deals';
 
 export const GET = route(
   async (_request: Request, context: { params: Promise<{ id: string }> }) => {
-    await requireUser();
+    const user = await requireUser();
     const { id } = await context.params;
 
-    const deal = await getDeal(id);
+    // Pass the viewer so allocation reflects their own commitments only.
+    const deal = await getDeal(id, user.id);
     if (!deal) throw new NotFoundError('Deal not found');
 
     return ok(deal);

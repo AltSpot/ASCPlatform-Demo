@@ -29,7 +29,7 @@ export default async function InvestPage({
   const user = await requireUser();
   const { dealId } = await params;
 
-  const deal = await getDeal(dealId);
+  const deal = await getDeal(dealId, user.id);
   if (!deal) notFound();
 
   const wizard = await getWizardView(user.id);

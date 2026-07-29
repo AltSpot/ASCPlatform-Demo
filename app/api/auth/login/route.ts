@@ -7,6 +7,7 @@
 import { authenticate, createSession } from '@/lib/auth';
 import { audit } from '@/lib/audit';
 import { ok, readJson, requireString, route } from '@/lib/http';
+import { sweepStaleDemoAccounts } from '@/lib/repositories/demo';
 import { ensureInvestorRecords, getWizardView } from '@/lib/repositories/investor';
 
 export const POST = route(async (request: Request) => {
@@ -17,6 +18,11 @@ export const POST = route(async (request: Request) => {
   // form contract does not change when real credentials are switched on.
   const password =
     typeof body.password === 'string' ? body.password : 'demo-password';
+
+  // Opportunistic housekeeping: clear out previous visitors before this
+  // one starts. A container host has no cron, and login is the one moment
+  // a small delay costs nothing.
+  await sweepStaleDemoAccounts();
 
   const { user, created } = await authenticate(email, password);
   await createSession(user.id);

@@ -4,6 +4,6 @@ import { ok, route } from '@/lib/http';
 import { listDeals } from '@/lib/repositories/deals';
 
 export const GET = route(async () => {
-  await requireUser();
-  return ok(await listDeals());
+  const user = await requireUser();
+  return ok(await listDeals(user.id));
 });

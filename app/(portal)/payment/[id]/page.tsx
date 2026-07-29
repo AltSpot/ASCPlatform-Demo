@@ -24,7 +24,7 @@ export default async function PaymentPage({
   if (!subscription) notFound();
 
   const [deal, bank] = await Promise.all([
-    getDeal(subscription.dealId),
+    getDeal(subscription.dealId, user.id),
     getBank(user.id),
   ]);
   if (!deal) notFound();
