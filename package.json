@@ -20,7 +20,12 @@
     "serve:stop": "node scripts/dev-server.mjs stop",
     "serve:restart": "node scripts/dev-server.mjs restart",
     "serve:status": "node scripts/dev-server.mjs status",
-    "serve:logs": "node scripts/dev-server.mjs logs"
+    "serve:logs": "node scripts/dev-server.mjs logs",
+    "deploy": "node scripts/render.mjs deploy",
+    "deploy:status": "node scripts/render.mjs status",
+    "deploy:logs": "node scripts/render.mjs logs",
+    "deploy:env": "node scripts/render.mjs env",
+    "deploy:wake": "node scripts/render.mjs wake"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.9.1",
