@@ -14,8 +14,8 @@ import { useState } from 'react';
 import { useToast } from '@/components/Toast';
 import { api, ApiError } from '@/lib/client/api';
 
-const DEMO_EMAIL = 'jordan.hale@example.com';
-const DEMO_PASSWORD = 'demo-password';
+import styles from './LoginForm.module.css';
+
 
 export default function LoginForm() {
   const router = useRouter();
@@ -32,6 +32,23 @@ export default function LoginForm() {
     setBusy(true);
     try {
       await api.login(email.trim(), password);
+      router.push('/dashboard');
+      router.refresh();
+    } catch (error) {
+      const message =
+        error instanceof ApiError ? error.message : 'Could not sign in. Try again.';
+      toast(message);
+      setBusy(false);
+    }
+  }
+
+  /** The pre-onboarded door. Lands ready to invest. */
+  async function existingInvestor() {
+    if (busy) return;
+
+    setBusy(true);
+    try {
+      await api.demoLogin();
       router.push('/dashboard');
       router.refresh();
     } catch (error) {
@@ -76,7 +93,7 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 16 }}>
         <button
           type="button"
           className="skip"
@@ -85,23 +102,31 @@ export default function LoginForm() {
         >
           Forgot password
         </button>
-        <button
-          type="button"
-          className="skip"
-          style={{ textDecoration: 'none', fontSize: 13 }}
-          onClick={() => {
-            setEmail(DEMO_EMAIL);
-            setPassword(DEMO_PASSWORD);
-          }}
-        >
-          Use demo investor
-        </button>
       </div>
+
+      <div className={styles.divider}>
+        <span>or</span>
+      </div>
+
+      {/* The second door. Signing in with an email creates a new investor
+          with nothing on file; this one is already through setup. */}
+      <button
+        type="button"
+        className="btn btn-ghost btn-block"
+        onClick={existingInvestor}
+        disabled={busy}
+      >
+        {busy ? 'Signing in…' : 'Use existing investor'}
+      </button>
+      <p className="tiny" style={{ marginTop: 10, textAlign: 'center' }}>
+        Signs in as Hannah Smith, already verified. Straight to the marketplace.
+      </p>
 
       <hr className="hr" />
       <div className="demo-note">
-        Functional demo. All money is simulated and any email and password will sign
-        you in. Do not enter real passwords, tax IDs, or bank details.
+        Functional demo. All money is simulated and any email and password signs you
+        in as a <b>new</b> investor, who completes accreditation, the W-9 and identity
+        verification. Do not enter real passwords, tax IDs, or bank details.
       </div>
     </>
   );

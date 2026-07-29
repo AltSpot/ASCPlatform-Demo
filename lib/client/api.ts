@@ -89,6 +89,8 @@ export const api = {
       email,
       password,
     }),
+  demoLogin: () =>
+    post<{ user: SessionUser; wizardComplete: boolean }>('/auth/demo-login'),
   logout: () => post<void>('/auth/logout'),
   session: () => request<SessionPayload>('/session'),
 

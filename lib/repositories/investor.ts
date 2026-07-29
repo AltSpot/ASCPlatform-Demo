@@ -9,6 +9,7 @@
 import 'server-only';
 
 import { prisma } from '../db';
+import { DEMO_PERSONA } from '../demo-persona';
 import { ACCREDITATION_VALIDITY_DAYS, DAY_MS } from '../domain';
 import type {
   AccreditationStatus,
@@ -407,4 +408,59 @@ export async function getBank(userId: string): Promise<BankView | null> {
     type: row.type,
     linkedAt: row.linkedAt.toISOString(),
   };
+}
+
+// ---------------- the "existing investor" persona ----------------
+
+/**
+ * Fully onboard a freshly created investor as the demo persona.
+ *
+ * Everything the invest gate checks is satisfied here: accreditation
+ * verified, W-9 in the Vault, KYC cleared, an investment profile, and a
+ * linked bank. The visitor lands on the dashboard able to go straight
+ * into a subscription.
+ *
+ * Called only for accounts minted by the existing-investor button, so a
+ * normally created investor still walks the whole setup.
+ */
+export async function provisionDemoPersona(userId: string): Promise<void> {
+  await ensureInvestorRecords(userId);
+
+  const now = new Date();
+
+  await verifyAccreditation(userId);
+  await saveVault(userId, { ...DEMO_PERSONA.vault });
+
+  await prisma.kycRecord.update({
+    where: { userId },
+    data: {
+      idUploaded: true,
+      idFileName: 'hannah-smith-license.jpg',
+      selfieCaptured: true,
+      status: 'cleared',
+      submittedAt: now,
+      clearedAt: now,
+    },
+  });
+
+  await createProfile(userId, {
+    type: DEMO_PERSONA.profile.type,
+    name: DEMO_PERSONA.profile.name,
+    taxClass: DEMO_PERSONA.vault.taxClass,
+  });
+
+  await prisma.bankAccount.create({
+    data: {
+      userId,
+      institution: DEMO_PERSONA.bank.institution,
+      mask: DEMO_PERSONA.bank.mask,
+      type: DEMO_PERSONA.bank.type,
+      isDefault: true,
+    },
+  });
+
+  await prisma.wizardState.update({
+    where: { userId },
+    data: { profileDone: true, bankDone: true, completedAt: now },
+  });
 }

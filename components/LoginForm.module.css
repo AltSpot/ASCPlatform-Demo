@@ -1,0 +1,10 @@
+/* A quiet rule between the two ways in. */
+.divider{
+  display:flex;align-items:center;gap:14px;
+  margin:20px 0 16px;
+  font-family:var(--fm);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--faint);
+}
+.divider::before,.divider::after{
+  content:"";flex:1;height:1px;background:var(--hair);
+}
