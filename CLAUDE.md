@@ -43,6 +43,14 @@ Concretely:
 - **Money is integer dollars.** No floats in the database. Fee math lives in
   `lib/fees.ts` and nowhere else, so the document, the checkout summary and the
   funding page can never disagree.
+- **Everything for this product lives in this repo.** Components, assets, pages,
+  documents and experiments are created here, never in outside folders. The old
+  `altspot-portal` static demo is retired and deleted; the running app is its
+  own visual reference.
+- **Every company in the demo is fictional.** No real portfolio company names or
+  logos, and no claims about named real competitors. The lead deal, Synthera AI,
+  is an invented company whose deal package mirrors the shape of a real one.
+  Do not reintroduce real names into seed data, documents or copy.
 
 ## Running it
 
@@ -99,9 +107,8 @@ lib/
   client/api.ts             the ONLY place the browser calls fetch
 prisma/
   schema.prisma             production-shaped; SQLite today, Postgres later
-  seed.ts                   Simphonic (real) plus three fictional deals
+  seed.ts                   four fictional deals, Synthera AI leading
 scripts/                    dev-server supervisor, db reset, optional autostart
-legacy/                     the original static HTML demo, kept as visual reference
 ```
 
 ### Rendering split
@@ -136,7 +143,7 @@ renders it in a fixed order so deals compare like for like: hero, AltSpot's
 committed capital, the stat band, the story chapters, the thesis, the trend
 chart, risk, terms, the two fees, the data room, the ask. Every section returns
 `null` when its content is missing, because the deals behind the lead carry far
-thinner editorial than Simphonic. `/deals/[id]/deck` is a permanent redirect
+thinner editorial than Synthera. `/deals/[id]/deck` is a permanent redirect
 kept only so old links land somewhere sensible.
 
 ### The subscription document

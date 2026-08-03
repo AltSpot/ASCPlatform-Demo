@@ -30,7 +30,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "ASC Simphonic II, LLC",
+              "text": "ASC Synthera II, LLC",
               "b": true,
               "i": false
             }
@@ -80,7 +80,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "ASC Simphonic II, LLC",
+              "text": "ASC Synthera II, LLC",
               "b": true,
               "i": false
             }
@@ -100,7 +100,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This Operating Agreement (this “Agreement”), is made as of the Effective Date set forth on Schedule I attached hereto (the “Effective Date”), by and among ASC Simphonic II, LLC, a limited liability company under the laws of the State of Delaware (the “Company”), and the parties whose names are set forth in Exhibit A attached hereto and incorporated herein by this reference:",
+              "text": "This Operating Agreement (this \u201cAgreement\u201d), is made as of the Effective Date set forth on Schedule I attached hereto (the \u201cEffective Date\u201d), by and among ASC Synthera II, LLC, a limited liability company under the laws of the State of Delaware (the \u201cCompany\u201d), and the parties whose names are set forth in Exhibit A attached hereto and incorporated herein by this reference:",
               "b": false,
               "i": false
             }
@@ -110,7 +110,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "A. The Certificate of Formation (the “Certificate”) for the Company was filed with the Secretary of State of the State of Delaware on the Formation Date set forth on Schedule I (the “Formation Date”), pursuant to the Delaware Limited Liability Company Act, as may be amended from time to time (the “Act”).",
+              "text": "A. The Certificate of Formation (the \u201cCertificate\u201d) for the Company was filed with the Secretary of State of the State of Delaware on the Formation Date set forth on Schedule I (the \u201cFormation Date\u201d), pursuant to the Delaware Limited Liability Company Act, as may be amended from time to time (the \u201cAct\u201d).",
               "b": false,
               "i": false
             }
@@ -120,7 +120,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "B. The parties hereto desire to enter into this Agreement to provide for the Company’s governance and conduct of its business, and to specify their relative rights and obligations set forth herein.",
+              "text": "B. The parties hereto desire to enter into this Agreement to provide for the Company\u2019s governance and conduct of its business, and to specify their relative rights and obligations set forth herein.",
               "b": false,
               "i": false
             }
@@ -158,7 +158,7 @@
           "title": "Name",
           "runs": [
             {
-              "text": " The name of the Company shall be “ASC Simphonic II, LLC”. The Company may conduct business under that name or any other name approved by the Manager.",
+              "text": " The name of the Company shall be \u201cASC Synthera II, LLC\u201d. The Company may conduct business under that name or any other name approved by the Manager.",
               "b": false,
               "i": false
             }
@@ -194,7 +194,7 @@
           "title": "Business of the Company",
           "runs": [
             {
-              "text": " The Company will hold securities of the Portfolio Company set forth on Schedule I (the “Portfolio Company”) (the holding of such securities, the “Purpose”), and engage in any other lawful act or activity for which a limited liability company may be organized under the Act that is reasonably related to the Purpose.",
+              "text": " The Company will hold securities of the Portfolio Company set forth on Schedule I (the \u201cPortfolio Company\u201d) (the holding of such securities, the \u201cPurpose\u201d), and engage in any other lawful act or activity for which a limited liability company may be organized under the Act that is reasonably related to the Purpose.",
               "b": false,
               "i": false
             }
@@ -206,7 +206,7 @@
           "title": "Filings",
           "runs": [
             {
-              "text": " From time to time, the Manager shall cause to be filed, and agree to execute, such further certificates of formation, qualifications to do business, registration, fictitious name certificates, or like filings in such jurisdictions as may be necessary or appropriate in connection with the conduct of the Company’s business or to provide notification of the limitation of liability of the Manager, officers and those persons admitted to the Company as members (the “Members”) of the Company under applicable law.",
+              "text": " From time to time, the Manager shall cause to be filed, and agree to execute, such further certificates of formation, qualifications to do business, registration, fictitious name certificates, or like filings in such jurisdictions as may be necessary or appropriate in connection with the conduct of the Company\u2019s business or to provide notification of the limitation of liability of the Manager, officers and those persons admitted to the Company as members (the \u201cMembers\u201d) of the Company under applicable law.",
               "b": false,
               "i": false
             }
@@ -233,7 +233,7 @@
               "i": false
             },
             {
-              "text": " Upon execution of this Agreement, the Members will transfer and assign to the Company initial contributions to the capital of the Company the money or other property set forth opposite each such Member’s name on Exhibit A, in exchange for Membership Interests in the Company. “Membership Interest” shall mean an ownership interest in the Company which includes the right to share in the “Net Profits”, “Net Losses” (as such terms are defined in Section 5.1) or similar items of, and to receive distributions from, the Company, the right to vote or participate in management of the Company and the right to information concerning the business and affairs of the Company, as provided in this Agreement and the Act, and shall be issued as set forth in Section 2.1.2 below.",
+              "text": " Upon execution of this Agreement, the Members will transfer and assign to the Company initial contributions to the capital of the Company the money or other property set forth opposite each such Member\u2019s name on Exhibit A, in exchange for Membership Interests in the Company. \u201cMembership Interest\u201d shall mean an ownership interest in the Company which includes the right to share in the \u201cNet Profits\u201d, \u201cNet Losses\u201d (as such terms are defined in Section 5.1) or similar items of, and to receive distributions from, the Company, the right to vote or participate in management of the Company and the right to information concerning the business and affairs of the Company, as provided in this Agreement and the Act, and shall be issued as set forth in Section 2.1.2 below.",
               "b": false,
               "i": false
             }
@@ -248,7 +248,7 @@
               "i": false
             },
             {
-              "text": " The Membership Interests of the Company shall consist of numbers of units (“Units”). Initially, there shall be the number of Units set forth as the Total Units on Schedule I, of which (a) one (1) shall be designated as “Class A Common Units” (the “Class A Units”), and (b) the number of Units set forth as the Total Class B Units on Schedule I shall be designated as “Class B Common Units” (the “Class B Units”; the Class A Units and Class B Units are collectively referred to as “Common Units”). The number of Common Units held by each Member upon such Member’s initial capital contribution is set forth on Exhibit A. Each Class A Unit shall have the right to one (1) vote per Unit. Except as specifically and expressly provided in this Agreement, the Class B Units shall have no voting rights. The Class A Units shall be entitled to the Carried Interest as more fully set forth in Section 5.7. Except for such voting rights and the right to the Carried Interest, the Class A Units shall have no economic or other rights, and the holder(s) of the Class A Units shall not be entitled to any return of capital or other distribution from the Company except in respect of the Carried Interest. The Class A Units are intended to constitute a “profits interest” within the meaning of Internal Revenue Service Revenue Procedure 93-27 and Revenue Procedure 2001-43 (or successor guidance), and this Agreement shall be interpreted consistently with such intent.",
+              "text": " The Membership Interests of the Company shall consist of numbers of units (\u201cUnits\u201d). Initially, there shall be the number of Units set forth as the Total Units on Schedule I, of which (a) one (1) shall be designated as \u201cClass A Common Units\u201d (the \u201cClass A Units\u201d), and (b) the number of Units set forth as the Total Class B Units on Schedule I shall be designated as \u201cClass B Common Units\u201d (the \u201cClass B Units\u201d; the Class A Units and Class B Units are collectively referred to as \u201cCommon Units\u201d). The number of Common Units held by each Member upon such Member\u2019s initial capital contribution is set forth on Exhibit A. Each Class A Unit shall have the right to one (1) vote per Unit. Except as specifically and expressly provided in this Agreement, the Class B Units shall have no voting rights. The Class A Units shall be entitled to the Carried Interest as more fully set forth in Section 5.7. Except for such voting rights and the right to the Carried Interest, the Class A Units shall have no economic or other rights, and the holder(s) of the Class A Units shall not be entitled to any return of capital or other distribution from the Company except in respect of the Carried Interest. The Class A Units are intended to constitute a \u201cprofits interest\u201d within the meaning of Internal Revenue Service Revenue Procedure 93-27 and Revenue Procedure 2001-43 (or successor guidance), and this Agreement shall be interpreted consistently with such intent.",
               "b": false,
               "i": false
             }
@@ -272,7 +272,7 @@
           "title": "Capital Accounts",
           "runs": [
             {
-              "text": " The Company shall establish an individual capital account (“Capital Account”) for each Member. The Company shall determine and maintain each Capital Account in accordance with Treasury Regulations Section 1.704-1(b)(2)(iv). Upon a valid transfer of a Member’s Membership Interest in accordance with Article 6, such Member’s Capital Account shall carry over to the new owner.",
+              "text": " The Company shall establish an individual capital account (\u201cCapital Account\u201d) for each Member. The Company shall determine and maintain each Capital Account in accordance with Treasury Regulations Section 1.704-1(b)(2)(iv). Upon a valid transfer of a Member\u2019s Membership Interest in accordance with Article 6, such Member\u2019s Capital Account shall carry over to the new owner.",
               "b": false,
               "i": false
             }
@@ -296,7 +296,7 @@
           "title": "Company Expenses; Capital Calls",
           "runs": [
             {
-              "text": " The Company agrees to assume and pay all operating expenses, solely out of the assets of the Company, attributable to the Company’s or Manager’s activities (collectively, “Company Expenses”) on the terms and conditions herein set forth, and shall reimburse, solely out of the assets of the Company, the Manager for any Company Expenses incurred by them on behalf of the Company. Company Expenses borne by the Company shall include, without limitation: organizational and liquidation expenses of the Company; any sales or other taxes, fees or government charges which may be assessed against the Company; commissions or brokerage fees or similar charges incurred in connection with the purchase or sale of securities; all expenses relating to litigation and threatened litigation involving the Company, including indemnification expenses; expenses attributable to normal and extraordinary commercial banking, accounting, appraisal, legal, custodial and registration services provided to the Company; preparation and filing of all tax forms, including Schedule K-1s; and all other expenses properly chargeable to the activities of the Company. The Manager may retain and set aside a portion of the Company’s assets to pay for Company Expenses. The Operating Reserve established pursuant to Section 2.8 shall be the primary source of funds for the payment of Company Expenses, and the capital call mechanism set forth in this Section 2.5 shall apply only after the Operating Reserve has been substantially exhausted. To the extent that Company assets are insufficient to pay Company Expenses, the Manager may send written notice to all Members to contribute additional cash and assets to pay for Company Expenses, and within ten (10) days after the date of such written notice, all Members shall be required to contribute their pro rata share of the amount requested by the Manager, at a per-unit price equal to the price per unit paid by all of the Members to purchase their initial Class B Units. To the extent that any Member fails to contribute the capital called by the Manager, the ownership percentage of such non-contributing Member shall be diluted and reduced as a result of the additional capital contributions made by all of the contributing Members in respect of such capital call.",
+              "text": " The Company agrees to assume and pay all operating expenses, solely out of the assets of the Company, attributable to the Company\u2019s or Manager\u2019s activities (collectively, \u201cCompany Expenses\u201d) on the terms and conditions herein set forth, and shall reimburse, solely out of the assets of the Company, the Manager for any Company Expenses incurred by them on behalf of the Company. Company Expenses borne by the Company shall include, without limitation: organizational and liquidation expenses of the Company; any sales or other taxes, fees or government charges which may be assessed against the Company; commissions or brokerage fees or similar charges incurred in connection with the purchase or sale of securities; all expenses relating to litigation and threatened litigation involving the Company, including indemnification expenses; expenses attributable to normal and extraordinary commercial banking, accounting, appraisal, legal, custodial and registration services provided to the Company; preparation and filing of all tax forms, including Schedule K-1s; and all other expenses properly chargeable to the activities of the Company. The Manager may retain and set aside a portion of the Company\u2019s assets to pay for Company Expenses. The Operating Reserve established pursuant to Section 2.8 shall be the primary source of funds for the payment of Company Expenses, and the capital call mechanism set forth in this Section 2.5 shall apply only after the Operating Reserve has been substantially exhausted. To the extent that Company assets are insufficient to pay Company Expenses, the Manager may send written notice to all Members to contribute additional cash and assets to pay for Company Expenses, and within ten (10) days after the date of such written notice, all Members shall be required to contribute their pro rata share of the amount requested by the Manager, at a per-unit price equal to the price per unit paid by all of the Members to purchase their initial Class B Units. To the extent that any Member fails to contribute the capital called by the Manager, the ownership percentage of such non-contributing Member shall be diluted and reduced as a result of the additional capital contributions made by all of the contributing Members in respect of such capital call.",
               "b": false,
               "i": false
             }
@@ -308,7 +308,7 @@
           "title": "Minimum Subscription",
           "runs": [
             {
-              "text": " The minimum capital contribution of any Member subscribing for Class B Units shall be the Minimum Subscription Amount set forth on Schedule I (the “Minimum Subscription Amount”); provided, however, that the Manager, in the Manager’s sole and absolute discretion, may accept a capital contribution in a lesser amount from any prospective Member.",
+              "text": " The minimum capital contribution of any Member subscribing for Class B Units shall be the Minimum Subscription Amount set forth on Schedule I (the \u201cMinimum Subscription Amount\u201d); provided, however, that the Manager, in the Manager\u2019s sole and absolute discretion, may accept a capital contribution in a lesser amount from any prospective Member.",
               "b": false,
               "i": false
             }
@@ -320,7 +320,7 @@
           "title": "Management Fee",
           "runs": [
             {
-              "text": " In consideration of the Manager’s services in organizing and managing the Company, the Company shall pay to the Manager (or the Manager’s designee) at the closing of the Company’s initial offering of Class B Units (and, with respect to any Member admitted thereafter, at the closing of such Member’s purchase of Class B Units) a one-time management fee equal to the Management Fee Percentage set forth on Schedule I (the “Management Fee Percentage”) of the aggregate capital contributions made at such closing (the “Management Fee”). The Management Fee represents the prepayment, in full, of all annual management fees that would otherwise be payable to the Manager during the term of the Company, and no further management fees of any kind shall be payable to the Manager. The Management Fee shall be paid out of the Company’s assets and shall not reduce, and shall be disregarded for purposes of calculating, any Member’s capital contribution, Capital Account, Unreturned Capital, Percentage Interest, or number of Class B Units.",
+              "text": " In consideration of the Manager\u2019s services in organizing and managing the Company, the Company shall pay to the Manager (or the Manager\u2019s designee) at the closing of the Company\u2019s initial offering of Class B Units (and, with respect to any Member admitted thereafter, at the closing of such Member\u2019s purchase of Class B Units) a one-time management fee equal to the Management Fee Percentage set forth on Schedule I (the \u201cManagement Fee Percentage\u201d) of the aggregate capital contributions made at such closing (the \u201cManagement Fee\u201d). The Management Fee represents the prepayment, in full, of all annual management fees that would otherwise be payable to the Manager during the term of the Company, and no further management fees of any kind shall be payable to the Manager. The Management Fee shall be paid out of the Company\u2019s assets and shall not reduce, and shall be disregarded for purposes of calculating, any Member\u2019s capital contribution, Capital Account, Unreturned Capital, Percentage Interest, or number of Class B Units.",
               "b": false,
               "i": false
             }
@@ -332,7 +332,7 @@
           "title": "Operating Reserve",
           "runs": [
             {
-              "text": " At the closing of the Company’s initial offering of Class B Units (and, with respect to any Member admitted thereafter, at the closing of such Member’s purchase of Class B Units), the Company shall set aside, from the aggregate capital contributions made at such closing, an amount equal to the Operating Reserve Percentage set forth on Schedule I (the “Operating Reserve Percentage”) of such capital contributions to be held by the Company as a reserve for the payment of Company Expenses (the “Operating Reserve”). The Operating Reserve shall be held in the Company’s bank account and may be applied by the Manager from time to time, in the Manager’s sole discretion, to pay any Company Expenses, and shall constitute the primary source of funds for the payment of Company Expenses. The funding of the Operating Reserve shall not reduce, and shall be disregarded for purposes of calculating, any Member’s capital contribution, Capital Account, Unreturned Capital, Percentage Interest, or number of Class B Units. Notwithstanding Section 5.7 and Section 8.4, any portion of the Operating Reserve that the Manager determines is no longer required to pay anticipated Company Expenses, including any portion remaining upon dissolution of the Company, shall be distributed solely to the Members holding Class B Units, pro rata in accordance with each such Member’s Percentage Interest, as a return of capital, and the holder(s) of Class A Units shall not be entitled to any portion of, or to any Carried Interest on, such distribution. Each distribution made pursuant to this Section 2.8 shall reduce the Unreturned Capital of each Class B Member by the amount so distributed to such Member.",
+              "text": " At the closing of the Company\u2019s initial offering of Class B Units (and, with respect to any Member admitted thereafter, at the closing of such Member\u2019s purchase of Class B Units), the Company shall set aside, from the aggregate capital contributions made at such closing, an amount equal to the Operating Reserve Percentage set forth on Schedule I (the \u201cOperating Reserve Percentage\u201d) of such capital contributions to be held by the Company as a reserve for the payment of Company Expenses (the \u201cOperating Reserve\u201d). The Operating Reserve shall be held in the Company\u2019s bank account and may be applied by the Manager from time to time, in the Manager\u2019s sole discretion, to pay any Company Expenses, and shall constitute the primary source of funds for the payment of Company Expenses. The funding of the Operating Reserve shall not reduce, and shall be disregarded for purposes of calculating, any Member\u2019s capital contribution, Capital Account, Unreturned Capital, Percentage Interest, or number of Class B Units. Notwithstanding Section 5.7 and Section 8.4, any portion of the Operating Reserve that the Manager determines is no longer required to pay anticipated Company Expenses, including any portion remaining upon dissolution of the Company, shall be distributed solely to the Members holding Class B Units, pro rata in accordance with each such Member\u2019s Percentage Interest, as a return of capital, and the holder(s) of Class A Units shall not be entitled to any portion of, or to any Carried Interest on, such distribution. Each distribution made pursuant to this Section 2.8 shall reduce the Unreturned Capital of each Class B Member by the amount so distributed to such Member.",
               "b": false,
               "i": false
             }
@@ -344,7 +344,7 @@
           "title": "Origination and Structuring Fee",
           "runs": [
             {
-              "text": " The Company shall pay to the Manager (or the Manager’s designee) at the closing of the Company’s initial offering of Class B Units (and, with respect to any Member admitted thereafter, at the closing of such Member’s purchase of Class B Units) a one-time origination and structuring fee equal to the Origination and Structuring Fee Percentage set forth on Schedule I (the “Origination and Structuring Fee Percentage”) of the aggregate capital contributions made at such closing (the “Origination and Structuring Fee”), in consideration of documenting, forming, and organizing the Company, including legal, third-party consulting and diligence expenses, entity-formation costs, and the Manager’s personnel and resources expended in connection therewith. The Origination and Structuring Fee shall be paid out of the Company’s assets and shall not reduce, and shall be disregarded for purposes of calculating, any Member’s capital contribution, Capital Account, Unreturned Capital, Percentage Interest, or number of Class B Units.",
+              "text": " The Company shall pay to the Manager (or the Manager\u2019s designee) at the closing of the Company\u2019s initial offering of Class B Units (and, with respect to any Member admitted thereafter, at the closing of such Member\u2019s purchase of Class B Units) a one-time origination and structuring fee equal to the Origination and Structuring Fee Percentage set forth on Schedule I (the \u201cOrigination and Structuring Fee Percentage\u201d) of the aggregate capital contributions made at such closing (the \u201cOrigination and Structuring Fee\u201d), in consideration of documenting, forming, and organizing the Company, including legal, third-party consulting and diligence expenses, entity-formation costs, and the Manager\u2019s personnel and resources expended in connection therewith. The Origination and Structuring Fee shall be paid out of the Company\u2019s assets and shall not reduce, and shall be disregarded for purposes of calculating, any Member\u2019s capital contribution, Capital Account, Unreturned Capital, Percentage Interest, or number of Class B Units.",
               "b": false,
               "i": false
             }
@@ -362,7 +362,7 @@
           "title": "Admission of Additional Members",
           "runs": [
             {
-              "text": " To be admitted as an additional Member of the Company (an “Additional Member”), such Additional Member shall: (a) receive a Membership Interest by way of a Transfer made in compliance with the provisions of Article 6 or by making a contribution to the Company, in the form of money or property, with a value equal to or greater than the fair value of the Membership Interest acquired, as determined by the Manager in good faith, (b) be approved by the Manager; (c) execute (i) an instrument satisfactory to the Manager accepting and adopting the terms and provisions of this Agreement, and (ii) any other document or instrument as may be deemed necessary by the Manager; (d) pay any reasonable expenses (including attorneys’ fees) in connection with his, her or its admission as an Additional Member, and (e) comply with all applicable state and federal securities laws. Additional Members will participate in the management, “Net Profits”, “Net Losses” (as such terms are defined in Section 5.1), and distributions of the Company on such terms as are determined by the Manager, consistent with the provisions of Sections 5.6 and 5.7 below. Exhibit A shall be amended upon the admission of an additional Member to set forth such Member’s name, capital contribution and Percentage Interest (as defined in Section 5.1).",
+              "text": " To be admitted as an additional Member of the Company (an \u201cAdditional Member\u201d), such Additional Member shall: (a) receive a Membership Interest by way of a Transfer made in compliance with the provisions of Article 6 or by making a contribution to the Company, in the form of money or property, with a value equal to or greater than the fair value of the Membership Interest acquired, as determined by the Manager in good faith, (b) be approved by the Manager; (c) execute (i) an instrument satisfactory to the Manager accepting and adopting the terms and provisions of this Agreement, and (ii) any other document or instrument as may be deemed necessary by the Manager; (d) pay any reasonable expenses (including attorneys\u2019 fees) in connection with his, her or its admission as an Additional Member, and (e) comply with all applicable state and federal securities laws. Additional Members will participate in the management, \u201cNet Profits\u201d, \u201cNet Losses\u201d (as such terms are defined in Section 5.1), and distributions of the Company on such terms as are determined by the Manager, consistent with the provisions of Sections 5.6 and 5.7 below. Exhibit A shall be amended upon the admission of an additional Member to set forth such Member\u2019s name, capital contribution and Percentage Interest (as defined in Section 5.1).",
               "b": false,
               "i": false
             }
@@ -392,7 +392,7 @@
           "title": "Management and Powers; Removal",
           "runs": [
             {
-              "text": " The business of the Company shall be managed by the Manager, who initially shall be the person set forth as the Manager on Schedule I (the “Manager”). The Manager shall have full, complete and exclusive authority, power, and discretion to manage and control the business, property and affairs of the Company, to make all decisions regarding those matters, including tax elections, and to perform any and all other acts or activities customary or incident to the management of the Company’s business, property and affairs. The Manager shall serve until such Manager resigns or is removed. The Member Majority Interest may only remove a Manager for Cause (at which time such Manager shall be deemed to have resigned from all other positions with the Company). The holders of a majority of the Class A Units may elect a new Manager to fill any vacancy in the Manager’s role. “Member Majority Interest” means the Members holding a majority of the issued and outstanding Common Units. “Cause” means, with respect to a Manager: (a) such Manager’s knowing participation in fraud, embezzlement, theft or similar acts which materially and adversely affects the Company’s property and/or business, (b) such Manager’s intentional infliction of damage to Company property causing a material loss, or (c) such Manager’s conviction of, or entry of a plea of guilty or nolo contendere to, any crime that constitutes a felony.",
+              "text": " The business of the Company shall be managed by the Manager, who initially shall be the person set forth as the Manager on Schedule I (the \u201cManager\u201d). The Manager shall have full, complete and exclusive authority, power, and discretion to manage and control the business, property and affairs of the Company, to make all decisions regarding those matters, including tax elections, and to perform any and all other acts or activities customary or incident to the management of the Company\u2019s business, property and affairs. The Manager shall serve until such Manager resigns or is removed. The Member Majority Interest may only remove a Manager for Cause (at which time such Manager shall be deemed to have resigned from all other positions with the Company). The holders of a majority of the Class A Units may elect a new Manager to fill any vacancy in the Manager\u2019s role. \u201cMember Majority Interest\u201d means the Members holding a majority of the issued and outstanding Common Units. \u201cCause\u201d means, with respect to a Manager: (a) such Manager\u2019s knowing participation in fraud, embezzlement, theft or similar acts which materially and adversely affects the Company\u2019s property and/or business, (b) such Manager\u2019s intentional infliction of damage to Company property causing a material loss, or (c) such Manager\u2019s conviction of, or entry of a plea of guilty or nolo contendere to, any crime that constitutes a felony.",
               "b": false,
               "i": false
             }
@@ -404,7 +404,7 @@
           "title": "Written Consent of the Manager",
           "runs": [
             {
-              "text": " Any action by the Manager may be evidenced by a written consent setting forth the action so taken, signed by the Manager. The Manager’s consent will be deemed equally effective if given in a physical writing or by any electronic means whereby the Manager’s intent to consent may be ascertained with reasonable certainty.",
+              "text": " Any action by the Manager may be evidenced by a written consent setting forth the action so taken, signed by the Manager. The Manager\u2019s consent will be deemed equally effective if given in a physical writing or by any electronic means whereby the Manager\u2019s intent to consent may be ascertained with reasonable certainty.",
               "b": false,
               "i": false
             }
@@ -428,7 +428,7 @@
           "title": "Officers",
           "runs": [
             {
-              "text": " The Manager may appoint officers of the Company as the Manager deem necessary and appropriate in the Manager’s sole discretion and delegate management powers to such officers.",
+              "text": " The Manager may appoint officers of the Company as the Manager deem necessary and appropriate in the Manager\u2019s sole discretion and delegate management powers to such officers.",
               "b": false,
               "i": false
             }
@@ -440,7 +440,7 @@
           "title": "Devotion of Time; Other Activities",
           "runs": [
             {
-              "text": " The Manager shall devote whatever time or effort the Manager determines to be necessary and appropriate for the furtherance of the Company’s business.",
+              "text": " The Manager shall devote whatever time or effort the Manager determines to be necessary and appropriate for the furtherance of the Company\u2019s business.",
               "b": false,
               "i": false
             }
@@ -492,12 +492,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.1 “Adjusted Capital Account Deficit”",
+              "text": "5.1.1 \u201cAdjusted Capital Account Deficit\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " means, with respect to any Member, the deficit balance, if any, in such Member’s Capital Account as of the end of the relevant fiscal year, after giving effect to the following adjustments: (a) credit to such Capital Account any amounts which such Member is obligated to restore pursuant to any provision of this Agreement (if any) or is deemed obligated to restore pursuant to the penultimate sentences of Treasury Regulations Sections 1.704-2(g)(1) and 1.704-2(i)(5); and (b) debit from such Capital Account the items described in Treasury Regulations Sections 1.704-l(b)(2)(ii)(d)(4), 1.704-1(b)(2)(ii)(d)(5), and 1.704-1(b)(2)(ii)(d)(6). The foregoing definition of “Adjusted Capital Account Deficit” is intended to comply with the provisions of Treasury Regulations Section 1.704-1(b)(2)(ii)(d) and shall be interpreted consistently therewith.",
+              "text": " means, with respect to any Member, the deficit balance, if any, in such Member\u2019s Capital Account as of the end of the relevant fiscal year, after giving effect to the following adjustments: (a) credit to such Capital Account any amounts which such Member is obligated to restore pursuant to any provision of this Agreement (if any) or is deemed obligated to restore pursuant to the penultimate sentences of Treasury Regulations Sections 1.704-2(g)(1) and 1.704-2(i)(5); and (b) debit from such Capital Account the items described in Treasury Regulations Sections 1.704-l(b)(2)(ii)(d)(4), 1.704-1(b)(2)(ii)(d)(5), and 1.704-1(b)(2)(ii)(d)(6). The foregoing definition of \u201cAdjusted Capital Account Deficit\u201d is intended to comply with the provisions of Treasury Regulations Section 1.704-1(b)(2)(ii)(d) and shall be interpreted consistently therewith.",
               "b": false,
               "i": false
             }
@@ -507,12 +507,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.2 “Book Value”",
+              "text": "5.1.2 \u201cBook Value\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " means, with respect to any asset, the asset’s adjusted basis for federal income tax purposes, except as follows:",
+              "text": " means, with respect to any asset, the asset\u2019s adjusted basis for federal income tax purposes, except as follows:",
               "b": false,
               "i": false
             }
@@ -562,7 +562,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.3 “Code”",
+              "text": "5.1.3 \u201cCode\u201d",
               "b": true,
               "i": false
             },
@@ -577,12 +577,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.4 “Company Minimum Gain”",
+              "text": "5.1.4 \u201cCompany Minimum Gain\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " shall have the meaning ascribed to the term “partnership minimum gain” in the Treasury Regulations Section 1.704-2(d).",
+              "text": " shall have the meaning ascribed to the term \u201cpartnership minimum gain\u201d in the Treasury Regulations Section 1.704-2(d).",
               "b": false,
               "i": false
             }
@@ -592,7 +592,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.5 “Depreciation”",
+              "text": "5.1.5 \u201cDepreciation\u201d",
               "b": true,
               "i": false
             },
@@ -607,12 +607,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.6 “Distributable Cash”",
+              "text": "5.1.6 \u201cDistributable Cash\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " means such portion of the cash on hand or in bank accounts of the Company as is available for distribution to the Members after reasonable provision has been made for payment of Company expenses, liabilities, capital improvements, replacements, additions and contingencies, all as determined by the Manager in the Manager’s sole discretion.",
+              "text": " means such portion of the cash on hand or in bank accounts of the Company as is available for distribution to the Members after reasonable provision has been made for payment of Company expenses, liabilities, capital improvements, replacements, additions and contingencies, all as determined by the Manager in the Manager\u2019s sole discretion.",
               "b": false,
               "i": false
             }
@@ -622,12 +622,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.7 “Liquidation Event”",
+              "text": "5.1.7 \u201cLiquidation Event\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " means one or more related transactions pursuant to which the Company shall (A) sell, convey, exclusively license or otherwise dispose of all or substantially all of its assets, (B) merge with or into or consolidate with any other limited liability company, corporation or other entity (other than a wholly-owned subsidiary of the Company), which merger or consolidation involves the sale, transfer or exchange of Units by the Members (whether for cash, securities or otherwise) or (C) a sale or other disposition of Units by the Members representing at least a majority of all outstanding Units; provided that none of the following shall be considered a Liquidation Event: (i) a merger effected exclusively for the purpose of changing the domicile of the Company, (ii) an equity financing in which the Company is the surviving company, (iii) a transaction in which the Members immediately prior to the transaction own the same percentages of the securities of the surviving entity following the transaction, or (iv) a consolidation with a wholly-owned subsidiary of the Company. The distribution of substantially all of the cash or assets attributable to the Company’s ownership position in the Portfolio Company by the Portfolio Company to the Company shall also be a Liquidation Event.",
+              "text": " means one or more related transactions pursuant to which the Company shall (A) sell, convey, exclusively license or otherwise dispose of all or substantially all of its assets, (B) merge with or into or consolidate with any other limited liability company, corporation or other entity (other than a wholly-owned subsidiary of the Company), which merger or consolidation involves the sale, transfer or exchange of Units by the Members (whether for cash, securities or otherwise) or (C) a sale or other disposition of Units by the Members representing at least a majority of all outstanding Units; provided that none of the following shall be considered a Liquidation Event: (i) a merger effected exclusively for the purpose of changing the domicile of the Company, (ii) an equity financing in which the Company is the surviving company, (iii) a transaction in which the Members immediately prior to the transaction own the same percentages of the securities of the surviving entity following the transaction, or (iv) a consolidation with a wholly-owned subsidiary of the Company. The distribution of substantially all of the cash or assets attributable to the Company\u2019s ownership position in the Portfolio Company by the Portfolio Company to the Company shall also be a Liquidation Event.",
               "b": false,
               "i": false
             }
@@ -637,12 +637,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.8 “Member Nonrecourse Debt”",
+              "text": "5.1.8 \u201cMember Nonrecourse Debt\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " shall have the meaning ascribed to the term “partner nonrecourse debt” in Treasury Regulations Section 1.704-2(b)(4).",
+              "text": " shall have the meaning ascribed to the term \u201cpartner nonrecourse debt\u201d in Treasury Regulations Section 1.704-2(b)(4).",
               "b": false,
               "i": false
             }
@@ -652,7 +652,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.9 “Member Nonrecourse Debt Minimum Gain”",
+              "text": "5.1.9 \u201cMember Nonrecourse Debt Minimum Gain\u201d",
               "b": true,
               "i": false
             },
@@ -667,7 +667,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.10 “Member Nonrecourse Deductions”",
+              "text": "5.1.10 \u201cMember Nonrecourse Deductions\u201d",
               "b": true,
               "i": false
             },
@@ -682,12 +682,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.11 “Net Profits” and “Net Losses”",
+              "text": "5.1.11 \u201cNet Profits\u201d and \u201cNet Losses\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " shall mean the income, gain, loss, deductions, and credits of the Company in the aggregate or separately stated, as appropriate, determined in accordance with the method of accounting at the close of each fiscal year employed on the Company’s information tax return filed for federal income tax purposes.",
+              "text": " shall mean the income, gain, loss, deductions, and credits of the Company in the aggregate or separately stated, as appropriate, determined in accordance with the method of accounting at the close of each fiscal year employed on the Company\u2019s information tax return filed for federal income tax purposes.",
               "b": false,
               "i": false
             }
@@ -697,7 +697,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.12 “Nonrecourse Liability”",
+              "text": "5.1.12 \u201cNonrecourse Liability\u201d",
               "b": true,
               "i": false
             },
@@ -712,12 +712,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.13 “Percentage Interest”",
+              "text": "5.1.13 \u201cPercentage Interest\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " of each Member shall be as set forth opposite such Member’s name on Exhibit A and is determined by dividing (a) the issued and outstanding Class B Units held by such Member by (b) the total of all issued and outstanding Class B Units of the Company.",
+              "text": " of each Member shall be as set forth opposite such Member\u2019s name on Exhibit A and is determined by dividing (a) the issued and outstanding Class B Units held by such Member by (b) the total of all issued and outstanding Class B Units of the Company.",
               "b": false,
               "i": false
             }
@@ -727,7 +727,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.14 “Treasury Regulations”",
+              "text": "5.1.14 \u201cTreasury Regulations\u201d",
               "b": true,
               "i": false
             },
@@ -742,12 +742,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.15 “Unreturned Capital”",
+              "text": "5.1.15 \u201cUnreturned Capital\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " shall mean, as of any determination date, such Member’s capital contributions, reduced by the cumulative distributions to such Member pursuant to Section 2.8, Section 5.6, Section 5.7.1.1 and Section 5.7.2.1.",
+              "text": " shall mean, as of any determination date, such Member\u2019s capital contributions, reduced by the cumulative distributions to such Member pursuant to Section 2.8, Section 5.6, Section 5.7.1.1 and Section 5.7.2.1.",
               "b": false,
               "i": false
             }
@@ -757,12 +757,12 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.1.16 “Carried Interest”",
+              "text": "5.1.16 \u201cCarried Interest\u201d",
               "b": true,
               "i": false
             },
             {
-              "text": " means an amount equal to the Carried Interest Percentage set forth on Schedule I (the “Carried Interest Percentage”) of the cumulative Distributable Cash and other amounts otherwise distributable by the Company under Section 5.7 after, and only after, each Member holding Class B Units has received cumulative distributions equal to such Member’s Unreturned Capital.",
+              "text": " means an amount equal to the Carried Interest Percentage set forth on Schedule I (the \u201cCarried Interest Percentage\u201d) of the cumulative Distributable Cash and other amounts otherwise distributable by the Company under Section 5.7 after, and only after, each Member holding Class B Units has received cumulative distributions equal to such Member\u2019s Unreturned Capital.",
               "b": false,
               "i": false
             }
@@ -774,7 +774,7 @@
           "title": "Allocations of Net Profits and Net Losses",
           "runs": [
             {
-              "text": " Except as provided in Section 5.3, the Net Profits and Net Losses (or any item of income, gain, deduction, or loss) of the Company for each fiscal year (or other period) shall be allocated among the Members so as to ensure, to the greatest extent possible, that the Capital Account of each Member as of the end of such fiscal year (or other period), as increased by the Member’s share of Company Minimum Gain and Member Nonrecourse Debt Minimum Gain not otherwise required to be taken into account in such fiscal year (or other period), is equal to the hypothetical aggregate distributions that such Member would be entitled to receive if (a) all of the assets of the Company were sold for their Book Values, (b) all liabilities of the Company were satisfied in cash according to their terms (limited, with respect to each Nonrecourse Liability, to the Book Values of the assets securing such liability) and (c) the remaining proceeds were distributed as of the end of such fiscal year (or other period) in accordance with Section 5.7. If for any fiscal year, such an allocation of Net Profits or Net Losses does not permit the Capital Accounts of Members to be made to equal the amount which would have been distributed to Members pursuant to a hypothetical liquidation, then instead of allocating Net Profits or Net Losses, a pro rata share of individual items of gross income, gain, loss or deduction (which were the components of Net Profits or Net Losses) shall be allocated among the Members in such a manner that, at the end of such fiscal year, the Capital Account of each Member shall, to the extent possible, equal the amount which would have been distributed to such Member pursuant to a hypothetical liquidation.",
+              "text": " Except as provided in Section 5.3, the Net Profits and Net Losses (or any item of income, gain, deduction, or loss) of the Company for each fiscal year (or other period) shall be allocated among the Members so as to ensure, to the greatest extent possible, that the Capital Account of each Member as of the end of such fiscal year (or other period), as increased by the Member\u2019s share of Company Minimum Gain and Member Nonrecourse Debt Minimum Gain not otherwise required to be taken into account in such fiscal year (or other period), is equal to the hypothetical aggregate distributions that such Member would be entitled to receive if (a) all of the assets of the Company were sold for their Book Values, (b) all liabilities of the Company were satisfied in cash according to their terms (limited, with respect to each Nonrecourse Liability, to the Book Values of the assets securing such liability) and (c) the remaining proceeds were distributed as of the end of such fiscal year (or other period) in accordance with Section 5.7. If for any fiscal year, such an allocation of Net Profits or Net Losses does not permit the Capital Accounts of Members to be made to equal the amount which would have been distributed to Members pursuant to a hypothetical liquidation, then instead of allocating Net Profits or Net Losses, a pro rata share of individual items of gross income, gain, loss or deduction (which were the components of Net Profits or Net Losses) shall be allocated among the Members in such a manner that, at the end of such fiscal year, the Capital Account of each Member shall, to the extent possible, equal the amount which would have been distributed to such Member pursuant to a hypothetical liquidation.",
               "b": false,
               "i": false
             }
@@ -801,7 +801,7 @@
               "i": false
             },
             {
-              "text": " If there is a net decrease in Company Minimum Gain during any fiscal year, each Member shall be specially allocated items of Company income and gain for such fiscal year (and, if necessary, in subsequent fiscal years) in an amount equal to the portion of such Member’s share of the net decrease in Company Minimum Gain that is allocable to the disposition of Company property subject to a Nonrecourse Liability, which share of such net decrease shall be determined in accordance with Treasury Regulations Section 1.704-2(g)(2). Allocations pursuant to this Section 5.3.1 shall be made in proportion to the amounts required to be allocated to each Member under this Section 5.3.1. The items to be so allocated shall be determined in accordance with Treasury Regulations Section 1.704-2(f). This Section 5.3.1 is intended to comply with the minimum gain chargeback requirement contained in Treasury Regulations Section 1.704-2(f) and shall be interpreted consistently therewith.",
+              "text": " If there is a net decrease in Company Minimum Gain during any fiscal year, each Member shall be specially allocated items of Company income and gain for such fiscal year (and, if necessary, in subsequent fiscal years) in an amount equal to the portion of such Member\u2019s share of the net decrease in Company Minimum Gain that is allocable to the disposition of Company property subject to a Nonrecourse Liability, which share of such net decrease shall be determined in accordance with Treasury Regulations Section 1.704-2(g)(2). Allocations pursuant to this Section 5.3.1 shall be made in proportion to the amounts required to be allocated to each Member under this Section 5.3.1. The items to be so allocated shall be determined in accordance with Treasury Regulations Section 1.704-2(f). This Section 5.3.1 is intended to comply with the minimum gain chargeback requirement contained in Treasury Regulations Section 1.704-2(f) and shall be interpreted consistently therewith.",
               "b": false,
               "i": false
             }
@@ -816,7 +816,7 @@
               "i": false
             },
             {
-              "text": " If there is a net decrease in Member Nonrecourse Debt Minimum Gain, during any fiscal year, each Member who has a share of the Member Nonrecourse Debt Minimum Gain (which share shall be determined in accordance with Treasury Regulations Section 1.704-2(i)(5)) shall be specially allocated items of Company income and gain for such fiscal year (and, if necessary, in subsequent fiscal years) in an amount equal to that portion of such Member’s share of the net decrease in Member Nonrecourse Debt Minimum Gain that is allocable to the disposition of Company property subject to such Member Nonrecourse Debt (which share of such net decrease shall be determined in accordance with Treasury Regulations Section 1.704-2(i)(5)). Allocations pursuant to this Section 5.3.2 shall be made in proportion to the amounts required to be allocated to each Member under this Section 5.3.2. The items to be so allocated shall be determined in accordance with Treasury Regulations Section 1.704-2(i)(4). This Section 5.3.2 is intended to comply with the minimum gain chargeback requirement contained in Treasury Regulations Section 1.704-2(i)(4) and shall be interpreted consistently therewith.",
+              "text": " If there is a net decrease in Member Nonrecourse Debt Minimum Gain, during any fiscal year, each Member who has a share of the Member Nonrecourse Debt Minimum Gain (which share shall be determined in accordance with Treasury Regulations Section 1.704-2(i)(5)) shall be specially allocated items of Company income and gain for such fiscal year (and, if necessary, in subsequent fiscal years) in an amount equal to that portion of such Member\u2019s share of the net decrease in Member Nonrecourse Debt Minimum Gain that is allocable to the disposition of Company property subject to such Member Nonrecourse Debt (which share of such net decrease shall be determined in accordance with Treasury Regulations Section 1.704-2(i)(5)). Allocations pursuant to this Section 5.3.2 shall be made in proportion to the amounts required to be allocated to each Member under this Section 5.3.2. The items to be so allocated shall be determined in accordance with Treasury Regulations Section 1.704-2(i)(4). This Section 5.3.2 is intended to comply with the minimum gain chargeback requirement contained in Treasury Regulations Section 1.704-2(i)(4) and shall be interpreted consistently therewith.",
               "b": false,
               "i": false
             }
@@ -873,7 +873,7 @@
           "title": "Qualified Income Offset",
           "runs": [
             {
-              "text": " Any Member who receives an adjustment, allocation or Distribution described in subparagraphs (4), (5) or (6) of Section 1.704-1(b)(2)(ii)(d) of the Treasury Regulations for any reason, expectedly or unexpectedly, which adjustment, allocation or distribution creates or increases a deficit balance in that Member’s Capital Account, shall be allocated items of “book” income and gain in accordance with the provisions of the “qualified income offset” as described in Section 1.704-1(b)(2)(ii)(d) of the Treasury Regulations. Any special allocations of items of income and gain pursuant to this Section 5.4 shall be taken into account in computing subsequent allocations of income and gain pursuant to this Article 5 so that the net amount of any item so allocated and the income, gain, and losses allocated to each Member pursuant to this Section 5.4 to the extent possible, shall be equal to the net amount that would have been allocated to each such Member pursuant to the provisions of this Article 5 if such unexpected adjustments, allocations, or distributions had not occurred.",
+              "text": " Any Member who receives an adjustment, allocation or Distribution described in subparagraphs (4), (5) or (6) of Section 1.704-1(b)(2)(ii)(d) of the Treasury Regulations for any reason, expectedly or unexpectedly, which adjustment, allocation or distribution creates or increases a deficit balance in that Member\u2019s Capital Account, shall be allocated items of \u201cbook\u201d income and gain in accordance with the provisions of the \u201cqualified income offset\u201d as described in Section 1.704-1(b)(2)(ii)(d) of the Treasury Regulations. Any special allocations of items of income and gain pursuant to this Section 5.4 shall be taken into account in computing subsequent allocations of income and gain pursuant to this Article 5 so that the net amount of any item so allocated and the income, gain, and losses allocated to each Member pursuant to this Section 5.4 to the extent possible, shall be equal to the net amount that would have been allocated to each such Member pursuant to the provisions of this Article 5 if such unexpected adjustments, allocations, or distributions had not occurred.",
               "b": false,
               "i": false
             }
@@ -885,7 +885,7 @@
           "title": "Code Section 704(c) Allocations",
           "runs": [
             {
-              "text": " Notwithstanding any other provision in this Article 5, in accordance with Code Section 704(c) and the Treasury Regulations promulgated thereunder, income, gain, loss, and deduction with respect to any property contributed to the capital of the Company shall, solely for tax purposes, be allocated among the Members so as to take account of any variation between the adjusted basis of such property to the Company for federal income tax purposes and its fair market value on the date of contribution. Allocations pursuant to this Section 5.5 are solely for purposes of federal, state and local taxes. As such, they shall not affect or in any way be taken into account in computing a Member’s Capital Account or share of profits, losses, or other items of distributions pursuant to any provision of this Agreement.",
+              "text": " Notwithstanding any other provision in this Article 5, in accordance with Code Section 704(c) and the Treasury Regulations promulgated thereunder, income, gain, loss, and deduction with respect to any property contributed to the capital of the Company shall, solely for tax purposes, be allocated among the Members so as to take account of any variation between the adjusted basis of such property to the Company for federal income tax purposes and its fair market value on the date of contribution. Allocations pursuant to this Section 5.5 are solely for purposes of federal, state and local taxes. As such, they shall not affect or in any way be taken into account in computing a Member\u2019s Capital Account or share of profits, losses, or other items of distributions pursuant to any provision of this Agreement.",
               "b": false,
               "i": false
             }
@@ -897,7 +897,7 @@
           "title": "Tax Distributions",
           "runs": [
             {
-              "text": " Subject to applicable law, the Manager shall cause the Company to distribute cash or other property or assets of the Company to each of the Members an amount sufficient to enable each Member to satisfy that Member’s estimated federal and state income tax liability with respect to the net amount of tax items that are allocable to such Member under this Agreement with respect to the period transpiring since the last preceding distribution under this Section 5.6, taking into account the character of such tax items as capital gains and ordinary income, and determined by assuming that all Members are subject to tax on each Member’s ordinary income at the highest marginal rates under federal income tax laws and income tax laws of the state in which each Member resides (the “Tax Advance”); provided, that (a) distributions in respect of Tax Advances shall be mandatory if Distributable Cash is available; (b) any distribution to any Member under Section 5.7 in any fiscal year shall be reduced by the amount of any Tax Advances previously paid to the Member for the corresponding fiscal year; and (c) all Tax Advances shall take into account any prior allocations of Net Loss hereunder.",
+              "text": " Subject to applicable law, the Manager shall cause the Company to distribute cash or other property or assets of the Company to each of the Members an amount sufficient to enable each Member to satisfy that Member\u2019s estimated federal and state income tax liability with respect to the net amount of tax items that are allocable to such Member under this Agreement with respect to the period transpiring since the last preceding distribution under this Section 5.6, taking into account the character of such tax items as capital gains and ordinary income, and determined by assuming that all Members are subject to tax on each Member\u2019s ordinary income at the highest marginal rates under federal income tax laws and income tax laws of the state in which each Member resides (the \u201cTax Advance\u201d); provided, that (a) distributions in respect of Tax Advances shall be mandatory if Distributable Cash is available; (b) any distribution to any Member under Section 5.7 in any fiscal year shall be reduced by the amount of any Tax Advances previously paid to the Member for the corresponding fiscal year; and (c) all Tax Advances shall take into account any prior allocations of Net Loss hereunder.",
               "b": false,
               "i": false
             }
@@ -928,7 +928,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.7.1.1 first, to each of the Members holding Class B Units in proportion to each such Member’s Unreturned Capital until each such Member’s Unreturned Capital has been reduced to zero; and",
+              "text": "5.7.1.1 first, to each of the Members holding Class B Units in proportion to each such Member\u2019s Unreturned Capital until each such Member\u2019s Unreturned Capital has been reduced to zero; and",
               "b": false,
               "i": false
             }
@@ -938,7 +938,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.7.1.2 thereafter, (a) a percentage equal to one hundred percent (100%) minus the Carried Interest Percentage to the Members holding Class B Units on a pari passu basis pro rata in accordance with each Member’s Percentage Interest, and (b) the Carried Interest Percentage to the holder(s) of Class A Units in respect of the Carried Interest (and, if there is more than one holder of Class A Units, pro rata in accordance with the number of Class A Units held).",
+              "text": "5.7.1.2 thereafter, (a) a percentage equal to one hundred percent (100%) minus the Carried Interest Percentage to the Members holding Class B Units on a pari passu basis pro rata in accordance with each Member\u2019s Percentage Interest, and (b) the Carried Interest Percentage to the holder(s) of Class A Units in respect of the Carried Interest (and, if there is more than one holder of Class A Units, pro rata in accordance with the number of Class A Units held).",
               "b": false,
               "i": false
             }
@@ -963,7 +963,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.7.2.1 first, to each of the Members holding Class B Units in proportion to each Member’s Unreturned Capital until each such Member’s Unreturned Capital has been reduced to zero; and",
+              "text": "5.7.2.1 first, to each of the Members holding Class B Units in proportion to each Member\u2019s Unreturned Capital until each such Member\u2019s Unreturned Capital has been reduced to zero; and",
               "b": false,
               "i": false
             }
@@ -973,7 +973,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "5.7.2.2 second, after the distributions set forth in Section 5.7.2.1, (a) a percentage equal to one hundred percent (100%) minus the Carried Interest Percentage to all of the Members holding Class B Units on a pari passu basis pro rata in accordance with each Member’s Percentage Interest, and (b) the Carried Interest Percentage to the holder(s) of Class A Units in respect of the Carried Interest (and, if there is more than one holder of Class A Units, pro rata in accordance with the number of Class A Units held).",
+              "text": "5.7.2.2 second, after the distributions set forth in Section 5.7.2.1, (a) a percentage equal to one hundred percent (100%) minus the Carried Interest Percentage to all of the Members holding Class B Units on a pari passu basis pro rata in accordance with each Member\u2019s Percentage Interest, and (b) the Carried Interest Percentage to the holder(s) of Class A Units in respect of the Carried Interest (and, if there is more than one holder of Class A Units, pro rata in accordance with the number of Class A Units held).",
               "b": false,
               "i": false
             }
@@ -991,7 +991,7 @@
           "title": "Transfer and Assignment of Interests",
           "runs": [
             {
-              "text": " No Member shall be entitled to transfer, assign, convey, sell, encumber or in any way alienate its Membership Interest, or any part thereof, or any other securities of the Company (or any options, warrants or other rights to acquire any Membership Interest or other securities of the Company) without the prior written consent of the Manager, not to be unreasonably withheld, conditioned or delayed; provided, that such consent shall not be required for an assignment or transfer by a Member (or such Member’s representative or executor) to a Member’s spouse, parent, sibling, in-law, child, step-child or grandchild, or to a trust for the benefit of such assigning Member or any of the foregoing family members (each, a “Family Member”). “Permitted Transferee” means any Family Member or any transferee approved by the Manager.",
+              "text": " No Member shall be entitled to transfer, assign, convey, sell, encumber or in any way alienate its Membership Interest, or any part thereof, or any other securities of the Company (or any options, warrants or other rights to acquire any Membership Interest or other securities of the Company) without the prior written consent of the Manager, not to be unreasonably withheld, conditioned or delayed; provided, that such consent shall not be required for an assignment or transfer by a Member (or such Member\u2019s representative or executor) to a Member\u2019s spouse, parent, sibling, in-law, child, step-child or grandchild, or to a trust for the benefit of such assigning Member or any of the foregoing family members (each, a \u201cFamily Member\u201d). \u201cPermitted Transferee\u201d means any Family Member or any transferee approved by the Manager.",
               "b": false,
               "i": false
             }
@@ -1003,7 +1003,7 @@
           "title": "Substitution of Members",
           "runs": [
             {
-              "text": " To the extent that a Permitted Transferee receives Membership Interests under this Article 6, such Permitted Transferee may become a substitute Member only if (i) such Permitted Transferee executes an instrument satisfactory to the Manager accepting and adopting the terms and provisions of this Agreement, (ii) such Permitted Transferee pays any reasonable expenses (including attorneys’ fees) in connection with his, her or its admission as a new Member, and (iii) the transfer complies with all applicable state and federal securities laws. The admission of a substitute Member shall not release the Member who assigned the Membership Interest from any liability that such Member may have to the Company. Any transferee who acquires in any manner whatsoever a Membership Interest, irrespective of whether such transferee has accepted and adopted in writing the terms and provisions of this Agreement, shall be deemed by the acceptance of the benefits of the acquisition thereof to have agreed to be subject to and bound by all of the terms and conditions of this Agreement that any predecessor of such Membership Interest was subject to or by which such predecessor was bound.",
+              "text": " To the extent that a Permitted Transferee receives Membership Interests under this Article 6, such Permitted Transferee may become a substitute Member only if (i) such Permitted Transferee executes an instrument satisfactory to the Manager accepting and adopting the terms and provisions of this Agreement, (ii) such Permitted Transferee pays any reasonable expenses (including attorneys\u2019 fees) in connection with his, her or its admission as a new Member, and (iii) the transfer complies with all applicable state and federal securities laws. The admission of a substitute Member shall not release the Member who assigned the Membership Interest from any liability that such Member may have to the Company. Any transferee who acquires in any manner whatsoever a Membership Interest, irrespective of whether such transferee has accepted and adopted in writing the terms and provisions of this Agreement, shall be deemed by the acceptance of the benefits of the acquisition thereof to have agreed to be subject to and bound by all of the terms and conditions of this Agreement that any predecessor of such Membership Interest was subject to or by which such predecessor was bound.",
               "b": false,
               "i": false
             }
@@ -1021,7 +1021,7 @@
           "title": "Books and Records",
           "runs": [
             {
-              "text": " The books and records of the Company shall be kept in accordance with the accounting methods followed for federal income tax purposes. The Company shall maintain at its principal office all of the following: (a) a current list of the full name and last known business or residence address of each Member set forth in alphabetical order, together with the capital contributions, Capital Account and Percentage Interest of each Member; (b) a copy of the Certificate and any and all amendments thereto together with executed copies of any powers of attorney pursuant to which the Certificate or any amendments thereto have been executed; (c) copies of the Company’s federal, state, and local income tax or information returns and reports, if any, for the seven (7) most recent fiscal years; (d) a copy of this Agreement and any and all amendments thereto together with executed copies of any powers of attorney pursuant to which this Agreement or any amendments thereto have been executed; (e) copies of the financial statements of the Company for the seven (7) most recent fiscal years; and (f) the Company’s books and records as they relate to the internal affairs of the Company for at least the current and past four (4) fiscal years.",
+              "text": " The books and records of the Company shall be kept in accordance with the accounting methods followed for federal income tax purposes. The Company shall maintain at its principal office all of the following: (a) a current list of the full name and last known business or residence address of each Member set forth in alphabetical order, together with the capital contributions, Capital Account and Percentage Interest of each Member; (b) a copy of the Certificate and any and all amendments thereto together with executed copies of any powers of attorney pursuant to which the Certificate or any amendments thereto have been executed; (c) copies of the Company\u2019s federal, state, and local income tax or information returns and reports, if any, for the seven (7) most recent fiscal years; (d) a copy of this Agreement and any and all amendments thereto together with executed copies of any powers of attorney pursuant to which this Agreement or any amendments thereto have been executed; (e) copies of the financial statements of the Company for the seven (7) most recent fiscal years; and (f) the Company\u2019s books and records as they relate to the internal affairs of the Company for at least the current and past four (4) fiscal years.",
               "b": false,
               "i": false
             }
@@ -1033,7 +1033,7 @@
           "title": "Reports",
           "runs": [
             {
-              "text": " The Company shall cause to be filed, in accordance with the Act, all reports and documents required to be filed with any governmental agency. The Company shall cause to be prepared at least annually information concerning the Company’s operations necessary for the completion of the Members’ federal and state income tax returns. The Company shall send or cause to be sent to each Member within ninety (90) days after the end of each fiscal year (i) such information as is necessary to complete the Members’ federal and state income tax or information returns and (ii) a copy of the Company’s federal, state, and local income tax or information returns for the year.",
+              "text": " The Company shall cause to be filed, in accordance with the Act, all reports and documents required to be filed with any governmental agency. The Company shall cause to be prepared at least annually information concerning the Company\u2019s operations necessary for the completion of the Members\u2019 federal and state income tax returns. The Company shall send or cause to be sent to each Member within ninety (90) days after the end of each fiscal year (i) such information as is necessary to complete the Members\u2019 federal and state income tax or information returns and (ii) a copy of the Company\u2019s federal, state, and local income tax or information returns for the year.",
               "b": false,
               "i": false
             }
@@ -1045,7 +1045,7 @@
           "title": "Bank Accounts",
           "runs": [
             {
-              "text": " The Company shall maintain its funds in one or more separate bank accounts in the name of the Company, and shall not permit the funds of the Company to be commingled in any fashion with the funds of any other person. The officers shall be authorized to endorse checks, drafts, and other evidences of indebtedness made payable to the order of the Company, but only for the purpose of deposit into the Company’s accounts.",
+              "text": " The Company shall maintain its funds in one or more separate bank accounts in the name of the Company, and shall not permit the funds of the Company to be commingled in any fashion with the funds of any other person. The officers shall be authorized to endorse checks, drafts, and other evidences of indebtedness made payable to the order of the Company, but only for the purpose of deposit into the Company\u2019s accounts.",
               "b": false,
               "i": false
             }
@@ -1066,7 +1066,7 @@
               "i": false
             },
             {
-              "text": " The person set forth as the Tax Representative on Schedule I is designated as the “partnership representative” of the Company within the meaning of Section 6223(a) of the Code (the “Tax Representative”). If any state or local tax law provides for a tax matters partner/partnership representative or person having similar rights, powers, authority or obligations, the Tax Representative shall also serve in such capacity. The Manager may name a replacement Tax Representative at any time. In such capacity, the Tax Representative shall have all of the rights, authority and power, and shall be subject to all of the obligations, of a tax matters partner/partnership representative to the extent provided in the Code and the Treasury Regulations, and the Members hereby agree to be bound by any actions taken by the Tax Representative in such capacity. The Tax Representative shall represent the Company in all tax matters to the extent allowed by law. Without limiting the foregoing, the Tax Representative is authorized and required to represent the Company (at the Company’s expense) in connection with all examination of the Company’s affairs by tax authorities and to expend Company funds for professional services and costs associated therewith. Any decisions made by the Tax Representative, including, without limitation, whether or not to settle or contest any tax matter, and the choice of forum for any such contest, and whether or not to extend the period of limitations for the assessment or collection of any tax, shall be made in the Tax Representative’s sole discretion. Without limiting the generality of the foregoing, the Tax Representative (i) shall have the sole and absolute authority to make any elections on behalf of the Company permitted to be made pursuant to the Code or the Treasury Regulations promulgated thereunder and (ii) without limiting the foregoing, may, in its sole discretion, make an election on behalf of the Company under Sections 6221(b) or 6226 of the Code, and (iii) may take all actions the Tax Representative deems necessary or advisable in connection with the foregoing. The Tax Representative will have the authority and responsibility to arrange for the preparation, and timely filing, of the Company’s tax returns.",
+              "text": " The person set forth as the Tax Representative on Schedule I is designated as the \u201cpartnership representative\u201d of the Company within the meaning of Section 6223(a) of the Code (the \u201cTax Representative\u201d). If any state or local tax law provides for a tax matters partner/partnership representative or person having similar rights, powers, authority or obligations, the Tax Representative shall also serve in such capacity. The Manager may name a replacement Tax Representative at any time. In such capacity, the Tax Representative shall have all of the rights, authority and power, and shall be subject to all of the obligations, of a tax matters partner/partnership representative to the extent provided in the Code and the Treasury Regulations, and the Members hereby agree to be bound by any actions taken by the Tax Representative in such capacity. The Tax Representative shall represent the Company in all tax matters to the extent allowed by law. Without limiting the foregoing, the Tax Representative is authorized and required to represent the Company (at the Company\u2019s expense) in connection with all examination of the Company\u2019s affairs by tax authorities and to expend Company funds for professional services and costs associated therewith. Any decisions made by the Tax Representative, including, without limitation, whether or not to settle or contest any tax matter, and the choice of forum for any such contest, and whether or not to extend the period of limitations for the assessment or collection of any tax, shall be made in the Tax Representative\u2019s sole discretion. Without limiting the generality of the foregoing, the Tax Representative (i) shall have the sole and absolute authority to make any elections on behalf of the Company permitted to be made pursuant to the Code or the Treasury Regulations promulgated thereunder and (ii) without limiting the foregoing, may, in its sole discretion, make an election on behalf of the Company under Sections 6221(b) or 6226 of the Code, and (iii) may take all actions the Tax Representative deems necessary or advisable in connection with the foregoing. The Tax Representative will have the authority and responsibility to arrange for the preparation, and timely filing, of the Company\u2019s tax returns.",
               "b": false,
               "i": false
             }
@@ -1096,7 +1096,7 @@
               "i": false
             },
             {
-              "text": " The Members acknowledge and agree that the Company intends to elect the application of Section 6226 of the Code. This acknowledgement applies to each Member whether or not the Member owns any Units in both the reviewed year and the year of the tax adjustment. If the Company elects the application of Section 6226 of the Code, the Members shall take into account and report to the United States Internal Revenue Service (or any other applicable taxing authority) any adjustment to their tax items for the reviewed year of which they are notified by the Company in a written statement, in the manner provided in Section 6226(b), whether or not the Member owns any Units at such time. Any Member that fails to report its share of such adjustments on its tax return shall indemnify and hold harmless the Company, the Board, the Tax Representative, and each of their Affiliates from and against any and all liabilities related to taxes (including penalties and interest) imposed on the Company as a result of the Member’s inaction. In addition, each Member shall indemnify and hold the Company, the Manager, the Tax Representative, and each of their Affiliates harmless from and against any and all liabilities related to taxes (including penalties and interest) imposed on the Company (i) pursuant to Section 6221 of the Code, and (ii) resulting from or attributable to such Member’s failure to comply with Section 7.4.2 or this Section 7.4.3. Each Member acknowledges and agrees that no Member shall have any claim against the Company, the Board, the Tax Representative, or any of their Affiliates for any tax, penalties or interest resulting from the Company’s election under Section 6226 of the Code.",
+              "text": " The Members acknowledge and agree that the Company intends to elect the application of Section 6226 of the Code. This acknowledgement applies to each Member whether or not the Member owns any Units in both the reviewed year and the year of the tax adjustment. If the Company elects the application of Section 6226 of the Code, the Members shall take into account and report to the United States Internal Revenue Service (or any other applicable taxing authority) any adjustment to their tax items for the reviewed year of which they are notified by the Company in a written statement, in the manner provided in Section 6226(b), whether or not the Member owns any Units at such time. Any Member that fails to report its share of such adjustments on its tax return shall indemnify and hold harmless the Company, the Board, the Tax Representative, and each of their Affiliates from and against any and all liabilities related to taxes (including penalties and interest) imposed on the Company as a result of the Member\u2019s inaction. In addition, each Member shall indemnify and hold the Company, the Manager, the Tax Representative, and each of their Affiliates harmless from and against any and all liabilities related to taxes (including penalties and interest) imposed on the Company (i) pursuant to Section 6221 of the Code, and (ii) resulting from or attributable to such Member\u2019s failure to comply with Section 7.4.2 or this Section 7.4.3. Each Member acknowledges and agrees that no Member shall have any claim against the Company, the Board, the Tax Representative, or any of their Affiliates for any tax, penalties or interest resulting from the Company\u2019s election under Section 6226 of the Code.",
               "b": false,
               "i": false
             }
@@ -1111,7 +1111,7 @@
               "i": false
             },
             {
-              "text": " The Company shall indemnify, defend, and hold the Tax Representative harmless for all expenses, including legal and accounting fees, claims, liabilities, losses and damages incurred in connection with its serving in that capacity, consistent with the Tax Representative’s fiduciary obligations.",
+              "text": " The Company shall indemnify, defend, and hold the Tax Representative harmless for all expenses, including legal and accounting fees, claims, liabilities, losses and damages incurred in connection with its serving in that capacity, consistent with the Tax Representative\u2019s fiduciary obligations.",
               "b": false,
               "i": false
             }
@@ -1126,7 +1126,7 @@
               "i": false
             },
             {
-              "text": " The provisions contained in this Section 7.4 shall survive the termination of the Company, the termination of the Agreement and, with respect to any Member, the transfer or assignment of any portion of such Member’s Units.",
+              "text": " The provisions contained in this Section 7.4 shall survive the termination of the Company, the termination of the Agreement and, with respect to any Member, the transfer or assignment of any portion of such Member\u2019s Units.",
               "b": false,
               "i": false
             }
@@ -1174,7 +1174,7 @@
               "i": false
             },
             {
-              "text": " By written consent of the Manager (not to be unreasonably withheld, conditioned or delayed upon the distribution of substantially all of the cash or assets attributable to the Company’s ownership position in the Portfolio Company by the Portfolio Company to the Company); or",
+              "text": " By written consent of the Manager (not to be unreasonably withheld, conditioned or delayed upon the distribution of substantially all of the cash or assets attributable to the Company\u2019s ownership position in the Portfolio Company by the Portfolio Company to the Company); or",
               "b": false,
               "i": false
             }
@@ -1213,7 +1213,7 @@
           "title": "Winding Up",
           "runs": [
             {
-              "text": " Upon the dissolution of the Company, the Company’s assets shall be disposed of and its affairs wound up. The Company shall give written notice of the commencement of the dissolution to all of its known creditors.",
+              "text": " Upon the dissolution of the Company, the Company\u2019s assets shall be disposed of and its affairs wound up. The Company shall give written notice of the commencement of the dissolution to all of its known creditors.",
               "b": false,
               "i": false
             }
@@ -1249,7 +1249,7 @@
           "title": "Certificates",
           "runs": [
             {
-              "text": " The Company shall file with the Secretary of State of the State of Delaware any certificates and other necessary documents and instruments to effect the dissolution of the Company and upon the completion of the winding up of the Company’s affairs.",
+              "text": " The Company shall file with the Secretary of State of the State of Delaware any certificates and other necessary documents and instruments to effect the dissolution of the Company and upon the completion of the winding up of the Company\u2019s affairs.",
               "b": false,
               "i": false
             }
@@ -1295,7 +1295,7 @@
           "title": "Accredited Investor Status",
           "runs": [
             {
-              "text": " The Member is an “accredited investor” as defined in in Rule 501(a) of Regulation D, promulgated under the Securities Act of 1933.",
+              "text": " The Member is an \u201caccredited investor\u201d as defined in in Rule 501(a) of Regulation D, promulgated under the Securities Act of 1933.",
               "b": false,
               "i": false
             }
@@ -1307,7 +1307,7 @@
           "title": "Preexisting Relationship or Experience",
           "runs": [
             {
-              "text": " (i) The Member has a preexisting personal or business relationship with the Company or one or more of its control persons, or (ii) by reason of the Member’s business or financial experience, or by reason of the business or financial experience of the Member’s financial advisor who is unaffiliated with and who is not compensated, directly or indirectly, by the Company or any affiliate or selling agent of the Company, the Member is capable of evaluating the risks and merits of an investment in the Interest and of protecting the Member’s own interests in connection with this investment.",
+              "text": " (i) The Member has a preexisting personal or business relationship with the Company or one or more of its control persons, or (ii) by reason of the Member\u2019s business or financial experience, or by reason of the business or financial experience of the Member\u2019s financial advisor who is unaffiliated with and who is not compensated, directly or indirectly, by the Company or any affiliate or selling agent of the Company, the Member is capable of evaluating the risks and merits of an investment in the Interest and of protecting the Member\u2019s own interests in connection with this investment.",
               "b": false,
               "i": false
             }
@@ -1319,7 +1319,7 @@
           "title": "Investment Intent",
           "runs": [
             {
-              "text": " The Member is acquiring the Membership Interest for investment purposes for the Member’s own account only and not with a view to or for sale in connection with any distribution of all or any part of the Membership Interest. No other person will have any direct or indirect beneficial interest in or right to the Membership Interest.",
+              "text": " The Member is acquiring the Membership Interest for investment purposes for the Member\u2019s own account only and not with a view to or for sale in connection with any distribution of all or any part of the Membership Interest. No other person will have any direct or indirect beneficial interest in or right to the Membership Interest.",
               "b": false,
               "i": false
             }
@@ -1331,7 +1331,7 @@
           "title": "No Registration of Interest",
           "runs": [
             {
-              "text": " The Member acknowledges that the Membership Interest has not been registered under the Securities Act of 1933, as amended (the “Securities Act”), in reliance upon the exemption from registration provided by Section 4(a)(2) of the Securities Act, or registered or qualified under the California Corporate Securities Law of 1968, as amended, or any other applicable blue sky laws in reliance, in part, on the Member’s representations, warranties, and agreements herein. The Member represents, warrants, and agrees that the Company and the Members are under no obligation to register or qualify the Membership Interest under the Securities Act or under any state securities law, or to assist the Member in complying with any exemption from registration and qualification.",
+              "text": " The Member acknowledges that the Membership Interest has not been registered under the Securities Act of 1933, as amended (the \u201cSecurities Act\u201d), in reliance upon the exemption from registration provided by Section 4(a)(2) of the Securities Act, or registered or qualified under the California Corporate Securities Law of 1968, as amended, or any other applicable blue sky laws in reliance, in part, on the Member\u2019s representations, warranties, and agreements herein. The Member represents, warrants, and agrees that the Company and the Members are under no obligation to register or qualify the Membership Interest under the Securities Act or under any state securities law, or to assist the Member in complying with any exemption from registration and qualification.",
               "b": false,
               "i": false
             }
@@ -1343,7 +1343,7 @@
           "title": "Restricted Security",
           "runs": [
             {
-              "text": " The Member understands that the Membership Interest is a “restricted security” under the Securities Act in that the Membership Interest will be acquired from the Company in a transaction not involving a public offering, and that the Membership Interest may be resold without registration under the Securities Act only in certain limited circumstances and that otherwise the Membership Interest must be held indefinitely. It is unlawful to consummate a sale or transfer of a Membership Interest without providing the Manager with an opinion of counsel that the proposed transfer (a) does not affect the original sale of the Membership Interest under the exemption under Section 4(2) of the Securities Act, and (b) is in compliance with all applicable state and federal securities laws.",
+              "text": " The Member understands that the Membership Interest is a \u201crestricted security\u201d under the Securities Act in that the Membership Interest will be acquired from the Company in a transaction not involving a public offering, and that the Membership Interest may be resold without registration under the Securities Act only in certain limited circumstances and that otherwise the Membership Interest must be held indefinitely. It is unlawful to consummate a sale or transfer of a Membership Interest without providing the Manager with an opinion of counsel that the proposed transfer (a) does not affect the original sale of the Membership Interest under the exemption under Section 4(2) of the Securities Act, and (b) is in compliance with all applicable state and federal securities laws.",
               "b": false,
               "i": false
             }
@@ -1355,7 +1355,7 @@
           "title": "Investment Risk",
           "runs": [
             {
-              "text": " The Member acknowledges that the purchase of the Membership interest is a speculative investment which involves a substantial degree of risk of loss by the Member of the Member’s entire investment in the Company, that the Member understands and takes full cognizance of the risk factors related to the purchase of the Membership Interest (including without limitation that the Company is newly organized and has no financial or operating history) and that the Member is financially able to bear the economic risk of an investment in the Interest, including the total loss thereof.",
+              "text": " The Member acknowledges that the purchase of the Membership interest is a speculative investment which involves a substantial degree of risk of loss by the Member of the Member\u2019s entire investment in the Company, that the Member understands and takes full cognizance of the risk factors related to the purchase of the Membership Interest (including without limitation that the Company is newly organized and has no financial or operating history) and that the Member is financially able to bear the economic risk of an investment in the Interest, including the total loss thereof.",
               "b": false,
               "i": false
             }
@@ -1379,7 +1379,7 @@
           "title": "Consultation with Attorney and Financial Advisors",
           "runs": [
             {
-              "text": " The Member has been advised to consult with such Member’s own attorney regarding all legal matters concerning an investment in the Company and with such Member’s own financial advisors regarding the financial consequences of participating in the Company, and has done so, to the extent such Member considers necessary.",
+              "text": " The Member has been advised to consult with such Member\u2019s own attorney regarding all legal matters concerning an investment in the Company and with such Member\u2019s own financial advisors regarding the financial consequences of participating in the Company, and has done so, to the extent such Member considers necessary.",
               "b": false,
               "i": false
             }
@@ -1391,7 +1391,7 @@
           "title": "Tax Consequences",
           "runs": [
             {
-              "text": " The Member acknowledges that the tax consequences to such Member of investing in the Company will depend on such Member’s particular circumstances, and none of the Company, the Manager, the other Members, nor the partners, shareholders, members, managers, agents, officers, directors, employees, affiliates, or consultants of any of them will be responsible or liable for the tax consequences to such Member of an investment in the Company. Such Member will look solely to, and rely upon, such Member’s own advisers with respect to the tax consequences of this investment. Such Member acknowledges that there can be no assurance that the Code or the Treasury Regulations will not be amended or interpreted in the future in such a manner so as to deprive the Company and the Members of some or all of the tax benefits they might now receive, nor that some of the deductions claimed by the Company or the allocations of items of income, gain, loss, deduction, or credit among the Members may not be challenged by the Internal Revenue Service.",
+              "text": " The Member acknowledges that the tax consequences to such Member of investing in the Company will depend on such Member\u2019s particular circumstances, and none of the Company, the Manager, the other Members, nor the partners, shareholders, members, managers, agents, officers, directors, employees, affiliates, or consultants of any of them will be responsible or liable for the tax consequences to such Member of an investment in the Company. Such Member will look solely to, and rely upon, such Member\u2019s own advisers with respect to the tax consequences of this investment. Such Member acknowledges that there can be no assurance that the Code or the Treasury Regulations will not be amended or interpreted in the future in such a manner so as to deprive the Company and the Members of some or all of the tax benefits they might now receive, nor that some of the deductions claimed by the Company or the allocations of items of income, gain, loss, deduction, or credit among the Members may not be challenged by the Internal Revenue Service.",
               "b": false,
               "i": false
             }
@@ -1445,7 +1445,7 @@
           "title": "Arbitration",
           "runs": [
             {
-              "text": " Except as otherwise provided in this Agreement, any controversy between the parties arising out of this Agreement shall be submitted to the American Arbitration Association for arbitration in the Arbitration Venue set forth on Schedule I (the “Arbitration Venue”). The decision of the Arbitrator shall be binding on the parties and non-appealable. The costs of the arbitration, including any American Arbitration Association administration fee, the arbitrator’s fee, and costs for the use of facilities during the hearings, shall be borne equally by the parties to the arbitration. Attorneys’ fees may be awarded to the prevailing or most prevailing party at the discretion of the arbitrator. The arbitrator shall not have any power to alter, amend, modify or change any of the terms of this Agreement nor to grant any remedy which is either prohibited by the terms of this Agreement, or not available in a court of law.",
+              "text": " Except as otherwise provided in this Agreement, any controversy between the parties arising out of this Agreement shall be submitted to the American Arbitration Association for arbitration in the Arbitration Venue set forth on Schedule I (the \u201cArbitration Venue\u201d). The decision of the Arbitrator shall be binding on the parties and non-appealable. The costs of the arbitration, including any American Arbitration Association administration fee, the arbitrator\u2019s fee, and costs for the use of facilities during the hearings, shall be borne equally by the parties to the arbitration. Attorneys\u2019 fees may be awarded to the prevailing or most prevailing party at the discretion of the arbitrator. The arbitrator shall not have any power to alter, amend, modify or change any of the terms of this Agreement nor to grant any remedy which is either prohibited by the terms of this Agreement, or not available in a court of law.",
               "b": false,
               "i": false
             }
@@ -1469,7 +1469,7 @@
           "title": "Notices",
           "runs": [
             {
-              "text": " Any notice to be given or to be served upon the Company or any party hereto in connection with this Agreement must be in writing (which may include facsimile or electronic mail) and will be deemed to have been given and received when delivered to the address specified by the party to receive the notice or, in the case of facsimile or electronic mail, when delivered upon confirmation of receipt. Such notices will be given to a Member at the address specified in Exhibit A hereto. Any party may, at any time by giving five (5) days’ prior written notice to the other Members, designate any other address in substitution of the foregoing address to which such notice will be given.",
+              "text": " Any notice to be given or to be served upon the Company or any party hereto in connection with this Agreement must be in writing (which may include facsimile or electronic mail) and will be deemed to have been given and received when delivered to the address specified by the party to receive the notice or, in the case of facsimile or electronic mail, when delivered upon confirmation of receipt. Such notices will be given to a Member at the address specified in Exhibit A hereto. Any party may, at any time by giving five (5) days\u2019 prior written notice to the other Members, designate any other address in substitution of the foregoing address to which such notice will be given.",
               "b": false,
               "i": false
             }
@@ -1553,7 +1553,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This Schedule I is attached to and forms part of the Operating Agreement of ASC Simphonic II, LLC, dated as of the Effective Date set forth below. Capitalized terms used in this Schedule I and not otherwise defined herein shall have the meanings set forth in the Operating Agreement.",
+              "text": "This Schedule I is attached to and forms part of the Operating Agreement of ASC Synthera II, LLC, dated as of the Effective Date set forth below. Capitalized terms used in this Schedule I and not otherwise defined herein shall have the meanings set forth in the Operating Agreement.",
               "b": false,
               "i": false
             }
@@ -1584,7 +1584,7 @@
             ],
             [
               "Portfolio Company",
-              "Simphonic, Inc., a Delaware corporation"
+              "Synthera AI, Inc., a Delaware corporation"
             ],
             [
               "Total Units",
@@ -1624,7 +1624,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "IN WITNESS WHEREOF, ASC Simphonic II, LLC, a Delaware limited liability company, and the Members of ASC Simphonic II, LLC, have executed this Agreement, effective as of the date written above.",
+              "text": "IN WITNESS WHEREOF, ASC Synthera II, LLC, a Delaware limited liability company, and the Members of ASC Synthera II, LLC, have executed this Agreement, effective as of the date written above.",
               "b": false,
               "i": false
             }
@@ -1644,7 +1644,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "ASC Simphonic II, LLC",
+              "text": "ASC Synthera II, LLC",
               "b": true,
               "i": false
             }
@@ -1704,7 +1704,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "IN WITNESS WHEREOF, ASC Simphonic II, LLC, a Delaware limited liability company, and the Members of ASC Simphonic II, LLC, have executed this Agreement, effective as of the date written above.",
+              "text": "IN WITNESS WHEREOF, ASC Synthera II, LLC, a Delaware limited liability company, and the Members of ASC Synthera II, LLC, have executed this Agreement, effective as of the date written above.",
               "b": false,
               "i": false
             }
@@ -1774,6 +1774,6 @@
     }
   ],
   "substitutions": {},
-  "contentHash": "d6a0ced57db33cca",
-  "wordCount": 9447
+  "contentHash": "5a0868c14eb7d338",
+  "wordCount": 9448
 }

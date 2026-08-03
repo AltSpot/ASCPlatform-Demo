@@ -135,7 +135,7 @@ export default function LegalDocument({
         <header className={s.head}>
           <h4 className={s.docTitle}>{entry.document.title ?? entry.title}</h4>
           <div className={s.docSub}>
-            ASC Simphonic II, LLC · Managed by AltSpot Capital, LLC
+            ASC Synthera II, LLC · Managed by AltSpot Capital, LLC
           </div>
           <div className={s.roleTag}>{ROLE_LABEL[entry.role]}</div>
           <p className={s.purpose}>{entry.purpose}</p>
@@ -245,7 +245,7 @@ export default function LegalDocument({
         })}
 
         <p className={s.foot}>
-          Rendered from the executed form of the {entry.title} for ASC Simphonic II,
+          Rendered from the executed form of the {entry.title} for ASC Synthera II,
           LLC. Wording, clause numbering and emphasis are counsel&rsquo;s. Version{' '}
           {entry.document.contentHash}. Demo environment.
         </p>

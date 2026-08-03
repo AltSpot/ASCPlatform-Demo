@@ -5,9 +5,11 @@
  * 10% carried interest on profits at exit. Nothing else: no annual
  * fees, no capital calls.
  *
- * Simphonic is the real lead deal, ported from the AltSpot deal package.
- * The remaining three are fictional and exist only to make the shelf look
- * inhabited — they are clearly marked in `isFictional`.
+ * Every company here is FICTIONAL. Synthera AI, the lead deal, mirrors the
+ * shape of a real AltSpot deal package (structure, terms, checkout flow), but
+ * the company, its name, logo and story are invented so the demo never shows
+ * a real company or makes claims about a real competitor. The remaining
+ * three are fictional shelf dressing.
  *
  * Idempotent: re-running upserts deals and leaves investor data alone.
  * Use `npm run db:reset` to wipe everything and start clean.
@@ -79,26 +81,26 @@ const FEES = { management: 5, carry: 10 };
 
 const DEALS: SeedDeal[] = [
   // ------------------------------------------------------------------
-  //  SIMPHONIC — the real deal. Content from the AltSpot deal package.
+  //  SYNTHERA AI — fictional lead deal, modeled on a real deal package.
   // ------------------------------------------------------------------
   {
-    id: 'simphonic',
-    name: 'Simphonic',
-    entity: 'ASC Simphonic II, LLC',
+    id: 'synthera',
+    name: 'Synthera AI',
+    entity: 'ASC Synthera II, LLC',
     tag: 'AltSpot-led · Series Seed',
     kind: 'led',
     sector: 'Vertical AI · Senior Care',
     stage: 'Series Seed Preferred',
     art: 'linear-gradient(135deg,#0E1A24 0%,#1C3A4E 55%,#3E7A96 115%)',
-    logoUrl: '/simphonic-logo.svg',
+    logoUrl: '/synthera-logo.svg',
     headline:
       'The AI operating system replacing legacy software across 60,000+ senior care facilities.',
     blurb:
-      'AI-native platform replacing three to five disconnected systems per facility. $840K contracted ARR, up ~68% in a month, with a large regional operator that dropped PointClickCare to adopt it.',
+      'AI-native platform replacing three to five disconnected systems per facility. $840K contracted ARR, up ~68% in a month, with a large regional operator that dropped the category’s dominant legacy platform to adopt it.',
     thesis: [
-      'A large regional senior care operator dropped PointClickCare, the industry’s dominant legacy platform, and chose Simphonic across 50+ facilities and 1,000+ licenses. When a major operator replaces the market leader with an AI-native platform, that is the clearest adoption signal the category produces.',
-      'The market is 60,000+ U.S. facilities, 90%+ of them small operators running on paper and disconnected point solutions. Simphonic replaces eMAR, scheduling, billing, care tracking and assessments with one system, at net-neutral or lower cost. It is a budget-neutral swap that removes vendors rather than adding a line item.',
-      'Distribution compounds through pharmacies. Incumbents charge pharmacies to integrate; Simphonic integrates free, turning every pharmacy into a warm channel into the dozens of facilities it already serves. Every integration also feeds a proprietary medication and care dataset that grows with scale.',
+      'A large regional senior care operator dropped the industry’s dominant legacy platform and chose Synthera across 50+ facilities and 1,000+ licenses. When a major operator replaces the market leader with an AI-native platform, that is the clearest adoption signal the category produces.',
+      'The market is 60,000+ U.S. facilities, 90%+ of them small operators running on paper and disconnected point solutions. Synthera replaces eMAR, scheduling, billing, care tracking and assessments with one system, at net-neutral or lower cost. It is a budget-neutral swap that removes vendors rather than adding a line item.',
+      'Distribution compounds through pharmacies. Incumbents charge pharmacies to integrate; Synthera integrates free, turning every pharmacy into a warm channel into the dozens of facilities it already serves. Every integration also feeds a proprietary medication and care dataset that grows with scale.',
       'AltSpot led the pre-seed at $5.5M pre-money and is doubling down at $11M. We hold a board observer seat, receive monthly financials, and have direct CEO access. Our investors see what we see.',
     ],
     // The standard set. Gaps are left genuinely empty rather than guessed:
@@ -136,13 +138,13 @@ const DEALS: SeedDeal[] = [
       { k: 'Close rate', v: '~70%', note: 'from decision stage forward' },
     ],
     summary:
-      'Simphonic replaces the three to five disconnected systems a senior care facility runs today with one AI-native platform. Contracted ARR is $840K across 12 companies and roughly 70 facilities, up about 68% in a month. AltSpot led the pre-seed and is leading this round with $500,000 of its own capital.',
+      'Synthera replaces the three to five disconnected systems a senior care facility runs today with one AI-native platform. Contracted ARR is $840K across 12 companies and roughly 70 facilities, up about 68% in a month. AltSpot led the pre-seed and is leading this round with $500,000 of its own capital.',
     // TODO: confirm with Ryan. Placeholder until the real figure is supplied.
     pricePerShare: 'Confirm before send',
     whatWeLike: [
-      'A large regional operator dropped PointClickCare, the category’s dominant platform, and chose Simphonic across 50+ facilities and 1,000+ licenses.',
-      'It is a budget-neutral swap. Simphonic replaces three to five systems at net-neutral or lower cost, so it removes vendors instead of adding a line item.',
-      'Pharmacies are the distribution wedge. Incumbents charge them to integrate; Simphonic integrates free, turning each one into a warm channel into dozens of facilities.',
+      'A large regional operator dropped the category’s dominant platform and chose Synthera across 50+ facilities and 1,000+ licenses.',
+      'It is a budget-neutral swap. Synthera replaces three to five systems at net-neutral or lower cost, so it removes vendors instead of adding a line item.',
+      'Pharmacies are the distribution wedge. Incumbents charge them to integrate; Synthera integrates free, turning each one into a warm channel into dozens of facilities.',
       'One operator lands many facilities. The average pipeline company brings roughly 28.5 facilities at about 50 licenses each.',
       'We have been inside this deal since the pre-seed at $5.5M pre-money, with a board observer seat, monthly financials and direct CEO access.',
     ],
@@ -161,14 +163,14 @@ const DEALS: SeedDeal[] = [
     ],
     outcomes: {
       intro:
-        'Vertical AI SaaS trades at a premium and the buyer universe is deep. PointClickCare has made 10+ acquisitions and a large regional operator just left it for Simphonic.',
+        'Vertical AI SaaS trades at a premium and the buyer universe is deep. The category’s dominant incumbent has made 10+ acquisitions, and a large regional operator just left it for Synthera.',
       scenarios: [
         { k: '$5M ARR', v: '3 to 7x', note: 'at 6 to 8x revenue' },
         { k: '$10M ARR', v: '5 to 14x', note: 'at 8 to 15x revenue' },
         { k: '$20M ARR', v: '11 to 27x', note: 'at 6 to 15x revenue' },
       ],
       comparables: [
-        { company: 'PointClickCare', context: 'Senior care EHR, 10+ acquisitions', valuation: '$5B+', multiple: '~7 to 8x rev' },
+        { company: 'Category incumbent', context: 'Senior care EHR, 10+ acquisitions', valuation: '$5B+', multiple: '~7 to 8x rev' },
         { company: 'MatrixCare', context: 'Acquired by ResMed', valuation: '$750M', multiple: '~6x rev' },
         { company: 'Veeva Systems', context: 'Vertical SaaS, life sciences', valuation: '$35B+', multiple: '~12x rev' },
         { company: 'ServiceTitan', context: 'Vertical SaaS, trades', valuation: '$9B+', multiple: '~13x rev' },
@@ -179,7 +181,7 @@ const DEALS: SeedDeal[] = [
         'Illustrative only, based on an $11M entry. Outcomes depend on exit timing, dilution and valuation, and no return is promised. The 5% revenue share pays before any exit.',
     },
     risks:
-      'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: revenue is concentrated in a small number of operators, and losing one materially changes the picture; the "in final negotiations" and pipeline figures are modeled from operator averages and are not signed contracts; senior care is regulated and reimbursement-sensitive, and rule changes can slow adoption; incumbents including PointClickCare are well capitalized and acquisitive; and the position is illiquid with no public market and no promised exit timeline. AltSpot’s own $500,000 carries these same risks.',
+      'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: revenue is concentrated in a small number of operators, and losing one materially changes the picture; the "in final negotiations" and pipeline figures are modeled from operator averages and are not signed contracts; senior care is regulated and reimbursement-sensitive, and rule changes can slow adoption; the category’s incumbents are well capitalized and acquisitive; and the position is illiquid with no public market and no promised exit timeline. AltSpot’s own $500,000 carries these same risks.',
     minInvestment: 10000,
     allocationTotal: 2000000,
     allocationRemaining: 640000,
@@ -197,20 +199,20 @@ const DEALS: SeedDeal[] = [
         'Contracted ARR in $K, monthly. Contracted figures verified with the company; pipeline figures are modeled and excluded here.',
     },
     docs: [
-      'Private Placement Memorandum: ASC Simphonic II, LLC',
-      'Subscription Agreement: ASC Simphonic II, LLC',
-      'Operating Agreement: ASC Simphonic II, LLC',
+      'Private Placement Memorandum: ASC Synthera II, LLC',
+      'Subscription Agreement: ASC Synthera II, LLC',
+      'Operating Agreement: ASC Synthera II, LLC',
       'Accredited Investor Questionnaire (Exhibit A)',
       'Funding Instructions',
     ],
     spotbot: [
       {
         q: 'What exactly am I buying?',
-        a: 'Class B Common Units in ASC Simphonic II, LLC, a Delaware special-purpose vehicle formed by AltSpot to hold Series Seed Preferred Stock in Simphonic, Inc. along with associated warrants. You own units in the SPV, not shares of Simphonic directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+        a: 'Class B Common Units in ASC Synthera II, LLC, a Delaware special-purpose vehicle formed by AltSpot to hold Series Seed Preferred Stock in Synthera AI, Inc. along with associated warrants. You own units in the SPV, not shares of Synthera directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
       },
       {
         q: 'How is AltSpot paid on this deal?',
-        a: 'A 5% management fee, charged once at closing, not annually. Then 10% carried interest on profits at exit. That is the entire fee model: no annual fees, no capital calls, no hidden charges. Separately, the SPV holds a 5% revenue share in Simphonic to a 1.5x cap, which is a term of the investment rather than a fee paid to AltSpot. Not legal, tax, or investment advice.',
+        a: 'A 5% management fee, charged once at closing, not annually. Then 10% carried interest on profits at exit. That is the entire fee model: no annual fees, no capital calls, no hidden charges. Separately, the SPV holds a 5% revenue share in Synthera to a 1.5x cap, which is a term of the investment rather than a fee paid to AltSpot. Not legal, tax, or investment advice.',
       },
       {
         q: 'What are the biggest risks?',
@@ -218,7 +220,7 @@ const DEALS: SeedDeal[] = [
       },
       {
         q: 'What is the revenue share?',
-        a: 'Once Simphonic exceeds $1M in ARR, the SPV receives 5% of top-line revenue until it has returned 1.5x the investment. That produces cashflow before any exit event. If Simphonic raises a qualified VC up round, AltSpot steps out of the revenue share and takes 30% warrant coverage at this round’s price instead. Details are in the Memorandum. Not legal, tax, or investment advice.',
+        a: 'Once Synthera exceeds $1M in ARR, the SPV receives 5% of top-line revenue until it has returned 1.5x the investment. That produces cashflow before any exit event. If Synthera raises a qualified VC up round, AltSpot steps out of the revenue share and takes 30% warrant coverage at this round’s price instead. Details are in the Memorandum. Not legal, tax, or investment advice.',
       },
     ],
     deck: [
@@ -240,14 +242,14 @@ const DEALS: SeedDeal[] = [
         title: 'One AI-native platform. Six systems replaced.',
         body: [
           'Care tracking, eMAR, billing, scheduling, assessments and an embedded AI assistant in a single system, built caregiver-first so frontline staff actually adopt it.',
-          'Simphonic replaces three to five systems at net-neutral or lower cost with 80%+ software gross margin. It removes vendors rather than adding a line item.',
+          'Synthera replaces three to five systems at net-neutral or lower cost with 80%+ software gross margin. It removes vendors rather than adding a line item.',
         ],
       },
       {
         kicker: 'Distribution',
         title: 'Pharmacies are the wedge, and they are free.',
         body: [
-          'In senior care, pharmacies and facilities are tightly coupled through medication administration. Incumbents charge pharmacies to integrate. Simphonic integrates free.',
+          'In senior care, pharmacies and facilities are tightly coupled through medication administration. Incumbents charge pharmacies to integrate. Synthera integrates free.',
           'Each pharmacy serves dozens of facilities and becomes a warm introduction to every one of them. The integration is free, the facilities pay, and the data compounds.',
         ],
       },
@@ -268,15 +270,15 @@ const DEALS: SeedDeal[] = [
         kicker: 'Why now',
         title: 'The market leader is already losing accounts.',
         body: [
-          'Legacy incumbents bolt AI onto an existing EHR. Simphonic was AI-native from day one, with a caregiver-first workflow that drives organic frontline adoption instead of staff resistance.',
-          'A large regional operator dropped PointClickCare and chose Simphonic. Close rate from decision stage forward is ~70%.',
+          'Legacy incumbents bolt AI onto an existing EHR. Synthera was AI-native from day one, with a caregiver-first workflow that drives organic frontline adoption instead of staff resistance.',
+          'A large regional operator dropped the dominant legacy platform and chose Synthera. Close rate from decision stage forward is ~70%.',
         ],
       },
       {
         kicker: 'Exit',
         title: 'Vertical AI SaaS trades at a premium.',
         body: [
-          'PointClickCare is valued above $5B at roughly 7–8x revenue and has made 10+ acquisitions. Comparable vertical SaaS trades between 6x and 13x revenue: Veeva, ServiceTitan, Toast, Procore.',
+          'The category’s dominant incumbent is valued above $5B at roughly 7–8x revenue and has made 10+ acquisitions. Comparable vertical SaaS trades between 6x and 13x revenue: Veeva, ServiceTitan, Toast, Procore.',
           'At an $11M entry, $5M ARR implies a 3–7x return and $10M ARR implies 5–14x, before the revenue share. Illustrative only; returns depend on exit timing, dilution and valuation.',
         ],
         stats: [
@@ -558,7 +560,7 @@ async function main() {
     });
   }
 
-  console.log(`Seeded ${DEALS.length} deals (Simphonic leading).`);
+  console.log(`Seeded ${DEALS.length} deals (Synthera AI leading).`);
 }
 
 main()

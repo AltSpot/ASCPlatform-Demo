@@ -10,7 +10,7 @@
  * because the whole model is two numbers and it belongs next to the ask.
  *
  * Every section degrades to nothing when its content is missing, since
- * the deals behind the lead carry far thinner editorial than Simphonic.
+ * the deals behind the lead carry far thinner editorial than Synthera.
  */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

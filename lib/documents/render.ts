@@ -168,7 +168,7 @@ export function renderBinder(
 
     return `<section class="instrument">
 <h1>${escapeHtml(entry.document.title ?? entry.title)}</h1>
-<div class="sub">ASC Simphonic II, LLC · Managed by AltSpot Capital, LLC</div>
+<div class="sub">ASC Synthera II, LLC · Managed by AltSpot Capital, LLC</div>
 <div class="role">${escapeHtml(
       { disclosure: 'Delivered, not signed', executed: 'Executed by the subscriber', counterpart: 'Joined by counterpart signature' }[
         entry.role

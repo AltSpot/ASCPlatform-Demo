@@ -50,7 +50,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "ASC SIMPHONIC II, LLC",
+              "text": "ASC SYNTHERA II, LLC",
               "b": true,
               "i": false
             }
@@ -70,7 +70,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "THE SECURITIES OFFERED HEREBY HAVE NOT BEEN REGISTERED UNDER THE U.S. SECURITIES ACT OF 1933, AS AMENDED (THE “SECURITIES ACT”), OR THE SECURITIES LAWS OF ANY STATE, AND ARE BEING OFFERED AND SOLD IN RELIANCE ON EXEMPTIONS FROM THE REGISTRATION REQUIREMENTS OF THE SECURITIES ACT AND APPLICABLE STATE SECURITIES LAWS. THE SECURITIES ARE BEING OFFERED ONLY TO PERSONS WHO QUALIFY AS “ACCREDITED INVESTORS” AS DEFINED IN RULE 501(a) OF REGULATION D PROMULGATED UNDER THE SECURITIES ACT.",
+              "text": "THE SECURITIES OFFERED HEREBY HAVE NOT BEEN REGISTERED UNDER THE U.S. SECURITIES ACT OF 1933, AS AMENDED (THE \u201cSECURITIES ACT\u201d), OR THE SECURITIES LAWS OF ANY STATE, AND ARE BEING OFFERED AND SOLD IN RELIANCE ON EXEMPTIONS FROM THE REGISTRATION REQUIREMENTS OF THE SECURITIES ACT AND APPLICABLE STATE SECURITIES LAWS. THE SECURITIES ARE BEING OFFERED ONLY TO PERSONS WHO QUALIFY AS \u201cACCREDITED INVESTORS\u201d AS DEFINED IN RULE 501(a) OF REGULATION D PROMULGATED UNDER THE SECURITIES ACT.",
               "b": true,
               "i": false
             }
@@ -90,7 +90,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "PRIOR TO EXECUTING THIS SUBSCRIPTION AGREEMENT, EACH PROSPECTIVE INVESTOR SHOULD CAREFULLY REVIEW THE CONFIDENTIAL PRIVATE PLACEMENT MEMORANDUM OF THE COMPANY DATED May 15, 2026 (THE “MEMORANDUM”) AND THE OPERATING AGREEMENT OF THE COMPANY (THE “OPERATING AGREEMENT”), AND CONSULT WITH SUCH INVESTOR’S OWN LEGAL, TAX, AND FINANCIAL ADVISORS.",
+              "text": "PRIOR TO EXECUTING THIS SUBSCRIPTION AGREEMENT, EACH PROSPECTIVE INVESTOR SHOULD CAREFULLY REVIEW THE CONFIDENTIAL PRIVATE PLACEMENT MEMORANDUM OF THE COMPANY DATED May 15, 2026 (THE \u201cMEMORANDUM\u201d) AND THE OPERATING AGREEMENT OF THE COMPANY (THE \u201cOPERATING AGREEMENT\u201d), AND CONSULT WITH SUCH INVESTOR\u2019S OWN LEGAL, TAX, AND FINANCIAL ADVISORS.",
               "b": true,
               "i": false
             }
@@ -110,7 +110,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "In order to subscribe for Class B Common Units (the “Class B Units” or the “Securities”) of ASC Simphonic II, LLC, a Delaware limited liability company (the “Company”), each prospective investor (a “Subscriber”) must:",
+              "text": "In order to subscribe for Class B Common Units (the \u201cClass B Units\u201d or the \u201cSecurities\u201d) of ASC Synthera II, LLC, a Delaware limited liability company (the \u201cCompany\u201d), each prospective investor (a \u201cSubscriber\u201d) must:",
               "b": false,
               "i": false
             }
@@ -120,7 +120,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "Review the Offering Documents. Read this Subscription Agreement, the Memorandum, and the Operating Agreement in their entirety, and consult with the Subscriber’s own legal, tax, and financial advisors.",
+              "text": "Review the Offering Documents. Read this Subscription Agreement, the Memorandum, and the Operating Agreement in their entirety, and consult with the Subscriber\u2019s own legal, tax, and financial advisors.",
               "b": false,
               "i": false
             }
@@ -210,7 +210,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "as Manager of ASC Simphonic II, LLC",
+              "text": "as Manager of ASC Synthera II, LLC",
               "b": false,
               "i": false
             }
@@ -270,7 +270,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This SUBSCRIPTION AGREEMENT (this “Subscription Agreement” or this “Agreement”) is entered into as of the date set forth on the signature page hereto (the “Subscription Date”), by and between ASC Simphonic II, LLC, a Delaware limited liability company (the “Company”), and the undersigned subscriber (the “Subscriber”).",
+              "text": "This SUBSCRIPTION AGREEMENT (this \u201cSubscription Agreement\u201d or this \u201cAgreement\u201d) is entered into as of the date set forth on the signature page hereto (the \u201cSubscription Date\u201d), by and between ASC Synthera II, LLC, a Delaware limited liability company (the \u201cCompany\u201d), and the undersigned subscriber (the \u201cSubscriber\u201d).",
               "b": false,
               "i": false
             }
@@ -280,7 +280,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Capitalized terms used and not otherwise defined in this Agreement shall have the meanings ascribed to such terms in the Memorandum or in the Operating Agreement of the Company, dated as of May 15, 2026 (as the same may be amended, supplemented, or restated from time to time, the “Operating Agreement”).",
+              "text": "Capitalized terms used and not otherwise defined in this Agreement shall have the meanings ascribed to such terms in the Memorandum or in the Operating Agreement of the Company, dated as of May 15, 2026 (as the same may be amended, supplemented, or restated from time to time, the \u201cOperating Agreement\u201d).",
               "b": false,
               "i": false
             }
@@ -290,7 +290,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "WHEREAS, the Company is a Delaware limited liability company formed for the sole purpose of acquiring and holding shares of Series Seed Preferred Stock (the “Series Seed Preferred”) of Simphonic, Inc., a Delaware corporation (“Simphonic”), together with associated warrants to purchase common stock of Simphonic (the “Warrants” and, together with the Series Seed Preferred, the “Portfolio Securities”);",
+              "text": "WHEREAS, the Company is a Delaware limited liability company formed for the sole purpose of acquiring and holding shares of Series Seed Preferred Stock (the \u201cSeries Seed Preferred\u201d) of Synthera AI, Inc., a Delaware corporation (\u201cSynthera\u201d), together with associated warrants to purchase common stock of Synthera (the \u201cWarrants\u201d and, together with the Series Seed Preferred, the \u201cPortfolio Securities\u201d);",
               "b": false,
               "i": false
             }
@@ -300,7 +300,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "WHEREAS, the Company is offering Class B Common Units (the “Class B Units” or the “Securities”) to a limited number of “accredited investors” as defined in Rule 501(a) of Regulation D promulgated under the Securities Act, in reliance on the exemption from registration provided by Section 4(a)(2) of the Securities Act and Rule 506 of Regulation D, and applicable state securities law exemptions (the “Offering”);",
+              "text": "WHEREAS, the Company is offering Class B Common Units (the \u201cClass B Units\u201d or the \u201cSecurities\u201d) to a limited number of \u201caccredited investors\u201d as defined in Rule 501(a) of Regulation D promulgated under the Securities Act, in reliance on the exemption from registration provided by Section 4(a)(2) of the Securities Act and Rule 506 of Regulation D, and applicable state securities law exemptions (the \u201cOffering\u201d);",
               "b": false,
               "i": false
             }
@@ -310,7 +310,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "WHEREAS, AltSpot Capital, LLC serves as the Manager of the Company (the “Manager”); and",
+              "text": "WHEREAS, AltSpot Capital, LLC serves as the Manager of the Company (the \u201cManager\u201d); and",
               "b": false,
               "i": false
             }
@@ -352,7 +352,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Subject to the terms and conditions of this Agreement, the Subscriber hereby irrevocably subscribes for and agrees to purchase {{units}} Class B Units (the “Subscribed Units”) at a price of $1.00 per Class B Unit (the “Per-Unit Price”), for an aggregate subscription amount equal to the Per-Unit Price multiplied by the number of Subscribed Units (the “Subscription Amount”). The Subscription Amount must be at least $50,000 (the “Minimum Subscription Amount”), provided that the Manager may, in its sole and absolute discretion, accept a Subscription Amount in a lesser amount.",
+              "text": "Subject to the terms and conditions of this Agreement, the Subscriber hereby irrevocably subscribes for and agrees to purchase {{units}} Class B Units (the \u201cSubscribed Units\u201d) at a price of $1.00 per Class B Unit (the \u201cPer-Unit Price\u201d), for an aggregate subscription amount equal to the Per-Unit Price multiplied by the number of Subscribed Units (the \u201cSubscription Amount\u201d). The Subscription Amount must be at least $50,000 (the \u201cMinimum Subscription Amount\u201d), provided that the Manager may, in its sole and absolute discretion, accept a Subscription Amount in a lesser amount.",
               "b": false,
               "i": false
             }
@@ -368,7 +368,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This Agreement does not constitute an offer to sell or a solicitation of an offer to buy. The Subscriber’s subscription is not binding on the Company until this Agreement is accepted (the date of acceptance, the “Closing Date”) by, or on behalf of, the Company by execution of the signature page hereto, and the Subscriber’s admission as a Member is conditioned on the Subscriber’s execution of the counterpart signature page to the Operating Agreement attached hereto as Exhibit B. The Manager may accept or reject this subscription, in whole or in part, in its sole and absolute discretion. If this subscription is rejected, in whole or in part, the rejected portion of the Subscription Amount shall be returned promptly to the Subscriber without interest or deduction, and this Agreement shall (with respect to the rejected portion) be null and void.",
+              "text": "This Agreement does not constitute an offer to sell or a solicitation of an offer to buy. The Subscriber\u2019s subscription is not binding on the Company until this Agreement is accepted (the date of acceptance, the \u201cClosing Date\u201d) by, or on behalf of, the Company by execution of the signature page hereto, and the Subscriber\u2019s admission as a Member is conditioned on the Subscriber\u2019s execution of the counterpart signature page to the Operating Agreement attached hereto as Exhibit B. The Manager may accept or reject this subscription, in whole or in part, in its sole and absolute discretion. If this subscription is rejected, in whole or in part, the rejected portion of the Subscription Amount shall be returned promptly to the Subscriber without interest or deduction, and this Agreement shall (with respect to the rejected portion) be null and void.",
               "b": false,
               "i": false
             }
@@ -400,7 +400,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber’s offer to purchase the Subscribed Units is irrevocable, and the Subscriber may not withdraw, cancel, or revoke this Agreement once delivered, except as may be required by applicable law.",
+              "text": "The Subscriber\u2019s offer to purchase the Subscribed Units is irrevocable, and the Subscriber may not withdraw, cancel, or revoke this Agreement once delivered, except as may be required by applicable law.",
               "b": false,
               "i": false
             }
@@ -409,7 +409,7 @@
         {
           "type": "section",
           "n": "1.5",
-          "title": "Manager’s Right to Modify the Offering",
+          "title": "Manager\u2019s Right to Modify the Offering",
           "runs": []
         },
         {
@@ -432,7 +432,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber acknowledges that the Company’s acquisition of the Portfolio Securities is conditioned upon, among other things, the satisfaction or waiver of the conditions to closing set forth in the definitive transaction documents to be entered into between the Company and Simphonic. If such acquisition does not occur, or if the Manager determines, in its sole discretion, not to proceed with such acquisition, the Manager will return uninvested subscription funds to Subscribers (less any actual Company expenses incurred to date, to the extent provided in the Operating Agreement) without interest or deduction.",
+              "text": "The Subscriber acknowledges that the Company\u2019s acquisition of the Portfolio Securities is conditioned upon, among other things, the satisfaction or waiver of the conditions to closing set forth in the definitive transaction documents to be entered into between the Company and Synthera. If such acquisition does not occur, or if the Manager determines, in its sole discretion, not to proceed with such acquisition, the Manager will return uninvested subscription funds to Subscribers (less any actual Company expenses incurred to date, to the extent provided in the Operating Agreement) without interest or deduction.",
               "b": false,
               "i": false
             }
@@ -458,7 +458,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber has received, carefully reviewed, and understands this Agreement, the Memorandum, the Operating Agreement, and any other materials provided by the Manager in connection with the Offering (collectively, the “Offering Documents”), including without limitation the risk factors, conflicts of interest, and tax considerations described therein;",
+              "text": "The Subscriber has received, carefully reviewed, and understands this Agreement, the Memorandum, the Operating Agreement, and any other materials provided by the Manager in connection with the Offering (collectively, the \u201cOffering Documents\u201d), including without limitation the risk factors, conflicts of interest, and tax considerations described therein;",
               "b": false,
               "i": false
             }
@@ -468,7 +468,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber has had the opportunity to ask questions of, and receive answers from, the Manager and its representatives concerning the terms and conditions of the Offering, the Company, Simphonic, and the Portfolio Securities, and to obtain such additional information as the Subscriber has deemed necessary to verify the accuracy of the information furnished;",
+              "text": "The Subscriber has had the opportunity to ask questions of, and receive answers from, the Manager and its representatives concerning the terms and conditions of the Offering, the Company, Synthera, and the Portfolio Securities, and to obtain such additional information as the Subscriber has deemed necessary to verify the accuracy of the information furnished;",
               "b": false,
               "i": false
             }
@@ -478,7 +478,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "In making the decision to subscribe for the Subscribed Units, the Subscriber has relied solely on the Offering Documents and the Subscriber’s own independent investigation, due diligence, and analysis (and that of the Subscriber’s own advisors), and has not relied on any oral or written representation made by the Company, the Manager, or any of their respective affiliates, employees, agents, or representatives that is not contained in this Agreement or in the other Offering Documents;",
+              "text": "In making the decision to subscribe for the Subscribed Units, the Subscriber has relied solely on the Offering Documents and the Subscriber\u2019s own independent investigation, due diligence, and analysis (and that of the Subscriber\u2019s own advisors), and has not relied on any oral or written representation made by the Company, the Manager, or any of their respective affiliates, employees, agents, or representatives that is not contained in this Agreement or in the other Offering Documents;",
               "b": false,
               "i": false
             }
@@ -488,7 +488,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber has been advised to, and has had the opportunity to, consult with the Subscriber’s own attorney, accountant, and other financial and tax advisors regarding this investment and the Offering Documents;",
+              "text": "The Subscriber has been advised to, and has had the opportunity to, consult with the Subscriber\u2019s own attorney, accountant, and other financial and tax advisors regarding this investment and the Offering Documents;",
               "b": false,
               "i": false
             }
@@ -518,7 +518,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber understands that, except as expressly set forth in the Offering Documents, the Company has not made and is not making any representation or warranty regarding Simphonic, its business, prospects, financial condition, results of operations, or the Portfolio Securities, and that information regarding Simphonic in the Offering Documents has not been independently verified by the Company or the Manager.",
+              "text": "The Subscriber understands that, except as expressly set forth in the Offering Documents, the Company has not made and is not making any representation or warranty regarding Synthera, its business, prospects, financial condition, results of operations, or the Portfolio Securities, and that information regarding Synthera in the Offering Documents has not been independently verified by the Company or the Manager.",
               "b": false,
               "i": false
             }
@@ -550,7 +550,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber is an “accredited investor” as defined in Rule 501(a) of Regulation D promulgated under the Securities Act. The Subscriber’s accredited investor status is correctly indicated on the Accredited Investor Questionnaire attached hereto as Exhibit A, which is incorporated by reference into this Agreement and made a part hereof. All information provided by the Subscriber in the Accredited Investor Questionnaire is true, complete, and correct as of the date hereof and will be true, complete, and correct as of the Closing Date.",
+              "text": "The Subscriber is an \u201caccredited investor\u201d as defined in Rule 501(a) of Regulation D promulgated under the Securities Act. The Subscriber\u2019s accredited investor status is correctly indicated on the Accredited Investor Questionnaire attached hereto as Exhibit A, which is incorporated by reference into this Agreement and made a part hereof. All information provided by the Subscriber in the Accredited Investor Questionnaire is true, complete, and correct as of the date hereof and will be true, complete, and correct as of the Closing Date.",
               "b": false,
               "i": false
             }
@@ -566,7 +566,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber is acquiring the Subscribed Units solely for the Subscriber’s own account, for investment purposes only, and not with a view to, or for resale in connection with, any distribution thereof, in whole or in part, in violation of the Securities Act or any applicable state securities laws. The Subscriber has no present intention of selling, granting any participation in, or otherwise distributing the Subscribed Units. The Subscriber does not have any contract, undertaking, agreement, or arrangement with any person to sell, transfer, grant a participation in, or otherwise distribute the Subscribed Units.",
+              "text": "The Subscriber is acquiring the Subscribed Units solely for the Subscriber\u2019s own account, for investment purposes only, and not with a view to, or for resale in connection with, any distribution thereof, in whole or in part, in violation of the Securities Act or any applicable state securities laws. The Subscriber has no present intention of selling, granting any participation in, or otherwise distributing the Subscribed Units. The Subscriber does not have any contract, undertaking, agreement, or arrangement with any person to sell, transfer, grant a participation in, or otherwise distribute the Subscribed Units.",
               "b": false,
               "i": false
             }
@@ -592,7 +592,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscribed Units have not been, and will not be, registered under the Securities Act or qualified or registered under the securities laws of any state or other jurisdiction, in reliance on exemptions from such registration and qualification requirements, including the exemption provided by Section 4(a)(2) of the Securities Act and Rule 506 of Regulation D, and that the availability of such exemptions depends in part on the accuracy of the Subscriber’s representations herein;",
+              "text": "The Subscribed Units have not been, and will not be, registered under the Securities Act or qualified or registered under the securities laws of any state or other jurisdiction, in reliance on exemptions from such registration and qualification requirements, including the exemption provided by Section 4(a)(2) of the Securities Act and Rule 506 of Regulation D, and that the availability of such exemptions depends in part on the accuracy of the Subscriber\u2019s representations herein;",
               "b": false,
               "i": false
             }
@@ -602,7 +602,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscribed Units constitute “restricted securities” within the meaning of Rule 144 under the Securities Act, and may not be resold, pledged, hypothecated, or otherwise transferred unless registered under the Securities Act and applicable state securities laws or pursuant to an available exemption from such registration and qualification requirements;",
+              "text": "The Subscribed Units constitute \u201crestricted securities\u201d within the meaning of Rule 144 under the Securities Act, and may not be resold, pledged, hypothecated, or otherwise transferred unless registered under the Securities Act and applicable state securities laws or pursuant to an available exemption from such registration and qualification requirements;",
               "b": false,
               "i": false
             }
@@ -638,7 +638,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber, alone or together with the Subscriber’s advisors who are unaffiliated with and not compensated, directly or indirectly, by the Company or the Manager, has such knowledge and experience in financial, tax, and business matters as to be capable of evaluating the merits and risks of an investment in the Company. The Subscriber has the financial ability to bear the economic risk of an investment in the Company for an indefinite period of time, has adequate means of providing for the Subscriber’s current needs and contingencies, has no need for liquidity with respect to the investment in the Company, and can afford a complete loss of the Subscriber’s investment.",
+              "text": "The Subscriber, alone or together with the Subscriber\u2019s advisors who are unaffiliated with and not compensated, directly or indirectly, by the Company or the Manager, has such knowledge and experience in financial, tax, and business matters as to be capable of evaluating the merits and risks of an investment in the Company. The Subscriber has the financial ability to bear the economic risk of an investment in the Company for an indefinite period of time, has adequate means of providing for the Subscriber\u2019s current needs and contingencies, has no need for liquidity with respect to the investment in the Company, and can afford a complete loss of the Subscriber\u2019s investment.",
               "b": false,
               "i": false
             }
@@ -664,7 +664,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "An investment in the Subscribed Units is speculative and involves a high degree of risk, including the risk of total loss of the Subscriber’s investment;",
+              "text": "An investment in the Subscribed Units is speculative and involves a high degree of risk, including the risk of total loss of the Subscriber\u2019s investment;",
               "b": false,
               "i": false
             }
@@ -674,7 +674,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Company is a single-purpose investment vehicle whose sole investment will be in Simphonic, and accordingly the Subscriber will have no diversification within the Company;",
+              "text": "The Company is a single-purpose investment vehicle whose sole investment will be in Synthera, and accordingly the Subscriber will have no diversification within the Company;",
               "b": false,
               "i": false
             }
@@ -704,7 +704,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber may be required, under certain circumstances described in the Operating Agreement (including Section 2.5), to make additional capital contributions to the Company, and a failure to do so may result in dilution of the Subscriber’s interest in the Company;",
+              "text": "The Subscriber may be required, under certain circumstances described in the Operating Agreement (including Section 2.5), to make additional capital contributions to the Company, and a failure to do so may result in dilution of the Subscriber\u2019s interest in the Company;",
               "b": false,
               "i": false
             }
@@ -714,7 +714,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber has carefully reviewed the risk factors set forth in the Memorandum, including but not limited to those relating to (a) the single-asset concentration in Simphonic, (b) the limited governance, voting, and information rights of Class B Members, (c) the limited fiduciary duties and broad indemnification of the Manager, (d) potential conflicts of interest involving the Manager and its affiliates (including ASC Simphonic LLC, an existing Series A holder of Simphonic), (e) the contingent and capped nature of the Revenue Participation Rights, (f) the time-limited nature of the Warrants, (g) U.S. federal, state, and local tax matters, including the Company’s intended election under Section 6226 of the Code (push-out election) and the Subscriber’s indemnification obligations under Section 7.4 of the Operating Agreement, (h) the early-stage nature of Simphonic and the healthcare regulatory and AI-related risks affecting Simphonic’s business, and (i) the mandatory binding arbitration in Los Angeles, California; and",
+              "text": "The Subscriber has carefully reviewed the risk factors set forth in the Memorandum, including but not limited to those relating to (a) the single-asset concentration in Synthera, (b) the limited governance, voting, and information rights of Class B Members, (c) the limited fiduciary duties and broad indemnification of the Manager, (d) potential conflicts of interest involving the Manager and its affiliates (including ASC Synthera LLC, an existing Series A holder of Synthera), (e) the contingent and capped nature of the Revenue Participation Rights, (f) the time-limited nature of the Warrants, (g) U.S. federal, state, and local tax matters, including the Company\u2019s intended election under Section 6226 of the Code (push-out election) and the Subscriber\u2019s indemnification obligations under Section 7.4 of the Operating Agreement, (h) the early-stage nature of Synthera and the healthcare regulatory and AI-related risks affecting Synthera\u2019s business, and (i) the mandatory binding arbitration in Los Angeles, California; and",
               "b": false,
               "i": false
             }
@@ -724,7 +724,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber has carefully evaluated such risk factors and is willing and able to bear the economic risks of, and a complete loss of, the Subscriber’s investment.",
+              "text": "The Subscriber has carefully evaluated such risk factors and is willing and able to bear the economic risks of, and a complete loss of, the Subscriber\u2019s investment.",
               "b": false,
               "i": false
             }
@@ -740,7 +740,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber, if a natural person, has reached the age of majority in the Subscriber’s jurisdiction of residence and has full power and legal capacity to execute this Agreement, the Accredited Investor Questionnaire, and the counterpart signature page to the Operating Agreement, and to perform the Subscriber’s obligations hereunder and thereunder. The Subscriber, if not a natural person, is duly organized, validly existing, and in good standing under the laws of its jurisdiction of formation, has full power and authority to execute and deliver this Agreement, the Accredited Investor Questionnaire, and the Operating Agreement, and to perform its obligations hereunder and thereunder, and has duly taken all action necessary to authorize such execution, delivery, and performance. The execution and delivery by the Subscriber of, and performance by the Subscriber of its obligations under, this Agreement, the Accredited Investor Questionnaire, and the Operating Agreement do not and will not (a) violate any law, regulation, judgment, or order applicable to the Subscriber, (b) violate or conflict with the Subscriber’s organizational documents (if applicable), or (c) violate, conflict with, result in a breach of, or constitute a default under any agreement to which the Subscriber is a party or by which the Subscriber is bound.",
+              "text": "The Subscriber, if a natural person, has reached the age of majority in the Subscriber\u2019s jurisdiction of residence and has full power and legal capacity to execute this Agreement, the Accredited Investor Questionnaire, and the counterpart signature page to the Operating Agreement, and to perform the Subscriber\u2019s obligations hereunder and thereunder. The Subscriber, if not a natural person, is duly organized, validly existing, and in good standing under the laws of its jurisdiction of formation, has full power and authority to execute and deliver this Agreement, the Accredited Investor Questionnaire, and the Operating Agreement, and to perform its obligations hereunder and thereunder, and has duly taken all action necessary to authorize such execution, delivery, and performance. The execution and delivery by the Subscriber of, and performance by the Subscriber of its obligations under, this Agreement, the Accredited Investor Questionnaire, and the Operating Agreement do not and will not (a) violate any law, regulation, judgment, or order applicable to the Subscriber, (b) violate or conflict with the Subscriber\u2019s organizational documents (if applicable), or (c) violate, conflict with, result in a breach of, or constitute a default under any agreement to which the Subscriber is a party or by which the Subscriber is bound.",
               "b": false,
               "i": false
             }
@@ -756,7 +756,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This Agreement, the Accredited Investor Questionnaire, and the Operating Agreement, when executed and delivered by the Subscriber, will constitute the legal, valid, and binding obligations of the Subscriber, enforceable against the Subscriber in accordance with their respective terms, except as enforceability may be limited by bankruptcy, insolvency, reorganization, or similar laws affecting creditors’ rights generally and by general equitable principles.",
+              "text": "This Agreement, the Accredited Investor Questionnaire, and the Operating Agreement, when executed and delivered by the Subscriber, will constitute the legal, valid, and binding obligations of the Subscriber, enforceable against the Subscriber in accordance with their respective terms, except as enforceability may be limited by bankruptcy, insolvency, reorganization, or similar laws affecting creditors\u2019 rights generally and by general equitable principles.",
               "b": false,
               "i": false
             }
@@ -772,7 +772,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscription Amount and any subsequent capital contributions to be made by the Subscriber are derived from sources that are lawful and have not been derived directly or indirectly from any activity that contravenes any applicable laws or regulations, including any laws or regulations relating to anti-money laundering, anti-terrorism, anti-bribery and corruption, or sanctions. The Subscriber is not, nor is any beneficial owner, controlling person, principal, or affiliate of the Subscriber, (a) a person or entity named on the Specially Designated Nationals and Blocked Persons List or any other sanctions list maintained by the U.S. Department of the Treasury’s Office of Foreign Assets Control (“OFAC”), or (b) a person or entity organized or resident in any country or territory that is the subject of comprehensive sanctions administered by OFAC. The Subscriber agrees to provide such additional information and documentation as the Manager may reasonably request to comply with anti-money laundering, anti-terrorism, sanctions, and other similar laws and regulations.",
+              "text": "The Subscription Amount and any subsequent capital contributions to be made by the Subscriber are derived from sources that are lawful and have not been derived directly or indirectly from any activity that contravenes any applicable laws or regulations, including any laws or regulations relating to anti-money laundering, anti-terrorism, anti-bribery and corruption, or sanctions. The Subscriber is not, nor is any beneficial owner, controlling person, principal, or affiliate of the Subscriber, (a) a person or entity named on the Specially Designated Nationals and Blocked Persons List or any other sanctions list maintained by the U.S. Department of the Treasury\u2019s Office of Foreign Assets Control (\u201cOFAC\u201d), or (b) a person or entity organized or resident in any country or territory that is the subject of comprehensive sanctions administered by OFAC. The Subscriber agrees to provide such additional information and documentation as the Manager may reasonably request to comply with anti-money laundering, anti-terrorism, sanctions, and other similar laws and regulations.",
               "b": false,
               "i": false
             }
@@ -788,7 +788,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber acknowledges that the Offering is being conducted in reliance on Rule 506(c) of Regulation D under the Securities Act and that the Company is required to take reasonable steps to verify the Subscriber’s status as an accredited investor. The Subscriber agrees to (a) complete accredited investor verification through iCapital (formerly Parallel Markets) or such other third-party verification service as the Manager may designate (the “Verification Service”), or (b) at the Manager’s option, deliver to the Manager a written confirmation, dated within the prior three (3) months, from a registered broker-dealer, registered investment adviser, licensed attorney, or certified public accountant, stating that such person has taken reasonable steps to verify the Subscriber’s accredited investor status and has determined that the Subscriber is an accredited investor. The Subscriber authorizes the Verification Service to share the results of such verification with the Manager and the Company, and the Subscriber agrees to provide such additional information and documentation as the Verification Service or the Manager may reasonably request to complete the verification. The Subscriber acknowledges that the Manager may decline to accept the Subscriber’s subscription if accredited investor status cannot be verified to the Manager’s reasonable satisfaction in accordance with Rule 506(c).",
+              "text": "The Subscriber acknowledges that the Offering is being conducted in reliance on Rule 506(c) of Regulation D under the Securities Act and that the Company is required to take reasonable steps to verify the Subscriber\u2019s status as an accredited investor. The Subscriber agrees to (a) complete accredited investor verification through iCapital (formerly Parallel Markets) or such other third-party verification service as the Manager may designate (the \u201cVerification Service\u201d), or (b) at the Manager\u2019s option, deliver to the Manager a written confirmation, dated within the prior three (3) months, from a registered broker-dealer, registered investment adviser, licensed attorney, or certified public accountant, stating that such person has taken reasonable steps to verify the Subscriber\u2019s accredited investor status and has determined that the Subscriber is an accredited investor. The Subscriber authorizes the Verification Service to share the results of such verification with the Manager and the Company, and the Subscriber agrees to provide such additional information and documentation as the Verification Service or the Manager may reasonably request to complete the verification. The Subscriber acknowledges that the Manager may decline to accept the Subscriber\u2019s subscription if accredited investor status cannot be verified to the Manager\u2019s reasonable satisfaction in accordance with Rule 506(c).",
               "b": false,
               "i": false
             }
@@ -804,7 +804,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Either (a) the Subscriber has a preexisting personal or business relationship with the Company, the Manager, or one or more of the Manager’s control persons, or (b) by reason of the Subscriber’s business or financial experience (or that of the Subscriber’s financial advisor who is unaffiliated with, and not compensated by, the Company or the Manager), the Subscriber is capable of evaluating the risks and merits of an investment in the Subscribed Units and of protecting the Subscriber’s own interests in connection with this investment.",
+              "text": "Either (a) the Subscriber has a preexisting personal or business relationship with the Company, the Manager, or one or more of the Manager\u2019s control persons, or (b) by reason of the Subscriber\u2019s business or financial experience (or that of the Subscriber\u2019s financial advisor who is unaffiliated with, and not compensated by, the Company or the Manager), the Subscriber is capable of evaluating the risks and merits of an investment in the Subscribed Units and of protecting the Subscriber\u2019s own interests in connection with this investment.",
               "b": false,
               "i": false
             }
@@ -840,7 +840,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Company will be classified as a partnership for U.S. federal income tax purposes, and the Subscriber will be required to take into account the Subscriber’s allocable share of the Company’s items of income, gain, loss, deduction, and credit, regardless of whether the Company makes any distributions in any particular year;",
+              "text": "The Company will be classified as a partnership for U.S. federal income tax purposes, and the Subscriber will be required to take into account the Subscriber\u2019s allocable share of the Company\u2019s items of income, gain, loss, deduction, and credit, regardless of whether the Company makes any distributions in any particular year;",
               "b": false,
               "i": false
             }
@@ -850,7 +850,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Company intends to elect the application of Section 6226 of the Code (push-out election), as set forth in Section 7.4 of the Operating Agreement, and accordingly any IRS adjustments to the Company’s items of income or deduction may be allocated to the Subscriber for the reviewed year;",
+              "text": "The Company intends to elect the application of Section 6226 of the Code (push-out election), as set forth in Section 7.4 of the Operating Agreement, and accordingly any IRS adjustments to the Company\u2019s items of income or deduction may be allocated to the Subscriber for the reviewed year;",
               "b": false,
               "i": false
             }
@@ -860,7 +860,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "Pursuant to Section 7.4 of the Operating Agreement, the Subscriber is required to provide the Tax Representative with such tax information, documents, certifications, tax identification numbers, and tax forms as the Tax Representative may request, and to indemnify the Company, the Manager, and the Tax Representative against tax liabilities resulting from the Subscriber’s failure to comply;",
+              "text": "Pursuant to Section 7.4 of the Operating Agreement, the Subscriber is required to provide the Tax Representative with such tax information, documents, certifications, tax identification numbers, and tax forms as the Tax Representative may request, and to indemnify the Company, the Manager, and the Tax Representative against tax liabilities resulting from the Subscriber\u2019s failure to comply;",
               "b": false,
               "i": false
             }
@@ -870,7 +870,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber will be responsible for the Subscriber’s own tax liabilities (subject to any Tax Distributions under Section 5.6 of the Operating Agreement);",
+              "text": "The Subscriber will be responsible for the Subscriber\u2019s own tax liabilities (subject to any Tax Distributions under Section 5.6 of the Operating Agreement);",
               "b": false,
               "i": false
             }
@@ -890,7 +890,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber is relying solely on the Subscriber’s own advisors with respect to the tax consequences of this investment; and",
+              "text": "The Subscriber is relying solely on the Subscriber\u2019s own advisors with respect to the tax consequences of this investment; and",
               "b": false,
               "i": false
             }
@@ -916,7 +916,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber represents and warrants that the Subscriber is, or is not, a “benefit plan investor” within the meaning of Section 3(42) of ERISA and the U.S. Department of Labor’s plan asset regulations (a “Benefit Plan Investor”), as indicated by the Subscriber’s response on the Accredited Investor Questionnaire. If the Subscriber is a Benefit Plan Investor, the Subscriber further represents and warrants that the Subscriber’s investment in the Company has been duly authorized and is in compliance with all applicable provisions of ERISA and the Code, and that the fiduciary causing the Subscriber to make this investment has determined that the investment is appropriate for the Benefit Plan Investor.",
+              "text": "The Subscriber represents and warrants that the Subscriber is, or is not, a \u201cbenefit plan investor\u201d within the meaning of Section 3(42) of ERISA and the U.S. Department of Labor\u2019s plan asset regulations (a \u201cBenefit Plan Investor\u201d), as indicated by the Subscriber\u2019s response on the Accredited Investor Questionnaire. If the Subscriber is a Benefit Plan Investor, the Subscriber further represents and warrants that the Subscriber\u2019s investment in the Company has been duly authorized and is in compliance with all applicable provisions of ERISA and the Code, and that the fiduciary causing the Subscriber to make this investment has determined that the investment is appropriate for the Benefit Plan Investor.",
               "b": false,
               "i": false
             }
@@ -932,7 +932,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber acknowledges that the Memorandum and the other Offering Documents have been furnished to the Subscriber on a confidential basis. The Subscriber will not, without the prior written consent of the Manager, reproduce, distribute, disclose, or use the Memorandum or any other Offering Document, or any portion thereof or information contained therein, except that the Subscriber may disclose such information (a) to the Subscriber’s legal, tax, financial, and other professional advisors who have a need to know such information for the purpose of evaluating the Subscriber’s investment and who are bound by obligations of confidentiality, and (b) as required by applicable law, regulation, or legal process, in which case the Subscriber will, to the extent legally permissible, promptly notify the Manager prior to disclosure.",
+              "text": "The Subscriber acknowledges that the Memorandum and the other Offering Documents have been furnished to the Subscriber on a confidential basis. The Subscriber will not, without the prior written consent of the Manager, reproduce, distribute, disclose, or use the Memorandum or any other Offering Document, or any portion thereof or information contained therein, except that the Subscriber may disclose such information (a) to the Subscriber\u2019s legal, tax, financial, and other professional advisors who have a need to know such information for the purpose of evaluating the Subscriber\u2019s investment and who are bound by obligations of confidentiality, and (b) as required by applicable law, regulation, or legal process, in which case the Subscriber will, to the extent legally permissible, promptly notify the Manager prior to disclosure.",
               "b": false,
               "i": false
             }
@@ -964,7 +964,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "All representations, warranties, covenants, and agreements made by the Subscriber in this Agreement, the Accredited Investor Questionnaire, and the Operating Agreement shall survive the execution and delivery of this Agreement, the acceptance of the Subscriber’s subscription, the Closing Date, and the dissolution of the Company.",
+              "text": "All representations, warranties, covenants, and agreements made by the Subscriber in this Agreement, the Accredited Investor Questionnaire, and the Operating Agreement shall survive the execution and delivery of this Agreement, the acceptance of the Subscriber\u2019s subscription, the Closing Date, and the dissolution of the Company.",
               "b": false,
               "i": false
             }
@@ -986,7 +986,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "By executing this Agreement and the counterpart signature page to the Operating Agreement attached hereto as Exhibit B, the Subscriber agrees to become a Member of the Company, to be bound by all of the terms and conditions of the Operating Agreement, and to make the representations, warranties, and covenants set forth in Article 10 of the Operating Agreement. Upon acceptance of this Agreement by the Manager and execution by the Manager of the counterpart signature page to the Operating Agreement, the Subscriber shall be admitted as a Member of the Company holding {{units}} Class B Units, and Exhibit A to the Operating Agreement shall be amended to reflect the Subscriber’s admission, capital contribution, and Percentage Interest.",
+              "text": "By executing this Agreement and the counterpart signature page to the Operating Agreement attached hereto as Exhibit B, the Subscriber agrees to become a Member of the Company, to be bound by all of the terms and conditions of the Operating Agreement, and to make the representations, warranties, and covenants set forth in Article 10 of the Operating Agreement. Upon acceptance of this Agreement by the Manager and execution by the Manager of the counterpart signature page to the Operating Agreement, the Subscriber shall be admitted as a Member of the Company holding {{units}} Class B Units, and Exhibit A to the Operating Agreement shall be amended to reflect the Subscriber\u2019s admission, capital contribution, and Percentage Interest.",
               "b": false,
               "i": false
             }
@@ -1002,7 +1002,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber hereby irrevocably constitutes and appoints the Manager (and each authorized officer, agent, or attorney-in-fact thereof) as the Subscriber’s true and lawful attorney-in-fact, with full power of substitution and resubstitution, in the Subscriber’s name, place, and stead, to make, execute, sign, acknowledge, swear to, deliver, file, and record (a) the Operating Agreement (and any amendments and restatements thereto effected in accordance with its terms), (b) any amendments to Exhibit A or Schedule I to the Operating Agreement to reflect the admission, withdrawal, capital contribution, distribution, or Percentage Interest of any Member (including the Subscriber), (c) all certificates and other instruments deemed advisable by the Manager to qualify or continue the Company as a limited liability company in any jurisdiction in which the Company conducts business, (d) all instruments that effect a change or modification of the Company in accordance with the Operating Agreement, and (e) all instruments necessary or appropriate to dissolve and liquidate the Company in accordance with the Operating Agreement. This power of attorney is coupled with an interest, is irrevocable, and shall survive the death, incapacity, dissolution, bankruptcy, or disability of the Subscriber.",
+              "text": "The Subscriber hereby irrevocably constitutes and appoints the Manager (and each authorized officer, agent, or attorney-in-fact thereof) as the Subscriber\u2019s true and lawful attorney-in-fact, with full power of substitution and resubstitution, in the Subscriber\u2019s name, place, and stead, to make, execute, sign, acknowledge, swear to, deliver, file, and record (a) the Operating Agreement (and any amendments and restatements thereto effected in accordance with its terms), (b) any amendments to Exhibit A or Schedule I to the Operating Agreement to reflect the admission, withdrawal, capital contribution, distribution, or Percentage Interest of any Member (including the Subscriber), (c) all certificates and other instruments deemed advisable by the Manager to qualify or continue the Company as a limited liability company in any jurisdiction in which the Company conducts business, (d) all instruments that effect a change or modification of the Company in accordance with the Operating Agreement, and (e) all instruments necessary or appropriate to dissolve and liquidate the Company in accordance with the Operating Agreement. This power of attorney is coupled with an interest, is irrevocable, and shall survive the death, incapacity, dissolution, bankruptcy, or disability of the Subscriber.",
               "b": false,
               "i": false
             }
@@ -1018,7 +1018,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber acknowledges and agrees that the Manager has full, complete, and exclusive authority, power, and discretion to manage and control the business, property, and affairs of the Company in accordance with the Operating Agreement, including with respect to (a) the negotiation, execution, and performance of the definitive transaction documents with Simphonic, (b) the voting, sale, exercise, and other disposition of the Portfolio Securities (including the Warrants), (c) responses to drag-along, tag-along, pre-emptive, right-of-first-refusal, and other similar provisions in Simphonic’s organizational documents and shareholder agreements, (d) tax matters and elections, including elections under Sections 6221(b) and 6226 of the Code, (e) capital calls, distributions, and admission of additional Members, and (f) all other matters relating to the operation of the Company. The Subscriber further acknowledges that, except as expressly provided in the Operating Agreement, Class B Units have no voting rights and Class B Members have no right to participate in management of the Company.",
+              "text": "The Subscriber acknowledges and agrees that the Manager has full, complete, and exclusive authority, power, and discretion to manage and control the business, property, and affairs of the Company in accordance with the Operating Agreement, including with respect to (a) the negotiation, execution, and performance of the definitive transaction documents with Synthera, (b) the voting, sale, exercise, and other disposition of the Portfolio Securities (including the Warrants), (c) responses to drag-along, tag-along, pre-emptive, right-of-first-refusal, and other similar provisions in Synthera\u2019s organizational documents and shareholder agreements, (d) tax matters and elections, including elections under Sections 6221(b) and 6226 of the Code, (e) capital calls, distributions, and admission of additional Members, and (f) all other matters relating to the operation of the Company. The Subscriber further acknowledges that, except as expressly provided in the Operating Agreement, Class B Units have no voting rights and Class B Members have no right to participate in management of the Company.",
               "b": false,
               "i": false
             }
@@ -1034,7 +1034,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber agrees to indemnify and hold harmless the Company, the Manager, and each of their respective members, managers, officers, directors, employees, agents, affiliates, advisors, and representatives (each, an “Indemnified Party”) from and against any and all losses, claims, damages, liabilities, costs, and expenses (including reasonable attorneys’ fees and disbursements) arising out of or relating to:",
+              "text": "The Subscriber agrees to indemnify and hold harmless the Company, the Manager, and each of their respective members, managers, officers, directors, employees, agents, affiliates, advisors, and representatives (each, an \u201cIndemnified Party\u201d) from and against any and all losses, claims, damages, liabilities, costs, and expenses (including reasonable attorneys\u2019 fees and disbursements) arising out of or relating to:",
               "b": false,
               "i": false
             }
@@ -1074,7 +1074,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "Any tax liabilities of the Company arising as a result of the Subscriber’s failure to comply with Sections 7.4.2 and 7.4.3 of the Operating Agreement (including failure to provide tax information requested by the Tax Representative or to report adjustments allocated to the Subscriber under Section 6226 of the Code).",
+              "text": "Any tax liabilities of the Company arising as a result of the Subscriber\u2019s failure to comply with Sections 7.4.2 and 7.4.3 of the Operating Agreement (including failure to provide tax information requested by the Tax Representative or to report adjustments allocated to the Subscriber under Section 6226 of the Code).",
               "b": false,
               "i": false
             }
@@ -1084,7 +1084,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "The Subscriber’s indemnification obligations under this Section 5 shall be in addition to, and not in limitation of, the Subscriber’s indemnification obligations under the Operating Agreement (including under Section 7.4 thereof) and shall survive the dissolution of the Company and any transfer or assignment of the Subscriber’s Units.",
+              "text": "The Subscriber\u2019s indemnification obligations under this Section 5 shall be in addition to, and not in limitation of, the Subscriber\u2019s indemnification obligations under the Operating Agreement (including under Section 7.4 thereof) and shall survive the dissolution of the Company and any transfer or assignment of the Subscriber\u2019s Units.",
               "b": false,
               "i": false
             }
@@ -1186,7 +1186,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This Agreement may not be assigned by the Subscriber without the prior written consent of the Manager, which consent may be granted or withheld in the Manager’s sole and absolute discretion. Any purported assignment in violation of this Section 6.6 shall be null and void. Subject to the foregoing, this Agreement shall be binding upon and inure to the benefit of the parties hereto and their respective successors, heirs, executors, administrators, legal representatives, and permitted assigns.",
+              "text": "This Agreement may not be assigned by the Subscriber without the prior written consent of the Manager, which consent may be granted or withheld in the Manager\u2019s sole and absolute discretion. Any purported assignment in violation of this Section 6.6 shall be null and void. Subject to the foregoing, this Agreement shall be binding upon and inure to the benefit of the parties hereto and their respective successors, heirs, executors, administrators, legal representatives, and permitted assigns.",
               "b": false,
               "i": false
             }
@@ -1218,7 +1218,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable in any jurisdiction, such invalidity, illegality, or unenforceability shall not affect any other provision of this Agreement or invalidate or render unenforceable such provision in any other jurisdiction, and this Agreement shall be reformed, construed, and enforced in such jurisdiction so as to best give effect to the parties’ intent.",
+              "text": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable in any jurisdiction, such invalidity, illegality, or unenforceability shall not affect any other provision of this Agreement or invalidate or render unenforceable such provision in any other jurisdiction, and this Agreement shall be reformed, construed, and enforced in such jurisdiction so as to best give effect to the parties\u2019 intent.",
               "b": false,
               "i": false
             }
@@ -1266,7 +1266,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This Agreement has been negotiated by the parties with the advice of counsel and shall not be construed against the drafter. Each reference to “including” shall be deemed to mean “including without limitation.” Each reference to a particular gender shall be deemed to include each other gender, and each reference to the singular shall be deemed to include the plural and vice versa.",
+              "text": "This Agreement has been negotiated by the parties with the advice of counsel and shall not be construed against the drafter. Each reference to \u201cincluding\u201d shall be deemed to mean \u201cincluding without limitation.\u201d Each reference to a particular gender shall be deemed to include each other gender, and each reference to the singular shall be deemed to include the plural and vice versa.",
               "b": false,
               "i": false
             }
@@ -1312,7 +1312,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "ASC SIMPHONIC II, LLC",
+              "text": "ASC SYNTHERA II, LLC",
               "b": true,
               "i": false
             }
@@ -1833,7 +1833,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "ASC SIMPHONIC II, LLC",
+              "text": "ASC SYNTHERA II, LLC",
               "b": true,
               "i": false
             }
@@ -1934,7 +1934,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "This Accredited Investor Questionnaire (this “Questionnaire”) is being furnished to you in connection with the offer and sale by ASC Simphonic II, LLC (the “Company”) of Class B Common Units (the “Securities”) to qualify the offer and sale of the Securities for an exemption from registration under the U.S. Securities Act of 1933, as amended (the “Securities Act”), pursuant to Section 4(a)(2) thereof and Rule 506 of Regulation D promulgated thereunder, and from registration under applicable state securities laws.",
+              "text": "This Accredited Investor Questionnaire (this \u201cQuestionnaire\u201d) is being furnished to you in connection with the offer and sale by ASC Synthera II, LLC (the \u201cCompany\u201d) of Class B Common Units (the \u201cSecurities\u201d) to qualify the offer and sale of the Securities for an exemption from registration under the U.S. Securities Act of 1933, as amended (the \u201cSecurities Act\u201d), pursuant to Section 4(a)(2) thereof and Rule 506 of Regulation D promulgated thereunder, and from registration under applicable state securities laws.",
               "b": false,
               "i": false
             }
@@ -1944,7 +1944,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "To establish the availability of these exemptions, the Company is required to confirm that each prospective investor is an “accredited investor” within the meaning of Rule 501(a) of Regulation D under the Securities Act. Your responses to this Questionnaire will be relied upon for purposes of confirming your accredited investor status. The information you provide in this Questionnaire will be treated confidentially, except that the Company and the Manager may present this Questionnaire to such persons as they deem appropriate to establish the availability of exemptions from registration under federal and state securities laws.",
+              "text": "To establish the availability of these exemptions, the Company is required to confirm that each prospective investor is an \u201caccredited investor\u201d within the meaning of Rule 501(a) of Regulation D under the Securities Act. Your responses to this Questionnaire will be relied upon for purposes of confirming your accredited investor status. The information you provide in this Questionnaire will be treated confidentially, except that the Company and the Manager may present this Questionnaire to such persons as they deem appropriate to establish the availability of exemptions from registration under federal and state securities laws.",
               "b": false,
               "i": false
             }
@@ -1954,7 +1954,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "PLEASE COMPLETE, EXECUTE, AND RETURN THIS QUESTIONNAIRE TOGETHER WITH YOUR SUBSCRIPTION AGREEMENT. PLEASE ANSWER EACH QUESTION TRUTHFULLY AND COMPLETELY. IF AN ANSWER IS “NONE” OR “NOT APPLICABLE,” PLEASE SO INDICATE.",
+              "text": "PLEASE COMPLETE, EXECUTE, AND RETURN THIS QUESTIONNAIRE TOGETHER WITH YOUR SUBSCRIPTION AGREEMENT. PLEASE ANSWER EACH QUESTION TRUTHFULLY AND COMPLETELY. IF AN ANSWER IS \u201cNONE\u201d OR \u201cNOT APPLICABLE,\u201d PLEASE SO INDICATE.",
               "b": true,
               "i": false
             }
@@ -1964,7 +1964,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part I — Subscriber Identification",
+              "text": "Part I \u2014 Subscriber Identification",
               "b": false,
               "i": false
             }
@@ -2094,7 +2094,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part II — Accredited Investor Status",
+              "text": "Part II \u2014 Accredited Investor Status",
               "b": false,
               "i": false
             }
@@ -2124,7 +2124,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "If the Subscriber is a natural person (or a natural person and the Subscriber’s spouse, jointly), the Subscriber qualifies as an accredited investor if any of the following is true:",
+              "text": "If the Subscriber is a natural person (or a natural person and the Subscriber\u2019s spouse, jointly), the Subscriber qualifies as an accredited investor if any of the following is true:",
               "b": false,
               "i": true
             }
@@ -2134,7 +2134,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](1) Net Worth Test. The Subscriber’s individual net worth, or joint net worth with the Subscriber’s spouse or spousal equivalent, exceeds $1,000,000 at the time of subscription. For purposes of this calculation, (a) “spousal equivalent” means a cohabitant occupying a relationship generally equivalent to that of a spouse; (b) the value of the Subscriber’s primary residence is not included in the calculation of net worth, and indebtedness secured by the primary residence (up to its estimated fair market value) is not included as a liability, except that any incremental amount of indebtedness incurred in the 60 days preceding subscription (other than as a result of the acquisition of the primary residence) is included as a liability, and any indebtedness in excess of the fair market value of the primary residence is included as a liability. ",
+              "text": "[ ](1) Net Worth Test. The Subscriber\u2019s individual net worth, or joint net worth with the Subscriber\u2019s spouse or spousal equivalent, exceeds $1,000,000 at the time of subscription. For purposes of this calculation, (a) \u201cspousal equivalent\u201d means a cohabitant occupying a relationship generally equivalent to that of a spouse; (b) the value of the Subscriber\u2019s primary residence is not included in the calculation of net worth, and indebtedness secured by the primary residence (up to its estimated fair market value) is not included as a liability, except that any incremental amount of indebtedness incurred in the 60 days preceding subscription (other than as a result of the acquisition of the primary residence) is included as a liability, and any indebtedness in excess of the fair market value of the primary residence is included as a liability. ",
               "b": false,
               "i": false
             }
@@ -2144,7 +2144,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](2) Income Test. The Subscriber had individual income in excess of $200,000 in each of the two most recent calendar years (or joint income with the Subscriber’s spouse or spousal equivalent in excess of $300,000 in each of those years), and reasonably expects to reach the same income level in the current calendar year. ",
+              "text": "[ ](2) Income Test. The Subscriber had individual income in excess of $200,000 in each of the two most recent calendar years (or joint income with the Subscriber\u2019s spouse or spousal equivalent in excess of $300,000 in each of those years), and reasonably expects to reach the same income level in the current calendar year. ",
               "b": false,
               "i": false
             }
@@ -2164,7 +2164,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](4) Knowledgeable Employee. The Subscriber is a “knowledgeable employee,” as defined in Rule 3c-5(a)(4) under the Investment Company Act of 1940, of the issuer of the Securities (where the issuer would be an investment company but for the exclusion provided by Section 3(c)(1) or 3(c)(7) of the Investment Company Act). [Note: This category is generally not available for the Company; included for completeness.] ",
+              "text": "[ ](4) Knowledgeable Employee. The Subscriber is a \u201cknowledgeable employee,\u201d as defined in Rule 3c-5(a)(4) under the Investment Company Act of 1940, of the issuer of the Securities (where the issuer would be an investment company but for the exclusion provided by Section 3(c)(1) or 3(c)(7) of the Investment Company Act). [Note: This category is generally not available for the Company; included for completeness.] ",
               "b": false,
               "i": false
             }
@@ -2174,7 +2174,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](5) Family Client. The Subscriber is a “family client”, as defined in Rule 202(a)(11)(G)-1 under the Investment Advisers Act of 1940, of a family office that itself qualifies as an accredited investor under category B(11) below, whose investment in the Company is directed by such family office. ",
+              "text": "[ ](5) Family Client. The Subscriber is a \u201cfamily client\u201d, as defined in Rule 202(a)(11)(G)-1 under the Investment Advisers Act of 1940, of a family office that itself qualifies as an accredited investor under category B(11) below, whose investment in the Company is directed by such family office. ",
               "b": false,
               "i": false
             }
@@ -2254,7 +2254,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](6) Private Business Development Company. The Subscriber is a “private business development company” as defined in Section 202(a)(22) of the Investment Advisers Act of 1940. ",
+              "text": "[ ](6) Private Business Development Company. The Subscriber is a \u201cprivate business development company\u201d as defined in Section 202(a)(22) of the Investment Advisers Act of 1940. ",
               "b": false,
               "i": false
             }
@@ -2294,7 +2294,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](10) Investments-Based Entity ($5M Investments). The Subscriber is an entity, of a type not listed in any other category, not formed for the specific purpose of acquiring the Securities, and owning “investments” (as defined in Rule 2a51-1(b) under the Investment Company Act of 1940) in excess of $5,000,000. ",
+              "text": "[ ](10) Investments-Based Entity ($5M Investments). The Subscriber is an entity, of a type not listed in any other category, not formed for the specific purpose of acquiring the Securities, and owning \u201cinvestments\u201d (as defined in Rule 2a51-1(b) under the Investment Company Act of 1940) in excess of $5,000,000. ",
               "b": false,
               "i": false
             }
@@ -2304,7 +2304,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](11) Family Office. The Subscriber is a “family office,” as defined in Rule 202(a)(11)(G)-1 under the Investment Advisers Act of 1940, that (a) has assets under management in excess of $5,000,000, (b) was not formed for the specific purpose of acquiring the Securities, and (c) whose prospective investment is directed by a person who has such knowledge and experience in financial and business matters that such family office is capable of evaluating the merits and risks of the prospective investment.",
+              "text": "[ ](11) Family Office. The Subscriber is a \u201cfamily office,\u201d as defined in Rule 202(a)(11)(G)-1 under the Investment Advisers Act of 1940, that (a) has assets under management in excess of $5,000,000, (b) was not formed for the specific purpose of acquiring the Securities, and (c) whose prospective investment is directed by a person who has such knowledge and experience in financial and business matters that such family office is capable of evaluating the merits and risks of the prospective investment.",
               "b": false,
               "i": false
             }
@@ -2314,7 +2314,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](12) Family Client of a Family Office. The Subscriber is a “family client,” as defined in Rule 202(a)(11)(G)-1 under the Investment Advisers Act of 1940, of a family office described in B(11) above, whose prospective investment in the Company is directed by such family office. ",
+              "text": "[ ](12) Family Client of a Family Office. The Subscriber is a \u201cfamily client,\u201d as defined in Rule 202(a)(11)(G)-1 under the Investment Advisers Act of 1940, of a family office described in B(11) above, whose prospective investment in the Company is directed by such family office. ",
               "b": false,
               "i": false
             }
@@ -2334,7 +2334,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part III — Verification of Accredited Investor Status",
+              "text": "Part III \u2014 Verification of Accredited Investor Status",
               "b": false,
               "i": false
             }
@@ -2344,7 +2344,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Note: This Part III is required because the Company is conducting the Offering under Rule 506(c) of Regulation D, which permits general solicitation but requires the Company to take reasonable steps to verify the Subscriber’s accredited investor status.",
+              "text": "Note: This Part III is required because the Company is conducting the Offering under Rule 506(c) of Regulation D, which permits general solicitation but requires the Company to take reasonable steps to verify the Subscriber\u2019s accredited investor status.",
               "b": false,
               "i": true
             }
@@ -2384,7 +2384,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ](3) Professional Letter. The Subscriber will provide a written confirmation, dated within the prior three months, from a registered broker-dealer, registered investment adviser, licensed attorney, or certified public accountant, stating that such person has taken reasonable steps to verify the Subscriber’s accredited investor status within the prior three months and has determined that the Subscriber is an accredited investor. ",
+              "text": "[ ](3) Professional Letter. The Subscriber will provide a written confirmation, dated within the prior three months, from a registered broker-dealer, registered investment adviser, licensed attorney, or certified public accountant, stating that such person has taken reasonable steps to verify the Subscriber\u2019s accredited investor status within the prior three months and has determined that the Subscriber is an accredited investor. ",
               "b": false,
               "i": false
             }
@@ -2414,7 +2414,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part IV — ERISA and Plan Asset Status",
+              "text": "Part IV \u2014 ERISA and Plan Asset Status",
               "b": false,
               "i": false
             }
@@ -2484,7 +2484,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ]Entity whose underlying assets include “plan assets” within the meaning of ERISA by reason of investment by employee benefit plans subject to Title I of ERISA or plans subject to Section 4975 of the Code ",
+              "text": "[ ]Entity whose underlying assets include \u201cplan assets\u201d within the meaning of ERISA by reason of investment by employee benefit plans subject to Title I of ERISA or plans subject to Section 4975 of the Code ",
               "b": false,
               "i": false
             }
@@ -2494,7 +2494,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "“Benefit Plan Investor” means (i) any employee benefit plan subject to Title I of ERISA; (ii) any plan to which Section 4975 of the Code applies; and (iii) any entity whose underlying assets include “plan assets” by reason of any such plan’s investment in the entity (within the meaning of ERISA Section 3(42) and 29 C.F.R. Section 2510.3-101).",
+              "text": "\u201cBenefit Plan Investor\u201d means (i) any employee benefit plan subject to Title I of ERISA; (ii) any plan to which Section 4975 of the Code applies; and (iii) any entity whose underlying assets include \u201cplan assets\u201d by reason of any such plan\u2019s investment in the entity (within the meaning of ERISA Section 3(42) and 29 C.F.R. Section 2510.3-101).",
               "b": false,
               "i": true
             }
@@ -2534,7 +2534,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber acknowledges that the Manager intends to monitor and limit investment in the Company by Benefit Plan Investors so that participation by such investors does not equal or exceed 25% of the value of any class of equity interests in the Company (or to otherwise rely on an applicable exception under the U.S. Department of Labor’s plan asset regulations), and that the Manager may reject or limit subscriptions from Benefit Plan Investors in order to prevent the Company’s assets from being treated as “plan assets.”",
+              "text": "The Subscriber acknowledges that the Manager intends to monitor and limit investment in the Company by Benefit Plan Investors so that participation by such investors does not equal or exceed 25% of the value of any class of equity interests in the Company (or to otherwise rely on an applicable exception under the U.S. Department of Labor\u2019s plan asset regulations), and that the Manager may reject or limit subscriptions from Benefit Plan Investors in order to prevent the Company\u2019s assets from being treated as \u201cplan assets.\u201d",
               "b": false,
               "i": false
             }
@@ -2544,7 +2544,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part V — “Bad Actor” Disqualifying Events (Rule 506(d))",
+              "text": "Part V \u2014 \u201cBad Actor\u201d Disqualifying Events (Rule 506(d))",
               "b": false,
               "i": false
             }
@@ -2554,7 +2554,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Rule 506(d) of Regulation D under the Securities Act prohibits the offer and sale of securities under Rule 506 if any “covered person” (which includes, with respect to the Subscriber, any beneficial owner of 20% or more of the issuer’s outstanding voting equity securities, calculated on the basis of voting power) is subject to certain enumerated disqualifying events. The Manager is required to confirm that no Subscriber, if such Subscriber would beneficially own 20% or more of the Company’s voting equity securities, is subject to any such disqualifying event.",
+              "text": "Rule 506(d) of Regulation D under the Securities Act prohibits the offer and sale of securities under Rule 506 if any \u201ccovered person\u201d (which includes, with respect to the Subscriber, any beneficial owner of 20% or more of the issuer\u2019s outstanding voting equity securities, calculated on the basis of voting power) is subject to certain enumerated disqualifying events. The Manager is required to confirm that no Subscriber, if such Subscriber would beneficially own 20% or more of the Company\u2019s voting equity securities, is subject to any such disqualifying event.",
               "b": false,
               "i": false
             }
@@ -2564,7 +2564,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "If the Subscriber’s subscription would result in the Subscriber beneficially owning 20% or more of the Company’s outstanding voting equity securities (calculated on the basis of voting power), the Subscriber represents and warrants that, to the Subscriber’s knowledge, neither the Subscriber nor any beneficial owner, control person, principal, or affiliate of the Subscriber:",
+              "text": "If the Subscriber\u2019s subscription would result in the Subscriber beneficially owning 20% or more of the Company\u2019s outstanding voting equity securities (calculated on the basis of voting power), the Subscriber represents and warrants that, to the Subscriber\u2019s knowledge, neither the Subscriber nor any beneficial owner, control person, principal, or affiliate of the Subscriber:",
               "b": false,
               "i": false
             }
@@ -2604,7 +2604,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "Is subject to an order of the SEC entered pursuant to Section 15(b) or 15B(c) of the Securities Exchange Act of 1934 or Section 203(e) or (f) of the Investment Advisers Act of 1940 that, at the time of subscription, (a) suspends or revokes such person’s registration as a broker, dealer, municipal securities dealer, or investment adviser; (b) places limitations on the activities, functions, or operations of such person; or (c) bars such person from being associated with any entity or from participating in the offering of any penny stock;",
+              "text": "Is subject to an order of the SEC entered pursuant to Section 15(b) or 15B(c) of the Securities Exchange Act of 1934 or Section 203(e) or (f) of the Investment Advisers Act of 1940 that, at the time of subscription, (a) suspends or revokes such person\u2019s registration as a broker, dealer, municipal securities dealer, or investment adviser; (b) places limitations on the activities, functions, or operations of such person; or (c) bars such person from being associated with any entity or from participating in the offering of any penny stock;",
               "b": false,
               "i": false
             }
@@ -2694,7 +2694,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part VI — FINRA and Other Affiliations",
+              "text": "Part VI \u2014 FINRA and Other Affiliations",
               "b": false,
               "i": false
             }
@@ -2714,7 +2714,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "1. Is the Subscriber, or any beneficial owner of the Subscriber, an officer, director, partner, member, registered representative, employee, control person, or other affiliate of any Financial Industry Regulatory Authority (“FINRA”) member firm?",
+              "text": "1. Is the Subscriber, or any beneficial owner of the Subscriber, an officer, director, partner, member, registered representative, employee, control person, or other affiliate of any Financial Industry Regulatory Authority (\u201cFINRA\u201d) member firm?",
               "b": false,
               "i": false
             }
@@ -2769,7 +2769,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "2. Is the Subscriber a “foreign person” for purposes of the Foreign Investment Risk Review Modernization Act (FIRRMA) and the regulations administered by the Committee on Foreign Investment in the United States (CFIUS)?",
+              "text": "2. Is the Subscriber a \u201cforeign person\u201d for purposes of the Foreign Investment Risk Review Modernization Act (FIRRMA) and the regulations administered by the Committee on Foreign Investment in the United States (CFIUS)?",
               "b": false,
               "i": false
             }
@@ -2799,7 +2799,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "3. Is the Subscriber a “government official,” “politically exposed person,” or related party to such persons (as defined in U.S. anti-corruption and anti-money laundering regulations)?",
+              "text": "3. Is the Subscriber a \u201cgovernment official,\u201d \u201cpolitically exposed person,\u201d or related party to such persons (as defined in U.S. anti-corruption and anti-money laundering regulations)?",
               "b": false,
               "i": false
             }
@@ -2864,7 +2864,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ]No — the Subscriber is acquiring the Subscribed Units for the Subscriber’s own account. ",
+              "text": "[ ]No \u2014 the Subscriber is acquiring the Subscribed Units for the Subscriber\u2019s own account. ",
               "b": false,
               "i": false
             }
@@ -2874,7 +2874,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "[ ]Yes — if checked, please provide details on a separate sheet. ",
+              "text": "[ ]Yes \u2014 if checked, please provide details on a separate sheet. ",
               "b": false,
               "i": false
             }
@@ -2884,7 +2884,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part VII — IRS Tax Forms",
+              "text": "Part VII \u2014 IRS Tax Forms",
               "b": false,
               "i": false
             }
@@ -2974,7 +2974,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "Part VIII — Certification",
+              "text": "Part VIII \u2014 Certification",
               "b": false,
               "i": false
             }
@@ -3004,7 +3004,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber will promptly notify the Manager in writing of any change to any of the information provided in this Questionnaire that occurs prior to the Closing Date or, with respect to the Subscriber’s status as an accredited investor or as a Benefit Plan Investor, at any time during the period in which the Subscriber holds Class B Units;",
+              "text": "The Subscriber will promptly notify the Manager in writing of any change to any of the information provided in this Questionnaire that occurs prior to the Closing Date or, with respect to the Subscriber\u2019s status as an accredited investor or as a Benefit Plan Investor, at any time during the period in which the Subscriber holds Class B Units;",
               "b": false,
               "i": false
             }
@@ -3014,7 +3014,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber understands that any false statement or material omission in this Questionnaire may result in the rejection of the Subscriber’s subscription, the termination of the Subscriber’s rights as a Member of the Company, civil and criminal liability under the Securities Act and other applicable laws, and indemnification obligations under Section 5 of the Subscription Agreement; and",
+              "text": "The Subscriber understands that any false statement or material omission in this Questionnaire may result in the rejection of the Subscriber\u2019s subscription, the termination of the Subscriber\u2019s rights as a Member of the Company, civil and criminal liability under the Securities Act and other applicable laws, and indemnification obligations under Section 5 of the Subscription Agreement; and",
               "b": false,
               "i": false
             }
@@ -3024,7 +3024,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "The Subscriber consents to the Company’s and the Manager’s use of the information provided in this Questionnaire to comply with applicable securities, tax, anti-money laundering, sanctions, and other laws and regulations, and to disclose such information to their respective counsel, accountants, administrators, and other service providers as the Manager deems appropriate.",
+              "text": "The Subscriber consents to the Company\u2019s and the Manager\u2019s use of the information provided in this Questionnaire to comply with applicable securities, tax, anti-money laundering, sanctions, and other laws and regulations, and to disclose such information to their respective counsel, accountants, administrators, and other service providers as the Manager deems appropriate.",
               "b": false,
               "i": false
             }
@@ -3245,7 +3245,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "By executing this counterpart signature page (this “Counterpart Signature Page”), the undersigned (the “Subscriber”) hereby:",
+              "text": "By executing this counterpart signature page (this \u201cCounterpart Signature Page\u201d), the undersigned (the \u201cSubscriber\u201d) hereby:",
               "b": false,
               "i": false
             }
@@ -3255,7 +3255,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "Adopts, agrees to, and accepts all of the terms and conditions of the Operating Agreement of ASC Simphonic II, LLC, dated as of May 15, 2026 (as the same may be amended, supplemented, or restated from time to time, the “Operating Agreement”);",
+              "text": "Adopts, agrees to, and accepts all of the terms and conditions of the Operating Agreement of ASC Synthera II, LLC, dated as of May 15, 2026 (as the same may be amended, supplemented, or restated from time to time, the \u201cOperating Agreement\u201d);",
               "b": false,
               "i": false
             }
@@ -3275,7 +3275,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "Authorizes the Manager to amend Exhibit A and Schedule I to the Operating Agreement to reflect the Subscriber’s admission as a Member, the Subscriber’s capital contribution, the number of Class B Units issued to the Subscriber, and the Subscriber’s Percentage Interest; and",
+              "text": "Authorizes the Manager to amend Exhibit A and Schedule I to the Operating Agreement to reflect the Subscriber\u2019s admission as a Member, the Subscriber\u2019s capital contribution, the number of Class B Units issued to the Subscriber, and the Subscriber\u2019s Percentage Interest; and",
               "b": false,
               "i": false
             }
@@ -3285,7 +3285,7 @@
           "type": "item",
           "runs": [
             {
-              "text": "Acknowledges that, upon acceptance by the Manager, the Subscriber shall be admitted as a Member of ASC Simphonic II, LLC, holding Class B Units, and shall be bound by the Operating Agreement to the same extent as if the Subscriber had executed the Operating Agreement on the original execution date thereof.",
+              "text": "Acknowledges that, upon acceptance by the Manager, the Subscriber shall be admitted as a Member of ASC Synthera II, LLC, holding Class B Units, and shall be bound by the Operating Agreement to the same extent as if the Subscriber had executed the Operating Agreement on the original execution date thereof.",
               "b": false,
               "i": false
             }
@@ -3500,7 +3500,7 @@
           "type": "p",
           "runs": [
             {
-              "text": "ASC SIMPHONIC II, LLC",
+              "text": "ASC SYNTHERA II, LLC",
               "b": true,
               "i": false
             }
@@ -3589,6 +3589,6 @@
     "Series Seed Preferred Stock": 1,
     "Series Seed Preferred": 2
   },
-  "contentHash": "49d3994eededb93e",
-  "wordCount": 9315
+  "contentHash": "924ee187a0acff9f",
+  "wordCount": 9316
 }
