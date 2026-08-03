@@ -92,7 +92,7 @@ const DEALS: SeedDeal[] = [
     sector: 'Vertical AI · Senior Care',
     stage: 'Series Seed Preferred',
     art: 'linear-gradient(135deg,#0E1A24 0%,#1C3A4E 55%,#3E7A96 115%)',
-    logoUrl: '/synthera-logo.svg',
+    logoUrl: '/synthera-logo.png',
     headline:
       'The AI operating system replacing legacy software across 60,000+ senior care facilities.',
     blurb:
