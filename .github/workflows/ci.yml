@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   check:
-    name: typecheck · lint · build
+    name: typecheck · lint · test · build
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -42,6 +42,13 @@ jobs:
       # on errors only, which is the behaviour we want.
       - name: Lint
         run: npm run lint
+
+      # The suite covers the pure, isomorphic core: the state machine, the
+      # invest gate, fee math, the subscription document and the SpotBot
+      # refusal gate. No database and no server, so it runs here in about a
+      # second and before the slowest step.
+      - name: Test
+        run: npm test
 
       - name: Build
         run: npm run build
