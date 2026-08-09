@@ -185,6 +185,44 @@ exist deliberately: the REST API under `app/api/` is complete and
 inspectable on its own, and the UI is a consumer of it rather than a
 privileged path around it.
 
+### The API surface
+
+This is the contract. Every endpoint is a route handler under `app/api/`,
+wrapped by `route()` from `lib/http.ts`, and every one of them except the
+auth and session routes calls `requireUser()` first. Errors come back as
+`{ error: { code, message } }` with `unauthorized` 401, `invalid_request`
+400, `not_found` 404, `invalid_state` 409, and a generic
+`internal_error` 500 that never leaks a stack trace.
+
+| Endpoint | Methods | Purpose |
+|---|---|---|
+| `auth/login`, `auth/logout` | POST | Credentials in, session cookie out |
+| `auth/demo-login` | POST | Demo only. Mints a pre-onboarded persona |
+| `session` | GET | Current user, setup status, invest gate |
+| `wizard`, `wizard/complete` | GET, POST | Setup progress |
+| `accreditation/letter`, `/upload`, `/verify` | POST | Certification letter, upload, reviewer confirmation |
+| `kyc/id`, `kyc/selfie`, `kyc/submit` | POST | Identity capture and submission |
+| `vault` | GET, PUT | Taxpayer info, captured once, reused everywhere |
+| `profiles`, `profiles/[id]/default` | GET, POST | Investing entities |
+| `bank` | GET, POST | Linked funding accounts |
+| `deals`, `deals/[id]` | GET | The shelf and a single deal |
+| `subscriptions` | GET, POST | List, and start a commitment (invest gate enforced here) |
+| `subscriptions/resumable` | GET | Unfinished commitment for a deal |
+| `subscriptions/[id]` | GET, PATCH, DELETE | Read, change amount, cancel |
+| `subscriptions/[id]/confirm` | POST | Confirm one section of the agreement |
+| `subscriptions/[id]/sign` | POST | Execute. Decrements allocation |
+| `subscriptions/[id]/fund` | POST | Funding instruction |
+| `documents`, `documents/[id]/download` | GET | Filed documents |
+| `radar/interest` | POST | Indicate interest in a Radar name |
+| `spotbot` | POST | Explainer answers, gated before generation |
+| `demo/reset` | POST | Demo only. Wipes the caller's account |
+
+Ownership is enforced by scoping every read to the session user
+(`findFirst({ where: { id, userId } })`), so another user's id returns
+404 rather than 403. The invest gate, the state machine, and every
+ownership rule are re-checked server side. The UI versions are
+courtesies, not controls.
+
 ### `lib/repositories/` is the only database boundary
 
 Route handlers and pages never call `prisma` directly for domain data.

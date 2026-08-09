@@ -216,35 +216,8 @@ These are the claims the product makes. Do not let a change quietly break them.
 
 ## Deliberately out of scope
 
-Liquidity/secondaries surfaces (legally gated), SPAN (discontinued), and the
-public marketing site and application flow (the product starts at login).
-
-## Oliphron (the CRM) — a first-class integration target
-
-AltSpot's CRM, **Oliphron, runs on Supabase**, and ASCPlatform will need to talk
-to it frequently. Treat that as a design constraint now, not a later problem.
-
-What it means in practice:
-
-- **The database will be Supabase Postgres**, not Neon or anything else. Two
-  Postgres instances on the same platform can share a project, use foreign data
-  wrappers, or at minimum share auth and networking conventions. Do not introduce
-  a second database vendor.
-- **Investor identity is the join key.** Oliphron already classifies people by
-  `roles[]` (lp / operator / player), `platforms[]` (`ast` the newsletter, `asm`
-  the marketplace), and tiers. An ASCPlatform investor is an Oliphron contact
-  with `asm` in `platforms[]`. Keep a stable external identifier on `User` so the
-  two sides can be reconciled — do not assume email is permanent.
-- **The funnel is the product.** Oliphron's model is newsletter subscriber →
-  marketplace member → invests in a deal. ASCPlatform owns the last two hops, so
-  events like "account created", "accreditation verified", "subscription signed"
-  and "subscription funded" are exactly what the CRM wants. `lib/audit.ts`
-  already records all of them — it is the natural outbound feed.
-- **Write integration behind an interface** in `lib/integrations/oliphron.ts`
-  when the time comes. Do not let CRM concerns leak into the repositories.
-- Oliphron writes are **live production with no undo**. Anything ASCPlatform
-  pushes there must be idempotent and must never bulk-write without an explicit
-  trigger.
+Liquidity/secondaries surfaces (legally gated) and the public marketing site
+and application flow. The product starts at login.
 
 ## Going to production
 
@@ -255,7 +228,9 @@ What it means in practice:
 3. Swap `components/wizard/PlaidDemoModal.tsx` for Plaid Link, then delete it and
    its stylesheet.
 4. Swap the datasource in `prisma/schema.prisma` to `postgresql` and the adapter
-   in `lib/db.ts`. Repository call sites do not change.
+   in `lib/db.ts`. Repository call sites do not change. The migration history in
+   `prisma/migrations/` is SQLite dialect and gets rebuilt; status columns and
+   the `…Json` string columns should become native enums and `Json`.
 5. Replace `lib/auth.ts` sessions with the chosen IdP.
 6. Move expiry sweeping to a scheduled job.
 7. Real tokenization for taxpayer IDs, replacing the `tinToken` stand-in.
