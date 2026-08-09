@@ -264,6 +264,23 @@ What it means in practice:
 
 ## Known housekeeping
 
-`npm audit` reports advisories in dev-only transitive dependencies (the eslint
-chain and postcss). They are not in the runtime path. Clearing them forces an
-eslint major upgrade — worth doing deliberately, not as a side effect.
+**`npm audit` reports 7 high advisories, and 5 of them ARE in the runtime path.**
+Checked 2026-08-08; do not repeat the earlier claim that these are dev-only.
+
+- `postcss` and `sharp` come in through `next` itself. `npm audit --omit=dev`
+  still reports them, so they ship. The advertised fix is `npm audit fix
+  --force`, which installs `next@16.3.0`, outside the stated range.
+- `js-yaml` and `nanoid` are the dev-only two.
+
+Nothing here is exploitable by a visitor to the demo: the postcss advisories
+need attacker-controlled CSS at build time, and sharp is not on a path that
+processes untrusted images. It is still a **next minor upgrade owed before
+production**, done deliberately with the build verified, not as a side effect.
+
+There is **no test suite**. The CI workflow runs typecheck, lint and build,
+which is the floor, not the target. Anything touching `lib/domain.ts`
+(`assertTransition`, the invest gate) or `lib/fees.ts` is pure and isomorphic
+and should be the first thing covered.
+
+`lib/integrations/` is empty. It carries a README so the path referenced
+throughout the codebase exists in a clone.

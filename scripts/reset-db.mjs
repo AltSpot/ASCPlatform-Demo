@@ -5,7 +5,7 @@
  *   npm run db:reset
  *
  * Drops the SQLite file, re-applies every migration, and re-seeds the
- * three deals. Investors, commitments and documents are all cleared, so
+ * four deals. Investors, commitments and documents are all cleared, so
  * the next login starts a fresh walkthrough.
  */
 import { execFileSync } from 'node:child_process';
