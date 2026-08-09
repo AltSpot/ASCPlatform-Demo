@@ -80,6 +80,15 @@ export async function sweepStaleDemoAccounts(): Promise<number> {
  * rows hold anything: an unsigned commitment never reserved, and a funded
  * one is real. Called before `deleteInvestor`, because the cascade takes
  * the subscription rows with it.
+ *
+ * KNOWN BUG, left as found and carried through a refactor unchanged:
+ * this increments unconditionally, but `signSubscription` only decrements
+ * when ISOLATED_ALLOCATION is OFF. With it on, which is the default, the
+ * deal row was never debited, so every reset inflates
+ * `allocationRemaining` by the amount reset. It drifts upward over a long
+ * demo run and only a reseed corrects it. The fix is to make this
+ * symmetric with the sign path, guarded by the same flag. Not changed
+ * here because the change is behavioural, not hygiene.
  */
 export async function releaseHeldAllocation(userId: string): Promise<void> {
   const reserved = await prisma.subscription.findMany({
