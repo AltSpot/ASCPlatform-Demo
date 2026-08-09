@@ -100,6 +100,8 @@ server if you would rather watch it.
 | `npm start` | Serve the production build |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint (Next core-web-vitals + TypeScript) |
+| `npm test` | Run the test suite |
+| `npm run test:watch` | Re-run the suite as files change |
 | `npm run db:reset` | Drop the database, re-migrate, re-seed the four deals |
 | `npm run db:generate` | Regenerate the Prisma client after a schema change |
 | `npm run db:migrate` | Create and apply a migration |
@@ -340,13 +342,44 @@ credential.
 
 The application never reads the `RENDER_*` pair.
 
+## Tests
+
+```bash
+npm test          # the whole suite, about a second
+npm run test:watch
+```
+
+The runner is Node's built-in test runner driven through `tsx`, which the
+repo already depends on for seeding. No test framework, no config file and
+no new dependency.
+
+The suite covers the pure, isomorphic core, which is where the rules that
+matter live. It needs no database and no server, so it is fast enough to
+run on every save.
+
+| File | What it defends |
+| --- | --- |
+| `tests/domain.test.ts` | The subscription state machine, checked over every ordered pair of states, and the invest gate including the verified-but-expired boundary |
+| `tests/fees.test.ts` | The fee model: 5% once at closing, 10% carry at exit, and the shape assertions that make a third fee impossible to add quietly |
+| `tests/format.test.ts` | Taxpayer ID masking, the UTC pinning that prevents hydration mismatches, and the `EMPTY` placeholder |
+| `tests/subscription-sections.test.ts` | That the agreement is internally coherent, that confirmation codes and answer keys stay stable, and that the document states the same fee model `lib/fees.ts` computes |
+| `tests/spotbot-gate.test.ts` | That advice-seeking questions are refused with the right reason, that mechanics questions are not, and that the gate runs before the answer engine |
+
+Two things the suite deliberately does not do. It does not test the
+repository layer or the route handlers, because those need a database and
+would be testing Prisma more than testing this codebase. And it does not
+assert anything the type system already guarantees.
+
+Each file opens with a comment saying which invariant it protects and why
+that invariant is worth protecting. A few tests document current behaviour
+rather than asserting the ideal, and every one of those says so in place.
+
 ## CI
 
-`.github/workflows/ci.yml` runs typecheck, lint and build on every pull
-request and on pushes to `main`. Node comes from `.nvmrc`, which is the
-single source of the version and matches `NODE_VERSION` in `render.yaml`
-and `netlify.toml`. There is no test suite yet, which is the most
-obvious gap in this repo.
+`.github/workflows/ci.yml` runs typecheck, lint, test and build on every
+pull request and on pushes to `main`. Node comes from `.nvmrc`, which is
+the single source of the version and matches `NODE_VERSION` in
+`render.yaml` and `netlify.toml`.
 
 ## Deploying
 

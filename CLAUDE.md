@@ -252,10 +252,17 @@ need attacker-controlled CSS at build time, and sharp is not on a path that
 processes untrusted images. It is still a **next minor upgrade owed before
 production**, done deliberately with the build verified, not as a side effect.
 
-There is **no test suite**. The CI workflow runs typecheck, lint and build,
-which is the floor, not the target. Anything touching `lib/domain.ts`
-(`assertTransition`, the invest gate) or `lib/fees.ts` is pure and isomorphic
-and should be the first thing covered.
+The test suite lives in `tests/` and runs with `npm test`. It uses Node's
+built-in test runner through `tsx`, so there is no framework and no config
+file. It covers the pure, isomorphic core: the state machine and the invest
+gate in `lib/domain.ts`, `lib/fees.ts`, `lib/format.ts`,
+`lib/subscription-sections.ts` and `lib/spotbot/gate.ts`. CI runs it
+alongside typecheck, lint and build.
+
+Deliberately uncovered: the repository layer and the route handlers, which
+need a database. Anything new that is pure and enforces a rule belongs in
+`tests/`. A change to fee math, the state machine or the product invariants
+should fail the suite before it fails review.
 
 `lib/integrations/` is empty. It carries a README so the path referenced
 throughout the codebase exists in a clone.
