@@ -18,6 +18,7 @@ import type {
   WizardView,
   InvestGate,
 } from '../domain';
+import type { RadarCompanyView } from '../terminal/radar';
 
 export class ApiError extends Error {
   readonly status: number;
@@ -147,6 +148,12 @@ export const api = {
   fundSubscription: (id: string, method: string) =>
     post<SubscriptionView>(`/subscriptions/${id}/fund`, { method }),
   cancelSubscription: (id: string) => del<void>(`/subscriptions/${id}`),
+
+  // ---- radar ----
+  radar: () => request<RadarCompanyView[]>('/radar'),
+  /** Demand signal, not a commitment. Amount is whole dollars. */
+  indicateRadarInterest: (companySlug: string, amount: number) =>
+    post<RadarCompanyView>('/radar/interest', { companySlug, amount }),
 
   // ---- documents ----
   documents: () => request<DocumentView[]>('/documents'),

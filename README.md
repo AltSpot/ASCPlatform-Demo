@@ -215,7 +215,8 @@ auth and session routes calls `requireUser()` first. Errors come back as
 | `subscriptions/[id]/sign` | POST | Execute. Decrements allocation |
 | `subscriptions/[id]/fund` | POST | Funding instruction |
 | `documents`, `documents/[id]/download` | GET | Filed documents |
-| `radar/interest` | POST | Indicate interest in a Radar name |
+| `radar` | GET | The AltSpot Radar board, with this member's own indications |
+| `radar/interest` | POST | Indicate interest in a Radar name. Demand signal, not a commitment |
 | `spotbot` | POST | Explainer answers, gated before generation |
 | `demo/reset` | POST | Demo only. Wipes the caller's account |
 

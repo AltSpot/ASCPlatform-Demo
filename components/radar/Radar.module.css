@@ -1,0 +1,345 @@
+/* ============================================================
+   AltSpot Radar — the watchlist members vote on.
+
+   The shelf sells. Radar asks. So the cards deliberately do not
+   look like deal cards: no cover art, no allocation bar, no gold
+   CTA. What they carry instead is reference data set as a table
+   and one honest question at the bottom.
+
+   Tokens come from app/globals.css. No new colours here.
+   ============================================================ */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  padding: 22px 22px 18px;
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--hairg);
+  transform: translateY(-2px);
+}
+
+/* A card the member has already spoken on reads differently at a
+   glance, without shouting. */
+.card[data-indicated='true'] {
+  border-color: var(--hairg);
+  background: linear-gradient(180deg, rgba(243, 152, 7, 0.07), rgba(243, 152, 7, 0.01));
+}
+
+/* ---------- identity ---------- */
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.mark {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-family: var(--fm);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: #1a1204;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+}
+
+.name {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: -0.014em;
+  color: var(--ink);
+}
+
+.sector {
+  margin-top: 4px;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.about {
+  font-size: 13.3px;
+  line-height: 1.6;
+  color: var(--soft);
+}
+
+/* ---------- reference figures ---------- */
+
+.figures {
+  border-top: 1px solid var(--hair);
+  border-bottom: 1px solid var(--hair);
+  padding: 4px 0;
+}
+
+.figure {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.figure:last-child {
+  border-bottom: none;
+}
+
+.figureKey {
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.figureValue {
+  font-family: var(--fm);
+  font-size: 13.5px;
+  color: var(--ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.figureValue small {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.target .figureValue {
+  color: var(--orange-b);
+}
+
+/* ---------- demand ---------- */
+
+.demand {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.demandBar {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.demandFill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--gold), var(--orange), var(--ember));
+  transition: width 0.45s ease;
+}
+
+.demandLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.demandLine b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- the ask ---------- */
+
+.ask {
+  margin-top: auto;
+}
+
+.askRow {
+  display: flex;
+  gap: 9px;
+  align-items: stretch;
+}
+
+.amountWrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.currency {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--fm);
+  font-size: 13px;
+  color: var(--faint);
+  pointer-events: none;
+}
+
+.amount {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid var(--hair);
+  color: var(--ink);
+  border-radius: var(--r-sm);
+  padding: 10px 12px 10px 26px;
+  font-family: var(--fm);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.amount:focus {
+  border-color: var(--hairg);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(243, 152, 7, 0.12);
+}
+
+.amount::placeholder {
+  color: var(--faint);
+  letter-spacing: 0.04em;
+}
+
+/* Chrome and Safari draw spinners on number inputs. Money does not
+   want a spinner. */
+.amount::-webkit-outer-spin-button,
+.amount::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.hint {
+  margin-top: 9px;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.hint[data-error='true'] {
+  color: var(--ember);
+}
+
+/* The confirmed state. It has to land instantly and read as done. */
+.done {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid rgba(111, 169, 124, 0.4);
+  background: rgba(111, 169, 124, 0.08);
+  border-radius: var(--r-sm);
+  padding: 11px 14px;
+  animation: settle 0.28s ease;
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.doneText {
+  font-size: 13px;
+  color: var(--ink-2);
+  min-width: 0;
+}
+
+.doneText b {
+  color: var(--good);
+  font-family: var(--fm);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.change {
+  margin-left: auto;
+  flex: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.change:hover {
+  color: var(--orange-b);
+}
+
+/* ---------- section framing ---------- */
+
+.intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.disclosure {
+  margin-top: 26px;
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  background: rgba(0, 0, 0, 0.22);
+  padding: 18px 20px;
+  max-width: 88ch;
+}
+
+.disclosure b {
+  display: block;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--soft);
+  margin-bottom: 9px;
+}
+
+.disclosure p {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--faint);
+}
+
+@media (max-width: 900px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
+}

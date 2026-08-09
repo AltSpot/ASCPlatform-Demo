@@ -1,0 +1,125 @@
+/* ============================================================
+   Marketplace sectioning — Current opportunities / AltSpot Radar.
+
+   Two different promises live on this page. One is a shelf you can
+   buy from today. The other is a question about what we should go
+   and get. Putting them behind one control keeps that distinction
+   impossible to miss.
+
+   Tokens come from app/globals.css.
+   ============================================================ */
+
+.switcher {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-pill);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 26px;
+  overflow-x: auto;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: none;
+  cursor: pointer;
+  padding: 9px 18px;
+  white-space: nowrap;
+  font-family: var(--fm);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--soft);
+  transition: color 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab[aria-selected='true'] {
+  color: var(--ink);
+  border-color: var(--hairg);
+  background: linear-gradient(
+    90deg,
+    rgba(243, 152, 7, 0.18),
+    rgba(243, 152, 7, 0.05)
+  );
+}
+
+.count {
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: var(--faint);
+  border: 1px solid var(--hair);
+  border-radius: var(--r-pill);
+  padding: 2px 8px;
+}
+
+.tab[aria-selected='true'] .count {
+  color: var(--orange-b);
+  border-color: var(--hairg);
+}
+
+.panel {
+  animation: fade 0.22s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.panelHead {
+  margin-bottom: 22px;
+}
+
+.panelHead h2 {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: clamp(24px, 3vw, 30px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.panelHead p {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--soft);
+  max-width: 66ch;
+}
+
+@media (max-width: 900px) {
+  .switcher {
+    width: 100%;
+  }
+  /* Both labels have to fit on a phone without the control scrolling,
+     so the type tightens rather than the words shortening. */
+  .tab {
+    flex: 1;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 10px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+}

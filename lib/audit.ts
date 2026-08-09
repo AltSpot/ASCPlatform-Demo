@@ -31,6 +31,7 @@ export type AuditAction =
   | 'subscription.cancelled'
   | 'subscription.expired'
   | 'document.saved'
+  | 'radar.interest_indicated'
   | 'demo.reset';
 
 interface AuditInput {
