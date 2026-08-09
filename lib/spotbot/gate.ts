@@ -57,19 +57,22 @@ const RULES: readonly GateRule[] = [
   {
     reason: 'performance_prediction',
     patterns: [
-      /\b(how much|what) (will|would|could|can|might) (i|we|this|it|the deal|they)\b.*\b(make|earn|return|returns|get back|be worth|grow|profit)\b/,
+      /\b(how much|what) (will|would|could|can|might) \w+( \w+)?\b.*\b(make|earn|return|returns|get back|be worth|grow|profit)\b/,
       /\bhow much (money )?(will|can|could) (i|we)\b/,
       /\b(expected|projected|likely|guaranteed|realistic|typical|average|target|estimated) (return|returns|irr|moic|multiple|profit|profits|yield|upside|performance|gain|gains)\b/,
       /\bwhat (kind|sort|type) of returns?\b/,
       /\bwhat returns?\b/,
       /\b(should|can|will) (i|we) expect\b/,
-      /\bwill (this|it|the deal|the company|they) (go up|double|triple|succeed|fail|work out|exit|ipo|\d+ ?x|be worth)\b/,
+      // The subject is one or two words on purpose: "will this double",
+      // "will this company double", "will synthera ipo". Asking whether any
+      // subject will double or exit is a prediction regardless of the noun.
+      /\bwill \w+( \w+)? (go up|double|triple|succeed|fail|work out|exit|ipo|\d+ ?x|be worth)\b/,
       /\b(how likely|what are the (odds|chances)|probability of)\b/,
       /\b(price target|upside case|downside case)\b/,
       /\bwhen will (i|we) (see|make) (a |any )?(return|profit|money|gain|gains)\b/,
       /\bhow (much|well) (has|did|does) .*\b(perform|performed|return|returned)\b/,
       /\b(beat|outperform|outperformed) (the )?(market|s ?& ?p|index|stocks|real estate)\b/,
-      /\b(is|are) (this|it|these) going to (work|make money|be worth)\b/,
+      /\b(is|are) \w+( \w+)? going to (work|make money|be worth)\b/,
       /\bhow (big|large) (a |an )?(return|multiple|exit)\b/,
     ],
   },
@@ -109,7 +112,9 @@ const RULES: readonly GateRule[] = [
       /\bwhat (would|do) you (do|invest in|pick|choose|buy)\b/,
       /\byour (opinion|take|advice|thoughts|view) (on|about|of)\b/,
       /\b(is|are) (this|that|it|these|they|the)( deal| investment| one| opportunity)? ?(a )?(good|bad|smart|great|solid|safe|risky|wise|strong|weak)\b/,
-      /\b(is|are) (this|it) worth (it|investing|buying|the money|the risk)\b/,
+      // Matches the header's own example, "are these fees worth it", which
+      // the bare pronoun form let through.
+      /\b(is|are) \w+( \w+)? worth (it|investing|buying|the money|the risk)\b/,
       /\bworth investing\b/,
       /\b(is|are) (this|it) (a )?(scam|legit|legitimate|too risky)\b/,
       /\bwould you (invest|put money|buy)\b/,

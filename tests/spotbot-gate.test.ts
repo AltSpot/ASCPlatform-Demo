@@ -274,31 +274,30 @@ describe('the gate runs before the answer engine', () => {
 });
 
 describe('where the classifier defers, and what catches it', () => {
-  test('a bare pronoun subject is caught, a determiner plus a noun is not', () => {
-    // Documented, not endorsed, and the sharpest edge in this file.
-    //
-    // Several patterns anchor their subject on a bare pronoun or
-    // determiner: `(this|it|the deal|the company|they)`. A determiner
-    // followed by a noun falls outside them, so the phrasing a person is
-    // most likely to type is the one that gets through. The rule that
-    // catches "is this a good deal" does handle the noun, which is what
-    // makes the omission look like an oversight rather than a decision.
-    //
-    // The gate is deliberately literal and defers when unsure, and the
-    // engine is the second line: it retrieves from a corpus that contains
-    // no opinions, so an unmatched question gets `fallbackAnswer`, which
-    // says it does not know. The exposure is that the investor gets a
-    // generic non-answer instead of a proper refusal with a handoff, not
-    // that SpotBot forecasts or recommends anything.
-    assert.equal(classify('Will this double?').allowed, false);
-    assert.equal(classify('Will this company double?').allowed, true);
-    assert.equal(classify('Will Synthera double?').allowed, true);
-
-    assert.equal(classify('Is this worth it?').allowed, false);
-    assert.equal(classify('Is this deal worth it?').allowed, true);
-    // gate.ts opens by citing this exact question as one it separates from
-    // "what are the fees". Today it does not.
-    assert.equal(classify('Are these fees worth it?').allowed, true);
+  test('the subject may carry a noun: "will this company double" is refused', () => {
+    // This was a real gap, found by this suite and fixed. Several patterns
+    // anchored their subject on a bare pronoun, so the phrasing a person is
+    // most likely to type was the one that got through. The subject now
+    // accepts one or two words, because asking whether ANY subject will
+    // double or exit is a prediction regardless of the noun.
+    for (const question of [
+      'Will this double?',
+      'Will this company double?',
+      'Will Synthera double?',
+      'Will the deal exit?',
+      'Is this worth it?',
+      'Is this deal worth it?',
+      // gate.ts opens by citing this exact question as one it separates
+      // from "what are the fees". Now it does.
+      'Are these fees worth it?',
+      'Is this company going to work?',
+    ]) {
+      assert.equal(
+        classify(question).allowed,
+        false,
+        `an opinion-seeking question was let through: ${question}`,
+      );
+    }
   });
 
   test('a negated ask is let through', () => {
@@ -314,11 +313,9 @@ describe('where the classifier defers, and what catches it', () => {
     // the engine answers from the platform guide or admits it does not
     // know. It has nothing else to say.
     for (const question of [
-      'Will this company double?',
       "Shouldn't I invest in this?",
-      'Will Synthera double?',
-      'Is this deal worth it?',
-      'Are these fees worth it?',
+      'Is the minimum a lot?',
+      'Do people usually like this one?',
     ]) {
       const answer = await askSpotBot({ question, pathname: '/deals/synthera-ai' });
       assert.equal(answer.refused, false);
