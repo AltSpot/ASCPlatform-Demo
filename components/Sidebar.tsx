@@ -32,6 +32,13 @@ const NAV: NavEntry[] = [
     match: ['/dashboard', '/payment'],
   },
   {
+    id: 'terminal',
+    label: 'Terminal',
+    href: '/terminal',
+    icon: 'M3 4h18v16H3V4zm2 3v11h14V7H5zm2 2h4v2H7V9zm0 4h10v1.6H7V13zm0 3h7v1.6H7V16z',
+    match: ['/terminal'],
+  },
+  {
     id: 'marketplace',
     label: 'Marketplace',
     href: '/marketplace',

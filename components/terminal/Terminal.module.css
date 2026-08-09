@@ -1,0 +1,570 @@
+/* ============================================================
+   The Terminal — the wire, the Journal, the Monitor.
+
+   Three sections that share one rhythm and one bet: an investor
+   should be able to skim this in fifteen seconds and leave knowing
+   something. Density is the point, but never at the cost of air.
+
+   Rules inherited from app/globals.css, not restated here:
+   every eyebrow, label, timestamp, source and figure is JetBrains
+   Mono, uppercase, letter-spaced. Headlines are Borna. Reading
+   copy is Figtree. Orange is the accent; gold only starts
+   gradients. No new colours are declared in this file.
+   ============================================================ */
+
+/* ---------- the tape ---------- */
+
+/* A quiet strip of the same numbers the Monitor section explains in
+   full. It runs once at the top so the page opens with movement, then
+   gets out of the way. Reduced motion parks it. */
+.tape {
+  position: relative;
+  margin-bottom: 26px;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-pill);
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+  height: 42px;
+}
+
+/* Fades the ends so the loop never visibly cuts. */
+.tape::before,
+.tape::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  z-index: 2;
+  pointer-events: none;
+}
+.tape::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg), transparent);
+}
+.tape::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg), transparent);
+}
+
+.tapeTrack {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  height: 100%;
+  width: max-content;
+  /* Clears the left fade, so the first reading is never half-hidden. */
+  padding-left: 68px;
+  animation: tapeScroll 58s linear infinite;
+}
+
+@keyframes tapeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* The track holds the set twice; half a track is one clean loop. */
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tapeTrack {
+    animation: none;
+  }
+}
+
+.tapeItem {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  white-space: nowrap;
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tapeLabel {
+  color: var(--faint);
+}
+.tapeValue {
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.tapeDelta {
+  color: var(--orange-b);
+  letter-spacing: 0.06em;
+}
+.tapeDelta[data-direction='down'] {
+  color: var(--soft);
+}
+
+/* ---------- the wire ---------- */
+
+.lead {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--hairg);
+  border-radius: var(--r-lg);
+  padding: 34px 36px 30px;
+  background: linear-gradient(
+    155deg,
+    rgba(199, 154, 75, 0.14),
+    rgba(243, 152, 7, 0.06) 42%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  margin-bottom: 20px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.lead:hover {
+  border-color: var(--orange);
+  transform: translateY(-2px);
+}
+
+.leadTag {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.leadHeadline {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: clamp(26px, 3.4vw, 38px);
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  max-width: 22ch;
+}
+
+.leadDek {
+  margin-top: 16px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+.wireGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.wireItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  padding: 18px 20px 16px;
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  transition: border-color 0.14s ease, background 0.14s ease, transform 0.14s ease;
+}
+
+.wireItem:hover {
+  border-color: var(--hairg);
+  background: var(--panel-2);
+  transform: translateY(-2px);
+}
+
+.wireHeadline {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+.wireDek {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--soft);
+}
+
+.wireFoot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 4px;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.wireFoot .sep {
+  opacity: 0.5;
+}
+
+/* Category chips. One shape, five temperatures, all drawn from the
+   existing palette. */
+.cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid var(--hairg);
+  color: var(--orange-b);
+  background: rgba(243, 152, 7, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+
+.cat[data-cat='Secondaries'] {
+  border-color: rgba(199, 154, 75, 0.42);
+  color: var(--gold-l);
+  background: rgba(199, 154, 75, 0.09);
+}
+.cat[data-cat='Regulation'] {
+  border-color: var(--hair);
+  color: var(--soft);
+  background: rgba(255, 255, 255, 0.03);
+}
+.cat[data-cat='Exits'] {
+  border-color: rgba(111, 169, 124, 0.4);
+  color: var(--good);
+  background: rgba(111, 169, 124, 0.08);
+}
+.cat[data-cat='Private credit'],
+.cat[data-cat='Real assets'] {
+  border-color: rgba(229, 102, 26, 0.45);
+  color: var(--ember);
+  background: rgba(229, 102, 26, 0.08);
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 0 rgba(243, 152, 7, 0.5);
+  animation: pulse 2.4s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(243, 152, 7, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(243, 152, 7, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(243, 152, 7, 0);
+  }
+}
+
+/* ---------- the Journal ---------- */
+
+.journalGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: 18px;
+}
+
+.post {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.post:hover {
+  border-color: var(--hairg);
+  transform: translateY(-3px);
+  text-decoration: none;
+}
+
+.postArt {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid var(--hair);
+  background: linear-gradient(135deg, rgba(199, 154, 75, 0.25), rgba(243, 152, 7, 0.08));
+}
+
+/* Used when a post publishes no art. Keeps the grid honest. */
+.postArtFallback {
+  aspect-ratio: 16 / 9;
+  border-bottom: 1px solid var(--hair);
+  background:
+    radial-gradient(70% 90% at 20% 10%, rgba(243, 152, 7, 0.18), transparent 62%),
+    linear-gradient(135deg, rgba(199, 154, 75, 0.18), rgba(10, 8, 6, 0.4));
+  display: grid;
+  place-items: center;
+}
+
+.postBody {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.postTitle {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.22;
+  letter-spacing: -0.014em;
+  color: var(--ink);
+}
+
+.postExcerpt {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--soft);
+}
+
+.postFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 6px;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.postFoot .go {
+  color: var(--orange);
+}
+
+/* The empty state. Quiet on purpose: a feed that is down is not an
+   error the investor caused, and it must never look like one. */
+.quiet {
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  background: rgba(0, 0, 0, 0.22);
+  padding: 34px 30px;
+  text-align: center;
+}
+
+.quiet b {
+  display: block;
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.quiet span {
+  display: block;
+  font-size: 13.5px;
+  color: var(--soft);
+  max-width: 46ch;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.quietLink {
+  margin-top: 18px;
+  display: inline-block;
+}
+
+/* ---------- the Monitor ---------- */
+
+.monitorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: 16px;
+}
+
+.indicator {
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  padding: 20px 22px 16px;
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.14s ease;
+}
+
+.indicator:hover {
+  border-color: var(--hairg);
+}
+
+.indicatorLabel {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.indicatorRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.indicatorValue {
+  font-family: var(--fd);
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.indicatorDelta {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--orange-b);
+  white-space: nowrap;
+}
+
+.indicatorDelta[data-direction='down'] {
+  color: var(--soft);
+}
+
+.spark {
+  display: block;
+  width: 100%;
+  height: 42px;
+}
+
+.indicatorNote {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--soft);
+}
+
+.indicatorPeriod {
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ---------- the dashboard digest ---------- */
+
+/* The compact form of the wire. It sits under the portfolio and must
+   never compete with it: three headlines, one link, no art. */
+.digestHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.digestList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.digestItem {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.digestItem:last-child {
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+
+.digestTime {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  min-width: 66px;
+  padding-top: 3px;
+  flex: none;
+}
+
+.digestBody {
+  min-width: 0;
+}
+
+.digestHeadline {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.digestMeta {
+  margin-top: 5px;
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.digestFoot {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .lead {
+    padding: 26px 22px 24px;
+  }
+  .wireGrid,
+  .journalGrid,
+  .monitorGrid {
+    grid-template-columns: 1fr;
+  }
+  .digestTime {
+    min-width: 58px;
+  }
+  .tape {
+    margin-bottom: 20px;
+  }
+}
