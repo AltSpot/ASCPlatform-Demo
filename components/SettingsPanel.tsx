@@ -12,11 +12,16 @@ import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import { PARTNERS } from '@/lib/config';
 
-const NOTIFICATIONS = [
-  'New deals matching my interests',
-  'Funding reminders (every other day until funded)',
-  'Deal updates & valuation marks',
-  'Tax document delivery',
+/**
+ * Tax document delivery is `required`: an investor cannot opt out of receiving
+ * their own tax documents, so the control is shown, locked on, and labelled
+ * rather than hidden. Everything else is a genuine preference.
+ */
+const NOTIFICATIONS: { label: string; required?: boolean }[] = [
+  { label: 'New deals matching my interests' },
+  { label: 'Funding reminders (every other day until funded)' },
+  { label: 'Deal updates & valuation marks' },
+  { label: 'Tax document delivery', required: true },
 ];
 
 export default function SettingsPanel({ email }: { email: string }) {
@@ -87,14 +92,27 @@ export default function SettingsPanel({ email }: { email: string }) {
             <p className="small" style={{ marginBottom: 14 }}>
               Delivered by email in production ({PARTNERS.email}).
             </p>
-            {NOTIFICATIONS.map((label, i) => (
+            {NOTIFICATIONS.map(({ label, required }, i) => (
               <label
                 className="check"
-                style={{ marginBottom: i === NOTIFICATIONS.length - 1 ? 0 : 12 }}
+                style={{
+                  marginBottom: i === NOTIFICATIONS.length - 1 ? 0 : 12,
+                  cursor: required ? 'default' : undefined,
+                }}
                 key={label}
               >
-                <input type="checkbox" defaultChecked />
+                <input
+                  type="checkbox"
+                  defaultChecked
+                  disabled={required}
+                  readOnly={required}
+                />
                 {label}
+                {required ? (
+                  <span className="brandmark" style={{ marginLeft: 8 }}>
+                    Always on
+                  </span>
+                ) : null}
               </label>
             ))}
           </div>
