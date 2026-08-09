@@ -12,11 +12,11 @@
  * app/api/radar/interest/route.ts. What this component does is spare
  * the member a round trip to be told something obvious.
  */
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { useToast } from '@/components/Toast';
 import { api, ApiError } from '@/lib/client/api';
-import { money } from '@/lib/format';
+import { EMPTY, money } from '@/lib/format';
 import {
   MAX_INDICATION,
   priceFromCents,
@@ -63,7 +63,13 @@ export default function RadarCard({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  /* Folded by default. The board has to scan in one screen, which is
+     the entire reason the cards are compact. */
+  const [open, setOpen] = useState(false);
+  const panelId = `${useId()}-research`;
+
   const confirmed = view.yourAmount !== null && !editing;
+  const research = view.research;
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -154,6 +160,133 @@ export default function RadarCard({
           <span>
             <b>{compactDollars(view.interestDollars)}</b> behind it
           </span>
+        </div>
+      </div>
+
+      <div className={s.research}>
+        <button
+          type="button"
+          id={`${panelId}-toggle`}
+          className={s.disclose}
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => setOpen((was) => !was)}
+        >
+          <span className={s.discloseLabel}>
+            {open ? 'Hide the research' : 'Read the research'}
+          </span>
+          <svg
+            className={s.chev}
+            viewBox="0 0 12 12"
+            width="12"
+            height="12"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M2.5 4.5 6 8l3.5-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+
+        {/* Kept in the DOM so the fold can animate. `visibility: hidden`
+            in the closed state is what keeps the links out of the tab
+            order and out of the accessibility tree. */}
+        <div
+          id={panelId}
+          className={s.panel}
+          data-open={open}
+          role="region"
+          aria-labelledby={`${panelId}-toggle`}
+        >
+          <div className={s.panelInner}>
+            <div className={s.panelBody}>
+              <section className={s.block}>
+                <div className={s.blockKey}>What it does</div>
+                <p className={s.prose}>{research.business}</p>
+              </section>
+
+              <section className={s.block}>
+                <div className={s.blockKey}>The bull case</div>
+                <ul className={`${s.points} ${s.bull}`}>
+                  {research.bull.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className={s.block}>
+                <div className={s.blockKey}>The bear case</div>
+                <ul className={`${s.points} ${s.bear}`}>
+                  {research.bear.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className={s.block}>
+                <div className={s.blockKey}>Why we are tracking it</div>
+                <p className={s.prose}>{research.watching}</p>
+              </section>
+
+              <section className={s.block}>
+                <div className={s.blockKey}>Latest news</div>
+                <ul className={s.news}>
+                  {research.news.map((item) => (
+                    <li key={item.url}>
+                      <a
+                        className={s.newsLink}
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <span className={s.newsTitle}>{item.title}</span>
+                        <span className={s.newsMeta}>
+                          {item.publisher} · {item.date || EMPTY}
+                          <svg
+                            className={s.out}
+                            viewBox="0 0 12 12"
+                            width="10"
+                            height="10"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              d="M4 8l4-4M4.5 3.6H8.4V7.5"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  className={s.newsroom}
+                  href={research.newsroomUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  All news from {view.name}
+                </a>
+              </section>
+
+              <p className={s.caveat}>
+                AltSpot holds no position in {view.name} and is not offering it.
+                The two cases above are our plain-language reading of public
+                information, not research and not a recommendation.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
