@@ -2,7 +2,11 @@
   "name": "ascplatform",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "next dev --turbopack -p 4000",
     "build": "next build",
     "start": "next start -p ${PORT:-4000}",

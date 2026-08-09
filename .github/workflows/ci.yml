@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A second push to the same branch cancels the run still in flight.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: typecheck · lint · build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      # No database exists in CI and none is needed: the build never opens
+      # a connection. This only has to parse, and it matches render.yaml.
+      DATABASE_URL: file:./ascplatform.db
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # .nvmrc is the single source of the Node version, and matches
+          # NODE_VERSION in render.yaml and netlify.toml.
+          node-version-file: .nvmrc
+          cache: npm
+
+      # The generated Prisma client is not committed. `npm ci` regenerates
+      # it through the postinstall hook, so nothing extra is needed here.
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Warnings do not fail the build; errors do. eslint exits non-zero
+      # on errors only, which is the behaviour we want.
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
