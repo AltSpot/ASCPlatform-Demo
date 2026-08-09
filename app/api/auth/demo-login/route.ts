@@ -8,15 +8,20 @@
  * Deliberately a separate route from /api/auth/login rather than a flag
  * on it: typing an email must always produce a NEW investor with nothing
  * on file, and keeping the two paths apart means that can never drift.
+ *
+ * DEMO SEAM — this whole route is demo-only and refuses when DEMO_MODE is
+ * off. It creates an account with no credential anybody chose and marks
+ * accreditation, KYC, the Vault, a profile and a bank link as done
+ * without any of them having happened. There is no production equivalent:
+ * delete the route and the button that calls it.
  */
 import { audit } from '@/lib/audit';
 import { createSession, hashPassword } from '@/lib/auth';
 import { DEMO_MODE } from '@/lib/config';
-import { prisma } from '@/lib/db';
-import { DEMO_PERSONA, personaEmail } from '@/lib/demo-persona';
+import { DEMO_PERSONA } from '@/lib/demo-persona';
 import { ok, route, ValidationError } from '@/lib/http';
 import { sweepStaleDemoAccounts } from '@/lib/repositories/demo';
-import { provisionDemoPersona } from '@/lib/repositories/investor';
+import { createDemoPersonaInvestor } from '@/lib/repositories/investor';
 
 export const POST = route(async () => {
   if (!DEMO_MODE) {
@@ -25,17 +30,7 @@ export const POST = route(async () => {
 
   await sweepStaleDemoAccounts();
 
-  // A distinct address per visitor, so two people using the button at the
-  // same time never share a profile or see each other's commitments.
-  const user = await prisma.user.create({
-    data: {
-      email: personaEmail(),
-      name: DEMO_PERSONA.name,
-      passwordHash: await hashPassword('demo-persona'),
-    },
-  });
-
-  await provisionDemoPersona(user.id);
+  const user = await createDemoPersonaInvestor(await hashPassword('demo-persona'));
   await createSession(user.id);
 
   await audit({

@@ -1,13 +1,29 @@
 /**
  * POST /api/subscriptions/:id/fund
  *
- * Simulates the ACH transfer. Production hands off to the payments
- * provider and only moves to `funded` on settlement confirmation — the
- * state transition stays server-side for exactly that reason.
+ * Moves a signed commitment to `funded`. The state transition stays
+ * server-side because it is the books-and-records event: it is what says
+ * the money arrived.
+ *
+ * DEMO SEAM — the ACH debit is not real and settlement is synchronous.
+ *   Simulated: this call returns `funded` immediately. No payments
+ *     provider is contacted, no money moves, and the funding method is
+ *     whatever string the client posted.
+ *   Production contract: this route initiates a transfer with the
+ *     payments provider (PARTNERS.payments, Modern Treasury) against the
+ *     linked bank account and returns with the subscription still in
+ *     `docs_signed`. ACH settles in days, not milliseconds. The move to
+ *     `funded` is driven by the provider's settlement webhook, which
+ *     calls `fundSubscription` with the provider's transfer reference in
+ *     place of `method`, and a failed or returned transfer leaves the
+ *     10-day funding window running.
+ *   Replacement: add the transfer adapter under lib/integrations/, call
+ *     it here, and add a webhook route that owns the `fundSubscription`
+ *     call. Nothing downstream of the state machine changes.
  */
 import { requireUser } from '@/lib/auth';
 import { NotFoundError, ok, readJson, requireString, route } from '@/lib/http';
-import { prisma } from '@/lib/db';
+import { noteSubscriptionAgreement } from '@/lib/repositories/documents';
 import { getSubscription, fundSubscription } from '@/lib/repositories/subscriptions';
 
 export const POST = route(
@@ -24,10 +40,11 @@ export const POST = route(
     const funded = await fundSubscription(user.id, id, method);
 
     // The filed agreement now reflects funding rather than awaiting it.
-    await prisma.document.updateMany({
-      where: { userId: user.id, subscriptionId: id, type: 'agreement' },
-      data: { note: 'Signed · funded, awaiting countersign' },
-    });
+    await noteSubscriptionAgreement(
+      user.id,
+      id,
+      'Signed · funded, awaiting countersign',
+    );
 
     return ok(funded);
   },

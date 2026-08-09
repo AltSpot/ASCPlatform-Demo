@@ -68,3 +68,37 @@ export async function sweepStaleDemoAccounts(): Promise<number> {
     return 0;
   }
 }
+
+// ---------------- per-investor reset ----------------
+
+/**
+ * Hand back the allocation this investor's signed-but-unfunded
+ * commitments are holding.
+ *
+ * Allocation is decremented at signature, not at funding, so a wipe that
+ * ignored it would leave the shelf permanently short. Only `docs_signed`
+ * rows hold anything: an unsigned commitment never reserved, and a funded
+ * one is real. Called before `deleteInvestor`, because the cascade takes
+ * the subscription rows with it.
+ */
+export async function releaseHeldAllocation(userId: string): Promise<void> {
+  const reserved = await prisma.subscription.findMany({
+    where: { userId, state: 'docs_signed' },
+  });
+
+  for (const row of reserved) {
+    await prisma.deal.update({
+      where: { id: row.dealId },
+      data: { allocationRemaining: { increment: row.amount } },
+    });
+  }
+}
+
+/**
+ * Delete the investor outright. Cascades clear sessions, onboarding,
+ * profiles, commitments and documents, so no orphan rows are left behind.
+ * Other investors and the deal rows are untouched.
+ */
+export async function deleteInvestor(userId: string): Promise<void> {
+  await prisma.user.delete({ where: { id: userId } });
+}

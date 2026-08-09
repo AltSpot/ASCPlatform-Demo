@@ -37,6 +37,27 @@ export async function getDocument(
   return row;
 }
 
+/**
+ * Restate the status line on a subscription's filed agreement.
+ *
+ * The document is filed at signature reading "awaiting funding", and the
+ * same row is restated once the money moves. Scoped by userId as well as
+ * subscriptionId so a caller cannot annotate somebody else's paperwork.
+ *
+ * Silently matches nothing when no agreement was filed, which is the
+ * existing behaviour: a missing document must not fail the funding call.
+ */
+export async function noteSubscriptionAgreement(
+  userId: string,
+  subscriptionId: string,
+  note: string,
+): Promise<void> {
+  await prisma.document.updateMany({
+    where: { userId, subscriptionId, type: 'agreement' },
+    data: { note },
+  });
+}
+
 export async function saveDocument(
   userId: string,
   input: {

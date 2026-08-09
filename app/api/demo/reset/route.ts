@@ -6,13 +6,17 @@
  * their signed commitments were holding, so the marketplace returns to
  * its seeded state. Other investors are untouched.
  *
- * Refuses outside demo mode: this is not a production capability.
+ * DEMO SEAM — this whole route is demo-only and refuses when DEMO_MODE is
+ * off. Destroying an investor's books and records on request is not a
+ * production capability: a real deployment retains them, and the closest
+ * legitimate operation is a supervised account closure that keeps the
+ * audit trail. Delete this route rather than adapting it.
  */
 import { audit } from '@/lib/audit';
 import { destroySession, getSessionUser } from '@/lib/auth';
 import { DEMO_MODE } from '@/lib/config';
-import { prisma } from '@/lib/db';
 import { ok, route, ValidationError } from '@/lib/http';
+import { deleteInvestor, releaseHeldAllocation } from '@/lib/repositories/demo';
 
 export const POST = route(async () => {
   if (!DEMO_MODE) {
@@ -23,21 +27,12 @@ export const POST = route(async () => {
   if (!user) return ok({ ok: true });
 
   // Return allocation held by signed-but-unfunded commitments.
-  const reserved = await prisma.subscription.findMany({
-    where: { userId: user.id, state: 'docs_signed' },
-  });
-  for (const row of reserved) {
-    await prisma.deal.update({
-      where: { id: row.dealId },
-      data: { allocationRemaining: { increment: row.amount } },
-    });
-  }
+  await releaseHeldAllocation(user.id);
 
   await audit({ userId: user.id, action: 'demo.reset', entity: 'user', entityId: user.id });
 
   await destroySession();
-  // Cascades clear sessions, onboarding, profiles, subscriptions and docs.
-  await prisma.user.delete({ where: { id: user.id } });
+  await deleteInvestor(user.id);
 
   return ok({ ok: true });
 });

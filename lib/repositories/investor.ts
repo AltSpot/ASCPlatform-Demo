@@ -4,12 +4,14 @@
  *
  * `ensureInvestorRecords` is the bootstrap: it creates the one-per-user
  * rows and seeds a closed Meridian position so a first login lands on a
- * dashboard that already feels lived-in.
+ * dashboard that already feels lived-in. That seeding is a DEMO SEAM and
+ * fabricates a holding nobody bought. Read the note on `SEED_POSITION`
+ * before trusting any position on this platform.
  */
 import 'server-only';
 
 import { prisma } from '../db';
-import { DEMO_PERSONA } from '../demo-persona';
+import { DEMO_PERSONA, personaEmail } from '../demo-persona';
 import { ACCREDITATION_VALIDITY_DAYS, DAY_MS } from '../domain';
 import type {
   AccreditationStatus,
@@ -19,7 +21,30 @@ import type {
   WizardView,
 } from '../domain';
 
-/** The demo position that makes a new dashboard look inhabited. */
+/**
+ * DEMO SEAM — READ THIS ONE. Every new investor is handed a position
+ * they never bought.
+ *
+ * The figures below are invented. `seedOpeningPosition` writes them into
+ * the real Subscription and Document tables the moment an account is
+ * bootstrapped, so within milliseconds of a first sign-in the investor
+ * holds an `accepted` $25,000 commitment in Meridian, marked up to
+ * $29,600, dated seven months ago, with a "Countersigned · closed"
+ * subscription agreement filed in Docs. No money moved. Nothing was
+ * signed: `signature` is null and the document has no body to open.
+ *
+ * It exists because a dashboard with nothing on it demonstrates nothing.
+ * It is also the single most misleading thing in the codebase, because
+ * these rows are indistinguishable from real ones at a glance. The only
+ * marker is `seeded: true` on the subscription.
+ *
+ *   Production contract: there is none. A new investor holds nothing.
+ *   Replacement: delete `SEED_POSITION`, delete `seedOpeningPosition`,
+ *     and delete the call in `ensureInvestorRecords`. Nothing else reads
+ *     them. The `seeded` column on Subscription goes with them, and until
+ *     it does, anything that reports on positions should be checked for
+ *     whether it filters on it.
+ */
 const SEED_POSITION = {
   dealId: 'meridian',
   amount: 25_000,
@@ -44,7 +69,10 @@ export async function ensureInvestorRecords(userId: string): Promise<void> {
 }
 
 /**
- * Seeds one accepted position plus its countersigned agreement.
+ * DEMO SEAM — fabricates one accepted position plus its countersigned
+ * agreement. See the note on SEED_POSITION above; this is the function
+ * that writes invented holdings into the real tables.
+ *
  * Skipped silently if the deal is not present, so the bootstrap never
  * blocks a login on seed data.
  */
@@ -204,7 +232,13 @@ export async function saveVault(userId: string, input: VaultInput): Promise<void
       state: input.state,
       zip: input.zip,
       tinLast4: last4 || null,
-      // Stand-in for the token a real tokenization vault would return.
+      // DEMO SEAM — this is not a token. It is the last four digits with
+      // a prefix, so it carries exactly the information it is supposed to
+      // protect and reverses trivially. The full taxpayer ID is correctly
+      // never persisted, which is the part that matters and must stay
+      // true. Production sends the raw value to a tokenization vault and
+      // stores the opaque handle it returns. Replace this expression, not
+      // the column.
       tinToken: last4 ? `tok_demo_${last4}` : null,
     },
   });
@@ -244,8 +278,13 @@ export async function recordSelfie(userId: string): Promise<void> {
 }
 
 /**
- * Submit for screening. Demo mode clears immediately; production would
- * leave this pending until the provider calls back.
+ * DEMO SEAM — submit for screening, and clear in the same write.
+ *
+ * `submittedAt` and `clearedAt` are both `now`, and `idUploaded` /
+ * `selfieCaptured` are forced true whether or not either happened. No
+ * KYC, AML, OFAC or PEP check runs. See app/api/kyc/submit/route.ts for
+ * the production contract; this is the function that stops writing
+ * `cleared` when the vendor adapter goes in.
  */
 export async function submitKyc(userId: string): Promise<void> {
   const now = new Date();
@@ -413,7 +452,15 @@ export async function getBank(userId: string): Promise<BankView | null> {
 // ---------------- the "existing investor" persona ----------------
 
 /**
- * Fully onboard a freshly created investor as the demo persona.
+ * DEMO SEAM — fully onboard a freshly created investor as the demo
+ * persona, without any of it having happened.
+ *
+ * Accreditation is marked verified with no letter, KYC is marked cleared
+ * with a hardcoded filename, the Vault is filled from DEMO_PERSONA, and a
+ * bank account is written directly rather than through `linkBank`. There
+ * is no production equivalent: this and its caller,
+ * `createDemoPersonaInvestor`, are deleted together with the
+ * existing-investor button.
  *
  * Everything the invest gate checks is satisfied here: accreditation
  * verified, W-9 in the Vault, KYC cleared, an investment profile, and a
@@ -463,4 +510,28 @@ export async function provisionDemoPersona(userId: string): Promise<void> {
     where: { userId },
     data: { profileDone: true, bankDone: true, completedAt: now },
   });
+}
+
+/**
+ * Mint a brand new investor under the demo persona and onboard them.
+ *
+ * A distinct address per visitor, so two people using the
+ * existing-investor button at the same time never share a profile or see
+ * each other's commitments. The caller supplies the password hash, which
+ * keeps hashing in lib/auth.ts where it belongs.
+ */
+export async function createDemoPersonaInvestor(
+  passwordHash: string,
+): Promise<{ id: string; email: string; name: string }> {
+  const user = await prisma.user.create({
+    data: {
+      email: personaEmail(),
+      name: DEMO_PERSONA.name,
+      passwordHash,
+    },
+  });
+
+  await provisionDemoPersona(user.id);
+
+  return { id: user.id, email: user.email, name: user.name };
 }
