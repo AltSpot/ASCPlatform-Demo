@@ -40,7 +40,9 @@ export default function DealGate({
             {tools}
           </div>
 
-          <h1 className={s.headline}>{deal.blurb}</h1>
+          {/* The one line, at reading size. There is no headline to set
+              in display type: that is one of the withheld fields. */}
+          <h1 className={s.heroLede}>{deal.blurb}</h1>
 
           <p className={s.heroMeta}>
             <span>{deal.sector}</span>

@@ -44,6 +44,7 @@ model User {
   documents     Document[]
   auditLogs     AuditLog[]
   radarInterest RadarInterest[]
+  watchlist     WatchlistItem[]
 
   @@map("users")
 }
@@ -241,8 +242,32 @@ model Deal {
 
   subscriptions Subscription[]
   documents     Document[]
+  watchers      WatchlistItem[]
 
   @@map("deals")
+}
+
+/// A deal one investor has saved to their own watchlist.
+///
+/// Private to that investor and inert: saving a deal reserves nothing,
+/// signals nothing to the issuer and is not an indication of interest.
+/// One row per investor per deal, which is what makes the toggle
+/// idempotent.
+///
+/// "Watchlist" is this feature and only this feature. AltSpot Radar is
+/// a different thing and is never called one.
+model WatchlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  dealId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deal Deal @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dealId])
+  @@index([userId])
+  @@map("watchlist_items")
 }
 
 // ---------------- the subscription state machine ----------------

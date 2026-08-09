@@ -9,28 +9,35 @@ import Link from 'next/link';
 import LineChart from '@/components/LineChart';
 import PendingCommitments from '@/components/PendingCommitments';
 import SetupBanner from '@/components/SetupBanner';
+import WatchlistBlock from '@/components/WatchlistBlock';
 import NewsDigest from '@/components/terminal/NewsDigest';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate, HELD_STATES } from '@/lib/domain';
 import { dateStr, daysLeft, EMPTY, money } from '@/lib/format';
-import { getDealsByIds } from '@/lib/repositories/deals';
+import { getDealsByIds, getDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { getMarketNews } from '@/lib/terminal/news';
+import { listWatchlist } from '@/lib/repositories/watchlist';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   const user = await requireUser();
 
-  const [subscriptions, wizard, headlines] = await Promise.all([
+  const [subscriptions, wizard, headlines, watchlist] = await Promise.all([
     listSubscriptions(user.id),
     getWizardView(user.id),
     // Three is the whole budget. The dashboard belongs to the portfolio.
     getMarketNews({ limit: 3 }),
+    listWatchlist(user.id),
   ]);
 
-  const deals = await getDealsByIds([...new Set(subscriptions.map((s) => s.dealId))]);
+  const [deals, watched] = await Promise.all([
+    getDealsByIds([...new Set(subscriptions.map((s) => s.dealId))]),
+    // Redacted per viewer, same rule as the marketplace.
+    getDealsForViewer(watchlist, user.id),
+  ]);
   const gate = evaluateInvestGate(wizard);
 
   const held = subscriptions.filter((s) => HELD_STATES.includes(s.state));
@@ -244,6 +251,8 @@ export default async function DashboardPage() {
           </table>
         )}
       </div>
+
+      <WatchlistBlock deals={watched} />
 
       <NewsDigest items={headlines} />
 

@@ -32,6 +32,8 @@ export type AuditAction =
   | 'subscription.expired'
   | 'document.saved'
   | 'radar.interest_indicated'
+  | 'watchlist.added'
+  | 'watchlist.removed'
   | 'demo.reset';
 
 interface AuditInput {

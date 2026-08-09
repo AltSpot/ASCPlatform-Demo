@@ -29,6 +29,7 @@ import KeyIndicators from '@/components/deal/KeyIndicators';
 import RoundHistory from '@/components/deal/RoundHistory';
 import SummaryMedia from '@/components/deal/SummaryMedia';
 import TermsTable from '@/components/deal/TermsTable';
+import WatchToggle from '@/components/deal/WatchToggle';
 import WhatWeLike from '@/components/deal/WhatWeLike';
 import s from '@/components/deal/Deal.module.css';
 import InvestButton from '@/components/InvestButton';
@@ -37,6 +38,7 @@ import { evaluateInvestGate } from '@/lib/domain';
 import { getDealForViewer, getDealRecord } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getResumable } from '@/lib/repositories/subscriptions';
+import { listWatchlist } from '@/lib/repositories/watchlist';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,6 +64,10 @@ export default async function DealPage({
   const deal = await getDealForViewer(id, user.id);
   if (!deal) notFound();
 
+  // Saving a deal is not reading one, so the toggle is offered either way.
+  const watched = (await listWatchlist(user.id)).includes(deal.id);
+  const watch = <WatchToggle dealId={deal.id} initialWatched={watched} />;
+
   if (deal.redacted) {
     return (
       <>
@@ -71,7 +77,7 @@ export default async function DealPage({
           <span className="here">{deal.name}</span>
         </div>
 
-        <DealGate deal={deal} />
+        <DealGate deal={deal} tools={watch} />
       </>
     );
   }
@@ -104,7 +110,7 @@ export default async function DealPage({
         <span className="here">{deal.name}</span>
       </div>
 
-      <DealHero deal={deal} cta={cta} />
+      <DealHero deal={deal} cta={cta} tools={watch} />
 
       <SummaryMedia summary={deal.summary} dealName={deal.name} />
 

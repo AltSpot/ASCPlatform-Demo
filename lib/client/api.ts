@@ -77,6 +77,13 @@ export interface LinkedAccount {
   type: string;
 }
 
+/** What a watchlist toggle returns: the new state, and the whole list. */
+export interface WatchlistResult {
+  dealId: string;
+  watched: boolean;
+  watchlist: string[];
+}
+
 export interface SessionPayload {
   user: SessionUser | null;
   wizard: WizardView | null;
@@ -153,6 +160,15 @@ export const api = {
   fundSubscription: (id: string, method: string) =>
     post<SubscriptionView>(`/subscriptions/${id}/fund`, { method }),
   cancelSubscription: (id: string) => del<void>(`/subscriptions/${id}`),
+
+  // ---- watchlist ----
+  /** This investor's own saved deals. Not AltSpot Radar. */
+  watchlist: () => request<string[]>('/watchlist'),
+  /** Idempotent both ways, so a double click cannot error. */
+  watchDeal: (dealId: string) =>
+    put<WatchlistResult>(`/watchlist/${dealId}`),
+  unwatchDeal: (dealId: string) =>
+    del<WatchlistResult>(`/watchlist/${dealId}`),
 
   // ---- radar ----
   radar: () => request<RadarCompanyView[]>('/radar'),

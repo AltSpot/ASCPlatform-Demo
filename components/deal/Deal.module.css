@@ -189,6 +189,44 @@
   margin-top: 22px;
 }
 
+/* ---------- watchlist toggle ----------
+   Quiet by default, orange once saved. Sits hard right of the header,
+   so it never competes with the ask. */
+
+.watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--soft);
+  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+}
+
+.watch:hover {
+  color: var(--ink);
+  border-color: var(--hairg);
+}
+
+.watch[aria-pressed='true'] {
+  color: var(--orange-b);
+  border-color: var(--hairg);
+  background: rgba(243, 152, 7, 0.08);
+}
+
+.watchMark {
+  font-size: 13px;
+  line-height: 1;
+}
+
 /* ---------- accreditation gate ----------
    Sits where the fact strip sits on an open deal, so the page keeps its
    shape and the swap is obvious. Orange, because it is the way forward,
