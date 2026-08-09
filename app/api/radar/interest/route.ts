@@ -26,7 +26,7 @@ export const POST = route(async (request: Request) => {
     maxLength: 64,
   });
 
-  // The watchlist is the allowlist. An unknown slug is a bad request,
+  // The tracked-company list is the allowlist. An unknown slug is a bad request,
   // not a new row.
   const company = findRadarCompany(companySlug);
   if (!company) throw new ValidationError('That company is not on the Radar');

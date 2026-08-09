@@ -94,7 +94,7 @@ export async function indicateInterest(
   const board = await getRadarBoard(userId);
   const view = board.find((company) => company.slug === companySlug);
 
-  // The route validates the slug against the watchlist before calling,
+  // The route validates the slug against the tracked companies before calling,
   // so this only fires if the two lists drift apart.
   if (!view) throw new Error(`Radar company "${companySlug}" is not on the board`);
   return view;

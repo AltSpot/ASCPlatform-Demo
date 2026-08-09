@@ -1,8 +1,9 @@
 'use client';
 
 /**
- * The marketplace switcher: what is open today, and what is on the
- * watchlist.
+ * The marketplace switcher: what is open today, and what AltSpot is
+ * tracking. "Watchlist" is deliberately not used here: that word belongs
+ * to the investor's own saved list, which is a different thing.
  *
  * Both panels are rendered on the server and handed in as children, so
  * the deals and the Radar board keep server-correct numbers on first
@@ -28,11 +29,11 @@ interface PanelCopy {
 const COPY: Record<MarketplaceView, PanelCopy> = {
   current: {
     title: 'Open now.',
-    lede: 'A focused shelf, not a listing board. Every deal here was sourced by AltSpot, underwritten through our diligence process, and carries our own committed capital.',
+    lede: 'Deals you can invest in today. AltSpot has its own capital in every one.',
   },
   radar: {
-    title: 'On our watchlist.',
-    lede: 'Private companies we are tracking. None of these are open today. Tell us which ones you want and how much you would put in, and we will know where to focus.',
+    title: 'What we are tracking.',
+    lede: 'Private companies AltSpot is looking at. None of these are open today. Tell us which ones you want and how much you would put in, and we will know where to focus.',
   },
 };
 
