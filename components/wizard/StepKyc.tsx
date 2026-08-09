@@ -94,7 +94,21 @@ export default function StepKyc({
     }
   }
 
-  /** Covers browsers or contexts where the camera is blocked outright. */
+  /**
+   * DEMO SEAM — draws a placeholder instead of taking a photograph.
+   *
+   *   Simulated: paints a gradient and the words "Simulated live
+   *     capture" onto the canvas, then reports the capture as done. It is
+   *     reachable three ways: no getUserMedia, a denied camera, and the
+   *     "Camera blocked? Simulate" button, which any visitor can press.
+   *     So the liveness step can always be skipped.
+   *   Production contract: a blocked camera is a hard stop. The investor
+   *     is told to grant access or continue on another device, and the
+   *     step stays incomplete. There is no bypass, because the whole
+   *     point of the capture is that it happened.
+   *   Replacement: delete this function and the Simulate button, and turn
+   *     both call sites into an error message.
+   */
   async function simulateCapture() {
     const canvas = canvasRef.current;
     if (!canvas) return;

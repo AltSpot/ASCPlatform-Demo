@@ -91,12 +91,18 @@ export function toDealView(row: Deal): DealView {
 }
 
 /**
- * How much allocation this investor has personally taken off the table.
+ * DEMO SEAM — how much allocation this investor has personally taken off
+ * the table, shown to them as if it were the global figure.
  *
  * Under isolated allocation the deal row is never decremented, so what a
  * visitor sees as "remaining" is the seeded figure minus their own live
  * commitments. Everyone else's view stays pristine, which is what makes
- * the demo safe to send to a room full of people at once.
+ * the demo safe to send to a room full of people at once. It also means
+ * the allocation bar on screen is not a real number.
+ *
+ * Guarded by ISOLATED_ALLOCATION in lib/config.ts, which follows
+ * ASC_EPHEMERAL. Production wants the true global remaining, so this
+ * returns an empty map and the deal row's own figure is used unchanged.
  */
 async function reservedByUser(
   userId: string,

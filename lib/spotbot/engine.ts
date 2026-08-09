@@ -1,6 +1,12 @@
 /**
  * The answer engine.
  *
+ * DEMO SEAM — SpotBot is not a model. Answers are retrieved from the
+ * fixed corpus in ./knowledge.ts by word overlap, which is why they are
+ * instant, identical on every run, and unable to say anything that is not
+ * already written down. The refusal gate in ./gate.ts is NOT part of this
+ * seam and stays exactly where it is.
+ *
  * ┌──────────────────────────────────────────────────────────────────┐
  * │  WIRING IN CLAUDE LATER                                          │
  * │                                                                  │

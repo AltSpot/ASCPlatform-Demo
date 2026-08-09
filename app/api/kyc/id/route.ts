@@ -1,9 +1,17 @@
 /**
  * POST /api/kyc/id — records that a government ID was captured.
  *
- * Only the filename is kept. The image itself never leaves the browser in
- * demo mode; production would stream it straight to the KYC vendor and
- * retain nothing locally.
+ * DEMO SEAM — no image is transmitted or examined.
+ *   Simulated: the browser posts a filename and nothing else. The file is
+ *     never read, never uploaded and never checked, so any file at all
+ *     satisfies the step.
+ *   Production contract: the image goes from the browser to the KYC
+ *     vendor, which performs the document check and returns a reference.
+ *     This server retains the reference, not the image. That rule is not
+ *     a demo convenience: never store the document (see CLAUDE.md, "never
+ *     store real PII").
+ *   Replacement: the request carries the vendor's upload reference in
+ *     place of a filename, and `recordIdUpload` persists that.
  */
 import { requireUser } from '@/lib/auth';
 import { ok, readJson, requireString, route } from '@/lib/http';

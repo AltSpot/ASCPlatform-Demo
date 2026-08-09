@@ -1,17 +1,21 @@
 'use client';
 
 /**
- * DEMO ITEM — a stand-in for Plaid Link.
+ * DEMO SEAM — a stand-in for Plaid Link, and the one whole-file one.
  *
- * The real flow hands the investor to Plaid's hosted SDK, which returns a
- * public token the server exchanges for accounts. Nothing here touches a
- * network: the sign-in is prefilled, Submit does not authenticate, and
- * the accounts are fixtures. The contract it hands back (institution plus
- * the selected accounts) is the same one the real Link callback provides,
- * so replacing this component does not move anything downstream.
- *
- * Delete this file, its stylesheet and the branch that opens it when
- * Plaid Link goes in.
+ *   Simulated: nothing here touches a network. The sign-in is prefilled,
+ *     Submit does not authenticate anything, the institutions are a
+ *     hardcoded list and the accounts and balances are fixtures. No bank
+ *     is contacted and no credential is real.
+ *   Production contract: the real flow hands the investor to Plaid's
+ *     hosted Link SDK, which returns a `public_token` the server
+ *     exchanges for accounts. The contract this component hands back
+ *     (institution plus the selected accounts) is the same one the real
+ *     Link callback provides, so replacing it does not move anything
+ *     downstream in the wizard. The server side of that exchange is the
+ *     seam in app/api/bank/route.ts.
+ *   Replacement: mount Plaid Link, then delete this file, its stylesheet
+ *     and the branch in components/wizard/StepBank.tsx that opens it.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';

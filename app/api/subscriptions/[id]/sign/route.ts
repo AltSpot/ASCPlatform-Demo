@@ -6,6 +6,26 @@
  * just in the UI. Signing reserves the allocation, starts the 10-day funding
  * clock, and files the executed agreement into Docs in one
  * transaction-shaped sequence.
+ *
+ * DEMO SEAM — the signature is a typed name, not an executed e-signature.
+ * Note there is no DEMO_MODE guard here: this path is unconditional today,
+ * which is exactly why it is called out.
+ *   Simulated: the investor types their name, the string is stored on the
+ *     subscription, and the rendered agreement is filed with it. There is
+ *     no signer identity check, no consent-to-electronic-records capture,
+ *     no tamper-evident seal and no certificate of completion. This
+ *     document would not stand up as an executed instrument.
+ *   Production contract: the e-sign provider (PARTNERS.esign, Anvil) is
+ *     given the rendered document and the signer, and returns a signed
+ *     envelope plus an audit certificate. `signSubscription` is called on
+ *     the provider's completion callback, and what lands in Docs is the
+ *     provider's sealed PDF with its envelope id, not locally rendered
+ *     HTML.
+ *   Replacement: implement the e-sign adapter in lib/integrations/. The
+ *     server-side rendering below stays: whoever relies on the record
+ *     later needs to reproduce it, and that is a production requirement,
+ *     not a demo shortcut. Only the signature capture and the document
+ *     that gets filed change.
  */
 import { requireUser } from '@/lib/auth';
 import {

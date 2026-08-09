@@ -2,9 +2,27 @@
  * GET  /api/bank — the default funding source, if any.
  * POST /api/bank — link the accounts chosen in the Plaid flow.
  *
- * The client posts the accounts it selected; production posts the same
- * shape after exchanging a Plaid public token, so credentials never
- * touch this server either way. Masks always come from the selection.
+ * DEMO SEAM (POST) — the account list is taken on trust from the browser.
+ * Note there is no DEMO_MODE guard here: this path is unconditional today,
+ * which is exactly why it is called out.
+ *   Simulated: components/wizard/PlaidDemoModal.tsx picks from fixtures
+ *     and posts an institution name plus masks. This route validates the
+ *     shape, and only the shape. Anyone with a session can post any
+ *     four-digit mask and any institution string and have it filed as a
+ *     funding source. Nothing was ever verified against a real bank.
+ *   Production contract: the browser completes Plaid Link and posts a
+ *     single `public_token`. This route exchanges it server-side for an
+ *     access token, pulls the accounts from Plaid, and persists what
+ *     Plaid reports. The client never gets to assert a mask. Bank
+ *     credentials still never touch this server either way, which is the
+ *     whole point of Link.
+ *   Replacement: implement the Plaid adapter in lib/integrations/, change
+ *     the request body to `{ public_token }`, and derive the
+ *     `LinkedAccountInput[]` from the exchange response. `linkBank` in
+ *     lib/repositories/investor.ts already takes that exact shape and
+ *     does not change.
+ *
+ * Masks always come from the link flow; nothing is fabricated server-side.
  */
 import { audit } from '@/lib/audit';
 import { requireUser } from '@/lib/auth';

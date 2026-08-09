@@ -42,7 +42,13 @@ export const ISOLATED_ALLOCATION = EPHEMERAL_DEMO;
 
 export const SESSION_COOKIE = 'asc_session';
 
-/** Sessions last 30 days; refreshed on use. */
+/**
+ * Sessions last 30 days from issue. They are NOT extended on use: the
+ * expiry is fixed at `createSession` and checked on every read, so a
+ * session dies 30 days after sign-in no matter how active it was. Sliding
+ * expiry is a deliberate omission, not an oversight. Add it in the IdP
+ * that replaces lib/auth.ts rather than here.
+ */
 export const SESSION_TTL_DAYS = 30;
 
 /**

@@ -122,9 +122,19 @@ export async function requireUser(): Promise<SessionUser> {
 /**
  * Resolve an email + password to a user.
  *
- * DEMO MODE: any password is accepted, and an unknown email creates the
- * investor on the spot. This is the intended behaviour for walkthroughs —
- * whoever is being shown the product should never be stopped by a login.
+ * DEMO SEAM — there is effectively no authentication.
+ *   Simulated: any password is accepted for a known email, and an
+ *     unknown email mints a new investor on the spot. Whoever is being
+ *     shown the product should never be stopped by a login. This is the
+ *     single most important thing to understand about the demo: a URL is
+ *     the only credential.
+ *   Production contract: `DEMO_MODE` false already restores the real
+ *     path below — the password is verified with scrypt and an unknown
+ *     email is rejected. Passwords are hashed the same way in both modes,
+ *     so nothing about the stored shape changes.
+ *   Replacement: per CLAUDE.md the sessions in this file are eventually
+ *     replaced by the chosen IdP, at which point this function goes away
+ *     rather than being fixed.
  */
 export async function authenticate(
   email: string,
