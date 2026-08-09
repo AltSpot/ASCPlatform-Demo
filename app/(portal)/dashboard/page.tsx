@@ -9,21 +9,25 @@ import Link from 'next/link';
 import LineChart from '@/components/LineChart';
 import PendingCommitments from '@/components/PendingCommitments';
 import SetupBanner from '@/components/SetupBanner';
+import NewsDigest from '@/components/terminal/NewsDigest';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate, HELD_STATES } from '@/lib/domain';
 import { dateStr, daysLeft, EMPTY, money } from '@/lib/format';
 import { getDealsByIds } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
+import { getMarketNews } from '@/lib/terminal/news';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   const user = await requireUser();
 
-  const [subscriptions, wizard] = await Promise.all([
+  const [subscriptions, wizard, headlines] = await Promise.all([
     listSubscriptions(user.id),
     getWizardView(user.id),
+    // Three is the whole budget. The dashboard belongs to the portfolio.
+    getMarketNews({ limit: 3 }),
   ]);
 
   const deals = await getDealsByIds([...new Set(subscriptions.map((s) => s.dealId))]);
@@ -136,7 +140,7 @@ export default async function DashboardPage() {
         <LineChart series={series} width={900} height={220} id="portfolio" />
       </div>
 
-      <div className="card">
+      <div className="card" style={{ marginBottom: 22 }}>
         <h3 style={{ marginBottom: 4 }}>Your positions</h3>
         <p className="small" style={{ marginBottom: 14 }}>
           Every investment you hold through AltSpot deal vehicles.
@@ -240,6 +244,8 @@ export default async function DashboardPage() {
           </table>
         )}
       </div>
+
+      <NewsDigest items={headlines} />
 
       {held.some((s) => s.seeded) && (
         <p className="tiny" style={{ marginTop: 18 }}>
