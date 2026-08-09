@@ -30,8 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files. .env holds real credentials (see .env.example) and is never
+# committed; the template is.
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -40,7 +42,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# generated Prisma client — rebuilt by `npm run db:generate`
+# generated Prisma client. Build output, never committed: `npm install`
+# regenerates it through the postinstall hook, and `npm run db:generate`
+# rebuilds it on demand after a schema change.
 /lib/generated
 
 # local demo database (recreate with `npm run db:reset`)
