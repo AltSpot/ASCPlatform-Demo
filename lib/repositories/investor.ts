@@ -15,6 +15,7 @@ import { DEMO_PERSONA, personaEmail } from '../demo-persona';
 import { ACCREDITATION_VALIDITY_DAYS, DAY_MS } from '../domain';
 import type {
   AccreditationStatus,
+  AccreditationView,
   BankView,
   ProfileView,
   VaultView,
@@ -146,6 +147,27 @@ export async function getWizardView(userId: string): Promise<WizardView> {
     profileDone: wizard?.profileDone ?? false,
     bankDone: wizard?.bankDone ?? false,
     complete: Boolean(wizard?.completedAt),
+  };
+}
+
+/**
+ * Just the verification record. The deal repository needs this on every
+ * browse read to decide what may go on the wire, and has no use for the
+ * rest of the wizard.
+ *
+ * An investor with no record yet reads as `not_started`, which is the
+ * same answer `getWizardView` gives and closes every gate.
+ */
+export async function getAccreditationView(
+  userId: string,
+): Promise<AccreditationView> {
+  const row = await prisma.accreditation.findUnique({ where: { userId } });
+
+  return {
+    status: (row?.status ?? 'not_started') as AccreditationStatus,
+    method: row?.method ?? null,
+    verifiedAt: row?.verifiedAt?.toISOString() ?? null,
+    expiresAt: row?.expiresAt?.toISOString() ?? null,
   };
 }
 

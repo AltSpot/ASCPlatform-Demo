@@ -17,6 +17,7 @@ import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  ACCREDITATION_STEP,
   ACCREDITATION_VALIDITY_DAYS,
   DAY_MS,
   FUNDING_WINDOW_DAYS,
@@ -26,8 +27,14 @@ import {
   SUBSCRIPTION_STATES,
   assertTransition,
   canTransition,
+  canViewDealDetail,
   evaluateInvestGate,
   firstIncompleteStep,
+  isAccreditationCurrent,
+  redactDeal,
+  type AccreditationStatus,
+  type AccreditationView,
+  type DealView,
   type SubscriptionState,
   type WizardView,
 } from '@/lib/domain';
@@ -323,6 +330,184 @@ describe('evaluateInvestGate', () => {
     wizard.accreditation.expiresAt = YESTERDAY;
     const steps = evaluateInvestGate(wizard).missing.map((m) => m.step);
     assert.deepEqual(steps, [1]);
+  });
+});
+
+// ---------------- the view gate ----------------
+
+/**
+ * Rule 506(c) restricts who may be *shown* the offering, which is a
+ * narrower question than who may invest. These tests pin that
+ * difference: the view gate turns on accreditation and nothing else, and
+ * the redaction is a whitelist so a new deal column is withheld by
+ * default.
+ */
+
+function accreditation(
+  status: AccreditationStatus,
+  expiresAt: string | null,
+): AccreditationView {
+  return {
+    status,
+    method: status === 'not_started' ? null : 'professional_letter',
+    verifiedAt: status === 'verified' ? new Date().toISOString() : null,
+    expiresAt,
+  };
+}
+
+describe('canViewDealDetail', () => {
+  test('verified accreditation inside its window opens the deal', () => {
+    assert.equal(canViewDealDetail(accreditation('verified', YEAR_AHEAD)), true);
+  });
+
+  test('verified accreditation past its expiry does not', () => {
+    // The same boundary the invest gate defends. A five year old approval
+    // still reads `verified` in the status column, so a check that only
+    // looked at the status would keep showing the package forever.
+    assert.equal(canViewDealDetail(accreditation('verified', YESTERDAY)), false);
+  });
+
+  test('anything short of verified does not, including a letter under review', () => {
+    for (const status of ['not_started', 'downloaded', 'pending', 'expired'] as const) {
+      assert.equal(
+        canViewDealDetail(accreditation(status, YEAR_AHEAD)),
+        false,
+        `status ${status} was shown the deal`,
+      );
+    }
+  });
+
+  test('verified with no recorded expiry is treated as current, as the invest gate does', () => {
+    assert.equal(canViewDealDetail(accreditation('verified', null)), true);
+  });
+
+  test('the boundary is evaluated against the supplied instant, not only now', () => {
+    const fixed = new Date('2030-01-01T00:00:00.000Z');
+    const record = accreditation('verified', fixed.toISOString());
+    assert.equal(canViewDealDetail(record, fixed.getTime() - 1), true);
+    assert.equal(canViewDealDetail(record, fixed.getTime() + 1), false);
+  });
+
+  test('viewing turns on accreditation alone: an unfinished W-9 or KYC does not close it', () => {
+    // Deliberate. The W-9 and the identity check are money-movement
+    // requirements, so they gate investing and not reading.
+    const wizard = cleared();
+    wizard.info.complete = false;
+    wizard.kyc.complete = false;
+    assert.equal(evaluateInvestGate(wizard).ok, false);
+    assert.equal(canViewDealDetail(wizard.accreditation), true);
+  });
+
+  test('it is exactly isAccreditationCurrent, so the two can never drift', () => {
+    for (const status of [
+      'not_started',
+      'downloaded',
+      'pending',
+      'verified',
+      'expired',
+    ] as const) {
+      for (const expiry of [YEAR_AHEAD, YESTERDAY, null]) {
+        const record = accreditation(status, expiry);
+        assert.equal(canViewDealDetail(record), isAccreditationCurrent(record));
+      }
+    }
+  });
+
+  test('accreditation is wizard step 1, which is where a gated investor is sent', () => {
+    assert.equal(ACCREDITATION_STEP, 1);
+    const wizard = cleared();
+    wizard.accreditation.status = 'not_started';
+    assert.equal(firstIncompleteStep(wizard), ACCREDITATION_STEP);
+  });
+});
+
+/** A deal with every field carrying a recognisable value. */
+function fullDeal(): DealView {
+  return {
+    id: 'synthera',
+    name: 'Synthera AI',
+    entity: 'AltSpot Synthera SPV I LLC',
+    tag: 'AltSpot-led · Series Seed',
+    kind: 'led',
+    sector: 'Vertical AI · Senior Care',
+    stage: 'Series Seed Preferred',
+    art: 'linear-gradient(120deg,#1b1410,#2a1c10)',
+    logoUrl: '/logos/synthera.svg',
+    headline: 'WITHHELD_HEADLINE',
+    summary: 'WITHHELD_SUMMARY',
+    pricePerShare: 'WITHHELD_PPS',
+    metrics: [{ k: 'ARR', v: 'WITHHELD_METRIC' }],
+    terms: [{ k: 'Security', v: 'WITHHELD_TERM' }],
+    preferredTerms: [{ k: 'Liquidation', v: 'WITHHELD_PREFERRED' }],
+    whatWeLike: ['WITHHELD_LIKE'],
+    outcomes: { intro: 'WITHHELD_OUTCOME' },
+    indicators: { arr: { value: 'WITHHELD_INDICATOR' } },
+    rounds: [{ round: 'Seed', date: '2025', preMoney: 'WITHHELD_ROUND' }],
+    blurb: 'Clinical documentation for senior care.',
+    risks: 'WITHHELD_RISK',
+    minInvestment: 25_000,
+    allocationTotal: 2_000_000,
+    allocationRemaining: 640_000,
+    targetClose: 'WITHHELD_CLOSE',
+    altspotCommitted: 250_000,
+    committedNote: 'WITHHELD_COMMITTED_NOTE',
+    status: 'open',
+    thesis: ['WITHHELD_THESIS'],
+    fees: { management: 5, carry: 10 },
+    media: { type: 'metric', label: 'WITHHELD_MEDIA', series: [1, 2], caption: '' },
+    docs: ['WITHHELD_DOC'],
+    spotbot: [{ q: 'WITHHELD_Q', a: 'WITHHELD_A' }],
+    deck: [{ kicker: 'WITHHELD_DECK', title: '', body: [] }],
+    redacted: false,
+  };
+}
+
+describe('redactDeal', () => {
+  test('the teaser is exactly the agreed public shell, and nothing else', () => {
+    // Written out rather than derived, so widening what an unverified
+    // member can see requires changing this list on purpose.
+    assert.deepEqual(Object.keys(redactDeal(fullDeal())).sort(), [
+      'art',
+      'blurb',
+      'id',
+      'kind',
+      'logoUrl',
+      'name',
+      'redacted',
+      'sector',
+      'status',
+      'tag',
+    ]);
+  });
+
+  test('no figure, term, document or narrative survives redaction', () => {
+    const wire = JSON.stringify(redactDeal(fullDeal()));
+
+    // Every editorial field is marked, so one grep proves the lot.
+    assert.equal(/WITHHELD_/.test(wire), false, `a withheld field reached the wire: ${wire}`);
+
+    for (const figure of ['25000', '2000000', '640000', '250000']) {
+      assert.equal(wire.includes(figure), false, `${figure} reached the wire`);
+    }
+    // The fee model is public copy on the marketplace, but not per deal.
+    assert.equal(wire.includes('management'), false);
+    assert.equal(wire.includes('carry'), false);
+    // The SPV and the security type name the terms of the offering.
+    assert.equal(wire.includes('SPV'), false);
+    assert.equal(wire.includes('Preferred'), false);
+  });
+
+  test('enough survives to know the deal exists and who it is', () => {
+    const teaser = redactDeal(fullDeal());
+    assert.equal(teaser.name, 'Synthera AI');
+    assert.equal(teaser.sector, 'Vertical AI · Senior Care');
+    assert.equal(teaser.blurb, 'Clinical documentation for senior care.');
+    assert.equal(teaser.logoUrl, '/logos/synthera.svg');
+  });
+
+  test('the discriminant flips, so a consumer cannot read a teaser as a full deal', () => {
+    assert.equal(fullDeal().redacted, false);
+    assert.equal(redactDeal(fullDeal()).redacted, true);
   });
 });
 

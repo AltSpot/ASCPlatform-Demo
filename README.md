@@ -207,7 +207,7 @@ auth and session routes calls `requireUser()` first. Errors come back as
 | `vault` | GET, PUT | Taxpayer info, captured once, reused everywhere |
 | `profiles`, `profiles/[id]/default` | GET, POST | Investing entities |
 | `bank` | GET, POST | Linked funding accounts |
-| `deals`, `deals/[id]` | GET | The shelf and a single deal |
+| `deals`, `deals/[id]` | GET | The shelf and a single deal, redacted to a teaser unless the caller is a verified accredited investor |
 | `subscriptions` | GET, POST | List, and start a commitment (invest gate enforced here) |
 | `subscriptions/resumable` | GET | Unfinished commitment for a deal |
 | `subscriptions/[id]` | GET, PATCH, DELETE | Read, change amount, cancel |
@@ -257,6 +257,15 @@ exits:   expired (10-day funding window lapsed) | refunded | cut_back
 `lib/domain.ts` also holds the invest gate, the set of conditions an
 investor must satisfy before a subscription can be started. The UI
 version of that gate is a courtesy; the route handler re-checks it.
+
+It holds one more gate, on reading rather than on investing.
+`canViewDealDetail` decides whether a member may be shown a deal's
+substantive package, and turns on accreditation alone: Rule 506(c)
+restricts who may be shown an offering, while the W-9 and the identity
+check are money-movement requirements. `lib/repositories/deals.ts`
+applies it, so an unverified member's browser is never sent the
+figures, the terms, the narrative or the data room. The blur on the
+gated deal page sits over placeholder shapes, not over withheld values.
 
 ### `lib/fees.ts` is the only place fee math lives
 
@@ -360,7 +369,7 @@ run on every save.
 
 | File | What it defends |
 | --- | --- |
-| `tests/domain.test.ts` | The subscription state machine, checked over every ordered pair of states, and the invest gate including the verified-but-expired boundary |
+| `tests/domain.test.ts` | The subscription state machine, checked over every ordered pair of states; the invest gate including the verified-but-expired boundary; and the deal view gate, with the redaction proved to be a whitelist |
 | `tests/fees.test.ts` | The fee model: 5% once at closing, 10% carry at exit, and the shape assertions that make a third fee impossible to add quietly |
 | `tests/format.test.ts` | Taxpayer ID masking, the UTC pinning that prevents hydration mismatches, and the `EMPTY` placeholder |
 | `tests/subscription-sections.test.ts` | That the agreement is internally coherent, that confirmation codes and answer keys stay stable, and that the document states the same fee model `lib/fees.ts` computes |

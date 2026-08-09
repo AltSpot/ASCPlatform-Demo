@@ -11,7 +11,7 @@ import { notFound, redirect } from 'next/navigation';
 import InvestFlow from '@/components/invest/InvestFlow';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
-import { getDeal } from '@/lib/repositories/deals';
+import { getDealRecord } from '@/lib/repositories/deals';
 import {
   getVault,
   getWizardView,
@@ -29,7 +29,7 @@ export default async function InvestPage({
   const user = await requireUser();
   const { dealId } = await params;
 
-  const deal = await getDeal(dealId, user.id);
+  const deal = await getDealRecord(dealId, user.id);
   if (!deal) notFound();
 
   const wizard = await getWizardView(user.id);

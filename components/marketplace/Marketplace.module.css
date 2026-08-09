@@ -108,6 +108,42 @@
   max-width: 66ch;
 }
 
+/* ---------- withheld figures on a card ----------
+   Stands in for the minimum, the fees and the allocation bar when the
+   viewer is not yet verified. The rules are not blurred numbers: no
+   number was sent to the browser to blur. */
+
+.locked {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lockedRows {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.lockedRows span {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+}
+
+.lockedNote {
+  font-family: var(--fm);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--faint);
+}
+
 @media (max-width: 900px) {
   .switcher {
     width: 100%;

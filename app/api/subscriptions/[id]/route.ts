@@ -5,7 +5,7 @@
  */
 import { requireUser } from '@/lib/auth';
 import { NotFoundError, ok, readJson, requireInt, route, ValidationError } from '@/lib/http';
-import { getDeal } from '@/lib/repositories/deals';
+import { getDealRecord } from '@/lib/repositories/deals';
 import { listProfiles } from '@/lib/repositories/investor';
 import {
   cancelSubscription,
@@ -36,7 +36,7 @@ export const PATCH = route(async (request: Request, context: Ctx) => {
   const patch: { amount?: number; profileId?: string | null } = {};
 
   if (body.amount !== undefined) {
-    const deal = await getDeal(current.dealId);
+    const deal = await getDealRecord(current.dealId);
     if (!deal) throw new NotFoundError('Deal not found');
     patch.amount = requireInt(body.amount, 'amount', {
       min: deal.minInvestment,

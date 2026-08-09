@@ -5,18 +5,26 @@
  * the two views could sit behind one switcher. Each card shows
  * AltSpot's own committed capital, because that is the product's
  * central claim: we never merely place someone else's listing.
+ *
+ * A card for a member who is not yet a verified accredited investor
+ * carries no figures at all. Not blurred figures: the server never sent
+ * them (see lib/repositories/deals.ts). What is left is the company, the
+ * sector and the one line, which is enough to know the deal exists.
  */
 import Link from 'next/link';
 
 import AllocBar from '@/components/AllocBar';
-import type { DealView, SubscriptionView } from '@/lib/domain';
+import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
+import { ACCREDITATION_STEP } from '@/lib/domain';
 import { money } from '@/lib/format';
+
+import s from './Marketplace.module.css';
 
 export default function DealShelf({
   deals,
   resumable,
 }: {
-  deals: DealView[];
+  deals: DealShelfItem[];
   /** Live subscriptions keyed by deal, so a card can offer the way back in. */
   resumable: Map<string, SubscriptionView>;
 }) {
@@ -26,7 +34,15 @@ export default function DealShelf({
         {deals.map((deal) => {
           const resume = resumable.get(deal.id);
 
-          const primary = resume ? (
+          const primary = deal.redacted ? (
+            <Link
+              className="btn btn-ghost btn-sm"
+              style={{ flex: 1 }}
+              href={`/wizard?step=${ACCREDITATION_STEP}&then=${deal.id}`}
+            >
+              Finish accreditation to view
+            </Link>
+          ) : resume ? (
             resume.state === 'docs_signed' ? (
               <Link
                 className="btn btn-gold btn-sm"
@@ -77,29 +93,35 @@ export default function DealShelf({
                 <h3>{deal.name}</h3>
                 <p className="small">{deal.blurb}</p>
 
-                <div className="deal-meta">
-                  <div className="m">
-                    Minimum<b>{money(deal.minInvestment)}</b>
-                  </div>
-                  <div className="m">
-                    Management fee<b>{deal.fees.management}% one time</b>
-                  </div>
-                  <div className="m">
-                    Carry<b>{deal.fees.carry}%</b>
-                  </div>
-                </div>
+                {deal.redacted ? (
+                  <LockedFigures />
+                ) : (
+                  <>
+                    <div className="deal-meta">
+                      <div className="m">
+                        Minimum<b>{money(deal.minInvestment)}</b>
+                      </div>
+                      <div className="m">
+                        Management fee<b>{deal.fees.management}% one time</b>
+                      </div>
+                      <div className="m">
+                        Carry<b>{deal.fees.carry}%</b>
+                      </div>
+                    </div>
 
-                <AllocBar
-                  allocationTotal={deal.allocationTotal}
-                  allocationRemaining={deal.allocationRemaining}
-                />
+                    <AllocBar
+                      allocationTotal={deal.allocationTotal}
+                      allocationRemaining={deal.allocationRemaining}
+                    />
+                  </>
+                )}
 
                 <div className="deal-actions">
                   {primary}
                   {/* The deal page is the pitch, so a member mid-subscription
                       still gets a way back to it. Otherwise the primary
                       button already goes there and a second one is noise. */}
-                  {resume && (
+                  {!deal.redacted && resume && (
                     <Link
                       className="btn btn-ghost btn-sm"
                       style={{ flex: 1 }}
@@ -122,5 +144,23 @@ export default function DealShelf({
         acceptance. Demo environment. Companies shown are fictional.
       </p>
     </>
+  );
+}
+
+/**
+ * Where the minimum, the fees and the allocation bar sit on an open
+ * card. Quiet rules rather than fake numbers: there is no value here to
+ * approximate, because none was sent.
+ */
+function LockedFigures() {
+  return (
+    <div className={s.locked}>
+      <div className={s.lockedRows} aria-hidden="true">
+        <span style={{ width: '58%' }} />
+        <span style={{ width: '76%' }} />
+        <span style={{ width: '41%' }} />
+      </div>
+      <p className={s.lockedNote}>Terms and allocation open once you are verified.</p>
+    </div>
   );
 }

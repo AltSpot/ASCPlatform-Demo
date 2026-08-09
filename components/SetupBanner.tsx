@@ -57,8 +57,8 @@ export default function SetupBanner({
           <p className="small" style={{ marginTop: 4 }}>
             {blocking ? (
               <>
-                Explore everything below. The marketplace and every deal page, in full,
-                are open to you now.{' '}
+                Browse the marketplace now. Deal terms, figures and documents open
+                once your accreditation is verified.{' '}
                 <b style={{ color: 'var(--gold-bright)' }}>
                   Investing unlocks once these are complete.
                 </b>

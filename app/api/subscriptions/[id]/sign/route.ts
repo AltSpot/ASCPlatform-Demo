@@ -37,7 +37,7 @@ import {
   ValidationError,
 } from '@/lib/http';
 import { renderBinder } from '@/lib/documents/render';
-import { getDeal } from '@/lib/repositories/deals';
+import { getDealRecord } from '@/lib/repositories/deals';
 import { getVault, listProfiles } from '@/lib/repositories/investor';
 import { dateStr, maskTin, money } from '@/lib/format';
 import { saveDocument } from '@/lib/repositories/documents';
@@ -66,7 +66,7 @@ export const POST = route(
 
     const signed = await signSubscription(user.id, id, signature);
 
-    const deal = await getDeal(current.dealId);
+    const deal = await getDealRecord(current.dealId);
     if (deal) {
       const [vault, profiles] = await Promise.all([
         getVault(user.id),

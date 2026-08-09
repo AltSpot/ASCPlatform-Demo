@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import PaymentFlow from '@/components/PaymentFlow';
 import { requireUser } from '@/lib/auth';
 import { daysLeft } from '@/lib/format';
-import { getDeal } from '@/lib/repositories/deals';
+import { getDealRecord } from '@/lib/repositories/deals';
 import { getBank } from '@/lib/repositories/investor';
 import { getSubscription } from '@/lib/repositories/subscriptions';
 
@@ -24,7 +24,7 @@ export default async function PaymentPage({
   if (!subscription) notFound();
 
   const [deal, bank] = await Promise.all([
-    getDeal(subscription.dealId, user.id),
+    getDealRecord(subscription.dealId, user.id),
     getBank(user.id),
   ]);
   if (!deal) notFound();

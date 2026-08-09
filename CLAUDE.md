@@ -211,6 +211,12 @@ These are the claims the product makes. Do not let a change quietly break them.
 - Signed documents file themselves into Docs automatically
 - The Vault is captured once and pre-fills every document thereafter
 - Accreditation is valid **five years**; the funding window is **10 days**
+- **Deal detail is for verified accredited investors only.** Everyone else gets
+  the teaser: name, sector, the one line and the artwork. The redaction happens
+  in `lib/repositories/deals.ts`, so the withheld fields are never sent to the
+  browser and `/api/deals` returns exactly what the page shows. `canViewDealDetail`
+  in `lib/domain.ts` is the rule, and it turns on accreditation alone: the W-9
+  and KYC gate investing, not reading
 - SpotBot **explains, never advises** — every answer cites its provenance
 - Secondaries is visible but disabled, pending a BD partner and counsel
 

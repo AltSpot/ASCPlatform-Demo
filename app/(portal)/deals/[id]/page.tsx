@@ -11,11 +11,16 @@
  *
  * Every section degrades to nothing when its content is missing, since
  * the deals behind the lead carry far thinner editorial than Synthera.
+ *
+ * None of it is rendered for a member who is not a verified accredited
+ * investor. The repository hands this page a teaser in that case, so the
+ * branch below is not hiding anything: there is nothing to hide.
  */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import ClosingCta from '@/components/deal/ClosingCta';
+import DealGate from '@/components/deal/DealGate';
 import DealHero from '@/components/deal/DealHero';
 import MetricChart from '@/components/deal/MetricChart';
 import Outcomes from '@/components/deal/Outcomes';
@@ -29,7 +34,7 @@ import s from '@/components/deal/Deal.module.css';
 import InvestButton from '@/components/InvestButton';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
-import { getDeal } from '@/lib/repositories/deals';
+import { getDealForViewer, getDealRecord } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getResumable } from '@/lib/repositories/subscriptions';
 
@@ -41,7 +46,8 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const deal = await getDeal(id);
+  // The company name is public to every member, gated or not.
+  const deal = await getDealRecord(id);
   return { title: deal ? `${deal.name} · AltSpot Capital` : 'Deal · AltSpot Capital' };
 }
 
@@ -53,8 +59,22 @@ export default async function DealPage({
   const user = await requireUser();
   const { id } = await params;
 
-  const deal = await getDeal(id, user.id);
+  const deal = await getDealForViewer(id, user.id);
   if (!deal) notFound();
+
+  if (deal.redacted) {
+    return (
+      <>
+        <div className="crumbs">
+          <Link href="/marketplace">Marketplace</Link>
+          <span className="sep">/</span>
+          <span className="here">{deal.name}</span>
+        </div>
+
+        <DealGate deal={deal} />
+      </>
+    );
+  }
 
   const [wizard, resume] = await Promise.all([
     getWizardView(user.id),

@@ -78,12 +78,20 @@
   z-index: 1;
 }
 
+/* Identity on the left, header controls hard right. */
+.heroTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
 .identity {
   display: flex;
   align-items: center;
   gap: 15px;
   flex-wrap: wrap;
-  margin-bottom: 30px;
 }
 
 .logo {
@@ -179,6 +187,90 @@
 
 .heroAlloc {
   margin-top: 22px;
+}
+
+/* ---------- accreditation gate ----------
+   Sits where the fact strip sits on an open deal, so the page keeps its
+   shape and the swap is obvious. Orange, because it is the way forward,
+   not a warning. */
+
+.gate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 34px;
+  padding: 26px 28px;
+  border: 1px solid var(--hairg);
+  border-radius: var(--r);
+  background: linear-gradient(180deg, rgba(243, 152, 7, 0.09), rgba(243, 152, 7, 0.02));
+}
+
+.gateBody {
+  flex: 1;
+  min-width: 260px;
+}
+
+.gateEyebrow {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--orange);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.gateText {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+/* ---------- the withheld page ----------
+   Placeholder rules, blurred. Nothing here was ever a value: the
+   redaction happens in the repository, so there is no real content
+   under this filter to recover. */
+
+.veil {
+  margin-top: 8px;
+  filter: blur(6px);
+  opacity: 0.55;
+  user-select: none;
+  pointer-events: none;
+}
+
+.veilSection {
+  padding: 46px 0;
+  border-top: 1px solid var(--hair);
+}
+
+.veilLabel {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--soft);
+  margin-bottom: 22px;
+}
+
+.veilRows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 68ch;
+}
+
+.veilRows span {
+  height: 13px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.03)
+  );
 }
 
 /* ---------- AltSpot's own capital ---------- */

@@ -20,21 +20,27 @@ import s from './Deal.module.css';
 export default function DealHero({
   deal,
   cta,
+  tools,
 }: {
   deal: DealView;
   cta: ReactNode;
+  /** Header controls, set hard right: the watchlist toggle today. */
+  tools?: ReactNode;
 }) {
   return (
     <header className={s.hero}>
       <div className={s.heroWash} style={{ background: deal.art }} aria-hidden="true" />
 
       <div className={s.heroInner}>
-        <div className={s.identity}>
-          {deal.logoUrl && (
-            <img className={s.logo} src={deal.logoUrl} alt="" aria-hidden="true" />
-          )}
-          <span className={s.name}>{deal.name}</span>
-          <span className="chip">{deal.tag}</span>
+        <div className={s.heroTop}>
+          <div className={s.identity}>
+            {deal.logoUrl && (
+              <img className={s.logo} src={deal.logoUrl} alt="" aria-hidden="true" />
+            )}
+            <span className={s.name}>{deal.name}</span>
+            <span className="chip">{deal.tag}</span>
+          </div>
+          {tools}
         </div>
 
         <h1 className={s.headline}>{deal.headline ?? deal.blurb}</h1>

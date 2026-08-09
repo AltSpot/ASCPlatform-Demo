@@ -18,7 +18,7 @@ import MarketplaceTabs, {
 import RadarBoard from '@/components/radar/RadarBoard';
 import { requireUser } from '@/lib/auth';
 import { RESUMABLE_STATES } from '@/lib/domain';
-import { listDeals } from '@/lib/repositories/deals';
+import { listDealsForViewer } from '@/lib/repositories/deals';
 import { getRadarBoard } from '@/lib/repositories/radar';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 
@@ -33,7 +33,7 @@ export default async function MarketplacePage({
 
   const [{ view }, deals, subscriptions, radar] = await Promise.all([
     searchParams,
-    listDeals(user.id),
+    listDealsForViewer(user.id),
     listSubscriptions(user.id),
     getRadarBoard(user.id),
   ]);

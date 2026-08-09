@@ -2,16 +2,30 @@
  * Deal repository — the only place that knows deals keep editorial
  * content in JSON-encoded columns. Everything above this layer works
  * with the fully-typed `DealView`.
+ *
+ * It is also where the accreditation gate is applied. Rule 506(c) says
+ * the offering may only be shown to verified accredited investors, so
+ * for anyone else the substantive package is not hidden further up: it
+ * is never read out of this module. `getDealForViewer` and
+ * `listDealsForViewer` are the reads every browse surface uses, and they
+ * return a `DealTeaser` when the viewer is not accredited. A blur in the
+ * UI over real values would not be a control; this is.
+ *
+ * The unredacted reads are named `…Record` and are for the paths that
+ * have already cleared the invest gate, which subsumes accreditation:
+ * checkout, funding, and document generation.
  */
 import 'server-only';
 
 import { prisma } from '../db';
 import { ISOLATED_ALLOCATION } from '../config';
+import { canViewDealDetail, redactDeal } from '../domain';
 import type {
   DealFees,
   DealMedia,
   DealMetric,
   DealOutcomes,
+  DealShelfItem,
   DealTerm,
   DealView,
   FundingRound,
@@ -20,6 +34,7 @@ import type {
   SpotbotEntry,
 } from '../domain';
 import type { Deal } from '../generated/prisma/client';
+import { getAccreditationView } from './investor';
 
 /**
  * Parse a JSON column with a typed fallback. A malformed blob degrades
@@ -87,6 +102,7 @@ export function toDealView(row: Deal): DealView {
     docs: parseJson<string[]>(row.docsJson, [], `${row.id}.docs`),
     spotbot: parseJson<SpotbotEntry[]>(row.spotbotJson, [], `${row.id}.spotbot`),
     deck: parseJson<DeckSlide[]>(row.deckJson, [], `${row.id}.deck`),
+    redacted: false,
   };
 }
 
@@ -131,7 +147,13 @@ function applyReserved(deal: DealView, reserved: number): DealView {
   };
 }
 
-export async function listDeals(userId?: string): Promise<DealView[]> {
+/**
+ * Every open deal, unredacted.
+ *
+ * Callers must already know the reader is entitled to the whole package.
+ * Browse surfaces want `listDealsForViewer`.
+ */
+export async function listDealRecords(userId?: string): Promise<DealView[]> {
   const rows = await prisma.deal.findMany({
     where: { status: 'open' },
     orderBy: { sortOrder: 'asc' },
@@ -147,7 +169,12 @@ export async function listDeals(userId?: string): Promise<DealView[]> {
   return deals.map((d) => applyReserved(d, reserved.get(d.id) ?? 0));
 }
 
-export async function getDeal(
+/**
+ * One deal, unredacted. Same warning as `listDealRecords`: this is for
+ * checkout, funding and document generation, all of which sit behind the
+ * invest gate. Browse surfaces want `getDealForViewer`.
+ */
+export async function getDealRecord(
   id: string,
   userId?: string,
 ): Promise<DealView | null> {
@@ -161,7 +188,84 @@ export async function getDeal(
   return applyReserved(deal, reserved.get(id) ?? 0);
 }
 
-/** Deals referenced by a set of subscriptions, keyed by id. */
+/** Does this deal exist at all? Public knowledge, so it is not gated. */
+export async function dealExists(id: string): Promise<boolean> {
+  const row = await prisma.deal.findUnique({ where: { id }, select: { id: true } });
+  return row !== null;
+}
+
+/**
+ * DEMO SEAM — the gate below is real, and trivially satisfied.
+ *
+ * Accreditation self-approves the moment a letter is uploaded (see
+ * app/api/accreditation/upload/route.ts), so any visitor can clear this
+ * in about ten seconds. What is simulated is the reviewer, not the
+ * restriction: the redaction runs off the same `verified` + unexpired
+ * record production will use, and nothing here changes when a human
+ * starts approving letters.
+ */
+function forViewer(deal: DealView, accredited: boolean): DealShelfItem {
+  return accredited ? deal : redactDeal(deal);
+}
+
+/** The shelf as this member is entitled to see it. */
+export async function listDealsForViewer(
+  userId: string,
+): Promise<DealShelfItem[]> {
+  const [deals, accreditation] = await Promise.all([
+    listDealRecords(userId),
+    getAccreditationView(userId),
+  ]);
+
+  const accredited = canViewDealDetail(accreditation);
+  return deals.map((deal) => forViewer(deal, accredited));
+}
+
+/** One deal as this member is entitled to see it. */
+export async function getDealForViewer(
+  id: string,
+  userId: string,
+): Promise<DealShelfItem | null> {
+  const [deal, accreditation] = await Promise.all([
+    getDealRecord(id, userId),
+    getAccreditationView(userId),
+  ]);
+  if (!deal) return null;
+
+  return forViewer(deal, canViewDealDetail(accreditation));
+}
+
+/**
+ * A named set of deals as this member is entitled to see them, in the
+ * order the ids were given. Unknown ids are dropped rather than faked.
+ */
+export async function getDealsForViewer(
+  ids: string[],
+  userId: string,
+): Promise<DealShelfItem[]> {
+  if (ids.length === 0) return [];
+
+  const [rows, accreditation] = await Promise.all([
+    prisma.deal.findMany({ where: { id: { in: ids } } }),
+    getAccreditationView(userId),
+  ]);
+
+  const accredited = canViewDealDetail(accreditation);
+  const byId = new Map(rows.map((row) => [row.id, toDealView(row)]));
+
+  return ids
+    .map((id) => byId.get(id))
+    .filter((deal): deal is DealView => deal !== undefined)
+    .map((deal) => forViewer(deal, accredited));
+}
+
+/**
+ * Deals referenced by a set of subscriptions, keyed by id.
+ *
+ * Not gated: an investor who holds a position, or is mid-commitment, has
+ * already been shown the deal. Callers use this for the name and tag on
+ * a positions row, never to render the package.
+ */
 export async function getDealsByIds(ids: string[]): Promise<Map<string, DealView>> {
   if (ids.length === 0) return new Map();
 

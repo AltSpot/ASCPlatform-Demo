@@ -185,6 +185,30 @@ export interface DealOutcomes {
   note?: string;
 }
 
+/**
+ * The part of a deal every signed-in member may see, accredited or not:
+ * that it exists, who it is, roughly what they do, and what it looks
+ * like. Nothing here is a figure, a term or a document.
+ *
+ * `DealView` extends this, so the redaction in `redactDeal` is a
+ * whitelist rather than a delete list. A new column added to `Deal`
+ * lands on `DealView` and stays withheld until someone puts it here on
+ * purpose, which is the failure direction we want.
+ */
+export interface DealTeaser {
+  id: string;
+  name: string;
+  tag: string;
+  kind: string;
+  sector: string;
+  art: string;
+  logoUrl: string | null;
+  blurb: string;
+  status: string;
+  /** Discriminant. True means the substantive package was withheld. */
+  redacted: true;
+}
+
 export interface DealView {
   id: string;
   name: string;
@@ -220,7 +244,15 @@ export interface DealView {
   docs: string[];
   spotbot: SpotbotEntry[];
   deck: DeckSlide[];
+  /** Discriminant. False means nothing was withheld from this viewer. */
+  redacted: false;
 }
+
+/**
+ * What a browse surface receives for one deal: the whole package, or the
+ * teaser, depending on the viewer. Consumers narrow on `redacted`.
+ */
+export type DealShelfItem = DealView | DealTeaser;
 
 // ---------------- investor-facing view models ----------------
 
@@ -230,13 +262,16 @@ export interface SessionUser {
   name: string;
 }
 
+/** An investor's 506(c) verification record, as the UI reads it. */
+export interface AccreditationView {
+  status: AccreditationStatus;
+  method: string | null;
+  verifiedAt: string | null;
+  expiresAt: string | null;
+}
+
 export interface WizardView {
-  accreditation: {
-    status: AccreditationStatus;
-    method: string | null;
-    verifiedAt: string | null;
-    expiresAt: string | null;
-  };
+  accreditation: AccreditationView;
   info: { complete: boolean };
   kyc: { idUploaded: boolean; selfieCaptured: boolean; complete: boolean };
   profileDone: boolean;
@@ -313,6 +348,75 @@ export interface DocumentView {
 
 // ---------------- gating ----------------
 
+/** The wizard step that carries accreditation. */
+export const ACCREDITATION_STEP = 1;
+
+/**
+ * Verified once, but past the five year window. The boundary that
+ * matters: the status column still says verified and only the date says
+ * otherwise. One expression, so the invest gate and the view gate can
+ * never disagree about when an approval goes stale.
+ */
+function accreditationExpired(
+  accreditation: AccreditationView,
+  now: number,
+): boolean {
+  return Boolean(
+    accreditation.expiresAt &&
+      new Date(accreditation.expiresAt).getTime() < now,
+  );
+}
+
+/** Verified, and still inside its window. */
+export function isAccreditationCurrent(
+  accreditation: AccreditationView,
+  now: number = Date.now(),
+): boolean {
+  return (
+    accreditation.status === 'verified' &&
+    !accreditationExpired(accreditation, now)
+  );
+}
+
+/**
+ * May this investor be shown a deal's substantive package?
+ *
+ * Accreditation alone, deliberately. Rule 506(c) restricts who may be
+ * shown the offering, and that turns on accredited status; the W-9 and
+ * the identity check are money-movement requirements, so they gate
+ * investing rather than reading. An investor part-way through setup can
+ * therefore still read a deal once accreditation clears.
+ *
+ * Pure, and the only definition of the rule. `lib/repositories/deals.ts`
+ * calls it before deciding what to put on the wire, so a UI that forgot
+ * to check would have nothing to leak.
+ */
+export function canViewDealDetail(
+  accreditation: AccreditationView,
+  now: number = Date.now(),
+): boolean {
+  return isAccreditationCurrent(accreditation, now);
+}
+
+/**
+ * Strip a deal down to its teaser. Whitelist, not delete list: see the
+ * note on `DealTeaser`.
+ */
+export function redactDeal(deal: DealView): DealTeaser {
+  return {
+    id: deal.id,
+    name: deal.name,
+    tag: deal.tag,
+    kind: deal.kind,
+    sector: deal.sector,
+    art: deal.art,
+    logoUrl: deal.logoUrl,
+    blurb: deal.blurb,
+    status: deal.status,
+    redacted: true,
+  };
+}
+
 /**
  * Required before a subscription may be started: accreditation, W-9 and
  * KYC. An investment profile can be created at checkout and a bank linked
@@ -322,12 +426,12 @@ export function evaluateInvestGate(wizard: WizardView): InvestGate {
   const missing: GateRequirement[] = [];
 
   if (wizard.accreditation.status !== 'verified') {
-    missing.push({ step: 1, label: 'Accreditation verification' });
-  } else if (
-    wizard.accreditation.expiresAt &&
-    new Date(wizard.accreditation.expiresAt).getTime() < Date.now()
-  ) {
-    missing.push({ step: 1, label: 'Accreditation re-verification (expired)' });
+    missing.push({ step: ACCREDITATION_STEP, label: 'Accreditation verification' });
+  } else if (accreditationExpired(wizard.accreditation, Date.now())) {
+    missing.push({
+      step: ACCREDITATION_STEP,
+      label: 'Accreditation re-verification (expired)',
+    });
   }
 
   if (!wizard.info.complete) {

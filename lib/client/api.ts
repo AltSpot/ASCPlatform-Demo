@@ -9,7 +9,7 @@
 
 import type {
   BankView,
-  DealView,
+  DealShelfItem,
   DocumentView,
   ProfileView,
   SessionUser,
@@ -124,8 +124,13 @@ export const api = {
     post<BankView[]>('/bank', { institution, accounts }),
 
   // ---- marketplace ----
-  deals: () => request<DealView[]>('/deals'),
-  deal: (id: string) => request<DealView>(`/deals/${id}`),
+  /**
+   * Redacted per viewer: a member who is not a verified accredited
+   * investor gets `DealTeaser` entries, with `redacted: true` as the
+   * discriminant. Narrow before reading any figure.
+   */
+  deals: () => request<DealShelfItem[]>('/deals'),
+  deal: (id: string) => request<DealShelfItem>(`/deals/${id}`),
 
   // ---- subscriptions ----
   subscriptions: () => request<SubscriptionView[]>('/subscriptions'),

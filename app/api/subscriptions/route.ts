@@ -9,7 +9,7 @@
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
 import { NotFoundError, ok, readJson, requireInt, route, ValidationError } from '@/lib/http';
-import { getDeal } from '@/lib/repositories/deals';
+import { getDealRecord } from '@/lib/repositories/deals';
 import { getWizardView, listProfiles } from '@/lib/repositories/investor';
 import {
   getResumable,
@@ -35,7 +35,7 @@ export const POST = route(async (request: Request) => {
     throw new ValidationError('"dealId" is required');
   }
 
-  const deal = await getDeal(body.dealId);
+  const deal = await getDealRecord(body.dealId);
   if (!deal) throw new NotFoundError('Deal not found');
 
   const gate = evaluateInvestGate(await getWizardView(user.id));
