@@ -258,7 +258,7 @@ export default async function DashboardPage() {
 
       {held.some((s) => s.seeded) && (
         <p className="tiny" style={{ marginTop: 18 }}>
-          Demo environment. The Meridian position is seeded so the portfolio has
+          Demo environment. The OpenAI position is seeded so the portfolio has
           history. Signed {dateStr(held.find((s) => s.seeded)?.signedAt)}.
         </p>
       )}

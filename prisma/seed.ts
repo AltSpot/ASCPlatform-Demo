@@ -5,11 +5,12 @@
  * 10% carried interest on profits at exit. Nothing else: no annual
  * fees, no capital calls.
  *
- * Every company here is FICTIONAL. Synthera AI, the lead deal, mirrors the
- * shape of a real AltSpot deal package (structure, terms, checkout flow), but
- * the company, its name, logo and story are invented so the demo never shows
- * a real company or makes claims about a real competitor. The remaining
- * three are fictional shelf dressing.
+ * Synthera AI, the lead deal, is FICTIONAL: it mirrors the shape of a real
+ * AltSpot deal package (structure, terms, checkout flow), but the company is
+ * invented. The AltSpot Growth Fund is our own vehicle. OpenAI and Databricks
+ * are real companies, and every deal term shown for them here (price,
+ * discount, allocation, AltSpot's position) is ILLUSTRATIVE demo data, not an
+ * actual offering or an actual position.
  *
  * Idempotent: re-running upserts deals and leaves investor data alone.
  * Use `npm run db:reset` to wipe everything and start clean.
@@ -291,223 +292,278 @@ const DEALS: SeedDeal[] = [
   },
 
   // ------------------------------------------------------------------
-  //  Fictional deals — shelf dressing so the marketplace isn't a
-  //  single card. Clearly not real companies.
+  //  The shelf behind the lead: AltSpot's own multi-deal fund, then two
+  //  late-stage secondaries in real companies. The OpenAI and Databricks
+  //  terms, prices, discounts and allocations are ILLUSTRATIVE.
   // ------------------------------------------------------------------
   {
-    id: 'aurora',
-    name: 'Aurora Robotics',
-    entity: 'ASC Aurora SPV, LLC',
-    tag: 'AltSpot-led · Series A',
-    kind: 'led',
-    sector: 'Industrial AI · Robotics',
-    stage: 'Series A',
+    id: 'growth-fund',
+    name: 'AltSpot Growth Fund',
+    entity: 'AltSpot Growth Fund I, LLC',
+    tag: 'AltSpot fund · Fund I',
+    kind: 'fund',
+    sector: 'Multi-Deal Fund · Venture',
+    stage: 'Fund I · $10M target',
     art: 'linear-gradient(135deg,#3B2E12 0%,#8F6B25 55%,#C9A14A 100%)',
-    headline: 'Warehouse automation the mid-market can actually buy.',
+    headline: 'Every AltSpot-led deal in one commitment.',
     blurb:
-      'Autonomous picking systems for mid-market warehouses, with 14 paid deployments, 3.1x net revenue retention, and a lead order book into 2027.',
+      'A $10M vehicle that invests in the next 10 to 15 AltSpot-led deals automatically, on the same terms the marketplace sees. One subscription, one K-1, the whole vintage.',
     thesis: [
-      'Mid-market logistics operators are priced out of enterprise robotics. Aurora sells a contained, per-lane system that pays back in under 14 months, with deployments live across 14 facilities.',
-      'Revenue has compounded 3.1x year over year on retention-led expansion; existing customers account for 68% of new lane orders.',
-      'AltSpot led this round after a full diligence cycle: customer reference calls across 9 accounts, a unit-economics rebuild from invoice data, and independent technical review of the perception stack.',
+      'One subscription covers the vintage. The fund invests in every deal AltSpot leads over the deployment period, on the same terms offered deal by deal on the marketplace, without the investor having to pick.',
+      'Diversification is the point. A single early-stage position can go to zero. Ten to fifteen positions across the vintage means no single outcome decides the fund.',
+      'AltSpot is the general partner and has committed $1,000,000 of the $10M target. The fee model is the same as every single deal: 5% once at closing, 10% carry at exit. No annual fees. Commitments are funded in full at closing, so there are no capital calls.',
     ],
     metrics: [
-      { k: 'Paid deployments', v: '14' },
-      { k: 'Payback period', v: '<14 mo' },
-      { k: 'Net revenue retention', v: '3.1x' },
-      { k: 'Expansion share of orders', v: '68%' },
+      { k: 'Fund target', v: '$10M' },
+      { k: 'Planned positions', v: '10–15' },
+      { k: 'GP commitment', v: '$1M' },
+      { k: 'Deployment period', v: '18 mo' },
     ],
     terms: [
-      { k: 'Security', v: 'Series A Preferred Stock' },
-      { k: 'Round size', v: '$1,500,000' },
-      { k: 'Liquidation preference', v: '1x non-participating' },
-      { k: 'AltSpot role', v: 'Lead investor' },
+      { k: 'Vehicle', v: 'AltSpot Growth Fund I, LLC' },
+      { k: 'Fund target', v: '$10,000,000' },
+      { k: 'GP commitment', v: '$1,000,000 (AltSpot)' },
+      { k: 'Deployment', v: '10 to 15 AltSpot-led deals' },
     ],
     risks:
-      'Early-stage venture risk applies: customer concentration in 3PL operators, hardware supply-chain exposure, and competition from enterprise incumbents moving down-market. Total loss of capital is possible. See the investment memo for the full risk review.',
-    minInvestment: 10000,
-    allocationTotal: 1500000,
-    allocationRemaining: 570000,
-    targetClose: 'Aug 21, 2026',
-    altspotCommitted: 400000,
-    committedNote: 'AltSpot led this round and holds its position permanently.',
+      'The fund invests in early-stage and growth-stage private companies and total loss of capital is possible. Positions are selected by AltSpot during the vintage and are not known in advance, so you are underwriting the process, not a named company. Deployment pace depends on deal flow and may be slower than planned. Fund interests are illiquid with no secondary market and no promised exit timeline. AltSpot’s own $1,000,000 carries these same risks.',
+    minInvestment: 25000,
+    allocationTotal: 10000000,
+    allocationRemaining: 6900000,
+    targetClose: 'Oct 16, 2026',
+    altspotCommitted: 1000000,
+    committedNote:
+      'AltSpot is the general partner and has committed $1,000,000 of the $10M target.',
     sortOrder: 1,
     fees: FEES,
     media: {
       type: 'metric',
-      label: 'Net revenue retention',
-      series: [100, 122, 149, 171, 204, 231, 262, 310],
-      caption: 'Indexed NRR by quarter, Q3 2024 – Q2 2026 (company data, AltSpot memo)',
+      label: 'Capital committed',
+      series: [1.0, 1.4, 1.9, 2.4, 3.1],
+      caption:
+        'Committed capital in $M since the fund opened, including the GP commitment. Source: fund records.',
     },
     docs: [
-      'Investment Memo: Aurora Robotics (AltSpot)',
-      'Subscription Agreement: ASC Aurora SPV',
-      'Series A Term Summary',
-      'Risk Factors & Disclosures',
+      'Private Placement Memorandum: AltSpot Growth Fund I, LLC',
+      'Subscription Agreement: AltSpot Growth Fund I, LLC',
+      'Limited Liability Company Agreement',
+      'Accredited Investor Questionnaire (Exhibit A)',
+      'Funding Instructions',
     ],
     spotbot: [
       {
         q: 'What exactly am I buying?',
-        a: 'Membership interests in ASC Aurora SPV, LLC, a special purpose vehicle formed by AltSpot to invest in Aurora Robotics’ Series A Preferred Stock. You own interests in the SPV, not shares of Aurora directly. Subject to AltSpot review, required documents, and final acceptance. Not legal, tax, or investment advice.',
+        a: 'Membership interests in AltSpot Growth Fund I, LLC, a $10M vehicle managed by AltSpot Capital, LLC. The fund invests in each AltSpot-led deal during the deployment period, on the same terms those deals are offered on the marketplace. You own interests in the fund, not shares of the underlying companies. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'Are there capital calls?',
+        a: 'No. Your commitment is funded in full at closing and deployed by the fund from there. There are no capital calls on this fund or anywhere on AltSpot, and no annual fees. Not legal, tax, or investment advice.',
       },
       {
         q: 'How is AltSpot paid on this deal?',
-        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. No annual fees and no capital calls. Not legal, tax, or investment advice.',
-      },
-    ],
-    deck: [
-      {
-        kicker: 'The problem',
-        title: 'Labor is the largest line item nobody can staff.',
-        body: [
-          'Mid-market warehouses run 30–80 pick lanes with turnover above 60% a year. They cannot underwrite enterprise automation, and they cannot hire their way out.',
-          'The segment is 41,000 facilities in North America alone, effectively unserved.',
-        ],
-      },
-      {
-        kicker: 'The product',
-        title: 'One lane. One weekend. One invoice.',
-        body: [
-          'A self-contained cell with an arm, a perception stack and a conveyor interface, priced per lane per month. No systems integrator, no facility redesign.',
-          'Customers start with two lanes and expand: 68% of new lane orders come from existing accounts.',
-        ],
-      },
-    ],
-  },
-  {
-    id: 'meridian',
-    name: 'Meridian Health AI',
-    entity: 'ASC Meridian SPV, LLC',
-    tag: 'Co-investment · Series B',
-    kind: 'coinvest',
-    sector: 'Healthcare · Clinical AI',
-    stage: 'Series B',
-    art: 'linear-gradient(135deg,#101B18 0%,#1E4A3C 55%,#6FA97C 115%)',
-    headline: 'The scribe every physician gets to keep.',
-    blurb:
-      'Clinical documentation AI deployed across 90+ hospital systems. AltSpot co-invests alongside the round’s tier-1 lead on identical terms.',
-    thesis: [
-      'Meridian’s ambient documentation platform is live in more than 90 hospital systems, cutting physician documentation time by an average of 54% in published deployments.',
-      'The Series B is led by a tier-1 healthcare investor; AltSpot secured a co-investment allocation on identical terms and underwrote the company independently.',
-      'Contracted ARR has doubled in the trailing twelve months with net revenue churn below 2%.',
-    ],
-    metrics: [
-      { k: 'Hospital systems', v: '90+' },
-      { k: 'Documentation time saved', v: '54%' },
-      { k: 'Net revenue churn', v: '<2%' },
-      { k: 'TTM ARR growth', v: '2.1x' },
-    ],
-    terms: [
-      { k: 'Security', v: 'Series B Preferred Stock' },
-      { k: 'Round size', v: '$2,000,000' },
-      { k: 'Liquidation preference', v: '1x non-participating' },
-      { k: 'AltSpot role', v: 'Co-investor' },
-    ],
-    risks:
-      'Growth-stage venture risk applies: reimbursement and regulatory shifts in clinical AI, competition from EHR incumbents, and long illiquidity. Total loss of capital is possible. See the investment memo for the full risk review.',
-    minInvestment: 10000,
-    allocationTotal: 2000000,
-    allocationRemaining: 240000,
-    targetClose: 'Aug 8, 2026',
-    altspotCommitted: 250000,
-    committedNote: 'AltSpot invests alongside the community on identical terms.',
-    sortOrder: 2,
-    fees: FEES,
-    media: {
-      type: 'metric',
-      label: 'Contracted ARR',
-      series: [100, 118, 131, 152, 168, 187, 199, 212],
-      caption:
-        'Indexed contracted ARR by quarter, Q3 2024 – Q2 2026 (company data, AltSpot memo)',
-    },
-    docs: [
-      'Investment Memo: Meridian Health AI (AltSpot)',
-      'Subscription Agreement: ASC Meridian SPV',
-      'Series B Term Summary',
-      'Risk Factors & Disclosures',
-    ],
-    spotbot: [
-      {
-        q: 'Who leads this round?',
-        a: 'A tier-1 healthcare investor leads the Series B; AltSpot holds an approved co-investment allocation on identical terms and conducted its own independent diligence. The lead’s identity is disclosed in the deal data room. Not legal, tax, or investment advice.',
-      },
-      {
-        q: 'How is AltSpot paid on this deal?',
-        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. No annual fees and no capital calls. Not legal, tax, or investment advice.',
-      },
-    ],
-    deck: [
-      {
-        kicker: 'Traction',
-        title: 'ARR doubled in twelve months.',
-        body: [
-          'Contracted ARR is up 2.1x trailing-twelve-months, driven by system-wide expansions in existing accounts.',
-        ],
-      },
-    ],
-  },
-  {
-    id: 'summit',
-    name: 'Summit Aerospace Secondary',
-    entity: 'ASC Summit SPV, LLC',
-    tag: 'Late-stage secondary',
-    kind: 'secondary',
-    sector: 'Aerospace · Defense',
-    stage: 'Late stage · issuer-approved',
-    art: 'linear-gradient(135deg,#12141E 0%,#2A3352 60%,#7C8BC0 120%)',
-    headline: 'Institutional access, issuer-approved.',
-    blurb:
-      'Issuer-approved secondary interest in a late-stage launch-services company, acquired as principal at a 22% discount to the last primary round.',
-    thesis: [
-      'AltSpot acquired this position as principal directly from an early employee block, with issuer approval and full transfer documentation. No forward contracts, no synthetic exposure.',
-      'The block was purchased at a 22% discount to the company’s most recent primary round price.',
-      'Late-stage secondaries give investors exposure to established, revenue-scaled private companies at a $10,000 minimum.',
-    ],
-    metrics: [
-      { k: 'Entry discount', v: '22%' },
-      { k: 'AltSpot committed', v: '$150K' },
-      { k: 'Structure', v: 'Direct, issuer-approved' },
-    ],
-    terms: [
-      { k: 'Security', v: 'Common stock (secondary)' },
-      { k: 'Transfer', v: 'Issuer-approved under ROFR' },
-      { k: 'AltSpot role', v: 'Principal acquirer' },
-    ],
-    risks:
-      'Late-stage does not mean low-risk: valuation marks can fall, IPO windows can stay shut, and secondary interests remain illiquid until a realization event. Total loss of capital is possible. See the memo for the full risk review.',
-    minInvestment: 10000,
-    allocationTotal: 1000000,
-    allocationRemaining: 815000,
-    targetClose: 'Sep 4, 2026',
-    altspotCommitted: 150000,
-    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
-    sortOrder: 3,
-    fees: FEES,
-    media: {
-      type: 'metric',
-      label: 'Entry vs. last round',
-      series: [78, 100],
-      caption:
-        'AltSpot entry price indexed against last primary round (100). Source: transfer documentation.',
-    },
-    docs: [
-      'Investment Memo: Summit Secondary (AltSpot)',
-      'Subscription Agreement: ASC Summit SPV',
-      'Transfer & Issuer Approval Summary',
-      'Risk Factors & Disclosures',
-    ],
-    spotbot: [
-      {
-        q: 'What makes this "issuer-approved"?',
-        a: 'The company approved this transfer under its right-of-first-refusal process, and AltSpot holds clean, documented title to the shares inside the SPV. Issuer approval matters because unapproved secondaries can be voided or blocked. Not legal, tax, or investment advice.',
+        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. The same model as every single deal, applied once at the fund level rather than per position. No annual fees and no capital calls. Not legal, tax, or investment advice.',
       },
     ],
     deck: [
       {
         kicker: 'The structure',
+        title: 'One commitment. The whole vintage.',
+        body: [
+          'The fund subscribes to every AltSpot-led deal during the deployment period, on the terms each deal is offered at. Investors get the vintage without picking, and without watching the marketplace for each close.',
+          'Commitments are funded in full at closing. No capital calls, no annual fees, one K-1.',
+        ],
+        stats: [
+          { k: 'Fund target', v: '$10M' },
+          { k: 'Planned positions', v: '10–15' },
+          { k: 'GP commitment', v: '$1M' },
+        ],
+      },
+      {
+        kicker: 'Why a fund',
+        title: 'The portfolio does the work one deal cannot.',
+        body: [
+          'Early-stage outcomes are skewed: a small number of positions drive the result, and any single one can go to zero. Spreading a commitment across the vintage is the structural answer.',
+          'AltSpot commits its own capital at the fund level, the same way it commits on every single deal.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI',
+    entity: 'ASC OpenAI SPV, LLC',
+    tag: 'Late-stage secondary',
+    kind: 'secondary',
+    sector: 'Foundation Models · Consumer AI',
+    stage: 'Late stage · issuer-approved',
+    art: 'linear-gradient(135deg,#0C0D10 0%,#23262E 55%,#5C6470 115%)',
+    logoUrl: '/openai-logo.svg',
+    headline: 'The most used AI product in the world, below its last tender price.',
+    blurb:
+      'Secondary interest in OpenAI at an implied $460B valuation, an 8% discount to the October 2025 employee tender. 800M+ weekly ChatGPT users and roughly $13B in annualized revenue.',
+    thesis: [
+      'ChatGPT reaches 800M+ weekly users and the OpenAI platform sits behind a large share of production AI workloads. Distribution at this scale is the hardest thing in software to replicate.',
+      'AltSpot acquired this position as principal from an early employee block, with issuer approval and full transfer documentation. No forward contracts, no synthetic exposure.',
+      'Entry is at an implied $460B, an 8% discount to the October 2025 employee tender at $500B. Reported annualized revenue is roughly $13B, growing faster than any software company at comparable scale.',
+    ],
+    metrics: [
+      { k: 'Implied valuation', v: '$460B' },
+      { k: 'Discount to last tender', v: '8%' },
+      { k: 'Weekly ChatGPT users', v: '800M+', note: 'reported, late 2025' },
+      { k: 'Annualized revenue', v: '~$13B', note: 'reported, 2025' },
+    ],
+    terms: [
+      { k: 'Security', v: 'Common stock (secondary)' },
+      { k: 'Implied valuation', v: '$460B' },
+      { k: 'Transfer', v: 'Issuer-approved under ROFR' },
+      { k: 'AltSpot role', v: 'Principal acquirer' },
+    ],
+    risks:
+      'Late-stage does not mean low-risk: the entry price is set by private-market marks that can fall, OpenAI does not disclose audited financials to secondary holders, compute spending is enormous and ongoing, and the corporate structure is unusual. The interest is illiquid until a realization event, and no IPO is scheduled or promised. Total loss of capital is possible. See the memo for the full risk review.',
+    minInvestment: 10000,
+    allocationTotal: 3000000,
+    allocationRemaining: 480000,
+    targetClose: 'Aug 28, 2026',
+    altspotCommitted: 300000,
+    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    sortOrder: 2,
+    fees: FEES,
+    media: {
+      type: 'metric',
+      label: 'Entry vs. last tender',
+      series: [92, 100],
+      caption:
+        'AltSpot entry price indexed against the October 2025 employee tender (100). Source: transfer documentation.',
+    },
+    docs: [
+      'Investment Memo: OpenAI Secondary (AltSpot)',
+      'Subscription Agreement: ASC OpenAI SPV',
+      'Transfer & Issuer Approval Summary',
+      'Risk Factors & Disclosures',
+    ],
+    spotbot: [
+      {
+        q: 'What exactly am I buying?',
+        a: 'Membership interests in ASC OpenAI SPV, LLC, a special purpose vehicle holding OpenAI shares acquired in an issuer-approved secondary transfer. You own interests in the SPV, not OpenAI stock directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How was the price set?',
+        a: 'AltSpot negotiated the block at an implied $460B valuation, an 8% discount to the October 2025 employee tender at $500B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How is AltSpot paid on this deal?',
+        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. No annual fees and no capital calls. Not legal, tax, or investment advice.',
+      },
+    ],
+    deck: [
+      {
+        kicker: 'The company',
+        title: 'Distribution no one else has.',
+        body: [
+          'ChatGPT is the consumer default for AI, with 800M+ weekly users reported in late 2025, and the API platform sits behind a large share of production AI workloads.',
+          'Reported annualized revenue is roughly $13B. No software company has grown to this scale this quickly.',
+        ],
+        stats: [
+          { k: 'Weekly users', v: '800M+' },
+          { k: 'Annualized revenue', v: '~$13B' },
+          { k: 'Last tender', v: '$500B' },
+        ],
+      },
+      {
+        kicker: 'The structure',
         title: 'Real shares. Clean title. One vehicle.',
         body: [
-          'The company approved the transfer under its ROFR process. AltSpot holds the shares inside ASC Summit SPV with full transfer documentation. No forwards, no synthetics.',
+          'The company approved the transfer under its ROFR process. AltSpot holds the shares inside ASC OpenAI SPV with full transfer documentation. No forwards, no synthetics.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'databricks',
+    name: 'Databricks',
+    entity: 'ASC Databricks SPV, LLC',
+    tag: 'Late-stage secondary',
+    kind: 'secondary',
+    sector: 'Data · Enterprise AI',
+    stage: 'Late stage · issuer-approved',
+    art: 'linear-gradient(135deg,#1A0B08 0%,#4A150D 55%,#B33A24 115%)',
+    logoUrl: '/databricks-logo.svg',
+    headline: 'The data platform underneath the enterprise AI build-out.',
+    blurb:
+      'Secondary interest in Databricks at an implied $92B valuation, an 8% discount to the Series K. $3.7B revenue run rate growing above 50%, with roughly 140% net revenue retention.',
+    thesis: [
+      'Databricks is where enterprise data and AI meet: 15,000+ customers run the lakehouse, and the enterprise AI build-out runs through the data layer it owns.',
+      'The revenue run rate crossed $3.7B growing above 50% a year, with net revenue retention around 140%. Very few private companies compound at that rate at this scale.',
+      'AltSpot acquired the block as principal, issuer-approved, at an implied $92B: an 8% discount to the Series K, which valued the company above $100B.',
+    ],
+    metrics: [
+      { k: 'Implied valuation', v: '$92B' },
+      { k: 'Discount to Series K', v: '8%' },
+      { k: 'Revenue run rate', v: '$3.7B', note: 'reported, Jan 2026' },
+      { k: 'Net revenue retention', v: '~140%' },
+    ],
+    terms: [
+      { k: 'Security', v: 'Common stock (secondary)' },
+      { k: 'Implied valuation', v: '$92B' },
+      { k: 'Transfer', v: 'Issuer-approved under ROFR' },
+      { k: 'AltSpot role', v: 'Principal acquirer' },
+    ],
+    risks:
+      'Late-stage venture risk applies: the entry mark is set by private rounds and can fall, competition from hyperscalers and open-source engines is real, and growth at this scale is expensive to sustain. The interest is illiquid until a realization event, and no IPO is scheduled or promised. Total loss of capital is possible. See the memo for the full risk review.',
+    minInvestment: 10000,
+    allocationTotal: 2500000,
+    allocationRemaining: 950000,
+    targetClose: 'Sep 11, 2026',
+    altspotCommitted: 250000,
+    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    sortOrder: 3,
+    fees: FEES,
+    media: {
+      type: 'metric',
+      label: 'Revenue run rate',
+      series: [1.0, 1.4, 1.6, 2.4, 3.0, 3.7],
+      caption:
+        'Reported revenue run rate in $B, 2023 through Jan 2026. Source: company announcements.',
+    },
+    docs: [
+      'Investment Memo: Databricks Secondary (AltSpot)',
+      'Subscription Agreement: ASC Databricks SPV',
+      'Transfer & Issuer Approval Summary',
+      'Risk Factors & Disclosures',
+    ],
+    spotbot: [
+      {
+        q: 'What exactly am I buying?',
+        a: 'Membership interests in ASC Databricks SPV, LLC, a special purpose vehicle holding Databricks shares acquired in an issuer-approved secondary transfer. You own interests in the SPV, not Databricks stock directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How was the price set?',
+        a: 'AltSpot negotiated the block at an implied $92B valuation, an 8% discount to the Series K round that valued the company above $100B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How is AltSpot paid on this deal?',
+        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. No annual fees and no capital calls. Not legal, tax, or investment advice.',
+      },
+    ],
+    deck: [
+      {
+        kicker: 'The company',
+        title: 'The lakehouse won the data layer.',
+        body: [
+          'More than 15,000 customers run Databricks, and the revenue run rate crossed $3.7B in early 2026 growing above 50% a year with roughly 140% net revenue retention.',
+          'Enterprise AI is built on enterprise data, and Databricks owns the layer where that data lives.',
+        ],
+        stats: [
+          { k: 'Revenue run rate', v: '$3.7B' },
+          { k: 'Growth', v: '50%+' },
+          { k: 'Customers', v: '15,000+' },
+        ],
+      },
+      {
+        kicker: 'The structure',
+        title: 'Real shares. Clean title. One vehicle.',
+        body: [
+          'The company approved the transfer under its ROFR process. AltSpot holds the shares inside ASC Databricks SPV with full transfer documentation. No forwards, no synthetics.',
         ],
       },
     ],

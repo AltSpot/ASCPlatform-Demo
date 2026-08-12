@@ -47,10 +47,15 @@ Concretely:
   documents and experiments are created here, never in outside folders. The old
   `altspot-portal` static demo is retired and deleted; the running app is its
   own visual reference.
-- **Every company in the demo is fictional.** No real portfolio company names or
-  logos, and no claims about named real competitors. The lead deal, Synthera AI,
-  is an invented company whose deal package mirrors the shape of a real one.
-  Do not reintroduce real names into seed data, documents or copy.
+- **Real companies appear only as clearly illustrative deals.** The lead deal,
+  Synthera AI, is an invented company whose deal package mirrors the shape of a
+  real one. Per Ryan's direction (2026-08-11), the shelf also carries the
+  AltSpot Growth Fund and two real-company secondaries, OpenAI and Databricks,
+  with their real logos. Every term shown for them (price, discount,
+  allocation, AltSpot's position) is invented demo data, the marketplace
+  disclaimer says so, and nothing may present those terms as actual offerings
+  or actual positions. Still no claims about named real competitors in
+  editorial copy.
 
 ## Running it
 
@@ -107,7 +112,7 @@ lib/
   client/api.ts             the ONLY place the browser calls fetch
 prisma/
   schema.prisma             production-shaped; SQLite today, Postgres later
-  seed.ts                   four fictional deals, Synthera AI leading
+  seed.ts                   four deals, Synthera AI leading
 scripts/                    dev-server supervisor, db reset, optional autostart
 ```
 

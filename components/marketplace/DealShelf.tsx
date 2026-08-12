@@ -141,7 +141,8 @@ export default function DealShelf({
         Private investments involve substantial risk, including possible loss of the
         entire amount invested, and are available only to verified accredited
         investors. Participation is subject to eligibility, documentation, and final
-        acceptance. Demo environment. Companies shown are fictional.
+        acceptance. Demo environment. Deal terms, prices and allocations are
+        illustrative and do not represent actual offerings.
       </p>
     </>
   );

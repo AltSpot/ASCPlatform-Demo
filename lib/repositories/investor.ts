@@ -3,7 +3,7 @@
  * and linked banks.
  *
  * `ensureInvestorRecords` is the bootstrap: it creates the one-per-user
- * rows and seeds a closed Meridian position so a first login lands on a
+ * rows and seeds a closed OpenAI position so a first login lands on a
  * dashboard that already feels lived-in. That seeding is a DEMO SEAM and
  * fabricates a holding nobody bought. Read the note on `SEED_POSITION`
  * before trusting any position on this platform.
@@ -29,7 +29,7 @@ import type {
  * The figures below are invented. `seedOpeningPosition` writes them into
  * the real Subscription and Document tables the moment an account is
  * bootstrapped, so within milliseconds of a first sign-in the investor
- * holds an `accepted` $25,000 commitment in Meridian, marked up to
+ * holds an `accepted` $25,000 commitment in the OpenAI SPV, marked up to
  * $29,600, dated seven months ago, with a "Countersigned · closed"
  * subscription agreement filed in Docs. No money moved. Nothing was
  * signed: `signature` is null and the document has no body to open.
@@ -47,7 +47,7 @@ import type {
  *     whether it filters on it.
  */
 const SEED_POSITION = {
-  dealId: 'meridian',
+  dealId: 'openai',
   amount: 25_000,
   currentValue: 29_600,
   signedDaysAgo: 210,
