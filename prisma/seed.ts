@@ -93,7 +93,7 @@ const DEALS: SeedDeal[] = [
     sector: 'Vertical AI · Senior Care',
     stage: 'Series Seed Preferred',
     art: 'linear-gradient(135deg,#0E1A24 0%,#1C3A4E 55%,#3E7A96 115%)',
-    logoUrl: '/synthera-logo.png',
+    logoUrl: '/synthera-logo.svg',
     headline:
       'The AI operating system replacing legacy software across 60,000+ senior care facilities.',
     blurb:
@@ -305,6 +305,7 @@ const DEALS: SeedDeal[] = [
     sector: 'Multi-Deal Fund · Venture',
     stage: 'Fund I · $10M target',
     art: 'linear-gradient(135deg,#3B2E12 0%,#8F6B25 55%,#C9A14A 100%)',
+    logoUrl: '/brand/altspot-logo-black.png',
     headline: 'Every AltSpot-led deal in one commitment.',
     blurb:
       'A $10M vehicle that invests in the next 10 to 15 AltSpot-led deals automatically, on the same terms the marketplace sees. One subscription, one K-1, the whole vintage.',
@@ -334,7 +335,7 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 1000000,
     committedNote:
       'AltSpot is the general partner and has committed $1,000,000 of the $10M target.',
-    sortOrder: 1,
+    sortOrder: 3,
     fees: FEES,
     media: {
       type: 'metric',
@@ -396,25 +397,25 @@ const DEALS: SeedDeal[] = [
     kind: 'secondary',
     sector: 'Foundation Models · Consumer AI',
     stage: 'Late stage · issuer-approved',
-    art: 'linear-gradient(135deg,#0C0D10 0%,#23262E 55%,#5C6470 115%)',
+    art: 'radial-gradient(120% 170% at 50% 40%,rgba(0,0,0,.05) 0%,rgba(0,0,0,0) 58%),linear-gradient(135deg,#FFFFFF 0%,#F6F4EF 55%,#E9E4DA 115%)',
     logoUrl: '/openai-logo.svg',
     headline: 'The most used AI product in the world, below its last tender price.',
     blurb:
-      'Secondary interest in OpenAI at an implied $460B valuation, an 8% discount to the October 2025 employee tender. 800M+ weekly ChatGPT users and roughly $13B in annualized revenue.',
+      'Secondary interest in OpenAI at an implied $690B valuation, an 8% discount to the March 2026 employee tender. 900M+ weekly ChatGPT users and roughly $30B in annualized revenue.',
     thesis: [
-      'ChatGPT reaches 800M+ weekly users and the OpenAI platform sits behind a large share of production AI workloads. Distribution at this scale is the hardest thing in software to replicate.',
+      'ChatGPT reaches 900M+ weekly users and the OpenAI platform sits behind a large share of production AI workloads. Distribution at this scale is the hardest thing in software to replicate.',
       'AltSpot acquired this position as principal from an early employee block, with issuer approval and full transfer documentation. No forward contracts, no synthetic exposure.',
-      'Entry is at an implied $460B, an 8% discount to the October 2025 employee tender at $500B. Reported annualized revenue is roughly $13B, growing faster than any software company at comparable scale.',
+      'Entry is at an implied $690B, an 8% discount to the March 2026 employee tender at $750B. Reported annualized revenue is roughly $30B, growing faster than any software company at comparable scale.',
     ],
     metrics: [
-      { k: 'Implied valuation', v: '$460B' },
+      { k: 'Implied valuation', v: '$690B' },
       { k: 'Discount to last tender', v: '8%' },
-      { k: 'Weekly ChatGPT users', v: '800M+', note: 'reported, late 2025' },
-      { k: 'Annualized revenue', v: '~$13B', note: 'reported, 2025' },
+      { k: 'Weekly ChatGPT users', v: '900M+', note: 'reported, mid-2026' },
+      { k: 'Annualized revenue', v: '~$30B', note: 'reported, mid-2026' },
     ],
     terms: [
       { k: 'Security', v: 'Common stock (secondary)' },
-      { k: 'Implied valuation', v: '$460B' },
+      { k: 'Implied valuation', v: '$690B' },
       { k: 'Transfer', v: 'Issuer-approved under ROFR' },
       { k: 'AltSpot role', v: 'Principal acquirer' },
     ],
@@ -426,14 +427,14 @@ const DEALS: SeedDeal[] = [
     targetClose: 'Aug 28, 2026',
     altspotCommitted: 300000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
-    sortOrder: 2,
+    sortOrder: 1,
     fees: FEES,
     media: {
       type: 'metric',
       label: 'Entry vs. last tender',
       series: [92, 100],
       caption:
-        'AltSpot entry price indexed against the October 2025 employee tender (100). Source: transfer documentation.',
+        'AltSpot entry price indexed against the March 2026 employee tender (100). Source: transfer documentation.',
     },
     docs: [
       'Investment Memo: OpenAI Secondary (AltSpot)',
@@ -448,7 +449,7 @@ const DEALS: SeedDeal[] = [
       },
       {
         q: 'How was the price set?',
-        a: 'AltSpot negotiated the block at an implied $460B valuation, an 8% discount to the October 2025 employee tender at $500B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
+        a: 'AltSpot negotiated the block at an implied $690B valuation, an 8% discount to the March 2026 employee tender at $750B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
       },
       {
         q: 'How is AltSpot paid on this deal?',
@@ -460,13 +461,13 @@ const DEALS: SeedDeal[] = [
         kicker: 'The company',
         title: 'Distribution no one else has.',
         body: [
-          'ChatGPT is the consumer default for AI, with 800M+ weekly users reported in late 2025, and the API platform sits behind a large share of production AI workloads.',
-          'Reported annualized revenue is roughly $13B. No software company has grown to this scale this quickly.',
+          'ChatGPT is the consumer default for AI, with 900M+ weekly users reported in mid-2026, and the API platform sits behind a large share of production AI workloads.',
+          'Reported annualized revenue is roughly $30B. No software company has grown to this scale this quickly.',
         ],
         stats: [
-          { k: 'Weekly users', v: '800M+' },
-          { k: 'Annualized revenue', v: '~$13B' },
-          { k: 'Last tender', v: '$500B' },
+          { k: 'Weekly users', v: '900M+' },
+          { k: 'Annualized revenue', v: '~$30B' },
+          { k: 'Last tender', v: '$750B' },
         ],
       },
       {
@@ -486,25 +487,25 @@ const DEALS: SeedDeal[] = [
     kind: 'secondary',
     sector: 'Data · Enterprise AI',
     stage: 'Late stage · issuer-approved',
-    art: 'linear-gradient(135deg,#1A0B08 0%,#4A150D 55%,#B33A24 115%)',
+    art: 'radial-gradient(120% 170% at 50% 40%,rgba(255,120,90,.22) 0%,rgba(255,120,90,0) 58%),linear-gradient(135deg,#1A0B08 0%,#4A150D 55%,#B33A24 115%)',
     logoUrl: '/databricks-logo.svg',
     headline: 'The data platform underneath the enterprise AI build-out.',
     blurb:
-      'Secondary interest in Databricks at an implied $92B valuation, an 8% discount to the Series K. $3.7B revenue run rate growing above 50%, with roughly 140% net revenue retention.',
+      'Secondary interest in Databricks at an implied $110B valuation, an 8% discount to the June 2026 tender. $4.5B revenue run rate growing above 50%, with roughly 140% net revenue retention.',
     thesis: [
       'Databricks is where enterprise data and AI meet: 15,000+ customers run the lakehouse, and the enterprise AI build-out runs through the data layer it owns.',
-      'The revenue run rate crossed $3.7B growing above 50% a year, with net revenue retention around 140%. Very few private companies compound at that rate at this scale.',
-      'AltSpot acquired the block as principal, issuer-approved, at an implied $92B: an 8% discount to the Series K, which valued the company above $100B.',
+      'The revenue run rate crossed $4.5B growing above 50% a year, with net revenue retention around 140%. Very few private companies compound at that rate at this scale.',
+      'AltSpot acquired the block as principal, issuer-approved, at an implied $110B: an 8% discount to the June 2026 employee tender at $120B.',
     ],
     metrics: [
-      { k: 'Implied valuation', v: '$92B' },
-      { k: 'Discount to Series K', v: '8%' },
-      { k: 'Revenue run rate', v: '$3.7B', note: 'reported, Jan 2026' },
+      { k: 'Implied valuation', v: '$110B' },
+      { k: 'Discount to last tender', v: '8%' },
+      { k: 'Revenue run rate', v: '$4.5B', note: 'reported, mid-2026' },
       { k: 'Net revenue retention', v: '~140%' },
     ],
     terms: [
       { k: 'Security', v: 'Common stock (secondary)' },
-      { k: 'Implied valuation', v: '$92B' },
+      { k: 'Implied valuation', v: '$110B' },
       { k: 'Transfer', v: 'Issuer-approved under ROFR' },
       { k: 'AltSpot role', v: 'Principal acquirer' },
     ],
@@ -516,14 +517,14 @@ const DEALS: SeedDeal[] = [
     targetClose: 'Sep 11, 2026',
     altspotCommitted: 250000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
-    sortOrder: 3,
+    sortOrder: 2,
     fees: FEES,
     media: {
       type: 'metric',
       label: 'Revenue run rate',
-      series: [1.0, 1.4, 1.6, 2.4, 3.0, 3.7],
+      series: [1.0, 1.4, 1.6, 2.4, 3.0, 3.7, 4.5],
       caption:
-        'Reported revenue run rate in $B, 2023 through Jan 2026. Source: company announcements.',
+        'Reported revenue run rate in $B, 2023 through mid-2026. Source: company announcements.',
     },
     docs: [
       'Investment Memo: Databricks Secondary (AltSpot)',
@@ -538,7 +539,7 @@ const DEALS: SeedDeal[] = [
       },
       {
         q: 'How was the price set?',
-        a: 'AltSpot negotiated the block at an implied $92B valuation, an 8% discount to the Series K round that valued the company above $100B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
+        a: 'AltSpot negotiated the block at an implied $110B valuation, an 8% discount to the June 2026 employee tender at $120B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
       },
       {
         q: 'How is AltSpot paid on this deal?',
@@ -550,11 +551,11 @@ const DEALS: SeedDeal[] = [
         kicker: 'The company',
         title: 'The lakehouse won the data layer.',
         body: [
-          'More than 15,000 customers run Databricks, and the revenue run rate crossed $3.7B in early 2026 growing above 50% a year with roughly 140% net revenue retention.',
+          'More than 15,000 customers run Databricks, and the revenue run rate crossed $4.5B in mid-2026 growing above 50% a year with roughly 140% net revenue retention.',
           'Enterprise AI is built on enterprise data, and Databricks owns the layer where that data lives.',
         ],
         stats: [
-          { k: 'Revenue run rate', v: '$3.7B' },
+          { k: 'Revenue run rate', v: '$4.5B' },
           { k: 'Growth', v: '50%+' },
           { k: 'Customers', v: '15,000+' },
         ],

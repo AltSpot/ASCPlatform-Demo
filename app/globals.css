@@ -154,6 +154,7 @@ h2.display{font-size:28px}
 
 .brand{display:flex;align-items:center;gap:10px;padding:2px 8px 22px}
 .brand .orb{width:22px;height:22px}
+.brand-logo{height:24px;width:auto;display:block}
 .brand-name{
   font-family:var(--fd);font-weight:500;font-size:20px;
   letter-spacing:-.01em;color:var(--ink);display:inline-flex;align-items:baseline;
@@ -241,10 +242,18 @@ h2.display{font-size:28px}
 .btn:active{transform:translateY(1px)}
 /* Primary CTA rides the canonical gold to orange ramp. */
 .btn-gold{
+  position:relative;overflow:hidden;
   background:linear-gradient(135deg,var(--gold),var(--orange));
   color:#1A1204;box-shadow:0 6px 22px rgba(243,152,7,.22);
 }
-.btn-gold:hover{box-shadow:0 8px 30px rgba(243,152,7,.36)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(243,152,7,.42)}
+/* The shine sweep from the marketing site, on the same clock. */
+.btn-gold::after{
+  content:'';position:absolute;top:0;bottom:0;left:0;width:55%;pointer-events:none;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.34),transparent);
+  transform:translateX(-130%);animation:cta-shine 4.6s ease-in-out infinite;
+}
+@keyframes cta-shine{0%,72%{transform:translateX(-130%)}88%,100%{transform:translateX(300%)}}
 .btn-ghost{background:transparent;border-color:var(--hairg);color:var(--ink)}
 .btn-ghost:hover{background:rgba(243,152,7,.08)}
 .btn-quiet{background:rgba(255,255,255,.04);color:var(--soft);border-color:var(--hair)}
@@ -294,19 +303,56 @@ label.field>span{
 /* ---------- allocation bar ---------- */
 .alloc{margin-top:10px}
 .alloc .bar{height:5px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
-.alloc .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--orange),var(--ember))}
+.alloc .fill{
+  height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--gold),var(--orange),var(--ember));
+  box-shadow:0 0 12px rgba(243,152,7,.35);
+}
 .alloc .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:7px;font-family:var(--fm);letter-spacing:.04em}
 
 /* ---------- deal cards ---------- */
 .deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:22px}
-.deal-card{display:flex;flex-direction:column;overflow:hidden;padding:0;transition:transform .15s ease,border-color .15s ease}
-.deal-card:hover{transform:translateY(-3px);border-color:var(--hairg)}
-.thumb{height:150px;position:relative;display:flex;align-items:flex-end;padding:16px}
-.thumb .chip{position:absolute;top:14px;left:14px;background:rgba(10,8,6,.66);backdrop-filter:blur(4px)}
-.deal-logo{
-  position:absolute;top:12px;right:14px;height:42px;width:42px;border-radius:10px;
-  object-fit:contain;background:rgba(10,8,6,.55);padding:4px;backdrop-filter:blur(4px);
+.deal-card{
+  display:flex;flex-direction:column;overflow:hidden;padding:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  transition:transform .22s cubic-bezier(.2,.7,.3,1),border-color .22s ease,box-shadow .22s ease;
+  animation:card-in .5s ease backwards;
 }
+.deal-card:hover{
+  transform:translateY(-5px);border-color:var(--hairg);
+  box-shadow:0 22px 54px rgba(0,0,0,.45),0 0 44px rgba(243,152,7,.10),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+.deal-grid .deal-card:nth-child(2){animation-delay:.06s}
+.deal-grid .deal-card:nth-child(3){animation-delay:.12s}
+.deal-grid .deal-card:nth-child(4){animation-delay:.18s}
+.deal-grid .deal-card:nth-child(n+5){animation-delay:.24s}
+@keyframes card-in{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+.thumb{height:168px;position:relative;display:flex;align-items:flex-end;padding:16px}
+/* Quiet vignette so the pills seat into any artwork, light or dark. */
+.thumb::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(180deg,rgba(10,8,6,.10),rgba(10,8,6,0) 34%,rgba(10,8,6,0) 64%,rgba(10,8,6,.16));
+}
+.thumb .chip{
+  position:absolute;top:14px;left:14px;background:rgba(10,8,6,.66);backdrop-filter:blur(4px);
+  font-size:9px;letter-spacing:.13em;padding:3px 9px;z-index:1;
+}
+/* The sector line sits on arbitrary banner art, light or dark, so it
+   carries its own backdrop the same way the chip does. */
+.thumb .sector{
+  position:relative;z-index:1;
+  background:rgba(10,8,6,.6);color:rgba(255,255,255,.85);
+  padding:3px 9px;border-radius:7px;backdrop-filter:blur(4px);
+}
+/* The deal mark is the banner artwork, not a corner tile. Width leaves
+   room for wordmarks; object-fit keeps square marks at 74px. */
+.deal-logo-hero{
+  position:absolute;inset:42px 0 50px 0;margin:auto;height:64px;width:min(60%,220px);
+  object-fit:contain;filter:drop-shadow(0 8px 28px rgba(0,0,0,.5));z-index:1;
+  transition:transform .25s cubic-bezier(.2,.7,.3,1);
+}
+.deal-card:hover .deal-logo-hero{transform:scale(1.05)}
 .deal-body{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1}
 .deal-body h3{font-family:var(--fd);font-size:23px;font-weight:500;letter-spacing:-.015em;color:var(--ink)}
 .deal-meta{display:flex;gap:18px;flex-wrap:wrap}

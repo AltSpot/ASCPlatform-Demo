@@ -47,14 +47,14 @@
   color: var(--ink);
 }
 
+/* The checked state is the marketing site's segmented control: solid
+   gold ramp, dark type. The active promise should look lit. */
 .tab[aria-selected='true'] {
-  color: var(--ink);
-  border-color: var(--hairg);
-  background: linear-gradient(
-    90deg,
-    rgba(243, 152, 7, 0.18),
-    rgba(243, 152, 7, 0.05)
-  );
+  color: #1a1204;
+  font-weight: 600;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  box-shadow: 0 4px 18px rgba(243, 152, 7, 0.28);
 }
 
 .count {
@@ -68,8 +68,8 @@
 }
 
 .tab[aria-selected='true'] .count {
-  color: var(--orange-b);
-  border-color: var(--hairg);
+  color: #1a1204;
+  border-color: rgba(10, 8, 6, 0.4);
 }
 
 .panel {

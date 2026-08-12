@@ -75,18 +75,12 @@ export default function DealShelf({
               <div className="thumb" style={{ background: deal.art }}>
                 <span className="chip">{deal.tag}</span>
                 {deal.logoUrl && (
+                  // The mark IS the artwork: large and centered, not a
+                  // corner tile.
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img className="deal-logo" src={deal.logoUrl} alt="" aria-hidden="true" />
+                  <img className="deal-logo-hero" src={deal.logoUrl} alt="" aria-hidden="true" />
                 )}
-                <span
-                  className="tiny"
-                  style={{
-                    color: 'rgba(255,255,255,.82)',
-                    textShadow: '0 1px 6px rgba(0,0,0,.5)',
-                  }}
-                >
-                  {deal.sector}
-                </span>
+                <span className="tiny sector">{deal.sector}</span>
               </div>
 
               <div className="deal-body">

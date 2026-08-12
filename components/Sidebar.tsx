@@ -89,10 +89,8 @@ export default function Sidebar({ user }: { user: SessionUser }) {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="orb" />
-        <div className="brand-name">
-          Alt<span>Spot</span>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="brand-logo" src="/brand/altspot-logo-white.png" alt="AltSpot" />
       </div>
 
       <div className="nav-label">Investor portal</div>
