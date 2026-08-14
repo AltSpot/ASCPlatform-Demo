@@ -48,16 +48,6 @@ export default async function MarketplacePage({
 
   return (
     <>
-      <div className="page-head">
-        <div className="titles">
-          <div className="eyebrow">Marketplace</div>
-          <h1 className="display">The private room.</h1>
-          <p className="sub">
-            What is open today, and what we are tracking.
-          </p>
-        </div>
-      </div>
-
       <MarketplaceTabs
         initial={initial}
         dealCount={deals.length}
