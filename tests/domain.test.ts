@@ -424,15 +424,15 @@ describe('canViewDealDetail', () => {
 /** A deal with every field carrying a recognisable value. */
 function fullDeal(): DealView {
   return {
-    id: 'synthera',
-    name: 'Synthera AI',
-    entity: 'AltSpot Synthera SPV I LLC',
+    id: 'calder',
+    name: 'Calder Grid',
+    entity: 'AltSpot Calder SPV I LLC',
     tag: 'AltSpot-led · Series Seed',
     kind: 'led',
     sector: 'Vertical AI · Senior Care',
     stage: 'Series Seed Preferred',
     art: 'linear-gradient(120deg,#1b1410,#2a1c10)',
-    logoUrl: '/logos/synthera.svg',
+    logoUrl: '/logos/calder.svg',
     headline: 'WITHHELD_HEADLINE',
     summary: 'WITHHELD_SUMMARY',
     pricePerShare: 'WITHHELD_PPS',
@@ -499,10 +499,10 @@ describe('redactDeal', () => {
 
   test('enough survives to know the deal exists and who it is', () => {
     const teaser = redactDeal(fullDeal());
-    assert.equal(teaser.name, 'Synthera AI');
+    assert.equal(teaser.name, 'Calder Grid');
     assert.equal(teaser.sector, 'Vertical AI · Senior Care');
     assert.equal(teaser.blurb, 'Clinical documentation for senior care.');
-    assert.equal(teaser.logoUrl, '/logos/synthera.svg');
+    assert.equal(teaser.logoUrl, '/logos/calder.svg');
   });
 
   test('the discriminant flips, so a consumer cannot read a teaser as a full deal', () => {

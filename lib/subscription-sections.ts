@@ -5,9 +5,9 @@
  * validation and the sign endpoint's completeness check all read this file.
  * Adding or removing a section is a one-line change here and nowhere else.
  *
- * Every word below is derived from the ASC Synthera II subscription
- * agreement (GG 5.15.26) and its Exhibit A accredited investor
- * questionnaire. `covers` names the clauses each panel discharges, so
+ * Every word below follows the shape of a standard SPV subscription
+ * agreement for the fictional lead deal (ASC Calder I, LLC) and its
+ * Exhibit A accredited investor questionnaire. `covers` names the clauses each panel discharges, so
  * counsel can audit the mapping without reading a component.
  *
  * Two of the six are selections of fact, not acknowledgements, and carry a
@@ -91,7 +91,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
         text: 'You have received and read this subscription agreement, the private placement memorandum and the operating agreement, including the risk factors, the conflicts of interest and the tax discussion.',
       },
       {
-        text: 'You had the chance to put questions to the Manager about the offering, the Company and Synthera, and you got answers.',
+        text: 'You had the chance to put questions to the Manager about the offering, the Company and Calder, and you got answers.',
       },
       {
         text: 'You are relying on those documents and on your own diligence and advisors. Nothing said or written outside them forms part of this deal, and nobody is authorized to add to them.',
@@ -100,13 +100,13 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
         text: 'The memorandum is a summary. Where it and the operating agreement disagree, the operating agreement controls.',
       },
       {
-        text: 'Beyond what the offering documents say, AltSpot makes no representation about Synthera, its business or its prospects, and has not independently verified the Synthera information in them.',
+        text: 'Beyond what the offering documents say, AltSpot makes no representation about Calder, its business or its prospects, and has not independently verified the Calder information in them.',
       },
       {
         text: 'Your subscription binds you, not the Company. The Manager may accept it in full, in part or not at all, may hold one or more closings, and may modify, extend or withdraw the offering.',
       },
       {
-        text: 'If the Company does not end up buying the Synthera securities, uninvested funds come back to you without interest.',
+        text: 'If the Company does not end up buying the Calder securities, uninvested funds come back to you without interest.',
       },
     ],
   },
@@ -195,7 +195,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
     covers: 'Agreement §3.2, §3.3, §3.4, §3.5',
     points: [
       {
-        text: 'This is speculative. The Company holds one asset: Series Seed Preferred Stock of Synthera AI, Inc., together with warrants over its common stock. There is no diversification inside the Company and you can lose the entire amount.',
+        text: 'This is speculative. The Company holds one asset: Series A Preferred Stock of Calder Grid, Inc. There is no diversification inside the Company and you can lose the entire amount.',
       },
       {
         text: 'The Company is newly formed and has no operating or financial history.',
@@ -210,7 +210,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
         text: 'You can hold something illiquid for an indefinite period. You have no need for liquidity here, your current needs are provided for elsewhere, and a total loss would not change your circumstances.',
       },
       {
-        text: 'Class B Units do not vote and carry limited information rights. The Manager operates under narrowed duties and broad indemnification, and it holds an earlier position in Synthera from the pre-seed round through ASC Synthera LLC. The revenue participation rights are contingent and capped, and the warrants expire. All of this is in the memorandum risk factors.',
+        text: 'Class B Units do not vote and carry limited information rights. The Manager operates under narrowed duties and broad indemnification, and it holds an earlier position in Calder from the seed round. All of this is in the memorandum risk factors.',
       },
       {
         lead: 'What you pay',
@@ -279,7 +279,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
     points: [
       {
         lead: 'You become a member',
-        text: 'Signing admits you as a Class B Member of ASC Synthera II, LLC and binds you to the operating agreement in full, including the representations in its Article 10, as if you had signed it on its original date.',
+        text: 'Signing admits you as a Class B Member of ASC Calder I, LLC and binds you to the operating agreement in full, including the representations in its Article 10, as if you had signed it on its original date.',
       },
       {
         lead: 'Power of attorney',
@@ -287,7 +287,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
       },
       {
         lead: 'The Manager decides',
-        text: 'AltSpot runs the Company. It negotiates and signs the Synthera transaction documents, votes the shares, exercises or lets the warrants lapse, responds to drag-along, tag-along and right-of-first-refusal calls, makes the tax elections, and chooses when and how to sell. Class B Units do not vote and Class B Members do not participate in management.',
+        text: 'AltSpot runs the Company. It negotiates and signs the Calder transaction documents, votes the shares, responds to drag-along, tag-along and right-of-first-refusal calls, makes the tax elections, and chooses when and how to sell. Class B Units do not vote and Class B Members do not participate in management.',
       },
       {
         lead: 'Governing law',

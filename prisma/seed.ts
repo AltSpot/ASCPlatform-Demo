@@ -5,9 +5,9 @@
  * 10% carried interest on profits at exit. Nothing else: no annual
  * fees, no capital calls.
  *
- * Synthera AI, the lead deal, is FICTIONAL: it mirrors the shape of a real
- * AltSpot deal package (structure, terms, checkout flow), but the company is
- * invented. The AltSpot Growth Fund is our own vehicle. OpenAI and Databricks
+ * Calder Grid, the lead deal, is FICTIONAL: it mirrors the shape of a real
+ * AltSpot deal package (structure, terms, checkout flow), but the company,
+ * its numbers and its story are invented and mirror no real transaction. The AltSpot Growth Fund is our own vehicle. OpenAI and Databricks
  * are real companies, and every deal term shown for them here (price,
  * discount, allocation, AltSpot's position) is ILLUSTRATIVE demo data, not an
  * actual offering or an actual position.
@@ -82,210 +82,206 @@ const FEES = { management: 5, carry: 10 };
 
 const DEALS: SeedDeal[] = [
   // ------------------------------------------------------------------
-  //  SYNTHERA AI — fictional lead deal, modeled on a real deal package.
+  //  CALDER GRID — fictional lead deal. Invented company, invented
+  //  numbers; nothing here mirrors any real AltSpot transaction.
   // ------------------------------------------------------------------
   {
-    id: 'synthera',
-    name: 'Synthera AI',
-    entity: 'ASC Synthera II, LLC',
-    tag: 'AltSpot-led · Series Seed',
+    id: 'calder',
+    name: 'Calder Grid',
+    entity: 'ASC Calder I, LLC',
+    tag: 'AltSpot-led · Series A',
     kind: 'led',
-    sector: 'Vertical AI · Senior Care',
-    stage: 'Series Seed Preferred',
-    art: 'linear-gradient(135deg,#0E1A24 0%,#1C3A4E 55%,#3E7A96 115%)',
-    logoUrl: '/synthera-logo.svg',
+    sector: 'Grid AI · Energy Infrastructure',
+    stage: 'Series A Preferred',
+    art: 'linear-gradient(135deg,#0A1322 0%,#14325A 55%,#2E6FD1 115%)',
+    logoUrl: '/calder-logo.svg',
     headline:
-      'The AI operating system replacing legacy software across 60,000+ senior care facilities.',
+      'The intelligence layer for the electric grid.',
     blurb:
-      'AI-native platform replacing three to five disconnected systems per facility. $840K contracted ARR, up ~68% in a month, with a large regional operator that dropped the category’s dominant legacy platform to adopt it.',
+      'Physics-informed AI that compresses utility interconnection studies from 14 months to days. $2.4M contracted ARR, up 3.1x year over year, with 11 investor-owned utilities under multi-year contract.',
     thesis: [
-      'A large regional senior care operator dropped the industry’s dominant legacy platform and chose Synthera across 50+ facilities and 1,000+ licenses. When a major operator replaces the market leader with an AI-native platform, that is the clearest adoption signal the category produces.',
-      'The market is 60,000+ U.S. facilities, 90%+ of them small operators running on paper and disconnected point solutions. Synthera replaces eMAR, scheduling, billing, care tracking and assessments with one system, at net-neutral or lower cost. It is a budget-neutral swap that removes vendors rather than adding a line item.',
-      'Distribution compounds through pharmacies. Incumbents charge pharmacies to integrate; Synthera integrates free, turning every pharmacy into a warm channel into the dozens of facilities it already serves. Every integration also feeds a proprietary medication and care dataset that grows with scale.',
-      'AltSpot led the pre-seed at $5.5M pre-money and is doubling down at $11M. We hold a board observer seat, receive monthly financials, and have direct CEO access. Our investors see what we see.',
+      'The grid is the bottleneck for everything: AI datacenters, electrification, and 2,900 gigawatts of generation and storage waiting in interconnection queues. Every project in that queue needs studies before it connects, and the studies are the chokepoint.',
+      'Calder replaces spreadsheet-era power-flow tooling with physics-informed models that produce regulator-ready studies in days instead of months, validated against the same reliability standards utilities are audited on.',
+      'The data moat compounds. Every study Calder runs enriches a living model of the transmission system that no point-in-time consultant and no legacy vendor holds. Utility number twelve gets a better product because of the first eleven.',
+      'AltSpot participated in the seed at $12M pre-money and is leading the Series A at $30M. We hold a board observer seat, receive monthly financials, and have direct CEO access. Our investors see what we see.',
     ],
     // The standard set. Gaps are left genuinely empty rather than guessed:
     // they render as "Not disclosed" and are the diligence list to close.
     indicators: {
-      revenue: { value: '$840K', note: 'Contracted ARR. 12 companies, ~70 facilities.' },
-      growth: { value: '~68%', note: 'Contracted ARR growth in the last month.' },
-      grossMargin: { value: '70%+', note: 'At scale. Software gross margin above 80%.' },
-      burn: { value: '~$65K', note: 'Per month. Lean and pre-scale.' },
-      entryMultiple: { value: '~13x', note: '$11M pre-money on $840K contracted ARR.' },
+      revenue: { value: '$2.4M', note: 'Contracted ARR. 11 utilities, 4 top-10 renewable developers.' },
+      growth: { value: '3.1x', note: 'Contracted ARR growth, trailing twelve months.' },
+      grossMargin: { value: '79%', note: 'Software gross margin.' },
+      burn: { value: '~$210K', note: 'Per month. 20+ months of runway post-round.' },
+      entryMultiple: { value: '~12.5x', note: '$30M pre-money on $2.4M contracted ARR.' },
     },
     rounds: [
       {
-        round: 'Pre-seed',
+        round: 'Seed',
         date: '2025',
-        preMoney: '$5,500,000',
-        note: 'AltSpot led. First money in.',
+        preMoney: '$12,000,000',
+        note: 'AltSpot participated alongside a deep-tech seed fund.',
       },
       {
-        round: 'Series Seed',
-        date: 'Jun 2026',
-        preMoney: '$11,000,000',
-        note: 'AltSpot leading again with $500,000 of its own capital.',
+        round: 'Series A',
+        date: 'Aug 2026',
+        preMoney: '$30,000,000',
+        note: 'AltSpot leading with $600,000 of its own capital.',
         current: true,
       },
     ],
     metrics: [
-      { k: 'Contracted ARR', v: '$840K', note: '12 companies · ~70 facilities' },
-      { k: 'ARR growth', v: '~68%', note: 'in the last month' },
-      { k: 'In final negotiations', v: '~$4.9M', note: '~234 facilities' },
-      { k: 'Qualified pipeline', v: '$25M+', note: '1,500+ facilities' },
-      { k: 'Monthly burn', v: '~$65K', note: 'lean, pre-scale' },
-      { k: 'Gross margin at scale', v: '70%+' },
-      { k: 'Total addressable market', v: '$26.5B' },
-      { k: 'Close rate', v: '~70%', note: 'from decision stage forward' },
+      { k: 'Contracted ARR', v: '$2.4M', note: '11 utilities · 4 top-10 developers' },
+      { k: 'ARR growth', v: '3.1x', note: 'trailing twelve months' },
+      { k: 'Study time', v: '6 days', note: 'vs. a 14-month industry median' },
+      { k: 'Qualified pipeline', v: '$18M', note: '40+ utilities in procurement' },
+      { k: 'Logo retention', v: '100%', note: 'no utility has ever left' },
+      { k: 'Gross margin', v: '79%' },
+      { k: 'Active interconnection queue', v: '2,900 GW' },
+      { k: 'Monthly burn', v: '~$210K', note: 'disciplined, post-revenue' },
     ],
     summary:
-      'Synthera replaces the three to five disconnected systems a senior care facility runs today with one AI-native platform. Contracted ARR is $840K across 12 companies and roughly 70 facilities, up about 68% in a month. AltSpot led the pre-seed and is leading this round with $500,000 of its own capital.',
-    // TODO: confirm with Ryan. Placeholder until the real figure is supplied.
-    pricePerShare: 'Confirm before send',
+      'Calder Grid sells physics-informed AI that runs the interconnection and planning studies the electric grid depends on, compressing a 14-month process into days. Contracted ARR is $2.4M across 11 investor-owned utilities and 4 of the ten largest renewable developers, up 3.1x in twelve months. AltSpot participated in the seed and is leading the Series A with $600,000 of its own capital.',
     whatWeLike: [
-      'A large regional operator dropped the category’s dominant platform and chose Synthera across 50+ facilities and 1,000+ licenses.',
-      'It is a budget-neutral swap. Synthera replaces three to five systems at net-neutral or lower cost, so it removes vendors instead of adding a line item.',
-      'Pharmacies are the distribution wedge. Incumbents charge them to integrate; Synthera integrates free, turning each one into a warm channel into dozens of facilities.',
-      'One operator lands many facilities. The average pipeline company brings roughly 28.5 facilities at about 50 licenses each.',
-      'We have been inside this deal since the pre-seed at $5.5M pre-money, with a board observer seat, monthly financials and direct CEO access.',
+      'The buyer has no alternative that is both fast and audit-grade. Consultants are slow, legacy tools predate the engineers using them, and the queue roughly doubles every three years.',
+      'Multi-year contracts with 100% logo retention. A utility that files Calder studies with its regulator has made a switching decision measured in decades.',
+      'Every study compounds the dataset. Calder holds a living model of the transmission system that gets harder to replicate with each engagement.',
+      'Demand is structural. AI datacenter load growth alone underwrites the queue for a decade, and every megawatt needs a study before it connects.',
+      'We have been inside the company since the seed, with a board observer seat, monthly financials and direct CEO access.',
     ],
     terms: [
-      { k: 'Security', v: 'Series Seed Preferred Stock' },
-      { k: 'Pre-money valuation', v: '$11,000,000' },
-      { k: 'Round size', v: '$2,000,000' },
+      { k: 'Security', v: 'Series A Preferred Stock' },
+      { k: 'Pre-money valuation', v: '$30,000,000' },
+      { k: 'Round size', v: '$6,000,000' },
     ],
     preferredTerms: [
       { k: 'Liquidation preference', v: '1x non-participating' },
       { k: 'Pro-rata rights', v: 'Yes' },
-      { k: 'Revenue share', v: '5% of top line to a 1.5x cap' },
-      { k: 'Warrant coverage', v: '30% at seed price' },
+      { k: 'Option pool', v: '10% post-money' },
       { k: 'Board rights', v: 'Observer seat held by AltSpot' },
       { k: 'Reporting', v: 'Monthly financials to investors' },
     ],
     outcomes: {
       intro:
-        'Vertical AI SaaS trades at a premium and the buyer universe is deep. The category’s dominant incumbent has made 10+ acquisitions, and a large regional operator just left it for Synthera.',
+        'Critical-infrastructure software trades at a premium and consolidates aggressively. The grid software incumbents have made dozens of acquisitions between them, and none of them owns an AI-native study engine.',
       scenarios: [
-        { k: '$5M ARR', v: '3 to 7x', note: 'at 6 to 8x revenue' },
-        { k: '$10M ARR', v: '5 to 14x', note: 'at 8 to 15x revenue' },
-        { k: '$20M ARR', v: '11 to 27x', note: 'at 6 to 15x revenue' },
+        { k: '$10M ARR', v: '3 to 4x', note: 'at 10 to 14x revenue' },
+        { k: '$25M ARR', v: '7 to 10x', note: 'at 10 to 14x revenue' },
+        { k: '$50M ARR', v: '14 to 19x', note: 'at 10 to 14x revenue' },
       ],
       comparables: [
-        { company: 'Category incumbent', context: 'Senior care EHR, 10+ acquisitions', valuation: '$5B+', multiple: '~7 to 8x rev' },
-        { company: 'MatrixCare', context: 'Acquired by ResMed', valuation: '$750M', multiple: '~6x rev' },
-        { company: 'Veeva Systems', context: 'Vertical SaaS, life sciences', valuation: '$35B+', multiple: '~12x rev' },
-        { company: 'ServiceTitan', context: 'Vertical SaaS, trades', valuation: '$9B+', multiple: '~13x rev' },
-        { company: 'Toast', context: 'Vertical SaaS, restaurants', valuation: '$18B+', multiple: '~8x rev' },
-        { company: 'Procore', context: 'Vertical SaaS, construction', valuation: '$12B+', multiple: '~11x rev' },
+        { company: 'Aspen Technology', context: 'Industrial process software, acquired by Emerson', valuation: '$16B', multiple: '~13x rev' },
+        { company: 'Bentley Systems', context: 'Infrastructure engineering software', valuation: '$16B+', multiple: '~11x rev' },
+        { company: 'Grid software incumbent', context: 'Decades of acquisitions in T&D tooling', valuation: '$10B+', multiple: '~9x rev' },
+        { company: 'Vertical SaaS median', context: 'Public vertical software basket', valuation: 'n/a', multiple: '8 to 13x rev' },
       ],
       note:
-        'Illustrative only, based on an $11M entry. Outcomes depend on exit timing, dilution and valuation, and no return is promised. The 5% revenue share pays before any exit.',
+        'Illustrative only, based on a $30M entry. Outcomes depend on exit timing, dilution and valuation, and no return is promised.',
     },
     risks:
-      'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: revenue is concentrated in a small number of operators, and losing one materially changes the picture; the "in final negotiations" and pipeline figures are modeled from operator averages and are not signed contracts; senior care is regulated and reimbursement-sensitive, and rule changes can slow adoption; the category’s incumbents are well capitalized and acquisitive; and the position is illiquid with no public market and no promised exit timeline. AltSpot’s own $500,000 carries these same risks.',
+      'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: utility sales cycles are long and budget-driven, and slippage of a few procurements materially changes the growth picture; regulators must continue accepting model-based studies, and a policy reversal would slow adoption; incumbent vendors and large consultancies are well capitalized and could bundle competing tools; and the position is illiquid with no public market and no promised exit timeline. AltSpot’s own $600,000 carries these same risks.',
     minInvestment: 10000,
     allocationTotal: 2000000,
     allocationRemaining: 640000,
-    targetClose: 'Aug 29, 2026',
-    altspotCommitted: 500000,
+    targetClose: 'Sep 18, 2026',
+    altspotCommitted: 600000,
     committedNote:
-      'AltSpot led the pre-seed and is leading this round with $500,000 of its own capital.',
+      'AltSpot participated in the seed and is leading this round with $600,000 of its own capital.',
     sortOrder: 0,
     fees: FEES,
     media: {
       type: 'metric',
       label: 'Contracted ARR',
-      series: [40, 78, 145, 210, 305, 420, 500, 840],
+      series: [150, 290, 480, 760, 1150, 1600, 2000, 2400],
       caption:
-        'Contracted ARR in $K, monthly. Contracted figures verified with the company; pipeline figures are modeled and excluded here.',
+        'Contracted ARR in $K by quarter. Contracted figures verified with the company; pipeline is excluded here.',
     },
     docs: [
-      'Private Placement Memorandum: ASC Synthera II, LLC',
-      'Subscription Agreement: ASC Synthera II, LLC',
-      'Operating Agreement: ASC Synthera II, LLC',
+      'Private Placement Memorandum: ASC Calder I, LLC',
+      'Subscription Agreement: ASC Calder I, LLC',
+      'Operating Agreement: ASC Calder I, LLC',
       'Accredited Investor Questionnaire (Exhibit A)',
       'Funding Instructions',
     ],
     spotbot: [
       {
         q: 'What exactly am I buying?',
-        a: 'Class B Common Units in ASC Synthera II, LLC, a Delaware special-purpose vehicle formed by AltSpot to hold Series Seed Preferred Stock in Synthera AI, Inc. along with associated warrants. You own units in the SPV, not shares of Synthera directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+        a: 'Class B Common Units in ASC Calder I, LLC, a Delaware special-purpose vehicle formed by AltSpot to hold Series A Preferred Stock in Calder Grid, Inc. You own units in the SPV, not shares of Calder directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
       },
       {
         q: 'How is AltSpot paid on this deal?',
-        a: 'A 5% management fee, charged once at closing, not annually. Then 10% carried interest on profits at exit. That is the entire fee model: no annual fees, no capital calls, no hidden charges. Separately, the SPV holds a 5% revenue share in Synthera to a 1.5x cap, which is a term of the investment rather than a fee paid to AltSpot. Not legal, tax, or investment advice.',
+        a: 'A 5% management fee, charged once at closing, not annually. Then 10% carried interest on profits at exit. That is the entire fee model: no annual fees, no capital calls, no hidden charges. Not legal, tax, or investment advice.',
       },
       {
         q: 'What are the biggest risks?',
-        a: 'Early-stage loss risk is real and total loss is possible. The vehicle holds one position, so there is no diversification. Revenue is concentrated in a small number of operators. The pipeline and "in final negotiations" figures are modeled from operator averages, not signed contracts. The position is illiquid with no promised exit. AltSpot’s own $500,000 carries these same risks. Please read the risk factors in the Memorandum before subscribing.',
+        a: 'Early-stage loss risk is real and total loss is possible. The vehicle holds one position, so there is no diversification. Utility procurement is slow, and a few slipped contracts change the growth picture. Regulatory acceptance of model-based studies must continue. The position is illiquid with no promised exit. AltSpot’s own $600,000 carries these same risks. Please read the risk factors in the Memorandum before subscribing.',
       },
       {
-        q: 'What is the revenue share?',
-        a: 'Once Synthera exceeds $1M in ARR, the SPV receives 5% of top-line revenue until it has returned 1.5x the investment. That produces cashflow before any exit event. If Synthera raises a qualified VC up round, AltSpot steps out of the revenue share and takes 30% warrant coverage at this round’s price instead. Details are in the Memorandum. Not legal, tax, or investment advice.',
+        q: 'What makes the data moat real?',
+        a: 'Every study Calder runs adds validated detail to a living model of the transmission system: line ratings, congestion behavior, protection settings, study outcomes. That corpus makes the next study faster and more accurate, which wins the next utility, which grows the corpus. A new entrant starts from zero and a consultant starts over on every engagement. Details are in the Memorandum. Not legal, tax, or investment advice.',
       },
     ],
     deck: [
       {
         kicker: 'The problem',
-        title: 'Six systems, none of which talk to each other.',
+        title: 'The grid has a 2,900 gigawatt waiting room.',
         body: [
-          'A typical facility runs medication administration in one system, scheduling in another, billing in a third, and tracks care on paper. 90%+ of the 60,000+ U.S. senior care facilities are small operators with no modern technology at all.',
-          'Every facility has a physical address and a known decision-maker, which makes this a high-volume, short-cycle sale rather than a multi-year enterprise cycle.',
+          'Everything the economy wants to build next, AI datacenters, factories, storage, generation, waits in an interconnection queue. Before anything connects, the utility must study how it affects the grid.',
+          'Those studies run on decades-old power-flow tools and consultant spreadsheets. The median study takes 14 months, and the queue roughly doubles every three years.',
         ],
         stats: [
-          { k: 'U.S. facilities', v: '60,000+' },
-          { k: 'Small operators, no modern tech', v: '90%+' },
-          { k: 'TAM', v: '$26.5B' },
+          { k: 'Active queue', v: '2,900 GW' },
+          { k: 'Median study time', v: '14 mo' },
+          { k: 'Study software TAM', v: '$9B' },
         ],
       },
       {
         kicker: 'The product',
-        title: 'One AI-native platform. Six systems replaced.',
+        title: 'Regulator-grade studies in days, not months.',
         body: [
-          'Care tracking, eMAR, billing, scheduling, assessments and an embedded AI assistant in a single system, built caregiver-first so frontline staff actually adopt it.',
-          'Synthera replaces three to five systems at net-neutral or lower cost with 80%+ software gross margin. It removes vendors rather than adding a line item.',
+          'Calder runs physics-informed models of the transmission system that produce complete interconnection and planning studies in about six days, validated against the same NERC reliability standards utilities are audited on.',
+          'Utilities file Calder studies directly with their regulators. This is not a copilot beside the workflow; it is the workflow.',
         ],
       },
       {
-        kicker: 'Distribution',
-        title: 'Pharmacies are the wedge, and they are free.',
+        kicker: 'The moat',
+        title: 'Every study makes the next one smarter.',
         body: [
-          'In senior care, pharmacies and facilities are tightly coupled through medication administration. Incumbents charge pharmacies to integrate. Synthera integrates free.',
-          'Each pharmacy serves dozens of facilities and becomes a warm introduction to every one of them. The integration is free, the facilities pay, and the data compounds.',
-        ],
-      },
-      {
-        kicker: 'Unit economics',
-        title: 'One operator lands many facilities.',
-        body: [
-          'The average pipeline company brings ~28.5 facilities. The average facility carries ~50 licenses at $30–40 per user per month, roughly $18–24K ARR per facility.',
-          'Landing a single multi-facility operator compounds into dozens of facilities and thousands of licenses: enterprise leverage on a facility-level sales cadence.',
-        ],
-        stats: [
-          { k: 'Facilities per company', v: '~28.5' },
-          { k: 'Licenses per facility', v: '~50' },
-          { k: 'ARR per facility', v: '$18–24K' },
+          'Each engagement adds validated grid detail to a living model no legacy vendor or consultant holds: line ratings, congestion behavior, protection settings, outcomes.',
+          'The corpus makes the next study faster and more accurate, which wins the next utility, which grows the corpus. Compounding, in software form.',
         ],
       },
       {
         kicker: 'Why now',
-        title: 'The market leader is already losing accounts.',
+        title: 'Load growth broke the old process.',
         body: [
-          'Legacy incumbents bolt AI onto an existing EHR. Synthera was AI-native from day one, with a caregiver-first workflow that drives organic frontline adoption instead of staff resistance.',
-          'A large regional operator dropped the dominant legacy platform and chose Synthera. Close rate from decision stage forward is ~70%.',
+          'For twenty years demand was flat and slow studies were tolerable. AI datacenters and electrification ended that: utilities are now mandated to clear queues they cannot clear with the old tools.',
+          'Regulators have begun accepting model-based studies, and the first movers are already filing them.',
+        ],
+      },
+      {
+        kicker: 'Unit economics',
+        title: 'Utilities sign for years, not projects.',
+        body: [
+          'Calder sells multi-year platform contracts, not per-study engagements. Logo retention is 100%, and expansion comes from adding study types and service territories.',
+          'Gross margin is 79% today and rises with every study the models have already learned from.',
+        ],
+        stats: [
+          { k: 'Logo retention', v: '100%' },
+          { k: 'Gross margin', v: '79%' },
+          { k: 'Net expansion', v: '135%' },
         ],
       },
       {
         kicker: 'Exit',
-        title: 'Vertical AI SaaS trades at a premium.',
+        title: 'Critical infrastructure software trades at a premium.',
         body: [
-          'The category’s dominant incumbent is valued above $5B at roughly 7–8x revenue and has made 10+ acquisitions. Comparable vertical SaaS trades between 6x and 13x revenue: Veeva, ServiceTitan, Toast, Procore.',
-          'At an $11M entry, $5M ARR implies a 3–7x return and $10M ARR implies 5–14x, before the revenue share. Illustrative only; returns depend on exit timing, dilution and valuation.',
+          'Aspen Technology went to Emerson at roughly 13x revenue. Bentley trades near 11x. The grid software incumbents have made dozens of acquisitions and none owns an AI-native study engine.',
+          'At a $30M entry, $10M ARR implies 3 to 4x and $25M ARR implies 7 to 10x. Illustrative only; returns depend on exit timing, dilution and valuation.',
         ],
         stats: [
-          { k: '$5M ARR', v: '3–7x' },
-          { k: '$10M ARR', v: '5–14x' },
-          { k: '$20M ARR', v: '11–27x' },
+          { k: '$10M ARR', v: '3–4x' },
+          { k: '$25M ARR', v: '7–10x' },
+          { k: '$50M ARR', v: '14–19x' },
         ],
       },
     ],
@@ -617,7 +613,7 @@ async function main() {
     });
   }
 
-  console.log(`Seeded ${DEALS.length} deals (Synthera AI leading).`);
+  console.log(`Seeded ${DEALS.length} deals (Calder Grid leading).`);
 }
 
 main()

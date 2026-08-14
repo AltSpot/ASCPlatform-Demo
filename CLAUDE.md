@@ -48,7 +48,7 @@ Concretely:
   `altspot-portal` static demo is retired and deleted; the running app is its
   own visual reference.
 - **Real companies appear only as clearly illustrative deals.** The lead deal,
-  Synthera AI, is an invented company whose deal package mirrors the shape of a
+  Calder Grid, is an invented company whose deal package mirrors the shape of a
   real one. Per Ryan's direction (2026-08-11), the shelf also carries the
   AltSpot Growth Fund and two real-company secondaries, OpenAI and Databricks,
   with their real logos. Every term shown for them (price, discount,
@@ -112,7 +112,7 @@ lib/
   client/api.ts             the ONLY place the browser calls fetch
 prisma/
   schema.prisma             production-shaped; SQLite today, Postgres later
-  seed.ts                   four deals, Synthera AI leading
+  seed.ts                   four deals, Calder Grid leading
 scripts/                    dev-server supervisor, db reset, optional autostart
 ```
 
@@ -148,7 +148,7 @@ renders it in a fixed order so deals compare like for like: hero, AltSpot's
 committed capital, the stat band, the story chapters, the thesis, the trend
 chart, risk, terms, the two fees, the data room, the ask. Every section returns
 `null` when its content is missing, because the deals behind the lead carry far
-thinner editorial than Synthera. `/deals/[id]/deck` is a permanent redirect
+thinner editorial than Calder. `/deals/[id]/deck` is a permanent redirect
 kept only so old links land somewhere sensible.
 
 ### The subscription document

@@ -10,7 +10,7 @@
  * because the whole model is two numbers and it belongs next to the ask.
  *
  * Every section degrades to nothing when its content is missing, since
- * the deals behind the lead carry far thinner editorial than Synthera.
+ * the deals behind the lead carry far thinner editorial than Calder.
  *
  * None of it is rendered for a member who is not a verified accredited
  * investor. The repository hands this page a teaser in that case, so the

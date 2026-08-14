@@ -96,8 +96,8 @@ const FIXTURES: NewsFixture[] = [
     minutesAgo: 96,
   },
   {
-    id: 'wire-synthera-series-c',
-    headline: 'Synthera AI prices its Series C with no structure attached',
+    id: 'wire-loma-series-c',
+    headline: 'Loma Clinical prices its Series C with no structure attached',
     dek: 'The clinical-workflow company closed a preferred round at a flat 1x non-participating preference. No ratchet, no pay-to-play, no cumulative dividend.',
     source: 'Cap Table Weekly',
     category: 'Venture',

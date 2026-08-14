@@ -248,7 +248,7 @@ describe('the gate runs before the answer engine', () => {
     // way round. Getting the refusal copy back verbatim is the evidence
     // the engine was not consulted at all.
     for (const [question, reason] of ADVICE) {
-      const answer = await askSpotBot({ question, pathname: '/deals/synthera-ai' });
+      const answer = await askSpotBot({ question, pathname: '/deals/calder-grid' });
       assert.equal(answer.refused, true, `"${question}" reached the engine`);
       assert.equal(answer.reason, reason);
       assert.deepEqual(answer, refusalAnswer(reason));
@@ -283,7 +283,7 @@ describe('where the classifier defers, and what catches it', () => {
     for (const question of [
       'Will this double?',
       'Will this company double?',
-      'Will Synthera double?',
+      'Will Calder double?',
       'Will the deal exit?',
       'Is this worth it?',
       'Is this deal worth it?',
@@ -317,7 +317,7 @@ describe('where the classifier defers, and what catches it', () => {
       'Is the minimum a lot?',
       'Do people usually like this one?',
     ]) {
-      const answer = await askSpotBot({ question, pathname: '/deals/synthera-ai' });
+      const answer = await askSpotBot({ question, pathname: '/deals/calder-grid' });
       assert.equal(answer.refused, false);
       assert.ok(answer.source.trim().length > 0, 'an answer was produced with no provenance');
       assert.match(

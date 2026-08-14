@@ -64,7 +64,7 @@ const RULES: readonly GateRule[] = [
       /\bwhat returns?\b/,
       /\b(should|can|will) (i|we) expect\b/,
       // The subject is one or two words on purpose: "will this double",
-      // "will this company double", "will synthera ipo". Asking whether any
+      // "will this company double", "will calder ipo". Asking whether any
       // subject will double or exit is a prediction regardless of the noun.
       /\bwill \w+( \w+)? (go up|double|triple|succeed|fail|work out|exit|ipo|\d+ ?x|be worth)\b/,
       /\b(how likely|what are the (odds|chances)|probability of)\b/,
