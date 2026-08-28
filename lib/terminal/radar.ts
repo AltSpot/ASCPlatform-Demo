@@ -78,11 +78,55 @@ export interface RadarResearch {
   newsroomUrl: string;
 }
 
+/**
+ * Asset classes AltSpot actually transacts in. The deck's line is the
+ * scope: institutional venture and growth equity positions taken onto
+ * the balance sheet, plus the secondary and real-asset routes into the
+ * same companies. Anything outside these four is not a Radar name.
+ *
+ * The two cool tints are the V18 category set, which exists for exactly
+ * this: taxonomy, never chrome.
+ */
+export const ASSET_CLASSES = {
+  venture: { label: 'Venture', tint: 'gold' },
+  growth: { label: 'Growth equity', tint: 'signal' },
+  secondary: { label: 'Secondaries', tint: 'secondary' },
+  'real-asset': { label: 'Real assets', tint: 'realasset' },
+} as const;
+
+export type AssetClass = keyof typeof ASSET_CLASSES;
+
+/**
+ * The industry taxonomy. Deliberately the standard private-markets set
+ * rather than only what is on the board today, so a name added next
+ * week has a bucket waiting instead of inventing one. The filter offers
+ * only the industries actually present, because a control that filters
+ * to nothing is worse than no control.
+ */
+export const INDUSTRIES = {
+  'artificial-intelligence': 'Artificial intelligence',
+  'enterprise-software': 'Enterprise software',
+  'data-infrastructure': 'Data infrastructure',
+  cybersecurity: 'Cybersecurity',
+  fintech: 'Financial technology',
+  healthcare: 'Healthcare and life sciences',
+  'aerospace-defense': 'Aerospace and defence',
+  'energy-climate': 'Energy and climate',
+  industrials: 'Industrials and manufacturing',
+  'consumer-marketplaces': 'Consumer and marketplaces',
+  'logistics-supply-chain': 'Logistics and supply chain',
+  'real-estate': 'Real estate',
+} as const;
+
+export type Industry = keyof typeof INDUSTRIES;
+
 export interface RadarCompany {
   /** Stable key. Also the value persisted on RadarInterest.companySlug. */
   slug: string;
   name: string;
-  sector: string;
+  /** Drives the label and the tint. One source, so they cannot drift. */
+  industry: Industry;
+  assetClass: AssetClass;
   /** What the company does. Public, factual, no financial claims. */
   description: string;
   /**
@@ -117,7 +161,8 @@ const COMPANIES: RadarCompany[] = [
   {
     slug: 'openai',
     name: 'OpenAI',
-    sector: 'Artificial intelligence',
+    industry: 'artificial-intelligence',
+    assetClass: 'growth',
     logoUrl: '/openai-logo.svg',
     description:
       'Research lab and product company behind ChatGPT and the GPT model family, selling models to developers and enterprises.',
@@ -174,7 +219,8 @@ const COMPANIES: RadarCompany[] = [
   {
     slug: 'spacex',
     name: 'SpaceX',
-    sector: 'Aerospace',
+    industry: 'aerospace-defense',
+    assetClass: 'secondary',
     description:
       'Launch provider and operator of the Starlink satellite internet network, with a reusable rocket fleet flying commercial and government payloads.',
     marketAverageCents: 18_500,
@@ -230,7 +276,8 @@ const COMPANIES: RadarCompany[] = [
   {
     slug: 'anthropic',
     name: 'Anthropic',
-    sector: 'Artificial intelligence',
+    industry: 'artificial-intelligence',
+    assetClass: 'growth',
     description:
       'AI safety company building the Claude models and selling them through an API, apps and cloud marketplaces.',
     marketAverageCents: 16_400,
@@ -287,7 +334,8 @@ const COMPANIES: RadarCompany[] = [
   {
     slug: 'databricks',
     name: 'Databricks',
-    sector: 'Data infrastructure',
+    industry: 'data-infrastructure',
+    assetClass: 'growth',
     logoUrl: '/databricks-logo.svg',
     description:
       'Data and AI platform built on the lakehouse architecture, used by enterprises to run analytics and machine learning on their own data.',

@@ -18,15 +18,20 @@
  * its own panel, because it is the one figure here that is ours rather
  * than the market's.
  */
+import { Building2, Layers, Sprout, TrendingUp } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useId, useState } from 'react';
 
 import { useToast } from '@/components/Toast';
 import { api, ApiError } from '@/lib/client/api';
 import { EMPTY, money } from '@/lib/format';
 import {
+  ASSET_CLASSES,
+  INDUSTRIES,
   MAX_INDICATION,
   priceFromCents,
   valuationShort,
+  type AssetClass,
   type RadarCompanyView,
 } from '@/lib/terminal/radar';
 
@@ -54,18 +59,23 @@ function compactDollars(value: number): string {
 }
 
 /**
- * Sector tint, from the V18 category set. These are the documented
- * exception to "no blue, green or purple": taxonomy, never chrome. A
- * sector with no tint falls through to champagne, which is the quiet
- * layer and always correct.
+ * Asset class carries the mark and the tint. The two cool tints are the
+ * V18 category set, which exists for exactly this: taxonomy, never
+ * chrome. Matching lib/terminal/radar.ts, which is the source.
  */
-function sectorTint(sector: string): string | undefined {
-  const key = sector.toLowerCase();
-  if (key.includes('artificial intelligence')) return s.tintViolet;
-  if (key.includes('aerospace')) return s.tintSecondary;
-  if (key.includes('data')) return s.tintRealasset;
-  return undefined;
-}
+const CLASS_ICON: Record<AssetClass, LucideIcon> = {
+  venture: Sprout,
+  growth: TrendingUp,
+  secondary: Layers,
+  'real-asset': Building2,
+};
+
+const CLASS_TINT: Record<AssetClass, string> = {
+  venture: s.tintGold,
+  growth: s.tintSignal,
+  secondary: s.tintSecondary,
+  'real-asset': s.tintRealasset,
+};
 
 export default function RadarCard({
   company,
@@ -151,9 +161,16 @@ export default function RadarCard({
 
         <div className={s.identity}>
           <h3 className={s.name}>{view.name}</h3>
-          <span className={`${s.sector} ${sectorTint(view.sector) ?? ''}`}>
-            {view.sector}
-          </span>
+          <div className={s.taxo}>
+            <span className={`${s.sector} ${CLASS_TINT[view.assetClass]}`}>
+              {(() => {
+                const Icon = CLASS_ICON[view.assetClass];
+                return <Icon size={11} strokeWidth={1.6} aria-hidden="true" />;
+              })()}
+              {ASSET_CLASSES[view.assetClass].label}
+            </span>
+            <span className={s.industry}>{INDUSTRIES[view.industry]}</span>
+          </div>
         </div>
 
         <span className={s.rank} aria-label={`Rank ${rank} by demand`}>

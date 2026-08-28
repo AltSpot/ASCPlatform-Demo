@@ -159,6 +159,9 @@
 /* Sector chip. The tint is the V18 category set, which is taxonomy and
    the documented exception to "no blue, green or purple". */
 .sector {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.14em;
@@ -172,11 +175,13 @@
 }
 
 .tintSecondary {
+  --chip-tint: var(--as-cat-secondary);
   color: var(--as-cat-secondary);
   border-color: rgba(124, 180, 245, 0.35);
   background: rgba(124, 180, 245, 0.07);
 }
 .tintRealasset {
+  --chip-tint: var(--as-cat-realasset);
   color: var(--as-cat-realasset);
   border-color: rgba(85, 208, 176, 0.35);
   background: rgba(85, 208, 176, 0.07);
@@ -733,4 +738,132 @@
   .board {
     grid-template-columns: 1fr;
   }
+}
+
+/* ------------------------------------------------------------------
+   Filters. Two axes: asset class carries its tint and mark, industry
+   stays a plain pill. Two coloured axes on one control reads as
+   decoration, and asset class is what an investor screens on first.
+   ------------------------------------------------------------------ */
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.filterLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--as-text-faint);
+  width: 92px;
+  flex: none;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  border: 1px solid var(--hair-neutral);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--r-pill);
+  padding: 7px 14px;
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.filterChip:hover {
+  color: var(--as-text);
+  border-color: var(--hair-gold-active);
+}
+
+/* Selected reads as filled rather than merely brighter, because with
+   two axes you need to see at a glance which one is doing the work. */
+.filterOn {
+  color: var(--as-ink);
+  background: var(--chip-tint, var(--as-gold));
+  border-color: transparent;
+  font-weight: var(--w-medium);
+}
+
+.filterFoot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 92px;
+}
+
+.filterCount {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+}
+
+.filterClear {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--as-text-faint);
+  padding: 0;
+}
+.filterClear:hover {
+  color: var(--accent-hot);
+}
+
+/* Asset class tints for the two brand accents. The cool pair already
+   exists above for the category set. */
+.tintGold {
+  --chip-tint: var(--as-gold);
+  color: var(--as-gold);
+  border-color: var(--hair-champagne);
+  background: rgba(199, 154, 75, 0.07);
+}
+.tintSignal {
+  --chip-tint: var(--accent-signal);
+  color: var(--accent-signal);
+  border-color: var(--hair-gold-active);
+  background: var(--fill-gold-tint);
+}
+
+/* Card identity: class chip, then industry as the quiet second line. */
+/* Column, not wrap. Wrapping put the industry beside the class chip on
+   a short label and below it on a long one, so no two cards agreed. */
+.taxo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.industry {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--as-text-faint);
 }
