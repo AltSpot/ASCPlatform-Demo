@@ -21,6 +21,7 @@ import { RESUMABLE_STATES } from '@/lib/domain';
 import { listDealsForViewer } from '@/lib/repositories/deals';
 import { getRadarBoard } from '@/lib/repositories/radar';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
+import { listWatchlist } from '@/lib/repositories/watchlist';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,11 +32,12 @@ export default async function MarketplacePage({
 }) {
   const user = await requireUser();
 
-  const [{ view }, deals, subscriptions, radar] = await Promise.all([
+  const [{ view }, deals, subscriptions, radar, watchlist] = await Promise.all([
     searchParams,
     listDealsForViewer(user.id),
     listSubscriptions(user.id),
     getRadarBoard(user.id),
+    listWatchlist(user.id),
   ]);
 
   const resumable = new Map(
@@ -52,7 +54,13 @@ export default async function MarketplacePage({
         initial={initial}
         dealCount={deals.length}
         radarCount={radar.length}
-        current={<DealShelf deals={deals} resumable={resumable} />}
+        current={
+          <DealShelf
+            deals={deals}
+            resumable={resumable}
+            watched={new Set(watchlist)}
+          />
+        }
         radar={<RadarBoard companies={radar} />}
       />
     </>

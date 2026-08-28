@@ -9,6 +9,7 @@
  * directions are idempotent server side, so a fast double click settles
  * rather than errors.
  */
+import { Star } from 'lucide-react';
 import { useState } from 'react';
 
 import { useToast } from '@/components/Toast';
@@ -53,9 +54,13 @@ export default function WatchToggle({
       aria-pressed={watched}
       aria-label={watched ? 'Remove from your watchlist' : 'Add to your watchlist'}
     >
-      <span className={s.watchMark} aria-hidden="true">
-        {watched ? '★' : '☆'}
-      </span>
+      <Star
+        className={s.watchMark}
+        size={15}
+        strokeWidth={1.5}
+        fill={watched ? 'currentColor' : 'none'}
+        aria-hidden="true"
+      />
       {watched ? 'On your watchlist' : 'Add to watchlist'}
     </button>
   );

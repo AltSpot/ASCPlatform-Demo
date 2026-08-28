@@ -159,3 +159,48 @@
     letter-spacing: 0.1em;
   }
 }
+
+/* ------------------------------------------------------------------
+   Watchlist star, top right of a card's artwork. Glass so it seats on
+   any deal art, light or dark, the same way the tag chip does.
+   ------------------------------------------------------------------ */
+.star {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: rgba(10, 8, 6, 0.66);
+  backdrop-filter: blur(4px);
+  color: var(--as-text-body);
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    transform var(--dur-micro) ease;
+}
+.star:hover {
+  color: var(--accent-hot);
+  border-color: var(--hair-gold-active);
+  transform: translateY(-1px);
+}
+.starOn {
+  color: var(--as-gold);
+  border-color: var(--hair-gold-active);
+}
+.starOn:hover {
+  color: var(--accent-hot);
+}
+
+/* Where an investor left off, said on the card instead of only in the
+   button label, so the shelf is scannable. */
+.resumeChip {
+  align-self: start;
+}

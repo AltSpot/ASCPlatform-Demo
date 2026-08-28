@@ -223,8 +223,7 @@
 }
 
 .watchMark {
-  font-size: 13px;
-  line-height: 1;
+  flex: none;
 }
 
 /* ---------- accreditation gate ----------
@@ -796,4 +795,74 @@
 
 @media (max-width:900px){
   .extrasGrid{gap:24px}
+}
+
+/* ------------------------------------------------------------------
+   Jump nav. The deal page is one long read; this is how you get back
+   to a section without scrolling through the argument again.
+   ------------------------------------------------------------------ */
+.dealNav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 0 22px;
+  padding: 10px 0;
+  background: linear-gradient(180deg, var(--as-ink) 72%, transparent);
+  backdrop-filter: blur(10px) saturate(1.4);
+}
+
+.dealNavLink {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  padding: 7px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.dealNavLink:hover {
+  color: var(--accent-hot);
+  border-color: var(--hair-gold-active);
+  background: var(--fill-gold-tint);
+}
+
+/* Active section. Gold leads, so the marker is gold, not signal. */
+.dealNavOn {
+  color: var(--as-ink);
+  background: var(--as-cta-gradient);
+  border-color: transparent;
+}
+/* Re-assert the gradient. .dealNavLink:hover and .dealNavOn tie on
+   specificity, so without this the hover background wins and the ink
+   text lands on a near-transparent pill, which reads as blank. */
+.dealNavOn:hover {
+  color: var(--as-ink);
+  background: var(--as-cta-gradient);
+  border-color: transparent;
+}
+
+/* Clear the sticky nav when an anchor jump lands. */
+.section[id] {
+  scroll-margin-top: 74px;
+}
+
+@media (max-width: 720px) {
+  .dealNav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .dealNav::-webkit-scrollbar {
+    display: none;
+  }
 }

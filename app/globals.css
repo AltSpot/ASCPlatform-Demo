@@ -358,7 +358,10 @@ h2.display{font-size:28px}
   background:var(--as-cta-gradient);
   color:var(--fg-on-gold);box-shadow:var(--shadow-cta);
 }
-.btn-gold:hover{transform:translateY(-2px);box-shadow:var(--shadow-cta-hover)}
+.btn-gold:hover{
+  transform:translateY(-2px);box-shadow:var(--shadow-cta-hover);
+  color:var(--fg-on-gold);
+}
 /* The shine sweep from the marketing site, on the same clock. */
 .btn-gold::after{
   content:'';position:absolute;top:0;bottom:0;left:0;width:55%;pointer-events:none;
@@ -367,9 +370,12 @@ h2.display{font-size:28px}
 }
 @keyframes cta-shine{0%,72%{transform:translateX(-130%)}88%,100%{transform:translateX(300%)}}
 .btn-ghost{background:transparent;border-color:var(--hairg);color:var(--ink)}
-.btn-ghost:hover{background:rgba(243,152,7,.08)}
+.btn-ghost:hover{
+  background:rgba(243,152,7,.08);
+  border-color:var(--hair-gold-active);color:var(--accent-hot);
+}
 .btn-quiet{background:rgba(255,255,255,.04);color:var(--soft);border-color:var(--hair)}
-.btn-quiet:hover{color:var(--ink)}
+.btn-quiet:hover{color:var(--as-text);border-color:var(--hair-gold-active)}
 .btn[disabled]{opacity:.4;cursor:not-allowed;box-shadow:none}
 .btn-block{width:100%}
 .btn-sm{padding:8px 14px;font-size:13px}

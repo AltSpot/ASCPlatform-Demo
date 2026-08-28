@@ -23,7 +23,7 @@ export default function Section({
   children: ReactNode;
 }) {
   return (
-    <section className={s.section} id={id}>
+    <section className={s.section} id={id} data-nav-label={id ? eyebrow : undefined}>
       <div className={s.sectionHead}>
         <div className={s.eyebrow}>{eyebrow}</div>
         {title && <h2 className={s.sectionTitle}>{title}</h2>}

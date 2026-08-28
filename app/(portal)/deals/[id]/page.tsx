@@ -22,6 +22,7 @@ import { notFound } from 'next/navigation';
 import ClosingCta from '@/components/deal/ClosingCta';
 import DealGate from '@/components/deal/DealGate';
 import DealHero from '@/components/deal/DealHero';
+import DealNav from '@/components/deal/DealNav';
 import MetricChart from '@/components/deal/MetricChart';
 import Outcomes from '@/components/deal/Outcomes';
 import RiskPanel from '@/components/deal/RiskPanel';
@@ -111,6 +112,8 @@ export default async function DealPage({
       </div>
 
       <DealHero deal={deal} cta={cta} tools={watch} />
+
+      <DealNav />
 
       <SummaryMedia summary={deal.summary} dealName={deal.name} />
 

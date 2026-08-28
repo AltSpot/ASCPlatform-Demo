@@ -54,6 +54,7 @@
 .primary:hover:not(:disabled):not([aria-disabled='true']) {
   transform: translateY(-2px);
   box-shadow: var(--shadow-cta-hover);
+  color: var(--fg-on-gold);
 }
 
 /* ---- ghost: transparent pill on a neutral hairline ---- */
@@ -95,6 +96,7 @@
 }
 .ghostLight:hover:not(:disabled):not([aria-disabled='true']) {
   border-color: var(--as-gold);
+  color: var(--as-cream-ink);
 }
 
 .block {

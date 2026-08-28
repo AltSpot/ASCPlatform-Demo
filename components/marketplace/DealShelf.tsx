@@ -14,6 +14,7 @@
 import Link from 'next/link';
 
 import AllocBar from '@/components/AllocBar';
+import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
 import { money } from '@/lib/format';
@@ -23,10 +24,13 @@ import s from './Marketplace.module.css';
 export default function DealShelf({
   deals,
   resumable,
+  watched,
 }: {
   deals: DealShelfItem[];
   /** Live subscriptions keyed by deal, so a card can offer the way back in. */
   resumable: Map<string, SubscriptionView>;
+  /** Deal ids on this investor's watchlist. */
+  watched: Set<string>;
 }) {
   return (
     <>
@@ -74,6 +78,11 @@ export default function DealShelf({
             <div className="card deal-card" key={deal.id}>
               <div className="thumb" style={{ background: deal.art }}>
                 <span className="chip">{deal.tag}</span>
+                <WatchStar
+                  dealId={deal.id}
+                  dealName={deal.name}
+                  initialWatched={watched.has(deal.id)}
+                />
                 {deal.logoUrl && (
                   // The mark IS the artwork: large and centered, not a
                   // corner tile.
@@ -84,6 +93,11 @@ export default function DealShelf({
               </div>
 
               <div className="deal-body">
+                {resume && (
+                  <span className={`chip ${s.resumeChip}`}>
+                    {resume.state === 'docs_signed' ? 'Awaiting funding' : 'In progress'}
+                  </span>
+                )}
                 <h3>{deal.name}</h3>
                 <p className="small">{deal.blurb}</p>
 
