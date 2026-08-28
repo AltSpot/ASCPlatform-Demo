@@ -334,6 +334,11 @@ h2.display{font-size:28px}
 @media (min-width:1180px){
   body[data-spot-open='true'] .main{padding-right:432px}
 }
+/* Widened for reading a long answer. Needs more room again, and more
+   viewport before it is worth folding at all. */
+@media (min-width:1480px){
+  body[data-spot-wide='true'] .main{padding-right:668px}
+}
 .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:26px;flex-wrap:wrap}
 .page-head .titles{display:flex;flex-direction:column;gap:8px}
 

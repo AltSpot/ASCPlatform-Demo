@@ -1,22 +1,24 @@
 'use client';
 
 /**
- * SpotBotDock — the guide that follows the investor around the portal.
+ * Spot — the guide that follows the investor around the portal.
  *
- * Mounted once in the portal shell, so it survives client navigation and
- * the conversation persists as the investor moves between pages. It reads
- * the pathname on every render, which is what makes the greeting, the
- * brief and the suggested questions match the room you are standing in.
+ * Mounted once in the portal shell, so the conversation survives client
+ * navigation. It reads the pathname, which is what makes the greeting,
+ * the brief and the suggested questions match the page you are on.
  *
- * Everything it says comes back from POST /api/spotbot. The gate that
- * decides what SpotBot will not answer runs there, server-side, so nothing
- * in this file can loosen it.
+ * The gate in lib/spotbot/gate.ts is what keeps "explains, never
+ * advises" true. Nothing in this component is a control: it is the
+ * surface, and the server refuses before the answer engine is reached.
  *
- * Not to be confused with components/SpotBot.tsx, the per-deal Q&A card.
+ * Conversation state is kept in sessionStorage rather than memory alone,
+ * so a refresh mid-question does not lose the thread. It is deliberately
+ * session-scoped and never sent anywhere: a member's questions are their
+ * own, and Spot answers from a local knowledge base.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { Copy, Check, Maximize2, Minimize2, Trash2, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ask } from '@/lib/spotbot/client';
 import { pageContext } from '@/lib/spotbot/pages';
@@ -42,14 +44,44 @@ const UNREACHABLE: Omit<Message, 'id'> = {
   source: 'AltSpot platform guide',
 };
 
+const STORE_KEY = 'asc.spot.thread';
+/** Enough to keep the thread useful, short enough to stay cheap to store. */
+const KEEP = 40;
+
+/** Within this many pixels of the bottom counts as "reading the latest". */
+const AT_BOTTOM = 48;
+
+function loadThread(): Message[] {
+  try {
+    const raw = sessionStorage.getItem(STORE_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (m): m is Message =>
+        !!m &&
+        typeof m === 'object' &&
+        typeof (m as Message).body === 'string' &&
+        ((m as Message).role === 'you' || (m as Message).role === 'spotbot'),
+    );
+  } catch {
+    // A private window, cleared storage, or malformed JSON. An empty
+    // thread is always a correct answer here.
+    return [];
+  }
+}
+
 export default function SpotBotDock() {
   const pathname = usePathname() ?? '/';
   const page = useMemo(() => pageContext(pathname), [pathname]);
 
   const [open, setOpen] = useState(false);
+  const [wide, setWide] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [pinned, setPinned] = useState(true);
   /**
    * The last answer's follow-ups, tagged with the page they were offered
    * on. Tagging rather than clearing keeps this derived: follow-ups about
@@ -61,20 +93,44 @@ export default function SpotBotDock() {
   );
 
   const launcherRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const nextId = useRef(0);
+  const restored = useRef(false);
+  /** The last thing the member typed, for arrow-up recall. */
+  const lastAsked = useRef('');
 
-  // Escape closes, from anywhere in the panel or the page behind it.
+  /** Restore on first open. An event handler, so it never fights render. */
+  const toggleOpen = useCallback(() => {
+    setOpen((was) => {
+      if (!was && !restored.current) {
+        restored.current = true;
+        const stored = loadThread();
+        if (stored.length > 0) {
+          nextId.current = stored.length;
+          setMessages(stored.map((m, i) => ({ ...m, id: i })));
+        }
+      }
+      return !was;
+    });
+  }, []);
+
+  // Escape closes. Cmd/Ctrl+K toggles from anywhere, which is what a
+  // member who lives in the portal will reach for.
   useEffect(() => {
-    if (!open) return;
-
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape' && open) {
+        setOpen(false);
+        return;
+      }
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        toggleOpen();
+      }
     }
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [open]);
+  }, [open, toggleOpen]);
 
   // Focus follows the panel: into the composer on open, back to the
   // launcher on close, so keyboard users never lose their place.
@@ -94,23 +150,48 @@ export default function SpotBotDock() {
    */
   useEffect(() => {
     const root = document.body;
-    if (open) root.dataset.spotOpen = 'true';
-    else delete root.dataset.spotOpen;
+    if (open) {
+      root.dataset.spotOpen = 'true';
+      if (wide) root.dataset.spotWide = 'true';
+      else delete root.dataset.spotWide;
+    } else {
+      delete root.dataset.spotOpen;
+      delete root.dataset.spotWide;
+    }
     return () => {
       delete root.dataset.spotOpen;
+      delete root.dataset.spotWide;
     };
-  }, [open]);
+  }, [open, wide]);
 
+  /** Keep the thread for this browser session only. */
+  useEffect(() => {
+    if (!restored.current) return;
+    try {
+      sessionStorage.setItem(STORE_KEY, JSON.stringify(messages.slice(-KEEP)));
+    } catch {
+      // Storage full or blocked. The in-memory thread still works.
+    }
+  }, [messages]);
+
+  /** Follow the conversation, unless the member has scrolled up to read. */
   useEffect(() => {
     const log = logRef.current;
-    if (!log) return;
+    if (!log || !pinned) return;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     log.scrollTo({ top: log.scrollHeight, behavior: reduced ? 'auto' : 'smooth' });
-  }, [messages, busy, open]);
+  }, [messages, busy, open, pinned]);
+
+  const onLogScroll = useCallback(() => {
+    const log = logRef.current;
+    if (!log) return;
+    const distance = log.scrollHeight - log.scrollTop - log.clientHeight;
+    setPinned(distance <= AT_BOTTOM);
+  }, []);
 
   const push = useCallback((message: Omit<Message, 'id'>) => {
-    setMessages((current) => [...current, { ...message, id: nextId.current++ }]);
+    setMessages((all) => [...all, { ...message, id: nextId.current++ }]);
   }, []);
 
   const send = useCallback(
@@ -119,8 +200,13 @@ export default function SpotBotDock() {
       if (!question || busy) return;
 
       setDraft('');
+      lastAsked.current = question;
+      setPinned(true);
       push({ role: 'you', body: question });
       setBusy(true);
+
+      // The composer grew to fit the question; give it its height back.
+      if (inputRef.current) inputRef.current.style.height = 'auto';
 
       try {
         const answer: SpotBotAnswer = await ask({ question, pathname });
@@ -140,14 +226,58 @@ export default function SpotBotDock() {
     [busy, pathname, push],
   );
 
+  const clearThread = useCallback(() => {
+    setMessages([]);
+    setFollowUps(null);
+    nextId.current = 0;
+    restored.current = true;
+    try {
+      sessionStorage.removeItem(STORE_KEY);
+    } catch {
+      // Nothing to do. The in-memory thread is already cleared.
+    }
+    inputRef.current?.focus();
+  }, []);
+
+  const copyAnswer = useCallback(async (message: Message) => {
+    try {
+      await navigator.clipboard.writeText(message.body);
+      setCopiedId(message.id);
+      window.setTimeout(() => setCopiedId((id) => (id === message.id ? null : id)), 1600);
+    } catch {
+      // Clipboard denied. Silent: the text is on screen and selectable.
+    }
+  }, []);
+
+  /** Enter sends. Shift+Enter is a new line. Up recalls, when empty. */
+  function onComposerKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      send(draft);
+      return;
+    }
+    if (event.key === 'ArrowUp' && draft === '' && lastAsked.current) {
+      event.preventDefault();
+      setDraft(lastAsked.current);
+    }
+  }
+
+  /** Grow to the question, up to the cap the stylesheet sets. */
+  function onComposerInput(event: React.FormEvent<HTMLTextAreaElement>) {
+    const el = event.currentTarget;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }
+
   const fresh = followUps?.path === pathname ? followUps.questions : [];
   const suggestions = (fresh.length > 0 ? fresh : page.suggested).slice(0, 3);
+  const hasThread = messages.length > 0;
 
   return (
     <div className={styles.dock}>
       {open && (
         <div
-          className={styles.panel}
+          className={wide ? `${styles.panel} ${styles.panelWide}` : styles.panel}
           role="dialog"
           aria-label="Spot"
           id="spotbot-panel"
@@ -158,45 +288,122 @@ export default function SpotBotDock() {
               <span className={styles.headName}>Spot</span>
               <span className={styles.headPage}>{page.label}</span>
             </div>
-            <button
-              className={styles.close}
-              onClick={() => setOpen(false)}
-              aria-label="Close Spot"
-            >
-              <X size={15} strokeWidth={1.5} aria-hidden="true" />
-            </button>
-          </div>
 
-          <div className={styles.brief}>
-            <span className={styles.briefLabel}>On this page</span>
-            <p className={styles.briefText}>{page.brief}</p>
-          </div>
-
-          <div className={styles.log} ref={logRef} role="log" aria-live="polite">
-            {messages.length === 0 && <p className={styles.greeting}>{GREETING}</p>}
-
-            {messages.map((message) =>
-              message.role === 'you' ? (
-                <div key={message.id} className={styles.you}>
-                  {message.body}
-                </div>
-              ) : (
-                <div
-                  key={message.id}
-                  className={styles.bot}
-                  data-refused={message.refused ? 'true' : 'false'}
+            <div className={styles.headTools}>
+              {hasThread && (
+                <button
+                  className={styles.tool}
+                  onClick={clearThread}
+                  aria-label="Clear this conversation"
+                  title="Clear this conversation"
                 >
-                  {message.body}
-                  {message.source && (
-                    <span className={styles.src}>
-                      SpotBot · {message.source} · explains, never advises
-                    </span>
-                  )}
-                </div>
-              ),
-            )}
+                  <Trash2 size={14} strokeWidth={1.5} aria-hidden="true" />
+                </button>
+              )}
+              <button
+                className={styles.tool}
+                onClick={() => setWide((w) => !w)}
+                aria-pressed={wide}
+                aria-label={wide ? 'Narrow the panel' : 'Widen the panel'}
+                title={wide ? 'Narrow' : 'Widen'}
+              >
+                {wide ? (
+                  <Minimize2 size={14} strokeWidth={1.5} aria-hidden="true" />
+                ) : (
+                  <Maximize2 size={14} strokeWidth={1.5} aria-hidden="true" />
+                )}
+              </button>
+              <button
+                className={styles.tool}
+                onClick={() => setOpen(false)}
+                aria-label="Close Spot"
+                title="Close"
+              >
+                <X size={15} strokeWidth={1.5} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
 
-            {busy && <div className={styles.thinking}>Checking the guide</div>}
+          {!hasThread && (
+            <div className={styles.brief}>
+              <span className={styles.briefLabel}>On this page</span>
+              <p className={styles.briefText}>{page.brief}</p>
+            </div>
+          )}
+
+          <div className={styles.logWrap}>
+            <div
+              className={styles.log}
+              ref={logRef}
+              onScroll={onLogScroll}
+              role="log"
+              aria-live="polite"
+              aria-relevant="additions"
+            >
+              {!hasThread && <p className={styles.greeting}>{GREETING}</p>}
+
+              {messages.map((message) =>
+                message.role === 'you' ? (
+                  <div key={message.id} className={styles.youRow}>
+                    <div className={styles.you}>{message.body}</div>
+                  </div>
+                ) : (
+                  <div key={message.id} className={styles.botRow}>
+                    <span className={`orb ${styles.botOrb}`} aria-hidden="true" />
+                    <div
+                      className={styles.bot}
+                      data-refused={message.refused ? 'true' : 'false'}
+                    >
+                      <p className={styles.botBody}>{message.body}</p>
+                      {message.source && (
+                        <span className={styles.src}>
+                          Spot · {message.source} · explains, never advises
+                        </span>
+                      )}
+                      <button
+                        className={styles.copy}
+                        onClick={() => copyAnswer(message)}
+                        aria-label="Copy this answer"
+                        title="Copy"
+                      >
+                        {copiedId === message.id ? (
+                          <Check size={13} strokeWidth={1.6} aria-hidden="true" />
+                        ) : (
+                          <Copy size={13} strokeWidth={1.5} aria-hidden="true" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ),
+              )}
+
+              {busy && (
+                <div className={styles.botRow}>
+                  <span className={`orb ${styles.botOrb}`} aria-hidden="true" />
+                  <div className={styles.thinking}>
+                    <span className={styles.thinkDot} />
+                    <span className={styles.thinkDot} />
+                    <span className={styles.thinkDot} />
+                    <span className={styles.thinkWord}>Checking the guide</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {!pinned && hasThread && (
+              <button
+                className={styles.jump}
+                onClick={() => {
+                  setPinned(true);
+                  logRef.current?.scrollTo({
+                    top: logRef.current.scrollHeight,
+                    behavior: 'smooth',
+                  });
+                }}
+              >
+                Latest
+              </button>
+            )}
           </div>
 
           {suggestions.length > 0 && (
@@ -224,11 +431,14 @@ export default function SpotBotDock() {
               send(draft);
             }}
           >
-            <input
+            <textarea
               ref={inputRef}
               className={styles.input}
               value={draft}
+              rows={1}
               onChange={(event) => setDraft(event.target.value)}
+              onInput={onComposerInput}
+              onKeyDown={onComposerKeyDown}
               placeholder="Ask about this page"
               aria-label="Ask Spot about this page"
               maxLength={400}
@@ -239,14 +449,19 @@ export default function SpotBotDock() {
             </button>
           </form>
 
-          <p className={styles.foot}>Spot explains, it never advises.</p>
+          <p className={styles.foot}>
+            Spot explains, it never advises.
+            <kbd className={styles.kbd}>Enter</kbd> to send,
+            <kbd className={styles.kbd}>Shift</kbd> +
+            <kbd className={styles.kbd}>Enter</kbd> for a new line.
+          </p>
         </div>
       )}
 
       <button
         ref={launcherRef}
         className={styles.launcher}
-        onClick={() => setOpen((value) => !value)}
+        onClick={toggleOpen}
         aria-expanded={open}
         aria-controls="spotbot-panel"
         aria-label={open ? 'Close Spot' : 'Open Spot, the AltSpot guide'}

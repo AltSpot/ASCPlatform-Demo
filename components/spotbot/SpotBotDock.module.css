@@ -1,6 +1,14 @@
-/* SpotBotDock — the floating guide.
-   Tokens only, no invented colours. The toast sits bottom-center at
-   z-index 200, so the dock stays below it and out of its lane. */
+/* ============================================================
+   Spot — the floating guide.
+
+   Tokens only, no invented colours. The toast sits bottom-centre at
+   z-index 200, so the dock stays below it and out of its lane.
+
+   The panel is chrome, so it takes the V18 chrome treatment: glass
+   over the ember canvas, gold-active hairline, modal radius. The one
+   warm surface inside it is the member's own question, because in a
+   conversation the thing you said is the thing you look for.
+   ============================================================ */
 
 .dock {
   position: fixed;
@@ -11,65 +19,92 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 12px;
-  font-family: var(--fb);
+  font-family: var(--font-sans);
 }
 
 /* ---------- launcher ---------- */
+
 .launcher {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 16px 10px 12px;
+  padding: 10px 18px 10px 12px;
   border-radius: var(--r-pill);
-  border: 1px solid var(--hairg);
-  background: linear-gradient(135deg, rgba(243, 152, 7, 0.16), rgba(10, 8, 6, 0.92));
-  backdrop-filter: blur(8px);
-  color: var(--ink);
+  border: 1px solid var(--hair-gold-active);
+  background: var(--glass-solid);
+  backdrop-filter: blur(20px) saturate(1.5);
+  color: var(--as-text);
   cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+  box-shadow: var(--shadow-md);
+  transition:
+    transform var(--dur-micro) ease,
+    box-shadow var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
 }
 .launcher:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 34px rgba(243, 152, 7, 0.26);
-  border-color: var(--orange);
+  box-shadow: var(--shadow-cta-hover);
+  border-color: var(--as-gold);
 }
 .launcher:active {
   transform: translateY(0);
 }
+
 /* The orb stays gold. Always. */
 .launcherOrb {
   width: 22px;
   height: 22px;
 }
 .launcherLabel {
-  font-family: var(--fm);
+  font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--w-medium);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--as-text);
 }
 
 /* ---------- panel ---------- */
+
 .panel {
-  width: 384px;
+  position: relative;
+  width: 400px;
   max-width: calc(100vw - 40px);
-  max-height: min(624px, calc(100vh - 132px));
+  height: min(660px, calc(100vh - 132px));
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--hairg);
-  border-radius: var(--r);
-  background: rgba(14, 11, 8, 0.97);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
+  border: 1px solid var(--hair-gold-active);
+  border-radius: var(--r-2xl);
+  background: linear-gradient(180deg, rgba(22, 17, 10, 0.97), rgba(10, 8, 6, 0.99));
+  backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
-  animation: dockIn 0.18s ease;
+  animation: dockIn var(--dur-2) var(--ease-entrance);
 }
+
+/* A reading width, for a long answer or a document quote. */
+.panelWide {
+  width: 620px;
+}
+
+/* One corner glow, the V18 atmosphere in miniature. Decorative. */
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    58% 34% at 88% 0%,
+    rgba(243, 152, 7, 0.13),
+    rgba(229, 102, 26, 0.04) 46%,
+    transparent 72%
+  );
+}
+
 @keyframes dockIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -77,12 +112,16 @@
   }
 }
 
+/* ---------- head ---------- */
+
 .head {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 15px 16px 13px;
-  border-bottom: 1px solid var(--hair);
+  padding: 15px 14px 13px 16px;
+  border-bottom: 1px solid var(--hair-neutral);
+  flex: none;
 }
 .headOrb {
   width: 20px;
@@ -93,16 +132,14 @@
   line-height: 1.2;
 }
 .headName {
-  font-family: var(--fd);
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
   font-size: 17px;
-  color: var(--ink);
+  color: var(--as-text);
   display: inline-flex;
   align-items: baseline;
 }
-/* The orange square period, same signature as the wordmark. */
-/* The orb period, same as the wordmark. This module kept its own copy
-   of the retired orange square. */
+/* The orb period, same signature as the wordmark. */
 .headName::after {
   content: '';
   width: 0.3em;
@@ -114,243 +151,427 @@
 }
 .headPage {
   display: block;
-  font-family: var(--fm);
+  font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--faint);
-  margin-top: 2px;
-}
-.close {
-  margin-left: auto;
-  border: 1px solid var(--hair);
-  background: transparent;
-  color: var(--soft);
-  border-radius: var(--r-pill);
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
-  flex: none;
-}
-.close:hover {
-  color: var(--ink);
-  border-color: var(--hairg);
+  color: var(--as-text-faint);
+  margin-top: 3px;
 }
 
+.headTools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--as-text-muted);
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
+}
+.tool:hover {
+  color: var(--accent-hot);
+  border-color: var(--hair-gold-active);
+  background: var(--fill-gold-tint);
+}
+
+/* ---------- the page brief ---------- */
+
 .brief {
-  padding: 13px 16px;
-  border-bottom: 1px solid var(--hair);
-  background: rgba(243, 152, 7, 0.05);
+  position: relative;
+  padding: 13px 16px 14px;
+  border-bottom: 1px solid var(--hair-neutral);
+  background: rgba(255, 255, 255, 0.02);
+  flex: none;
 }
 .briefLabel {
   display: block;
-  font-family: var(--fm);
+  font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--orange);
-  margin-bottom: 6px;
+  color: var(--accent-quiet);
+  margin-bottom: 7px;
 }
 .briefText {
   font-size: 12.8px;
-  line-height: 1.55;
-  color: var(--soft);
-  margin: 0;
+  line-height: 1.62;
+  color: var(--as-text-muted);
 }
 
-/* ---------- conversation ---------- */
-.log {
+/* ---------- the log ---------- */
+
+.logWrap {
+  position: relative;
   flex: 1;
+  min-height: 0;
+}
+
+.log {
+  height: 100%;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 96px;
+  gap: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
 }
-.greeting {
-  font-size: 13.2px;
-  line-height: 1.6;
-  color: var(--ink-2);
-  margin: 0;
+.log::-webkit-scrollbar {
+  width: 8px;
 }
-.greeting b {
-  color: var(--ink);
-  font-weight: 600;
+.log::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--r-pill);
 }
 
+.greeting {
+  font-size: 13.2px;
+  line-height: 1.68;
+  color: var(--as-text-body);
+}
+
+/* Back to the bottom, when the member has scrolled up to reread. */
+.jump {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--as-ink);
+  background: var(--as-cta-gradient);
+  border: none;
+  border-radius: var(--r-pill);
+  padding: 7px 15px;
+  cursor: pointer;
+  box-shadow: var(--shadow-cta);
+  animation: dockIn var(--dur-1) var(--ease-entrance);
+}
+
+/* ---------- messages ---------- */
+
+.youRow,
+.botRow {
+  display: flex;
+  gap: 9px;
+  animation: msgIn var(--dur-2) var(--ease-entrance) backwards;
+}
+.youRow {
+  justify-content: flex-end;
+}
+
+@keyframes msgIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The member's own question. The one warm surface in the panel: in a
+   thread, what you said is what you scan for. */
 .you {
-  align-self: flex-end;
-  max-width: 88%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--hair);
+  max-width: 84%;
+  padding: 10px 14px;
   border-radius: var(--r-lg) var(--r-lg) var(--r-xs) var(--r-lg);
-  padding: 9px 13px;
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
   font-size: 13.2px;
   line-height: 1.55;
-  color: var(--ink);
+  font-weight: var(--w-medium);
+  box-shadow: var(--shadow-cta);
 }
+
+.botOrb {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex: none;
+}
+
 .bot {
-  align-self: flex-start;
-  max-width: 96%;
-  background: rgba(243, 152, 7, 0.06);
-  border: 1px solid var(--hairg);
+  position: relative;
+  max-width: 88%;
+  padding: 12px 14px 11px;
   border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--r-xs);
-  padding: 12px 14px;
-  font-size: 13.2px;
-  line-height: 1.65;
-  color: var(--ink-2);
+  border: 1px solid var(--hair-neutral);
+  background: var(--fill-card);
 }
-/* A refusal is not an error and should not shout. It just stops
-   carrying the accent, so it reads as a different kind of answer. */
+
+/* A refusal is an answer, not an error. Ember says "different kind of
+   reply" without saying "something went wrong". */
 .bot[data-refused='true'] {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: var(--hair);
+  border-color: var(--hair-ember);
+  background: rgba(229, 102, 26, 0.06);
 }
+
+.botBody {
+  font-size: 13.2px;
+  line-height: 1.68;
+  color: var(--as-text-body);
+  white-space: pre-wrap;
+}
+
 .src {
   display: block;
-  margin-top: 10px;
-  font-family: var(--fm);
-  font-size: 9px;
-  letter-spacing: 0.14em;
+  margin-top: 9px;
+  padding-top: 8px;
+  padding-right: 32px;
+  border-top: 1px solid var(--hair-neutral);
+  font-family: var(--font-mono);
+  font-size: 8.8px;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--faint);
+  color: var(--as-text-faint);
   line-height: 1.5;
 }
+
+/* Bottom right, on the source line's row. Top right sat over the first
+   line of the answer, and the answer runs the full width of the bubble. */
+.copy {
+  position: absolute;
+  bottom: 9px;
+  right: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: var(--glass-solid);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--dur-micro) ease,
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
+}
+.bot:hover .copy,
+.copy:focus-visible {
+  opacity: 1;
+}
+.copy:hover {
+  color: var(--accent-hot);
+  border-color: var(--hair-gold-active);
+}
+
+/* ---------- thinking ---------- */
+
 .thinking {
-  align-self: flex-start;
-  font-family: var(--fm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--r-xs);
+  border: 1px solid var(--hair-neutral);
+  background: var(--fill-card);
+}
+
+.thinkDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-image: var(--as-orb-metal);
+  animation: think 1.15s ease-in-out infinite;
+}
+.thinkDot:nth-child(2) {
+  animation-delay: 0.14s;
+}
+.thinkDot:nth-child(3) {
+  animation-delay: 0.28s;
+}
+
+@keyframes think {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.thinkWord {
+  margin-left: 4px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--as-text-faint);
+}
+
+/* ---------- suggestions ---------- */
+
+.suggestions {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--hair-neutral);
+  flex: none;
+}
+.suggestLabel {
+  font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--faint);
-}
-
-/* ---------- suggestions + composer ---------- */
-.suggestions {
-  padding: 0 16px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.suggestLabel {
-  font-family: var(--fm);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--faint);
-  margin-bottom: 1px;
+  color: var(--accent-quiet);
+  margin-bottom: 2px;
 }
 .suggest {
   text-align: left;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--hair);
-  color: var(--soft);
+  border: 1px solid var(--hair-neutral);
   border-radius: var(--r-pill);
-  padding: 9px 12px;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--as-text-body);
+  padding: 9px 15px;
   font-size: 12.6px;
-  line-height: 1.45;
-  font-family: var(--fb);
-  transition: color 0.12s, border-color 0.12s;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
 }
-.suggest:hover {
-  color: var(--ink);
-  border-color: var(--hairg);
+.suggest:hover:not(:disabled) {
+  color: var(--accent-hot);
+  border-color: var(--hair-gold-active);
+  background: var(--fill-gold-tint);
 }
 .suggest:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
+/* ---------- composer ---------- */
+
 .composer {
+  position: relative;
   display: flex;
+  align-items: flex-end;
   gap: 8px;
-  padding: 12px 16px;
-  border-top: 1px solid var(--hair);
+  padding: 12px 16px 10px;
+  border-top: 1px solid var(--hair-neutral);
+  flex: none;
 }
+
 .input {
   flex: 1;
   min-width: 0;
-  background: rgba(0, 0, 0, 0.34);
-  border: 1px solid var(--hair);
-  color: var(--ink);
-  border-radius: var(--r-md);
-  padding: 10px 12px;
-  font-size: 13.4px;
-  font-family: var(--fb);
-}
-.input:focus {
-  border-color: var(--hairg);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(243, 152, 7, 0.12);
+  resize: none;
+  max-height: 132px;
+  padding: 11px 14px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-lg);
+  background: var(--fill-input);
+  color: var(--as-text);
+  font-family: var(--font-sans);
+  font-size: 13.2px;
+  line-height: 1.5;
 }
 .input::placeholder {
-  color: var(--faint);
+  color: var(--as-text-faint);
 }
+/* Signal is the focus colour. Functional, not brand. */
+.input:focus {
+  outline: none;
+  border-color: var(--accent-signal);
+  background: rgba(243, 152, 7, 0.08);
+}
+
 .send {
   flex: none;
   border: none;
   border-radius: var(--r-pill);
-  padding: 0 15px;
-  font-family: var(--fm);
-  font-size: 10px;
-  font-weight: 500;
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: var(--w-semi);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #1a1204;
-  background: linear-gradient(135deg, var(--gold), var(--orange));
+  padding: 12px 18px;
   cursor: pointer;
+  box-shadow: var(--shadow-cta);
+  transition:
+    transform var(--dur-micro) ease,
+    box-shadow var(--dur-micro) ease,
+    opacity var(--dur-micro) ease;
+}
+.send:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-cta-hover);
+  color: var(--fg-on-gold);
 }
 .send:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  box-shadow: none;
 }
+
+/* ---------- foot ---------- */
 
 .foot {
+  position: relative;
   padding: 0 16px 13px;
-  font-family: var(--fm);
-  font-size: 9px;
-  letter-spacing: 0.16em;
+  font-family: var(--font-mono);
+  font-size: 8.8px;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--faint);
-  line-height: 1.5;
+  color: var(--as-text-faint);
+  line-height: 1.7;
+  flex: none;
 }
 
-/* ---------- small screens ---------- */
-/* The toast owns the bottom-center band. Lift the whole dock above it
-   rather than letting a 90vw toast land under the launcher. */
-@media (max-width: 640px) {
-  .dock {
-    right: 14px;
-    left: 14px;
-    bottom: 88px;
-    align-items: flex-end;
-  }
-  .panel {
-    width: 100%;
-    max-width: none;
-    max-height: calc(100vh - 140px);
-  }
-  .launcherLabel {
-    display: none;
-  }
-  .launcher {
-    padding: 12px;
-  }
+.kbd {
+  display: inline-block;
+  margin: 0 3px;
+  padding: 1px 5px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-xs);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--as-text-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .panel {
+  .panel,
+  .youRow,
+  .botRow,
+  .jump {
     animation: none;
   }
-  .launcher,
-  .suggest {
-    transition: none;
-  }
-  .launcher:hover {
-    transform: none;
+  .thinkDot {
+    animation: none;
+    opacity: 0.7;
   }
 }
