@@ -11,6 +11,12 @@
  * the maximum and the slug are all re-checked in
  * app/api/radar/interest/route.ts. What this component does is spare
  * the member a round trip to be told something obvious.
+ *
+ * Reading order is deliberate. Demand is the headline, because Radar
+ * exists to answer "what should we buy next" and demand is the answer.
+ * The reference prices come second, and AltSpot's own target range gets
+ * its own panel, because it is the one figure here that is ours rather
+ * than the market's.
  */
 import { useId, useState } from 'react';
 
@@ -47,13 +53,30 @@ function compactDollars(value: number): string {
   return money(value);
 }
 
+/**
+ * Sector tint, from the V18 category set. These are the documented
+ * exception to "no blue, green or purple": taxonomy, never chrome. A
+ * sector with no tint falls through to champagne, which is the quiet
+ * layer and always correct.
+ */
+function sectorTint(sector: string): string | undefined {
+  const key = sector.toLowerCase();
+  if (key.includes('artificial intelligence')) return s.tintViolet;
+  if (key.includes('aerospace')) return s.tintSecondary;
+  if (key.includes('data')) return s.tintRealasset;
+  return undefined;
+}
+
 export default function RadarCard({
   company,
   /** This company's share of the loudest demand on the board, 0 to 1. */
   demandShare,
+  /** Position on the board, 1-indexed. The board is ranked by demand. */
+  rank,
 }: {
   company: RadarCompanyView;
   demandShare: number;
+  rank: number;
 }) {
   const toast = useToast();
 
@@ -109,58 +132,76 @@ export default function RadarCard({
   }
 
   return (
-    <div className={s.card} data-indicated={view.yourAmount !== null}>
-      <div className={s.head}>
-        <div className={s.mark} aria-hidden="true">
-          {monogram(view.name)}
+    <article className={s.card} data-indicated={view.yourAmount !== null}>
+      {/* One masked texture per card, per the V18 card spec. Decorative
+          and behind everything. */}
+      <span className={s.texture} aria-hidden="true" />
+
+      <header className={s.head}>
+        <div className={s.plate}>
+          {view.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className={s.logo} src={view.logoUrl} alt="" aria-hidden="true" />
+          ) : (
+            <span className={s.monogram} aria-hidden="true">
+              {monogram(view.name)}
+            </span>
+          )}
         </div>
-        <div>
-          <div className={s.name}>{view.name}</div>
-          <div className={s.sector}>{view.sector}</div>
+
+        <div className={s.identity}>
+          <h3 className={s.name}>{view.name}</h3>
+          <span className={`${s.sector} ${sectorTint(view.sector) ?? ''}`}>
+            {view.sector}
+          </span>
         </div>
-      </div>
+
+        <span className={s.rank} aria-label={`Rank ${rank} by demand`}>
+          {String(rank).padStart(2, '0')}
+        </span>
+      </header>
 
       <p className={s.about}>{view.description}</p>
 
-      <div className={s.figures}>
-        <div className={s.figure}>
-          <span className={s.figureKey}>Market average</span>
-          <span className={s.figureValue}>
-            {priceFromCents(view.marketAverageCents)}
-            <small>{view.marketAverageAsOf}</small>
-          </span>
-        </div>
-        <div className={s.figure}>
-          <span className={s.figureKey}>Last round</span>
-          <span className={s.figureValue}>
-            {valuationShort(view.lastRoundValuation)}
-            <small>{view.lastRoundLabel}</small>
-          </span>
-        </div>
-        <div className={`${s.figure} ${s.target}`}>
-          <span className={s.figureKey}>AltSpot target</span>
-          <span className={s.figureValue}>
-            {priceFromCents(view.targetLowCents)} to {priceFromCents(view.targetHighCents)}
-            <small>Per share, if we source it</small>
-          </span>
-        </div>
-      </div>
-
+      {/* Demand is the headline. It is the whole reason the board
+          exists, and it is ranked on it. */}
       <div className={s.demand}>
+        <div className={s.demandTop}>
+          <span className={s.demandValue}>{compactDollars(view.interestDollars)}</span>
+          <span className={s.demandWho}>
+            {view.interestInvestors.toLocaleString('en-US')} members
+          </span>
+        </div>
         <div className={s.demandBar}>
           <div
             className={s.demandFill}
             style={{ width: `${Math.max(6, Math.round(demandShare * 100))}%` }}
           />
         </div>
-        <div className={s.demandLine}>
-          <span>
-            <b>{view.interestInvestors.toLocaleString('en-US')}</b> indicated
-          </span>
-          <span>
-            <b>{compactDollars(view.interestDollars)}</b> behind it
-          </span>
+        <span className={s.demandKey}>Indicated so far</span>
+      </div>
+
+      <div className={s.figures}>
+        <div className={s.figure}>
+          <span className={s.figureKey}>Market average</span>
+          <span className={s.figureValue}>{priceFromCents(view.marketAverageCents)}</span>
+          <span className={s.figureNote}>{view.marketAverageAsOf}</span>
         </div>
+        <div className={s.figure}>
+          <span className={s.figureKey}>Last round</span>
+          <span className={s.figureValue}>{valuationShort(view.lastRoundValuation)}</span>
+          <span className={s.figureNote}>{view.lastRoundLabel}</span>
+        </div>
+      </div>
+
+      {/* The one figure on this card that is AltSpot's rather than the
+          market's, so it gets its own surface. */}
+      <div className={s.target}>
+        <span className={s.targetKey}>AltSpot target</span>
+        <span className={s.targetValue}>
+          {priceFromCents(view.targetLowCents)} to {priceFromCents(view.targetHighCents)}
+        </span>
+        <span className={s.targetNote}>Per share, if we source it</span>
       </div>
 
       <div className={s.research}>
@@ -338,6 +379,6 @@ export default function RadarCard({
           </form>
         )}
       </div>
-    </div>
+    </article>
   );
 }

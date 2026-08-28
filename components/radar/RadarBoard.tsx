@@ -26,11 +26,12 @@ export default function RadarBoard({
   return (
     <>
       <div className={s.board}>
-        {ranked.map((company) => (
+        {ranked.map((company, index) => (
           <RadarCard
             key={company.slug}
             company={company}
             demandShare={company.interestDollars / loudest}
+            rank={index + 1}
           />
         ))}
       </div>

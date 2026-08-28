@@ -85,6 +85,13 @@ export interface RadarCompany {
   sector: string;
   /** What the company does. Public, factual, no financial claims. */
   description: string;
+  /**
+   * The company's own mark, served from /public. Optional: a company
+   * without one falls back to a monogram on the same plate, so the
+   * board never looks half-finished while marks are being collected.
+   * Drop an SVG at public/brand/companies/<slug>.svg and point here.
+   */
+  logoUrl?: string;
   /** Illustrative indicative secondary price, in integer cents. */
   marketAverageCents: number;
   /** The period the indicative price is meant to describe. */
@@ -111,6 +118,7 @@ const COMPANIES: RadarCompany[] = [
     slug: 'openai',
     name: 'OpenAI',
     sector: 'Artificial intelligence',
+    logoUrl: '/openai-logo.svg',
     description:
       'Research lab and product company behind ChatGPT and the GPT model family, selling models to developers and enterprises.',
     marketAverageCents: 21_450,
@@ -280,6 +288,7 @@ const COMPANIES: RadarCompany[] = [
     slug: 'databricks',
     name: 'Databricks',
     sector: 'Data infrastructure',
+    logoUrl: '/databricks-logo.svg',
     description:
       'Data and AI platform built on the lakehouse architecture, used by enterprises to run analytics and machine learning on their own data.',
     marketAverageCents: 12_850,

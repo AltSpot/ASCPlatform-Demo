@@ -14,146 +14,223 @@
    and the extra width is what the research section reads best at. */
 .board {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  max-width: 1080px;
+  /* Three across. Falls to two, then one, rather than letting a card
+     squeeze below the width its figures need. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
   /* Cards keep their own height. One card opening its research must
      not stretch its neighbour into a column of empty space. */
   align-items: start;
 }
 
+@media (max-width: 1280px) {
+  .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  border: 1px solid var(--hair);
-  border-radius: var(--r);
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-lg);
   padding: 22px 22px 18px;
-  background: var(--panel);
+  background: var(--fill-card);
   backdrop-filter: blur(6px);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color var(--dur-1) ease,
+    transform var(--dur-1) var(--ease-layout),
+    box-shadow var(--dur-1) ease;
 }
 
 .card:hover {
-  border-color: var(--hairg);
-  transform: translateY(-2px);
+  border-color: var(--hair-gold-active);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* A card the member has already spoken on reads differently at a
    glance, without shouting. */
 .card[data-indicated='true'] {
-  border-color: var(--hairg);
+  border-color: var(--hair-gold-active);
   background: linear-gradient(180deg, rgba(243, 152, 7, 0.07), rgba(243, 152, 7, 0.01));
+}
+
+/* The one masked texture the V18 card spec allows. Decorative, behind
+   everything, and it must never catch a click. */
+.texture {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--as-dot-field);
+  background-size: 16px 16px;
+  opacity: 0.5;
+  mask-image: radial-gradient(58% 46% at 88% 6%, #000 0%, transparent 72%);
+  -webkit-mask-image: radial-gradient(58% 46% at 88% 6%, #000 0%, transparent 72%);
+}
+
+.card > *:not(.texture) {
+  position: relative;
+  z-index: 1;
 }
 
 /* ---------- identity ---------- */
 
 .head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 13px;
 }
 
-.mark {
-  width: 42px;
-  height: 42px;
+/* Marks arrive in the company's own colours, and some of them are solid
+   black. A warm plate is what makes any of them legible on the ember
+   canvas without touching the mark itself. */
+.plate {
+  width: 46px;
+  height: 46px;
   flex: none;
   border-radius: var(--r-md);
   display: grid;
   place-items: center;
-  font-family: var(--fm);
-  font-weight: 500;
-  font-size: 14px;
-  letter-spacing: 0.04em;
-  color: #1a1204;
-  background: linear-gradient(135deg, var(--gold), var(--orange));
+  padding: 8px;
+  background: var(--as-cream);
+  border: 1px solid var(--hair-cream);
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* No mark yet. Same plate, so a part-collected board still reads as
+   one board. */
+.monogram {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  color: var(--as-cream-ink);
+}
+
+.identity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
 }
 
 .name {
-  font-family: var(--fd);
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 1.15;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 21px;
+  line-height: 1.1;
   letter-spacing: -0.014em;
-  color: var(--ink);
+  color: var(--as-text);
 }
 
+/* Sector chip. The tint is the V18 category set, which is taxonomy and
+   the documented exception to "no blue, green or purple". */
 .sector {
-  margin-top: 4px;
-  font-family: var(--fm);
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.about {
-  font-size: 13.3px;
-  line-height: 1.6;
-  color: var(--soft);
-}
-
-/* ---------- reference figures ---------- */
-
-.figures {
-  border-top: 1px solid var(--hair);
-  border-bottom: 1px solid var(--hair);
-  padding: 4px 0;
-}
-
-.figure {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 9px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.figure:last-child {
-  border-bottom: none;
-}
-
-.figureKey {
-  font-family: var(--fm);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.figureValue {
-  font-family: var(--fm);
-  font-size: 13.5px;
-  color: var(--ink);
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.figureValue small {
-  display: block;
-  margin-top: 3px;
-  font-family: var(--fm);
+  font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--faint);
+  color: var(--accent-quiet);
+  border: 1px solid var(--hair-champagne);
+  background: var(--fill-gold-tint);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  white-space: nowrap;
 }
 
-.target .figureValue {
-  color: var(--orange-b);
+.tintSecondary {
+  color: var(--as-cat-secondary);
+  border-color: rgba(124, 180, 245, 0.35);
+  background: rgba(124, 180, 245, 0.07);
+}
+.tintRealasset {
+  color: var(--as-cat-realasset);
+  border-color: rgba(85, 208, 176, 0.35);
+  background: rgba(85, 208, 176, 0.07);
+}
+.tintViolet {
+  color: var(--as-cat-violet);
+  border-color: rgba(169, 139, 230, 0.36);
+  background: rgba(169, 139, 230, 0.07);
 }
 
-/* ---------- demand ---------- */
+/* Rank on the board. The board is sorted by demand, so this is real
+   information, not decoration. */
+.rank {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--as-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.about {
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--as-text-body);
+}
+
+/* ---------- demand, the headline ---------- */
 
 .demand {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
+  padding: 14px 16px;
+  border: 1px solid var(--hair-gold-active);
+  border-radius: var(--r-md);
+  background: var(--fill-gold-tint);
+}
+
+.demandTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Hot amber on a stat numeral is the V18 treatment. */
+.demandValue {
+  font-family: var(--font-mono);
+  font-weight: var(--w-medium);
+  font-size: 25px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--accent-hot);
+  font-variant-numeric: tabular-nums;
+}
+
+.demandWho {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .demandBar {
-  height: 4px;
+  height: 5px;
   border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.07);
   overflow: hidden;
@@ -162,25 +239,92 @@
 .demandFill {
   height: 100%;
   border-radius: var(--r-pill);
-  background: linear-gradient(90deg, var(--gold), var(--orange), var(--ember));
-  transition: width 0.45s ease;
+  background: var(--as-tri-gradient);
+  box-shadow: 0 0 12px rgba(243, 152, 7, 0.35);
+  transition: width var(--dur-2) var(--ease-out);
 }
 
-.demandLine {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  font-family: var(--fm);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+.demandKey {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--faint);
+  color: var(--as-text-faint);
 }
 
-.demandLine b {
-  color: var(--ink);
-  font-weight: 500;
+/* ---------- reference figures ---------- */
+
+/* Two columns rather than three stacked rows. The old layout hung a
+   9.5px caption under every value and there was no way to read it. */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 14px;
+  border-top: 1px solid var(--hair-neutral);
+  padding-top: 14px;
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.figureKey {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--as-text-faint);
+}
+
+.figureValue {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.figureNote {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--as-text-muted);
+}
+
+/* ---------- AltSpot's own range ---------- */
+
+/* Everything above this is the market's number. This one is ours, so
+   it gets a surface of its own rather than a third identical row. */
+.target {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 13px 16px;
+  border: 1px solid var(--hair-champagne);
+  border-radius: var(--r-md);
+  background: rgba(199, 154, 75, 0.06);
+}
+
+.targetKey {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--as-gold);
+}
+
+.targetValue {
+  font-family: var(--font-mono);
+  font-size: 15.5px;
+  color: var(--accent-quiet);
+  font-variant-numeric: tabular-nums;
+}
+
+.targetNote {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--as-text-muted);
 }
 
 /* ---------- the research fold ----------
@@ -477,9 +621,9 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  border: 1px solid rgba(111, 169, 124, 0.4);
-  background: rgba(111, 169, 124, 0.08);
-  border-radius: var(--r-sm);
+  border: 1px solid var(--hair-gold-active);
+  background: var(--fill-gold-tint);
+  border-radius: var(--r-md);
   padding: 11px 14px;
   animation: settle 0.28s ease;
 }
@@ -501,8 +645,11 @@
   min-width: 0;
 }
 
+/* Gold, not green. A confirmation is chrome, and the card this sits in
+   already reads gold in its indicated state. The bull and bear bullets
+   below keep their green and red: those are direction, not chrome. */
 .doneText b {
-  color: var(--good);
+  color: var(--accent-quiet);
   font-family: var(--fm);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
