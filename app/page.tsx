@@ -29,8 +29,8 @@ export default async function LoginPage() {
           <img
             className="brand-logo"
             style={{ height: 30 }}
-            src="/brand/altspot-logo-white.png"
-            alt="AltSpot"
+            src="/brand/altspot-capital-product-lockup.svg"
+            alt="AltSpot Capital"
           />
           <span
             style={{

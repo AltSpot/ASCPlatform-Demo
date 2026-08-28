@@ -90,7 +90,7 @@ app/
     payment/[id]/  docs/  profiles/  settings/
     deals/[id]/deck/        permanent redirect; the deck IS the deal page now
   api/                      the REST surface, including /api/spotbot
-  globals.css               THE design system — single source of visual truth
+  globals.css               THE design system (V18), single source of visual truth
 
 components/                 presentational components + client islands
   deal/                     the deal page sections + Deal.module.css
@@ -177,17 +177,45 @@ everything else. `components/SpotBot.tsx` is the separate per-deal Q&A card.
 
 ## Design system
 
-`app/globals.css` is the single source of visual truth. AltSpot Brand Identity
-v1.2:
+`app/globals.css` is the single source of visual truth. AltSpot Capital
+Brand Identity **V18** (Aug 2026), ported from the design-system handoff.
+Canonical token names are `--as-*`; the older short names (`--bg`, `--ink`,
+`--orange`, `--r`, `--fd`) survive as aliases retargeted onto them, so
+existing markup keeps resolving. Prefer `--as-*` in new code.
 
-- **Borna** (`--fd`) for display type. **Figtree** (`--fb`) for body and UI.
-  **JetBrains Mono** (`--fm`) for every eyebrow, label, table header, source line
-  and data figure, always uppercase and letter-spaced. If the eyebrow is not
-  monospace, it is not AltSpot.
-- **Orange `--orange` #F39807 is the primary accent.** Gold is the gradient
-  origin, not where the eye lands. The orb stays gold.
-- `--serif` / `--sans` / `--mono` are aliases of `--fd` / `--fb` / `--fm`, kept
-  so older markup still resolves. Prefer the `--f*` names in new code.
+- **Borna** (`--font-display`) for display type. **Figtree**
+  (`--font-sans`) for body and UI, 300 is the body default on dark.
+  **JetBrains Mono** (`--font-mono`) for every eyebrow, label, table
+  header, source line and data figure, always uppercase and
+  letter-spaced. If the eyebrow is not monospace, it is not AltSpot.
+- **This product is the Capital line, so gold `--as-gold` #C79A4B leads.**
+  V18 assigns one signal per product line and forbids mixing two in a
+  composition: Terminal #F39807, Marketplace/Intelligence #E5661A,
+  Capital #C79A4B. Signal orange stays **functional** (focus rings, live
+  indicators) via `--accent-signal`; hot amber #FF9E2C is hover and key
+  numerals via `--accent-hot`; champagne #E6C77A is the quiet layer.
+  The orb stays gold, always. The CTA gradient is gold to signal.
+- **Pill geometry.** Interactive controls (buttons, nav, chips, badges,
+  segmented controls) are `--r-pill` 100px. Cards `--r-lg` 20px, system
+  cards 22px, modals `--r-2xl` 24px, inputs `--r-md` 10px, media frames
+  `--r-frame` 18px. **Nothing between 24px and pill.**
+- **The wordmark period is the orb** (`--as-orb-period`), not a square.
+- **Icons are Lucide**, 1.5px stroke, `currentColor`. No emoji, no unicode
+  glyph icons. The → arrow in buttons and links is text, not an icon.
+- **No em dashes in copy.** Commas, periods, or restructure. En dash is
+  fine for numeric ranges. `EMPTY` in `lib/format.ts` is an en dash so a
+  writer never has to reach for one, and tests enforce all of this.
+- **No blue, green or purple** in brand chrome. The one exception is the
+  asset-class taxonomy: `--as-cat-secondary`, `--as-cat-realasset`,
+  `--as-cat-violet`, `--as-cat-info`, carried over from the V18 deck.
+  Category tints only. Never CTAs, focus, or navigation.
+
+### The four primitives
+
+`components/ui/` holds Button, Card, Eyebrow and Orb, ported from the
+handoff's `.d.ts` contracts. Import from `@/components/ui`. Anything built
+from them inherits pill geometry, the type ladder and accent discipline
+for free. Reach for these before writing a new one-off control.
 
 **Add tokens to `:root` before introducing one-off values.** Components consume
 these classes; they do not invent their own colours, radii or type scales. Inline

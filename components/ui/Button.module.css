@@ -1,0 +1,107 @@
+/* AltSpot Button — V18 pill action primitive.
+   Geometry is non-negotiable: every variant except `quiet` is a
+   100px pill. Primary rides the one gradient with ink text. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  font-family: var(--font-sans);
+  font-weight: var(--w-semi);
+  line-height: 1;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    transform var(--dur-micro) ease,
+    box-shadow var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    color var(--dur-micro) ease;
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ---- sizes ---- */
+.sm {
+  font-size: 12.5px;
+  padding: 9px 16px;
+}
+.md {
+  font-size: 14px;
+  padding: 13px 26px;
+}
+.lg {
+  font-size: 15px;
+  padding: 15px 30px;
+}
+
+/* ---- primary: the one gradient, ink text, warm glow ---- */
+.primary {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  box-shadow: var(--shadow-cta);
+}
+.primary:hover:not(:disabled):not([aria-disabled='true']) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-cta-hover);
+}
+
+/* ---- ghost: transparent pill on a neutral hairline ---- */
+.ghost {
+  background: transparent;
+  color: var(--as-text);
+  border-color: var(--hair-neutral);
+  font-weight: var(--w-regular);
+}
+.ghost:hover:not(:disabled):not([aria-disabled='true']) {
+  border-color: var(--hair-gold-active);
+  color: var(--accent-hot);
+  box-shadow: 0 0 24px rgba(243, 152, 7, 0.12);
+}
+
+/* ---- quiet: mono uppercase champagne link, no pill ---- */
+.quiet {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 6px 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: var(--w-regular);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+}
+.quiet:hover:not(:disabled):not([aria-disabled='true']) {
+  color: var(--as-text);
+}
+
+/* ---- ghost-light: for the paper/cream surface ---- */
+.ghostLight {
+  background: transparent;
+  color: var(--as-cream-ink);
+  border-color: var(--hair-cream);
+  font-weight: var(--w-medium);
+}
+.ghostLight:hover:not(:disabled):not([aria-disabled='true']) {
+  border-color: var(--as-gold);
+}
+
+.block {
+  width: 100%;
+}
+
+/* The arrow is text, never an icon. */
+.arrow {
+  display: inline-block;
+}

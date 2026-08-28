@@ -1,22 +1,32 @@
 /* ============================================================
    ASCPlatform — Investor Portal · Design System
-   Built to the AltSpot Capital brand identity (v1.2).
+   Built to the AltSpot Capital brand identity (V18, Aug 2026).
 
-   DARK SYSTEM. The brand runs two systems: dark for anything
-   looked at, light for anything read at length. The portal is a
-   product surface, so it is dark throughout.
+   DARK SYSTEM. :root IS the dark ember theme. Light (#FBFAF3) and
+   cream (#F5F3E0) are opt-in and unused in the portal today.
+
+   PRODUCT LINE: Capital. Its signal is GOLD (#C79A4B). Per V18,
+   one signal per line and never two in a composition:
+     Terminal #F39807 · Marketplace/Intelligence #E5661A · Capital #C79A4B
 
    The rules that define the identity, in order of importance:
      1. Eyebrows, labels, table headers, sources and data are
         JetBrains Mono, uppercase, letter-spaced. If the eyebrow
         is not monospace, it is not AltSpot.
-     2. Orange (--orange) is the primary accent. Gold is where the
-        gradient starts, not where the eye lands.
+     2. GOLD is where the eye lands. Signal orange is functional
+        (focus rings, live dots); hot amber is hover and numerals.
      3. The orb stays gold, always.
-     4. The wordmark is followed by an orange square period.
+     4. The wordmark is followed by the ORB-PERIOD, not a square.
      5. Dark surfaces get grain and a vignette. Flat black reads
         cheap.
+     6. PILL GEOMETRY. Interactive controls are 100px. Cards 20-22px,
+        modals 24px, inputs 10px, frames 18px. Nothing between
+        24px and pill.
+     7. No em dashes in copy. Commas, periods, or restructure.
 
+   Canonical token names are --as-*, carried over 1:1 from the
+   design-system handoff. The short v1.2 names below are aliases
+   retargeted onto them, so existing components keep working.
    Add tokens to :root before introducing one-off values.
    ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -31,57 +41,157 @@
 }
 
 :root{
-  /* ---- canvas & text ---- */
-  --bg:#0A0806;              /* warm near-black, never neutral #000 */
-  --bg-2:#0F0C09;
-  --ink:#F6F2E9;             /* headlines */
-  --ink-2:#DAD4C8;           /* body */
-  --soft:#9A9184;            /* secondary text, axis labels */
-  --faint:#6C6459;           /* sources, brandmark, page numbers */
+  /* ============ CANVAS & TEXT LADDER (V18 canonical) ============ */
+  --as-ink:#0A0806;            /* Dark Ember, THE canvas. Never neutral #000 */
+  --as-ink-2:#0C0A07;
+  --as-ink-3:#100C08;
+  --as-text:#F6F2E9;           /* headings */
+  --as-text-body:#DAD4C8;      /* body */
+  --as-text-muted:#9A9184;     /* muted, axis labels */
+  --as-text-faint:#6C6459;     /* fine print, sources */
 
-  /* ---- accents ---- */
-  --orange:#F39807;          /* PRIMARY accent */
-  --orange-b:#FF9E2C;        /* bright accent, key figures */
-  --ember:#E5661A;           /* gradient terminus */
-  --gold:#C79A4B;            /* gradient origin, secondary accent */
-  --gold-l:#E6C77A;
-  --gold-d:#A07A22;
+  /* ============ ACCENT FAMILY ============ */
+  --as-gold:#C79A4B;           /* CAPITAL SIGNAL. Glyphs, rules, gradient heads */
+  --as-orange:#F39807;         /* signal. Focus states, live dots, gradient middle */
+  --as-ember:#E5661A;          /* gradient tail, heat moments. Never a surface */
+  --as-amber:#FF9E2C;          /* hot amber. Hover, headline em, stat numerals */
+  --as-champagne:#E6C77A;      /* quiet layer. Micro-labels, form labels, chips */
+  --as-ember-soft:#F08A4B;     /* umbrella kicker */
+  --as-gold-deep:#8A6D35;
 
-  /* ---- surfaces ---- */
-  --panel:rgba(255,255,255,.04);
-  --panel-2:rgba(255,255,255,.06);
-  --hair:rgba(255,255,255,.10);
-  --hairg:rgba(243,152,7,.30);
+  /* ---- Orb stops, canonical from the exported logo SVGs ---- */
+  --as-orb-stop-0:#F3E8BC;  --as-orb-stop-38:#E7CE86;
+  --as-orb-stop-70:#CDA75A; --as-orb-stop-100:#B89A54;
 
-  /* ---- status ---- */
+  /* ============ CATEGORY TINTS ============
+     Asset-class taxonomy ONLY (deal categories, marketplace rows).
+     Named from AltSpot_VC_Deck_v18. These are the documented
+     exception to "no blue, green, purple" and must never be used
+     for brand chrome, CTAs, focus, or navigation. */
+  --as-cat-secondary:#7CB4F5;  /* secondaries */
+  --as-cat-realasset:#55D0B0;  /* real assets */
+  --as-cat-violet:#A98BE6;
+  --as-cat-info:#9CC4F0;
+
+  /* ============ LIGHT / CREAM — opt-in themes ============
+     Used today only by the subscription document surface, which is
+     paper by design. Not a page theme. */
+  --as-paper:#FBFAF3;
+  --as-cream:#F5F3E0;
+  --as-pure:#FFFFFF;
+  --as-cream-ink:#12100C;
+  --as-cream-ink-2:#221E18;
+  --as-cream-muted:#6B645B;
+
+  /* ============ HAIRLINES ============ */
+  --hair-neutral:rgba(255,255,255,.10);
+  --hair-gold-active:rgba(243,152,7,.30);
+  --hair-ember:rgba(229,102,26,.26);
+  --hair-champagne:rgba(199,154,75,.30);
+  --hair-cream:rgba(184,146,74,.28);   /* hairlines on the paper surface */
+
+  /* ============ FILLS ============ */
+  --fill-card:rgba(255,255,255,.04);
+  --fill-input:rgba(255,255,255,.05);
+  --fill-gold-tint:rgba(243,152,7,.05);
+  --glass:rgba(10,8,6,.62);
+  --glass-solid:rgba(10,8,6,.86);
+
+  /* ============ GRADIENTS (named and reserved) ============ */
+  --as-cta-gradient:linear-gradient(135deg,#C79A4B,#F39807);
+  --as-tri-gradient:linear-gradient(90deg,#C79A4B,#F39807,#E5661A);
+  --as-em-gradient:linear-gradient(100deg,#E6C77A,#FF9E2C 45%,#E5661A);
+  --as-orb-metal:radial-gradient(circle at 42% 38%,#F4E7BC,#E0C074 45%,#C79A4B 100%);
+  --as-orb-signal:radial-gradient(circle at 45% 40%,#FFB84D,#F39807 55%,#E5661A 100%);
+  --as-orb-period:
+    radial-gradient(circle at 50% 40%,rgba(243,152,7,.92),rgba(243,152,7,0) 64%),
+    radial-gradient(circle at 42% 38%,#F3E8BC 0%,#E7CE86 38%,#CDA75A 70%,#B89A54 100%);
+  --as-scan-line:linear-gradient(90deg,rgba(255,255,255,.08) 40%,rgba(243,152,7,.45) 50%,rgba(255,255,255,.08) 60%);
+
+  /* ============ SEMANTIC — gold leads, orange stays functional ============ */
+  --accent:var(--as-gold);          /* where the eye lands */
+  --accent-signal:var(--as-orange); /* focus rings, live indicators */
+  --accent-hot:var(--as-amber);     /* hover, key numerals */
+  --accent-quiet:var(--as-champagne);
+  --fg-on-gold:var(--as-ink);
+
+  /* ============ SPACING — 4px base ============ */
+  --s-1:4px;  --s-2:8px;  --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px;
+  --s-7:32px; --s-8:40px; --s-9:56px; --s-10:72px; --s-11:96px; --s-12:128px;
+
+  /* ============ RADII — V18 PILL GEOMETRY ============
+     Nothing between 24px and pill. */
+  --r-xs:4px;
+  --r-md:10px;    /* inputs */
+  --r-frame:18px; /* screenshot / media frames */
+  --r-lg:20px;    /* cards, the workhorse */
+  --r-xl:22px;    /* system cards */
+  --r-2xl:24px;   /* modals, largest cards */
+  --r-pill:100px; /* buttons, nav, chips, badges, segmented controls */
+
+  /* ============ SHADOWS — warm, deep, dark-canvas native ============ */
+  --shadow-sm:0 10px 30px rgba(0,0,0,.5);
+  --shadow-md:0 14px 44px rgba(0,0,0,.5);
+  --shadow-lg:0 30px 80px rgba(0,0,0,.6);
+  --shadow-cta:0 6px 24px rgba(243,152,7,.25);
+  --shadow-cta-hover:0 10px 34px rgba(243,152,7,.38);
+  --shadow-card-hover:0 22px 54px rgba(0,0,0,.45),0 0 44px rgba(243,152,7,.22);
+  --shadow-frame:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(243,152,7,.12);
+  --shadow-orb-sm:0 0 18px rgba(243,152,7,.5);
+  --shadow-orb-md:0 0 30px rgba(243,152,7,.65);
+
+  /* ============ MOTION ============ */
+  --ease-entrance:cubic-bezier(.16,1,.3,1);
+  --ease-layout:cubic-bezier(.22,1,.36,1);
+  --ease-out:cubic-bezier(.2,.7,.2,1);
+  --dur-micro:180ms; --dur-1:250ms; --dur-2:450ms; --dur-3:900ms;
+
+  /* ============ TYPE ============ */
+  --font-display:'Borna',Georgia,'Times New Roman',serif;
+  --font-sans:'Figtree',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  --w-light:300; --w-regular:400; --w-medium:500; --w-semi:600;
+
+  /* ============ STATUS ============ */
   --good:#6FA97C;
   --warn:#E5661A;
   --bad:#B85C5C;
 
+  /* ============ v1.2 ALIASES ===========================
+     Earlier components reference these. Retargeted onto the
+     V18 values above. Prefer the --as-* names in new code. */
+  --bg:var(--as-ink);
+  --bg-2:var(--as-ink-3);
+  --ink:var(--as-text);
+  --ink-2:var(--as-text-body);
+  --soft:var(--as-text-muted);
+  --faint:var(--as-text-faint);
+  --orange:var(--as-orange);
+  --orange-b:var(--as-amber);
+  --ember:var(--as-ember);
+  --gold:var(--as-gold);
+  --gold-l:var(--as-champagne);
+  --gold-d:var(--as-gold-deep);
+  --panel:var(--fill-card);
+  --panel-2:rgba(255,255,255,.06);
+  --hair:var(--hair-neutral);
+  --hairg:var(--hair-gold-active);
   --shadow:0 18px 50px rgba(0,0,0,.55);
-  --r:12px;
-  --r-sm:9px;                /* controls, chips-with-corners, inputs */
-  --r-lg:16px;               /* the large editorial cards on the Terminal */
-  --r-pill:99px;
-
-  --fd:'Borna',Georgia,'Times New Roman',serif;   /* display */
-  --fb:'Figtree',system-ui,-apple-system,sans-serif; /* body / UI */
-  --fm:'JetBrains Mono',ui-monospace,Consolas,monospace; /* labels & data */
-
-  /* ---- legacy aliases -------------------------------------
-     Earlier components referenced these names. Kept so nothing
-     breaks, retargeted onto brand values. Prefer the tokens
-     above in new code. */
-  --paper:var(--ink);
-  --muted:var(--soft);
-  --dim:var(--faint);
-  --line:rgba(255,255,255,.10);
-  --line-strong:rgba(243,152,7,.30);
-  --gold-bright:var(--gold-l);
-  --gold-deep:var(--gold-d);
-  --serif:var(--fd);
-  --sans:var(--fb);
-  --mono:var(--fm);
+  --r:var(--r-lg);          /* was 12px, now the V18 card workhorse */
+  --r-sm:var(--r-md);       /* was 9px, now the V18 input radius */
+  --paper:var(--as-text);
+  --muted:var(--as-text-muted);
+  --dim:var(--as-text-faint);
+  --line:var(--hair-neutral);
+  --line-strong:var(--hair-gold-active);
+  --gold-bright:var(--as-champagne);
+  --gold-deep:var(--as-gold-deep);
+  --fd:var(--font-display);
+  --fb:var(--font-sans);
+  --fm:var(--font-mono);
+  --serif:var(--font-display);
+  --sans:var(--font-sans);
+  --mono:var(--font-mono);
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -90,7 +200,7 @@ html{scroll-behavior:smooth}
 body{
   background:var(--bg);color:var(--ink-2);
   font-family:var(--fb);font-size:15px;line-height:1.6;
-  font-weight:400;
+  font-weight:var(--w-light);
   -webkit-font-smoothing:antialiased;min-height:100vh;
   position:relative;
 }
@@ -111,12 +221,12 @@ body::after{
 /* Keep real content above the atmosphere layers. */
 .layout,.wiz-shell,.login-wrap,.toast{position:relative;z-index:1}
 
-::selection{background:rgba(243,152,7,.28)}
-a{color:var(--orange-b);text-decoration:none}
-a:hover{text-decoration:underline}
+::selection{background:rgba(243,152,7,.32);color:var(--as-text)}
+a{color:var(--as-text);text-decoration:none}
+a:hover{color:var(--accent-hot)}
 img{max-width:100%}
 button{font-family:inherit}
-:focus-visible{outline:2px solid var(--orange);outline-offset:2px;border-radius:4px}
+:focus-visible{outline:2px solid var(--accent-signal);outline-offset:2px;border-radius:var(--r-xs)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
@@ -129,7 +239,7 @@ h2.display{font-size:28px}
 /* Eyebrows are monospace. Non-negotiable. */
 .eyebrow{
   font-family:var(--fm);font-size:11px;letter-spacing:.24em;
-  text-transform:uppercase;color:var(--orange);font-weight:500;
+  text-transform:uppercase;color:var(--accent);font-weight:500;
 }
 .kicker{
   font-family:var(--fm);font-size:10.5px;letter-spacing:.22em;
@@ -147,8 +257,8 @@ h2.display{font-size:28px}
 /* ---------- the orb + lockup (brand signature) ---------- */
 .orb{
   position:relative;border-radius:50%;flex:none;
-  background:radial-gradient(circle at 42% 38%,#F4E7BC 0%,#E0C074 45%,#C79A4B 100%);
-  box-shadow:0 0 44px rgba(199,154,75,.30);
+  background:var(--as-orb-metal);
+  box-shadow:var(--shadow-orb-sm);
 }
 .orb-dot{width:9px;height:9px;display:inline-block;vertical-align:middle}
 
@@ -161,8 +271,9 @@ h2.display{font-size:28px}
 }
 /* The orange square period. Strongest carrier of the identity. */
 .brand-name::after{
-  content:"";width:.17em;height:.17em;background:var(--orange);
-  display:inline-block;margin-left:.12em;
+  content:"";width:.3em;height:.3em;border-radius:50%;
+  background-image:var(--as-orb-period);
+  display:inline-block;margin-left:.08em;
 }
 .brand-name span{color:var(--ink)}
 
@@ -179,7 +290,7 @@ h2.display{font-size:28px}
   letter-spacing:.2em;color:var(--faint);text-transform:uppercase;
 }
 .nav-item{
-  display:flex;align-items:center;gap:11px;padding:10px;border-radius:9px;
+  display:flex;align-items:center;gap:11px;padding:10px;border-radius:var(--r-pill);
   color:var(--soft);font-weight:500;font-size:14px;border:1px solid transparent;cursor:pointer;
   transition:color .12s,background .12s;
 }
@@ -189,12 +300,13 @@ h2.display{font-size:28px}
   background:linear-gradient(90deg,rgba(243,152,7,.14),rgba(243,152,7,.03));
   border-color:var(--hairg);
 }
-.nav-item .ico{width:17px;height:17px;flex:none;opacity:.9}
+/* Lucide strokes carry their own size; CSS only holds the slot. */
+.nav-item .ico{width:18px;height:18px;flex:none;opacity:.9}
 .nav-item.soon{opacity:.4;cursor:default}
 .nav-item.soon:hover{background:none;color:var(--soft)}
 .badge-soon{
   margin-left:auto;font-family:var(--fm);font-size:9px;letter-spacing:.12em;
-  color:var(--faint);border:1px solid var(--hair);border-radius:99px;padding:2px 7px;
+  color:var(--faint);border:1px solid var(--hair);border-radius:var(--r-pill);padding:2px 7px;
 }
 .side-foot{margin-top:auto;padding:14px 10px 4px;border-top:1px solid var(--hair)}
 .user-chip{display:flex;align-items:center;gap:10px}
@@ -234,7 +346,7 @@ h2.display{font-size:28px}
 /* ---------- buttons ---------- */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:11px 20px;border-radius:9px;font-weight:600;font-size:14px;
+  padding:11px 20px;border-radius:var(--r-pill);font-weight:600;font-size:14px;
   cursor:pointer;border:1px solid transparent;
   transition:transform .12s ease,box-shadow .12s ease,background .12s;
   text-decoration:none!important;font-family:var(--fb);
@@ -243,10 +355,10 @@ h2.display{font-size:28px}
 /* Primary CTA rides the canonical gold to orange ramp. */
 .btn-gold{
   position:relative;overflow:hidden;
-  background:linear-gradient(135deg,var(--gold),var(--orange));
-  color:#1A1204;box-shadow:0 6px 22px rgba(243,152,7,.22);
+  background:var(--as-cta-gradient);
+  color:var(--fg-on-gold);box-shadow:var(--shadow-cta);
 }
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(243,152,7,.42)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:var(--shadow-cta-hover)}
 /* The shine sweep from the marketing site, on the same clock. */
 .btn-gold::after{
   content:'';position:absolute;top:0;bottom:0;left:0;width:55%;pointer-events:none;
@@ -270,7 +382,7 @@ label.field>span{
 }
 .input,select.input,textarea.input{
   width:100%;background:rgba(0,0,0,.32);border:1px solid var(--hair);
-  color:var(--ink);border-radius:9px;padding:12px 14px;font-size:15px;font-family:var(--fb);
+  color:var(--ink);border-radius:var(--r-md);padding:12px 14px;font-size:15px;font-family:var(--fb);
 }
 .input:focus{border-color:var(--hairg);outline:none;box-shadow:0 0 0 3px rgba(243,152,7,.12)}
 .input::placeholder{color:var(--faint)}
@@ -282,8 +394,8 @@ label.field>span{
 .chip{
   display:inline-flex;align-items:center;gap:7px;font-family:var(--fm);
   font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  border:1px solid var(--hairg);color:var(--orange-b);
-  padding:4px 11px;border-radius:99px;background:rgba(243,152,7,.07);
+  border:1px solid var(--hairg);color:var(--accent-quiet);
+  padding:4px 11px;border-radius:var(--r-pill);background:rgba(243,152,7,.07);
 }
 .chip.neutral{border-color:var(--hair);color:var(--soft);background:none}
 .chip.good{border-color:rgba(111,169,124,.4);color:var(--good);background:rgba(111,169,124,.07)}
@@ -302,10 +414,10 @@ label.field>span{
 
 /* ---------- allocation bar ---------- */
 .alloc{margin-top:10px}
-.alloc .bar{height:5px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.alloc .bar{height:5px;border-radius:var(--r-pill);background:rgba(255,255,255,.07);overflow:hidden}
 .alloc .fill{
-  height:100%;border-radius:99px;
-  background:linear-gradient(90deg,var(--gold),var(--orange),var(--ember));
+  height:100%;border-radius:var(--r-pill);
+  background:var(--as-tri-gradient);
   box-shadow:0 0 12px rgba(243,152,7,.35);
 }
 .alloc .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:7px;font-family:var(--fm);letter-spacing:.04em}
@@ -320,7 +432,7 @@ label.field>span{
 }
 .deal-card:hover{
   transform:translateY(-5px);border-color:var(--hairg);
-  box-shadow:0 22px 54px rgba(0,0,0,.45),0 0 44px rgba(243,152,7,.10),
+  box-shadow:var(--shadow-card-hover),
     inset 0 1px 0 rgba(255,255,255,.08);
 }
 .deal-grid .deal-card:nth-child(2){animation-delay:.06s}
@@ -343,7 +455,7 @@ label.field>span{
 .thumb .sector{
   position:relative;z-index:1;
   background:rgba(10,8,6,.6);color:rgba(255,255,255,.85);
-  padding:3px 9px;border-radius:7px;backdrop-filter:blur(4px);
+  padding:3px 9px;border-radius:var(--r-pill);backdrop-filter:blur(4px);
 }
 /* The deal mark is the banner artwork, not a corner tile. Width leaves
    room for wordmarks; object-fit keeps square marks at 74px. */
@@ -375,7 +487,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 .toast{
   position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
   background:#161210;border:1px solid var(--hairg);color:var(--ink);
-  padding:13px 22px;border-radius:10px;box-shadow:var(--shadow);opacity:0;
+  padding:13px 22px;border-radius:var(--r-lg);box-shadow:var(--shadow);opacity:0;
   transition:all .25s ease;z-index:200;font-size:14px;pointer-events:none;max-width:90vw;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -398,7 +510,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
   padding:36px 28px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
 }
 .wiz-steps{margin-top:38px;display:flex;flex-direction:column;gap:4px;position:relative}
-.wiz-step{display:flex;gap:14px;padding:12px 6px;border-radius:9px;color:var(--faint);align-items:flex-start}
+.wiz-step{display:flex;gap:14px;padding:12px 6px;border-radius:var(--r-md);color:var(--faint);align-items:flex-start}
 .wiz-step .mark{
   width:26px;height:26px;flex:none;border-radius:50%;border:1px solid var(--hair);
   display:grid;place-items:center;font-family:var(--fm);font-size:11px;background:rgba(0,0,0,.4);
@@ -419,7 +531,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 /* choice cards */
 .choice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
 .choice{
-  border:1px solid var(--hair);border-radius:11px;padding:18px;cursor:pointer;
+  border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;cursor:pointer;
   background:rgba(0,0,0,.24);transition:border-color .12s,background .12s;
 }
 .choice:hover{border-color:var(--hairg)}
@@ -429,12 +541,12 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 
 /* dropzone / kyc */
 .dz{
-  border:1.5px dashed var(--hairg);border-radius:12px;padding:30px;text-align:center;
+  border:1.5px dashed var(--hairg);border-radius:var(--r-lg);padding:30px;text-align:center;
   color:var(--soft);cursor:pointer;background:rgba(243,152,7,.02);
 }
 .dz:hover{background:rgba(243,152,7,.05)}
 .dz.done{border-style:solid;border-color:rgba(111,169,124,.5);color:var(--good)}
-.cam-frame{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:#000;position:relative;aspect-ratio:4/3}
+.cam-frame{border:1px solid var(--hair);border-radius:var(--r-frame);overflow:hidden;background:#000;position:relative;aspect-ratio:4/3}
 .cam-frame video,.cam-frame canvas{width:100%;height:100%;object-fit:cover;display:block}
 
 /* ---------- split-screen invest ---------- */
@@ -448,13 +560,13 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 }
 .docpane h4{font-family:var(--fd);font-size:16px;letter-spacing:.04em;text-transform:uppercase;text-align:center;margin-bottom:4px;color:#12100C}
 .docpane .docsub{text-align:center;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8A7B5E;margin-bottom:24px}
-.docpane .sec{margin:20px 0;padding:14px 16px;border-radius:8px;border:1px solid transparent;transition:background .3s,border-color .3s;position:relative}
+.docpane .sec{margin:20px 0;padding:14px 16px;border-radius:var(--r-md);border:1px solid transparent;transition:background .3s,border-color .3s;position:relative}
 .docpane .sec h5{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:9px;color:#8A7B5E}
 .docpane .sec.filled{background:rgba(184,146,74,.08);border-color:rgba(184,146,74,.3)}
 .docpane .sec .tick{position:absolute;top:12px;right:14px;font-size:12px;color:#B8924A;opacity:0;transition:opacity .3s;font-family:var(--fm)}
 .docpane .sec.filled .tick{opacity:1}
 .f{border-bottom:1px solid #C9BFA8;padding:0 3px;color:#A07A22;font-style:italic;min-width:40px;display:inline-block}
-.f.set{color:#12100C;font-style:normal;font-weight:600;background:rgba(184,146,74,.16);border-bottom-color:#B8924A;border-radius:2px}
+.f.set{color:#12100C;font-style:normal;font-weight:600;background:rgba(184,146,74,.16);border-bottom-color:#B8924A;border-radius:var(--r-xs)}
 .sig-line{border-bottom:1.5px solid #12100C;min-width:220px;display:inline-block;font-family:var(--fd);font-size:20px;padding:0 6px}
 
 .qcard{margin-bottom:16px}
@@ -463,8 +575,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 .qcard p{color:var(--soft);font-size:13.8px;margin-bottom:14px}
 .qcard.confirmed{border-color:rgba(111,169,124,.4)}
 .qcard.confirmed .btn{background:rgba(111,169,124,.12);color:var(--good);border-color:rgba(111,169,124,.4);box-shadow:none}
-.progress{height:4px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin:6px 0 22px}
-.progress .p{height:100%;background:linear-gradient(90deg,var(--gold),var(--orange),var(--ember));transition:width .4s ease;border-radius:99px}
+.progress{height:4px;background:rgba(255,255,255,.07);border-radius:var(--r-pill);overflow:hidden;margin:6px 0 22px}
+.progress .p{height:100%;background:var(--as-tri-gradient);transition:width .4s ease;border-radius:var(--r-pill)}
 
 /* fee table */
 .fee-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13.5px}
@@ -483,11 +595,11 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 .spotbot{border-color:var(--hairg)}
 .spot-q{
   display:block;width:100%;text-align:left;background:rgba(255,255,255,.03);
-  border:1px solid var(--hair);color:var(--soft);border-radius:9px;
+  border:1px solid var(--hair);color:var(--soft);border-radius:var(--r-pill);
   padding:11px 14px;margin-bottom:9px;cursor:pointer;font-size:13.5px;font-family:var(--fb);
 }
 .spot-q:hover{color:var(--ink);border-color:var(--hairg)}
-.spot-a{background:rgba(243,152,7,.06);border:1px solid var(--hair);border-radius:9px;padding:14px 16px;font-size:13.5px;color:var(--ink-2);margin-bottom:10px;line-height:1.65}
+.spot-a{background:rgba(243,152,7,.06);border:1px solid var(--hair);border-radius:var(--r-lg);padding:14px 16px;font-size:13.5px;color:var(--ink-2);margin-bottom:10px;line-height:1.65}
 .spot-a .src{display:block;margin-top:10px;font-family:var(--fm);font-size:9.5px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase}
 
 /* deck sections inside the deal page */
@@ -504,13 +616,13 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 
 .demo-note{
   border:1px solid rgba(229,102,26,.4);background:rgba(229,102,26,.07);color:var(--ember);
-  border-radius:9px;padding:11px 14px;font-size:12.5px;line-height:1.55;
+  border-radius:var(--r-md);padding:11px 14px;font-size:12.5px;line-height:1.55;
 }
 /* Anything tagged demo-only, removed before production. */
 .demo-tag{
   display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:9px;
   letter-spacing:.16em;text-transform:uppercase;color:var(--ember);
-  border:1px solid rgba(229,102,26,.45);border-radius:99px;padding:3px 9px;
+  border:1px solid rgba(229,102,26,.45);border-radius:var(--r-pill);padding:3px 9px;
   background:rgba(229,102,26,.08);
 }
 
@@ -545,3 +657,44 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
   .slide{padding:30px 22px}
   h1.display{font-size:32px}
 }
+
+/* ============================================================
+   V18 keyframe kit. Named exactly as the design system ships
+   them so marketing and product stay in step.
+   ============================================================ */
+@keyframes as-breathe{0%,100%{opacity:.85}50%{opacity:1}}
+@keyframes as-pulse{
+  0%{box-shadow:0 0 0 0 rgba(243,152,7,.45)}
+  70%{box-shadow:0 0 0 12px rgba(243,152,7,0)}
+  100%{box-shadow:0 0 0 0 rgba(243,152,7,0)}
+}
+@keyframes as-scan2{0%{background-position:120% 0}100%{background-position:-20% 0}}
+@keyframes as-fadeup{
+  0%{opacity:0;transform:translateY(28px)}
+  100%{opacity:1;transform:none}
+}
+
+/* Reveal-on-scroll: .9s entrance easing, 80ms sibling stagger. */
+.as-reveal{animation:as-fadeup var(--dur-3) var(--ease-entrance) backwards}
+.as-reveal:nth-child(2){animation-delay:80ms}
+.as-reveal:nth-child(3){animation-delay:160ms}
+.as-reveal:nth-child(4){animation-delay:240ms}
+.as-reveal:nth-child(n+5){animation-delay:320ms}
+
+/* The section-opener scan hairline. */
+.as-scan{
+  flex:1;height:1px;background:var(--as-scan-line);
+  background-size:220% 100%;animation:as-scan2 6s linear infinite;
+}
+
+/* ============================================================
+   CATEGORY TINTS — asset-class taxonomy only.
+   The documented exception to "no blue, green, purple". Never
+   use these for brand chrome, CTAs, focus, or navigation.
+   Structure matches the gold chip: solid text, .3 border,
+   .07 fill. From AltSpot_VC_Deck_v18.
+   ============================================================ */
+.chip.cat-secondary{color:var(--as-cat-secondary);border-color:rgba(124,180,245,.35);background:rgba(124,180,245,.07)}
+.chip.cat-realasset{color:var(--as-cat-realasset);border-color:rgba(85,208,176,.35);background:rgba(85,208,176,.07)}
+.chip.cat-violet{color:var(--as-cat-violet);border-color:rgba(169,139,230,.36);background:rgba(169,139,230,.07)}
+.chip.cat-info{color:var(--as-cat-info);border-color:rgba(156,196,240,.35);background:rgba(156,196,240,.07)}

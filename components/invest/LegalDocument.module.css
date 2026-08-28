@@ -50,7 +50,7 @@
 .clause{
   display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
   margin:22px 0 8px;padding:7px 10px;margin-left:-10px;
-  border-radius:6px;border:1px solid transparent;
+  border-radius: var(--r-xs);border:1px solid transparent;
   transition:background .35s ease,border-color .35s ease;
 }
 .clauseDone{background:rgba(184,146,74,.11);border-color:rgba(184,146,74,.34)}
@@ -87,7 +87,7 @@
 .mergeFilled{
   color:#12100C;font-style:normal;font-weight:700;
   background:rgba(184,146,74,.16);
-  border-bottom-color:#A07A22;border-radius:2px;
+  border-bottom-color:#A07A22;border-radius: var(--r-xs);
 }
 
 /* Signature-page summary lines: label left, value right. */
@@ -117,11 +117,11 @@
 .tabs{
   display:flex;gap:4px;margin-bottom:10px;
   background:rgba(0,0,0,.28);border:1px solid var(--hair);
-  border-radius:10px;padding:4px;
+  border-radius: var(--r-pill);padding:4px;
 }
 .tab{
   flex:1;padding:9px 10px;border:none;background:none;cursor:pointer;
-  border-radius:7px;color:var(--soft);
+  border-radius: var(--r-pill);color:var(--soft);
   font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;
   text-transform:uppercase;transition:background .12s,color .12s;
 }
@@ -133,7 +133,7 @@
   display:inline-block;margin-top:14px;
   font-family:var(--fm);font-size:9px;letter-spacing:.16em;
   text-transform:uppercase;color:#A07A22;
-  border:1px solid rgba(184,146,74,.4);border-radius:99px;padding:4px 11px;
+  border:1px solid rgba(184,146,74,.4);border-radius: var(--r-pill);padding:4px 11px;
 }
 .purpose{
   margin:14px auto 0;max-width:60ch;

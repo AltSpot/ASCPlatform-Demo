@@ -1,0 +1,99 @@
+/* AltSpot Card — the V18 container.
+   Glass on the dark canvas, paper on the cream band. 20px radius:
+   the workhorse. Hover lifts, never scales. */
+
+.card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  border-radius: var(--r-lg);
+  padding: var(--s-7) 26px;
+  font-family: var(--font-sans);
+  transition:
+    transform var(--dur-1) var(--ease-layout),
+    border-color var(--dur-1) ease,
+    box-shadow var(--dur-1) ease;
+}
+
+/* ---- glass: the dark-canvas default ---- */
+.glass {
+  background: var(--fill-card);
+  border: 1px solid var(--hair-neutral);
+  backdrop-filter: blur(6px);
+}
+.glass.neutral {
+  border-color: var(--hair-neutral);
+}
+.glass.gold {
+  border-color: var(--hair-gold-active);
+}
+.glass.ember {
+  border-color: var(--hair-ember);
+}
+.glass.champagne {
+  border-color: var(--hair-champagne);
+}
+
+.interactive:hover {
+  transform: translateY(-4px);
+  border-color: var(--hair-gold-active);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ---- paper: white card for the cream band ---- */
+.paper {
+  background: var(--as-pure);
+  border: 1px solid var(--hair-cream);
+}
+
+/* The 3px tri-gradient top bar. On for paper, opt-in for glass. */
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--as-tri-gradient);
+}
+
+/* ---- interior ---- */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-signal);
+}
+.paper .kicker {
+  color: #b0812f;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--as-text);
+}
+.paper .title {
+  color: var(--as-cream-ink);
+}
+
+.body {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--as-text-muted);
+}
+.paper .body {
+  color: var(--as-cream-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive:hover {
+    transform: none;
+  }
+}

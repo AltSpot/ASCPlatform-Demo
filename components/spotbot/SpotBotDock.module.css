@@ -20,7 +20,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 16px 10px 12px;
-  border-radius: 99px;
+  border-radius: var(--r-pill);
   border: 1px solid var(--hairg);
   background: linear-gradient(135deg, rgba(243, 152, 7, 0.16), rgba(10, 8, 6, 0.92));
   backdrop-filter: blur(8px);
@@ -123,7 +123,7 @@
   border: 1px solid var(--hair);
   background: transparent;
   color: var(--soft);
-  border-radius: 8px;
+  border-radius: var(--r-pill);
   width: 28px;
   height: 28px;
   cursor: pointer;
@@ -183,7 +183,7 @@
   max-width: 88%;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--hair);
-  border-radius: 10px 10px 3px 10px;
+  border-radius: var(--r-lg) var(--r-lg) var(--r-xs) var(--r-lg);
   padding: 9px 13px;
   font-size: 13.2px;
   line-height: 1.55;
@@ -194,7 +194,7 @@
   max-width: 96%;
   background: rgba(243, 152, 7, 0.06);
   border: 1px solid var(--hairg);
-  border-radius: 10px 10px 10px 3px;
+  border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--r-xs);
   padding: 12px 14px;
   font-size: 13.2px;
   line-height: 1.65;
@@ -245,7 +245,7 @@
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--hair);
   color: var(--soft);
-  border-radius: 9px;
+  border-radius: var(--r-pill);
   padding: 9px 12px;
   cursor: pointer;
   font-size: 12.6px;
@@ -274,7 +274,7 @@
   background: rgba(0, 0, 0, 0.34);
   border: 1px solid var(--hair);
   color: var(--ink);
-  border-radius: 9px;
+  border-radius: var(--r-md);
   padding: 10px 12px;
   font-size: 13.4px;
   font-family: var(--fb);
@@ -290,7 +290,7 @@
 .send {
   flex: none;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--r-pill);
   padding: 0 15px;
   font-family: var(--fm);
   font-size: 10px;

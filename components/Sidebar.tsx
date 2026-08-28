@@ -9,6 +9,16 @@
  */
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import {
+  FileText,
+  LayoutDashboard,
+  Newspaper,
+  Settings,
+  Store,
+  TrendingUp,
+  UserRound,
+  type LucideIcon,
+} from 'lucide-react';
 
 import { api } from '@/lib/client/api';
 import { initials } from '@/lib/format';
@@ -18,7 +28,7 @@ interface NavEntry {
   id: string;
   label: string;
   href: string;
-  icon: string;
+  icon: LucideIcon;
   /** Routes that should also light this entry. */
   match: string[];
 }
@@ -28,52 +38,53 @@ const NAV: NavEntry[] = [
     id: 'dashboard',
     label: 'Dashboard',
     href: '/dashboard',
-    icon: 'M3 13h6V3H3v10zm0 8h6v-6H3v6zm8 0h10V11H11v10zm0-18v6h10V3H11z',
+    icon: LayoutDashboard,
     match: ['/dashboard', '/payment'],
   },
   {
     id: 'terminal',
     label: 'Terminal',
     href: '/terminal',
-    icon: 'M3 4h18v16H3V4zm2 3v11h14V7H5zm2 2h4v2H7V9zm0 4h10v1.6H7V13zm0 3h7v1.6H7V16z',
+    icon: Newspaper,
     match: ['/terminal'],
   },
   {
     id: 'marketplace',
     label: 'Marketplace',
     href: '/marketplace',
-    icon: 'M4 7l8-4 8 4v2H4V7zm1 4h14v8h-4v-5H9v5H5v-8z',
+    icon: Store,
     match: ['/marketplace', '/deals', '/invest'],
   },
   {
     id: 'docs',
     label: 'Docs',
     href: '/docs',
-    icon: 'M6 2h9l5 5v15H6V2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8V12zm0 4h8v1.6H8V16z',
+    icon: FileText,
     match: ['/docs'],
   },
   {
     id: 'profiles',
     label: 'Profiles',
     href: '/profiles',
-    icon: 'M12 12a4.5 4.5 0 100-9 4.5 4.5 0 000 9zm-8 9a8 8 0 0116 0H4z',
+    icon: UserRound,
     match: ['/profiles'],
   },
   {
     id: 'settings',
     label: 'Settings',
     href: '/settings',
-    icon: 'M12 8a4 4 0 110 8 4 4 0 010-8zm9 4l-2.1-.7.3-2.2-1.9-1.1-1.7 1.4-2-.9L13 6h-2l-.6 2.5-2 .9-1.7-1.4-1.9 1.1.3 2.2L3 12l2.1.7-.3 2.2 1.9 1.1 1.7-1.4 2 .9L11 18h2l.6-2.5 2-.9 1.7 1.4 1.9-1.1-.3-2.2L21 12z',
+    icon: Settings,
     match: ['/settings'],
   },
 ];
 
-function Icon({ d }: { d: string }) {
-  return (
-    <svg className="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d={d} />
-    </svg>
-  );
+/**
+ * V18 iconography: Lucide, 1.5px stroke, currentColor. The system
+ * calibrates that weight at 24px; portal chrome is denser than the
+ * marketing surface, so nav sits at 18px and keeps the stroke.
+ */
+function Icon({ glyph: Glyph }: { glyph: LucideIcon }) {
+  return <Glyph className="ico" size={18} strokeWidth={1.5} aria-hidden="true" />;
 }
 
 export default function Sidebar({ user }: { user: SessionUser }) {
@@ -90,7 +101,7 @@ export default function Sidebar({ user }: { user: SessionUser }) {
     <aside className="sidebar">
       <div className="brand">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="brand-logo" src="/brand/altspot-logo-white.png" alt="AltSpot" />
+        <img className="brand-logo" src="/brand/altspot-capital-product-lockup.svg" alt="AltSpot Capital" />
       </div>
 
       <div className="nav-label">Investor portal</div>
@@ -103,14 +114,14 @@ export default function Sidebar({ user }: { user: SessionUser }) {
             href={entry.href}
             className={active ? 'nav-item active' : 'nav-item'}
           >
-            <Icon d={entry.icon} />
+            <Icon glyph={entry.icon} />
             {entry.label}
           </Link>
         );
       })}
 
       <div className="nav-item soon" title="Secondary liquidity, in design">
-        <Icon d="M7 17l4-6 3 3 4-7" />
+        <Icon glyph={TrendingUp} />
         Secondaries
         <span className="badge-soon">Soon</span>
       </div>

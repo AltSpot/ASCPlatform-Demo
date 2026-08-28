@@ -1,0 +1,52 @@
+/* AltSpot Eyebrow — the V18 mono section label.
+   If the eyebrow is not monospace, it is not AltSpot. */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--w-regular);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ---- tones ---- */
+.muted {
+  color: var(--as-text-muted);
+}
+.signal {
+  color: var(--accent-signal);
+}
+.champagne {
+  color: var(--accent-quiet);
+}
+.emberSoft {
+  color: var(--as-ember-soft);
+}
+.gold {
+  color: var(--as-gold);
+}
+
+/* The 34px gold to signal rule that opens a section. */
+.rule {
+  display: inline-block;
+  width: 34px;
+  height: 1px;
+  flex: none;
+  background: var(--as-cta-gradient);
+}
+
+/* The live indicator. Signal orange is functional, so it stays orange
+   here even on Capital surfaces where gold otherwise leads. */
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent-signal);
+  box-shadow: 0 0 10px rgba(243, 152, 7, 0.55);
+}
