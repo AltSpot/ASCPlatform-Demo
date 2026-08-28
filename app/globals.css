@@ -322,7 +322,18 @@ h2.display{font-size:28px}
 .logout{margin-left:auto;color:var(--faint);font-size:12px;background:none;border:none;cursor:pointer}
 .logout:hover{color:var(--ink)}
 
-.main{padding:34px 44px 70px;max-width:1180px;width:100%}
+.main{
+  padding:34px 44px 70px;max-width:1360px;width:100%;
+  transition:padding-right var(--dur-2) var(--ease-layout);
+}
+
+/* Spot is a fixed panel and would otherwise cover the page. When it is
+   open the content folds in beside it rather than hiding underneath.
+   Only where there is room to give: below this the panel is most of the
+   screen anyway and folding would leave a sliver. */
+@media (min-width:1180px){
+  body[data-spot-open='true'] .main{padding-right:432px}
+}
 .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:26px;flex-wrap:wrap}
 .page-head .titles{display:flex;flex-direction:column;gap:8px}
 

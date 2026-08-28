@@ -15,6 +15,7 @@
  * the back button still leaves the marketplace instead of walking the
  * user through their own tab presses.
  */
+import { Radar, Store } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 
 import s from './Marketplace.module.css';
@@ -73,7 +74,8 @@ export default function MarketplaceTabs({
           aria-controls="marketplace-panel"
           onClick={() => select('current')}
         >
-          Current opportunities
+          <Store size={15} strokeWidth={1.5} aria-hidden="true" />
+          Open now
           <span className={s.count}>{dealCount}</span>
         </button>
         <button
@@ -84,7 +86,8 @@ export default function MarketplaceTabs({
           aria-controls="marketplace-panel"
           onClick={() => select('radar')}
         >
-          AltSpot Radar
+          <Radar size={15} strokeWidth={1.5} aria-hidden="true" />
+          On the radar
           <span className={s.count}>{radarCount}</span>
         </button>
       </div>

@@ -21,7 +21,7 @@ export async function ask(request: SpotBotRequest): Promise<SpotBotAnswer> {
   const payload = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(payload?.error?.message ?? 'SpotBot is unavailable');
+    throw new Error(payload?.error?.message ?? 'Spot is unavailable');
   }
 
   return payload as SpotBotAnswer;

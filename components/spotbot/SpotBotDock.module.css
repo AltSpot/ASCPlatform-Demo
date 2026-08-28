@@ -101,13 +101,16 @@
   align-items: baseline;
 }
 /* The orange square period, same signature as the wordmark. */
+/* The orb period, same as the wordmark. This module kept its own copy
+   of the retired orange square. */
 .headName::after {
   content: '';
-  width: 0.17em;
-  height: 0.17em;
-  background: var(--orange);
+  width: 0.3em;
+  height: 0.3em;
+  border-radius: 50%;
+  background-image: var(--as-orb-period);
   display: inline-block;
-  margin-left: 0.12em;
+  margin-left: 0.08em;
 }
 .headPage {
   display: block;

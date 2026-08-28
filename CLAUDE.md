@@ -162,7 +162,13 @@ record *which* option was chosen, not merely that the panel was seen. `covers`
 names the clauses each panel discharges so counsel can audit the mapping without
 reading a component.
 
-### SpotBot
+### Spot
+
+**The guide is called Spot in every surface a member reads.** The code keeps the
+`SpotBot*` identifiers, the `components/spotbot/` and `lib/spotbot/` paths and
+the `/api/spotbot` route: renaming them moves the API surface and the tests for
+no user-visible gain, and `lib/spotbot/` is the seam a real model drops into.
+When you add copy, it is Spot. When you add code, match the file you are in.
 
 A portal-wide dock (`components/spotbot/`), mounted once in the portal shell so
 the conversation survives client navigation. It reads the pathname, which is

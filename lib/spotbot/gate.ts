@@ -186,7 +186,7 @@ export function refusalAnswer(reason: RefusalReason): SpotBotAnswer {
   const refusal = REFUSALS[reason];
   return {
     body: refusal.body,
-    source: 'AltSpot platform guide, SpotBot scope',
+    source: 'AltSpot platform guide, Spot scope',
     refused: true,
     reason,
     followUps: questionsFor(refusal.followUps),

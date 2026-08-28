@@ -2,16 +2,19 @@
    AltSpot Radar — the private companies AltSpot is tracking.
 
    The shelf sells. Radar asks. So the cards deliberately do not
-   look like deal cards: no cover art, no allocation bar, no gold
-   CTA. What they carry instead is reference data set as a table,
-   a research section that stays folded until it is wanted, and
-   one honest question at the bottom.
+   look like deal cards: no cover art and no allocation bar. What
+   they carry instead is the company's own mark, demand as the
+   headline figure, the market references beneath it, AltSpot's
+   own range on its own surface, a research section that stays
+   folded until it is wanted, and one honest question at the end.
+
+   Surfaces here are glass, not gold. Four cards each carrying two
+   tinted panels left the page with nothing lit; the warmth is
+   spent on the demand numeral and the switcher instead.
 
    Tokens come from app/globals.css. No new colours here.
    ============================================================ */
 
-/* Four names, so two columns. A 2 by 2 board has no orphan card,
-   and the extra width is what the research section reads best at. */
 .board {
   display: grid;
   /* Three across. Falls to two, then one, rather than letting a card
@@ -23,9 +26,20 @@
   align-items: start;
 }
 
+/* Spot open takes 432px off the content. Three columns in what is left
+   squeezes the figures, so the board gives a column back rather than
+   letting the cards get narrow. */
+:global(body[data-spot-open='true']) .board {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 @media (max-width: 1280px) {
   .board {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(body[data-spot-open='true']) .board {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -61,8 +75,8 @@
 /* A card the member has already spoken on reads differently at a
    glance, without shouting. */
 .card[data-indicated='true'] {
-  border-color: var(--hair-gold-active);
-  background: linear-gradient(180deg, rgba(243, 152, 7, 0.07), rgba(243, 152, 7, 0.01));
+  border-color: var(--hair-champagne);
+  background: linear-gradient(180deg, rgba(199, 154, 75, 0.05), rgba(199, 154, 75, 0.01));
 }
 
 /* The one masked texture the V18 card spec allows. Decorative, behind
@@ -185,6 +199,9 @@
 }
 
 .about {
+  margin: -4px 0 2px;
+  padding-left: 13px;
+  border-left: 1px solid var(--hair-neutral);
   font-size: 13.5px;
   line-height: 1.62;
   color: var(--as-text-body);
@@ -197,9 +214,9 @@
   flex-direction: column;
   gap: 7px;
   padding: 14px 16px;
-  border: 1px solid var(--hair-gold-active);
+  border: 1px solid var(--hair-neutral);
   border-radius: var(--r-md);
-  background: var(--fill-gold-tint);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .demandTop {
@@ -239,8 +256,7 @@
 .demandFill {
   height: 100%;
   border-radius: var(--r-pill);
-  background: var(--as-tri-gradient);
-  box-shadow: 0 0 12px rgba(243, 152, 7, 0.35);
+  background: var(--as-cta-gradient);
   transition: width var(--dur-2) var(--ease-out);
 }
 
@@ -249,7 +265,7 @@
   font-size: 9.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--as-text-faint);
+  color: var(--accent-quiet);
 }
 
 /* ---------- reference figures ---------- */
@@ -276,7 +292,7 @@
   font-size: 9.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--as-text-faint);
+  color: var(--accent-quiet);
 }
 
 .figureValue {
@@ -301,9 +317,9 @@
   flex-direction: column;
   gap: 4px;
   padding: 13px 16px;
-  border: 1px solid var(--hair-champagne);
+  border: 1px solid var(--hair-neutral);
   border-radius: var(--r-md);
-  background: rgba(199, 154, 75, 0.06);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .targetKey {
@@ -311,13 +327,13 @@
   font-size: 9.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--as-gold);
+  color: var(--accent-quiet);
 }
 
 .targetValue {
   font-family: var(--font-mono);
-  font-size: 15.5px;
-  color: var(--accent-quiet);
+  font-size: 16px;
+  color: var(--as-text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -694,18 +710,19 @@
 
 .disclosure b {
   display: block;
-  font-family: var(--fm);
+  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--soft);
-  margin-bottom: 9px;
+  color: var(--accent-quiet);
+  margin-bottom: 11px;
 }
 
 .disclosure p {
-  font-size: 12.5px;
-  line-height: 1.65;
-  color: var(--faint);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--as-text-muted);
+  max-width: 78ch;
 }
 
 .disclosure p + p {

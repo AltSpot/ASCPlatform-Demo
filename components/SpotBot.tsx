@@ -19,11 +19,11 @@ export default function SpotBot({ entries }: { entries: SpotbotEntry[] }) {
   return (
     <div className="card spotbot">
       <div className="eyebrow" style={{ marginBottom: 8 }}>
-        Ask SpotBot
+        Ask Spot
       </div>
       <p className="small" style={{ marginBottom: 14 }}>
         Plain-language answers about this deal, drawn only from approved materials.
-        SpotBot explains. It never advises.
+        Spot explains. It never advises.
       </p>
 
       {entries.map((entry, i) => (
@@ -39,7 +39,7 @@ export default function SpotBot({ entries }: { entries: SpotbotEntry[] }) {
             <div className="spot-a">
               {entry.a}
               <span className="src">
-                SpotBot · scoped to the approved AltSpot memo · logged for books &amp;
+                Spot · scoped to the approved AltSpot memo · logged for books &amp;
                 records
               </span>
             </div>
@@ -48,7 +48,7 @@ export default function SpotBot({ entries }: { entries: SpotbotEntry[] }) {
       ))}
 
       <p className="tiny" style={{ marginTop: 6 }}>
-        Demo preview with canned responses. The production SpotBot answers live from the
+        Demo preview with canned responses. The production Spot answers live from the
         deal&rsquo;s approved data room.
       </p>
     </div>

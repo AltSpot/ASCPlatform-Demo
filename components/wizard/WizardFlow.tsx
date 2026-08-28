@@ -138,7 +138,7 @@ export default function WizardFlow({
       <aside className="wiz-rail">
         <div className="brand">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="brand-logo" src="/brand/altspot-capital-product-lockup.svg" alt="AltSpot Capital" />
+          <img className="brand-logo" src="/brand/altspot-wordmark.svg" alt="AltSpot" />
         </div>
 
         <div>

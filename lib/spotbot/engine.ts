@@ -150,7 +150,7 @@ export async function generateAnswer(input: AnswerInput): Promise<SpotBotAnswer>
   if (THANKS.test(text)) {
     return {
       body: 'Any time. I am here on every page, so ask again whenever something on screen needs explaining.',
-      source: 'AltSpot platform guide, SpotBot',
+      source: 'AltSpot platform guide, Spot',
       refused: false,
       followUps: input.page.suggested,
     };

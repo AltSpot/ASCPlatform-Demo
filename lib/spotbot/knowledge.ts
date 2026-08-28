@@ -658,7 +658,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
     ],
     answer:
       'I explain the platform and the process. How a step works, what a term means, what a document contains, what the fees are, what happens after you fund. I answer from AltSpot\'s own materials and I cite the source under every answer, so you can check me. What I will not do is tell you whether to invest, guess at returns, size a position, or give tax or legal advice. Those belong with the offering documents and your own advisor. If you want a person, contact AltSpot directly.',
-    source: 'AltSpot platform guide, SpotBot',
+    source: 'AltSpot platform guide, Spot',
     related: ['sourcing', 'fees', 'illiquidity'],
   },
   {

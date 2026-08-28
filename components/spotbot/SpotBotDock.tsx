@@ -15,6 +15,7 @@
  * Not to be confused with components/SpotBot.tsx, the per-deal Q&A card.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { ask } from '@/lib/spotbot/client';
@@ -84,6 +85,22 @@ export default function SpotBotDock() {
     wasOpen.current = open;
   }, [open]);
 
+  /**
+   * The panel is fixed and would otherwise sit on top of the page. Tell
+   * the document it is open so the shell can fold the content in beside
+   * it instead of underneath it. An attribute rather than a prop because
+   * the portal shell is a server component and the dock is mounted as a
+   * sibling of the content, not a parent.
+   */
+  useEffect(() => {
+    const root = document.body;
+    if (open) root.dataset.spotOpen = 'true';
+    else delete root.dataset.spotOpen;
+    return () => {
+      delete root.dataset.spotOpen;
+    };
+  }, [open]);
+
   useEffect(() => {
     const log = logRef.current;
     if (!log) return;
@@ -132,21 +149,21 @@ export default function SpotBotDock() {
         <div
           className={styles.panel}
           role="dialog"
-          aria-label="SpotBot"
+          aria-label="Spot"
           id="spotbot-panel"
         >
           <div className={styles.head}>
             <div className={`orb ${styles.headOrb}`} aria-hidden="true" />
             <div className={styles.headText}>
-              <span className={styles.headName}>SpotBot</span>
+              <span className={styles.headName}>Spot</span>
               <span className={styles.headPage}>{page.label}</span>
             </div>
             <button
               className={styles.close}
               onClick={() => setOpen(false)}
-              aria-label="Close SpotBot"
+              aria-label="Close Spot"
             >
-              ✕
+              <X size={15} strokeWidth={1.5} aria-hidden="true" />
             </button>
           </div>
 
@@ -213,7 +230,7 @@ export default function SpotBotDock() {
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               placeholder="Ask about this page"
-              aria-label="Ask SpotBot about this page"
+              aria-label="Ask Spot about this page"
               maxLength={400}
               autoComplete="off"
             />
@@ -222,7 +239,7 @@ export default function SpotBotDock() {
             </button>
           </form>
 
-          <p className={styles.foot}>SpotBot explains, it never advises.</p>
+          <p className={styles.foot}>Spot explains, it never advises.</p>
         </div>
       )}
 
@@ -232,10 +249,10 @@ export default function SpotBotDock() {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-controls="spotbot-panel"
-        aria-label={open ? 'Close SpotBot' : 'Open SpotBot, the AltSpot guide'}
+        aria-label={open ? 'Close Spot' : 'Open Spot, the AltSpot guide'}
       >
         <span className={`orb ${styles.launcherOrb}`} aria-hidden="true" />
-        <span className={styles.launcherLabel}>SpotBot</span>
+        <span className={styles.launcherLabel}>Spot</span>
       </button>
     </div>
   );
