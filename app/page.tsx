@@ -24,24 +24,14 @@ export default async function LoginPage() {
       <div className="orb login-orb2" />
 
       <div className="card login-card">
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, marginBottom: 26 }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 26 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="brand-logo"
-            style={{ height: 30 }}
+            style={{ height: 26 }}
             src="/brand/altspot-capital-product-lockup.svg"
             alt="AltSpot Capital"
           />
-          <span
-            style={{
-              color: 'var(--muted)',
-              fontFamily: 'var(--sans)',
-              fontWeight: 400,
-              fontSize: 13,
-            }}
-          >
-            Capital
-          </span>
         </div>
 
         <h1 className="display" style={{ fontSize: 30, marginBottom: 8 }}>
