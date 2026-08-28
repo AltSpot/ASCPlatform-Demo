@@ -199,32 +199,6 @@
   gap: 11px;
 }
 
-.posPlate {
-  width: 34px;
-  height: 34px;
-  flex: none;
-  border-radius: var(--r-md);
-  display: grid;
-  place-items: center;
-  padding: 6px;
-  background: var(--as-cream);
-  border: 1px solid var(--hair-cream);
-}
-
-.posLogo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-.posMono {
-  font-family: var(--font-display);
-  font-weight: var(--w-medium);
-  font-size: 13px;
-  color: var(--as-cream-ink);
-}
-
 .posName {
   min-width: 0;
 }
@@ -261,4 +235,48 @@
   .stat:hover {
     transform: none;
   }
+}
+
+/* ------------------------------------------------------------------
+   Holding status. The chip says what is needed; the left mark makes
+   the table scannable without reading a word of it. Ember is "you owe
+   this an action", champagne is "we owe you one", good is settled.
+   ------------------------------------------------------------------ */
+.row td:first-child {
+  box-shadow: inset 3px 0 0 var(--row-tone, transparent);
+}
+
+.row[data-status='action'] {
+  --row-tone: var(--as-ember);
+}
+.row[data-status='progress'] {
+  --row-tone: var(--accent-quiet);
+}
+.row[data-status='active'] {
+  --row-tone: var(--good);
+}
+
+.statusAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--as-ember-soft);
+  border-color: var(--hair-ember);
+  background: rgba(229, 102, 26, 0.08);
+}
+.statusProgress {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent-quiet);
+  border-color: var(--hair-champagne);
+  background: rgba(199, 154, 75, 0.07);
+}
+.statusActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--good);
+  border-color: rgba(111, 169, 124, 0.4);
+  background: rgba(111, 169, 124, 0.07);
 }

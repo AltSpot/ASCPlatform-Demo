@@ -7,13 +7,19 @@
 import {
   Clock,
   CircleCheck,
+  FileSignature,
+  Hourglass,
   TrendingDown,
   TrendingUp,
   Wallet,
 } from 'lucide-react';
 import Link from 'next/link';
 
-import LineChart from '@/components/LineChart';
+import CompanyMark from '@/components/CompanyMark';
+import PortfolioChart, {
+  type PortfolioPoint,
+  type PortfolioRange,
+} from '@/components/PortfolioChart';
 import PendingCommitments from '@/components/PendingCommitments';
 import SetupBanner from '@/components/SetupBanner';
 import WatchlistBlock from '@/components/WatchlistBlock';
@@ -71,12 +77,34 @@ export default async function DashboardPage() {
   const pct = invested ? (gain / invested) * 100 : 0;
   const pendingAmount = pending.reduce((sum, s) => sum + s.amount, 0);
 
-  // A plausible curve that lands on today's value.
+  /**
+   * DEMO SEAM: a plausible curve that lands on today's value. Real marks
+   * arrive per reporting period from the deal vehicles; this exists so
+   * the chart has a shape before there is history to draw.
+   *
+   * Twelve quarters, so the range switcher has three years to offer.
+   * The dips are deliberate: a line that only ever rises reads as a
+   * sales chart rather than a portfolio.
+   */
   const base = invested || 25_000;
   const end = value || base;
-  const series = [0, 0.05, 0.04, 0.12, 0.17, 0.26, 0.35, 1].map((f) =>
-    Math.round(base + (end - base) * f),
-  );
+  const CURVE = [0, 0.03, 0.02, 0.09, 0.13, 0.11, 0.19, 0.26, 0.31, 0.44, 0.68, 1];
+
+  const today = new Date();
+  const chartPoints: PortfolioPoint[] = CURVE.map((f, i) => {
+    const back = CURVE.length - 1 - i;
+    const when = new Date(today.getFullYear(), today.getMonth() - back * 3, 1);
+    return {
+      label: `Q${Math.floor(when.getMonth() / 3) + 1} ${when.getFullYear()}`,
+      value: Math.round(base + (end - base) * f),
+    };
+  });
+
+  const chartRanges: PortfolioRange[] = [
+    { key: '1y', label: '1Y', points: 4 },
+    { key: '2y', label: '2Y', points: 8 },
+    { key: '3y', label: '3Y', points: 12 },
+  ];
 
   return (
     <>
@@ -161,12 +189,14 @@ export default async function DashboardPage() {
           <span className={d.sectionRule} aria-hidden="true" />
           Portfolio value
         </p>
-        <span className={d.sectionNote}>
-          Trailing 8 quarters · marks per AltSpot reporting
-        </span>
+        <span className={d.sectionNote}>Marks per AltSpot reporting</span>
       </div>
       <div className="card">
-        <LineChart series={series} width={900} height={220} id="portfolio" />
+        <PortfolioChart
+          points={chartPoints}
+          ranges={chartRanges}
+          invested={invested || base}
+        />
       </div>
 
       <div className={d.sectionHead}>
@@ -210,25 +240,22 @@ export default async function DashboardPage() {
                 const current = s.currentValue ?? s.amount;
                 const rowPct = ((current - s.amount) / s.amount) * 100;
 
+                const attention =
+                  s.state === 'started' || s.state === 'docs_signed'
+                    ? 'action'
+                    : s.state === 'funded'
+                      ? 'progress'
+                      : 'active';
+
                 return (
-                  <tr key={s.id}>
+                  <tr key={s.id} className={d.row} data-status={attention}>
                     <td>
                       <div className={d.posCell}>
-                        <span className={d.posPlate}>
-                          {deal?.logoUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              className={d.posLogo}
-                              src={deal.logoUrl}
-                              alt=""
-                              aria-hidden="true"
-                            />
-                          ) : (
-                            <span className={d.posMono} aria-hidden="true">
-                              {(deal?.name ?? s.dealId).charAt(0).toUpperCase()}
-                            </span>
-                          )}
-                        </span>
+                        <CompanyMark
+                          name={deal?.name ?? s.dealId}
+                          logoUrl={deal?.logoUrl}
+                          size={34}
+                        />
                         <span className={d.posName}>
                           <b>{deal?.name ?? s.dealId}</b>
                           <br />
@@ -252,23 +279,23 @@ export default async function DashboardPage() {
                     </td>
                     <td>
                       {s.state === 'started' ? (
-                        <span className="chip neutral">
-                          <span className="dot" />
-                          Pending · documents unsigned
+                        <span className={`chip ${d.statusAction}`}>
+                          <FileSignature size={12} strokeWidth={1.6} aria-hidden="true" />
+                          Sign the documents
                         </span>
                       ) : s.state === 'docs_signed' ? (
-                        <span className="chip warn">
-                          <span className="dot" />
-                          Pending · awaiting funding
+                        <span className={`chip ${d.statusAction}`}>
+                          <Clock size={12} strokeWidth={1.6} aria-hidden="true" />
+                          Fund by ACH
                         </span>
                       ) : s.state === 'funded' ? (
-                        <span className="chip warn">
-                          <span className="dot" />
-                          Funded · awaiting countersign
+                        <span className={`chip ${d.statusProgress}`}>
+                          <Hourglass size={12} strokeWidth={1.6} aria-hidden="true" />
+                          Awaiting countersign
                         </span>
                       ) : (
-                        <span className="chip good">
-                          <span className="dot" />
+                        <span className={`chip ${d.statusActive}`}>
+                          <CircleCheck size={12} strokeWidth={1.6} aria-hidden="true" />
                           Active
                         </span>
                       )}

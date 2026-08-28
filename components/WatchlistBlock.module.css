@@ -1,0 +1,8 @@
+/* The mark sits beside the name, same as the holdings table, so the
+   two lists on the dashboard read as one family. */
+
+.cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}

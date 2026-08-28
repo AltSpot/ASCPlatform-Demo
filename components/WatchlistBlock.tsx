@@ -11,8 +11,11 @@
  */
 import Link from 'next/link';
 
+import CompanyMark from '@/components/CompanyMark';
 import { ACCREDITATION_STEP, type DealShelfItem } from '@/lib/domain';
 import { money } from '@/lib/format';
+
+import w from './WatchlistBlock.module.css';
 
 export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
   return (
@@ -28,9 +31,14 @@ export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
             {deals.map((deal) => (
               <tr key={deal.id}>
                 <td>
-                  <b>{deal.name}</b>
-                  <br />
-                  <span className="tiny">{deal.sector}</span>
+                  <div className={w.cell}>
+                    <CompanyMark name={deal.name} logoUrl={deal.logoUrl} size={34} />
+                    <span>
+                      <b>{deal.name}</b>
+                      <br />
+                      <span className="tiny">{deal.sector}</span>
+                    </span>
+                  </div>
                 </td>
                 <td className="num">
                   {deal.redacted ? (

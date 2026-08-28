@@ -867,3 +867,86 @@
   text-transform: uppercase;
   color: var(--as-text-faint);
 }
+
+/* ------------------------------------------------------------------
+   The vote. It lives inside the demand panel because it moves the
+   number directly above it, and answering is the point of the board.
+   Three amounts off the minimum, because most people pick one of them
+   and a tap beats a focus, a type and a press.
+   ------------------------------------------------------------------ */
+.vote {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair-neutral);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voteKey {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+}
+
+.voteRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.votePick {
+  flex: 1 1 0;
+  min-width: 62px;
+  border: 1px solid var(--hair-gold-active);
+  border-radius: var(--r-pill);
+  background: var(--fill-gold-tint);
+  color: var(--as-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0.04em;
+  padding: 10px 8px;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition:
+    transform var(--dur-micro) ease,
+    box-shadow var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    color var(--dur-micro) ease;
+}
+.votePick:hover:not(:disabled) {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-cta);
+}
+
+.voteOther {
+  flex: none;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--as-text-muted);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
+}
+.voteOther:hover:not(:disabled) {
+  color: var(--accent-hot);
+  border-color: var(--hair-gold-active);
+}
+
+.votePick:disabled,
+.voteOther:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

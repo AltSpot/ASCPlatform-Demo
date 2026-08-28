@@ -93,6 +93,9 @@ export default function RadarCard({
   const [view, setView] = useState(company);
   const [amount, setAmount] = useState('');
   const [editing, setEditing] = useState(false);
+  /* The presets answer the question for almost everyone. The input is
+     the escape hatch, so it stays closed until it is asked for. */
+  const [custom, setCustom] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -104,11 +107,9 @@ export default function RadarCard({
   const confirmed = view.yourAmount !== null && !editing;
   const research = view.research;
 
-  async function submit(event: React.FormEvent) {
-    event.preventDefault();
+  /** One path in, whether the number came from a preset or the input. */
+  async function indicate(parsed: number) {
     if (busy) return;
-
-    const parsed = Math.round(Number(amount.replace(/[^0-9.]/g, '')));
 
     if (!Number.isFinite(parsed) || parsed < view.minIndication) {
       setError(`Minimum ${money(view.minIndication)}`);
@@ -126,6 +127,7 @@ export default function RadarCard({
       const next = await api.indicateRadarInterest(view.slug, parsed);
       setView(next);
       setEditing(false);
+      setCustom(false);
       setAmount('');
       toast(
         <>
@@ -140,6 +142,20 @@ export default function RadarCard({
       setBusy(false);
     }
   }
+
+  function submit(event: React.FormEvent) {
+    event.preventDefault();
+    indicate(Math.round(Number(amount.replace(/[^0-9.]/g, ''))));
+  }
+
+  /* Three amounts off the minimum. Most people pick one of these, and
+     picking one is a single tap rather than a focus, a type and a
+     press. */
+  const presets = [
+    view.minIndication,
+    view.minIndication * 2.5,
+    view.minIndication * 5,
+  ].map((n) => Math.round(n));
 
   return (
     <article className={s.card} data-indicated={view.yourAmount !== null}>
@@ -196,6 +212,89 @@ export default function RadarCard({
           />
         </div>
         <span className={s.demandKey}>Indicated so far</span>
+
+        {/* The ask sits with the number it moves. Reading the case for a
+            company is optional; answering the question is the point of
+            the board, so it comes before the detail rather than after
+            it. */}
+        <div className={s.vote}>
+          {confirmed ? (
+            <div className={s.done}>
+              <span className={s.doneText}>
+                You indicated <b>{money(view.yourAmount ?? 0)}</b>
+              </span>
+              <button
+                type="button"
+                className={s.change}
+                onClick={() => {
+                  setAmount(String(view.yourAmount ?? ''));
+                  setEditing(true);
+                  setCustom(true);
+                }}
+              >
+                Change
+              </button>
+            </div>
+          ) : custom ? (
+            <form onSubmit={submit} noValidate>
+              <div className={s.askRow}>
+                <div className={s.amountWrap}>
+                  <span className={s.currency}>$</span>
+                  <input
+                    className={s.amount}
+                    type="number"
+                    inputMode="numeric"
+                    min={view.minIndication}
+                    max={MAX_INDICATION}
+                    step={1000}
+                    value={amount}
+                    autoFocus
+                    placeholder={String(view.minIndication)}
+                    aria-label={`Amount you would put behind ${view.name}`}
+                    onChange={(event) => {
+                      setAmount(event.target.value);
+                      if (error) setError(null);
+                    }}
+                  />
+                </div>
+                <button className="btn btn-gold btn-sm" type="submit" disabled={busy}>
+                  {busy ? 'Saving' : view.yourAmount === null ? 'Indicate' : 'Update'}
+                </button>
+              </div>
+              <div className={s.hint} data-error={error !== null}>
+                {error ?? `Minimum ${money(view.minIndication)}. Not a commitment.`}
+              </div>
+            </form>
+          ) : (
+            <>
+              <span className={s.voteKey}>How much would you put in?</span>
+              <div className={s.voteRow}>
+                {presets.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    className={s.votePick}
+                    disabled={busy}
+                    onClick={() => indicate(preset)}
+                  >
+                    {compactDollars(preset)}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  className={s.voteOther}
+                  disabled={busy}
+                  onClick={() => setCustom(true)}
+                >
+                  Other
+                </button>
+              </div>
+              <div className={s.hint} data-error={error !== null}>
+                {error ?? 'One tap. Not a commitment, and you can change it.'}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       <div className={s.figures}>
@@ -348,54 +447,6 @@ export default function RadarCard({
         </div>
       </div>
 
-      <div className={s.ask}>
-        {confirmed ? (
-          <div className={s.done}>
-            <span className={s.doneText}>
-              You indicated <b>{money(view.yourAmount ?? 0)}</b>
-            </span>
-            <button
-              type="button"
-              className={s.change}
-              onClick={() => {
-                setAmount(String(view.yourAmount ?? ''));
-                setEditing(true);
-              }}
-            >
-              Change
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={submit} noValidate>
-            <div className={s.askRow}>
-              <div className={s.amountWrap}>
-                <span className={s.currency}>$</span>
-                <input
-                  className={s.amount}
-                  type="number"
-                  inputMode="numeric"
-                  min={view.minIndication}
-                  max={MAX_INDICATION}
-                  step={1000}
-                  value={amount}
-                  placeholder={String(view.minIndication)}
-                  aria-label={`Amount you would put behind ${view.name}`}
-                  onChange={(event) => {
-                    setAmount(event.target.value);
-                    if (error) setError(null);
-                  }}
-                />
-              </div>
-              <button className="btn btn-gold btn-sm" type="submit" disabled={busy}>
-                {busy ? 'Saving' : view.yourAmount === null ? 'Indicate' : 'Update'}
-              </button>
-            </div>
-            <div className={s.hint} data-error={error !== null}>
-              {error ?? `Minimum ${money(view.minIndication)}. Not a commitment.`}
-            </div>
-          </form>
-        )}
-      </div>
     </article>
   );
 }

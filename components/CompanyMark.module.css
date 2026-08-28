@@ -1,0 +1,30 @@
+/* The warm plate. Cream rather than white: it is the V18 light surface,
+   and a cold white tile on the ember canvas reads as a hole. */
+
+/* box-sizing and a px inset, not a percentage: percentage padding
+   resolves against the containing block's width, so a 34px plate in a
+   300px table cell was drawing itself 140px wide. */
+.plate {
+  box-sizing: border-box;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-md);
+  background: var(--as-cream);
+  border: 1px solid var(--hair-cream);
+  overflow: hidden;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.mono {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  line-height: 1;
+  color: var(--as-cream-ink);
+}
