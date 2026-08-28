@@ -20,13 +20,11 @@ export default function NewsDigest({ items }: { items: NewsItem[] }) {
   return (
     <div className="card">
       <div className={s.digestHead}>
-        <h3>The wire</h3>
         <span className={s.live}>
           <span className={s.liveDot} />
           Private markets
         </span>
       </div>
-      <p className="small">What moved while you were away.</p>
 
       <div className={s.digestList}>
         {items.map((item) => (

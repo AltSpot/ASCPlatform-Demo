@@ -4,6 +4,13 @@
  * Rendered on the server so the numbers are correct on first paint; the
  * only client islands are the pending-commitment controls.
  */
+import {
+  Clock,
+  CircleCheck,
+  TrendingDown,
+  TrendingUp,
+  Wallet,
+} from 'lucide-react';
 import Link from 'next/link';
 
 import LineChart from '@/components/LineChart';
@@ -19,6 +26,8 @@ import { getWizardView } from '@/lib/repositories/investor';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { getMarketNews } from '@/lib/terminal/news';
 import { listWatchlist } from '@/lib/repositories/watchlist';
+
+import d from './Dashboard.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,7 +85,7 @@ export default async function DashboardPage() {
           <div className="eyebrow">Dashboard</div>
           <h1 className="display">Welcome back, {user.name.split(' ')[0]}.</h1>
         </div>
-        <Link className="btn btn-ghost" href="/marketplace">
+        <Link className={`btn btn-gold ${d.attract}`} href="/marketplace">
           Browse the marketplace
         </Link>
       </div>
@@ -100,27 +109,46 @@ export default async function DashboardPage() {
         }))}
       />
 
-      <div className="grid c4" style={{ marginBottom: 22 }}>
+      <div className={d.stats}>
         <Stat
+          tone={d.toneInvested}
+          icon={<Wallet size={16} strokeWidth={1.5} aria-hidden="true" />}
           k="Net invested"
           v={money(invested)}
-          d={`${held.length} position${held.length === 1 ? '' : 's'}`}
+          detail={`${held.length} position${held.length === 1 ? '' : 's'}`}
         />
-        <Stat k="Estimated value" v={money(value)} d="Latest reported marks" />
         <Stat
+          tone={d.toneValue}
+          icon={<TrendingUp size={16} strokeWidth={1.5} aria-hidden="true" />}
+          k="Estimated value"
+          v={money(value)}
+          detail="Latest reported marks"
+        />
+        <Stat
+          tone={gain >= 0 ? d.toneUp : d.toneDown}
+          icon={
+            gain >= 0 ? (
+              <TrendingUp size={16} strokeWidth={1.5} aria-hidden="true" />
+            ) : (
+              <TrendingDown size={16} strokeWidth={1.5} aria-hidden="true" />
+            )
+          }
           k="Unrealized gain"
           v={`${gain >= 0 ? '+' : '−'}${money(Math.abs(gain))}`}
-          d={
-            <span className={gain >= 0 ? 'up' : 'down'}>
-              {gain >= 0 ? '▲ +' : '▼ '}
-              {pct.toFixed(1)}%
-            </span>
-          }
+          detail={`${gain >= 0 ? '+' : ''}${pct.toFixed(1)}% against cost`}
         />
         <Stat
+          tone={pending.length ? d.toneOwed : d.toneSettled}
+          icon={
+            pending.length ? (
+              <Clock size={16} strokeWidth={1.5} aria-hidden="true" />
+            ) : (
+              <CircleCheck size={16} strokeWidth={1.5} aria-hidden="true" />
+            )
+          }
           k="Pending funding"
           v={money(pendingAmount)}
-          d={
+          detail={
             pending.length
               ? `${pending.length} commitment${pending.length === 1 ? '' : 's'} awaiting ACH`
               : 'Nothing outstanding'
@@ -128,30 +156,27 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div className="card" style={{ marginBottom: 22 }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'baseline',
-            marginBottom: 14,
-            flexWrap: 'wrap',
-            gap: 8,
-          }}
-        >
-          <h3>Portfolio value</h3>
-          <span className="tiny num">
-            Trailing 8 quarters · marks per AltSpot reporting
-          </span>
-        </div>
+      <div className={d.sectionHead}>
+        <p className={d.sectionEyebrow}>
+          <span className={d.sectionRule} aria-hidden="true" />
+          Portfolio value
+        </p>
+        <span className={d.sectionNote}>
+          Trailing 8 quarters · marks per AltSpot reporting
+        </span>
+      </div>
+      <div className="card">
         <LineChart series={series} width={900} height={220} id="portfolio" />
       </div>
 
-      <div className="card" style={{ marginBottom: 22 }}>
-        <h3 style={{ marginBottom: 4 }}>Your positions</h3>
-        <p className="small" style={{ marginBottom: 14 }}>
-          Every investment you hold through AltSpot deal vehicles.
+      <div className={d.sectionHead}>
+        <p className={d.sectionEyebrow}>
+          <span className={d.sectionRule} aria-hidden="true" />
+          Your positions
         </p>
+        <span className={d.sectionNote}>Held through AltSpot deal vehicles</span>
+      </div>
+      <div className="card">
 
         {positions.length === 0 ? (
           <div className="dz" style={{ cursor: 'default' }}>
@@ -188,9 +213,28 @@ export default async function DashboardPage() {
                 return (
                   <tr key={s.id}>
                     <td>
-                      <b>{deal?.name ?? s.dealId}</b>
-                      <br />
-                      <span className="tiny">{deal?.tag ?? ''}</span>
+                      <div className={d.posCell}>
+                        <span className={d.posPlate}>
+                          {deal?.logoUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              className={d.posLogo}
+                              src={deal.logoUrl}
+                              alt=""
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <span className={d.posMono} aria-hidden="true">
+                              {(deal?.name ?? s.dealId).charAt(0).toUpperCase()}
+                            </span>
+                          )}
+                        </span>
+                        <span className={d.posName}>
+                          <b>{deal?.name ?? s.dealId}</b>
+                          <br />
+                          <span className="tiny">{deal?.tag ?? ''}</span>
+                        </span>
+                      </div>
                     </td>
                     <td className="num">{money(s.amount)}</td>
                     <td className="num">
@@ -252,8 +296,22 @@ export default async function DashboardPage() {
         )}
       </div>
 
+      <div className={d.sectionHead}>
+        <p className={d.sectionEyebrow}>
+          <span className={d.sectionRule} aria-hidden="true" />
+          Watchlist
+        </p>
+        <span className={d.sectionNote}>Saved to come back to</span>
+      </div>
       <WatchlistBlock deals={watched} />
 
+      <div className={d.sectionHead}>
+        <p className={d.sectionEyebrow}>
+          <span className={d.sectionRule} aria-hidden="true" />
+          The wire
+        </p>
+        <span className={d.sectionNote}>What moved while you were away</span>
+      </div>
       <NewsDigest items={headlines} />
 
       {held.some((s) => s.seeded) && (
@@ -266,20 +324,31 @@ export default async function DashboardPage() {
   );
 }
 
+/**
+ * One figure. The tone is the whole point: four cards with the same
+ * shape need one line of colour each or they read as one block.
+ */
 function Stat({
   k,
   v,
-  d,
+  detail,
+  tone,
+  icon,
 }: {
   k: string;
   v: string;
-  d: React.ReactNode;
+  detail: React.ReactNode;
+  tone: string;
+  icon: React.ReactNode;
 }) {
   return (
-    <div className="card stat">
-      <div className="k">{k}</div>
-      <div className="v num">{v}</div>
-      <div className="d">{d}</div>
+    <div className={`${d.stat} ${tone}`}>
+      <div className={d.statHead}>
+        <span className={d.statKey}>{k}</span>
+        <span className={d.statIcon}>{icon}</span>
+      </div>
+      <div className={d.statValue}>{v}</div>
+      <div className={d.statDetail}>{detail}</div>
     </div>
   );
 }

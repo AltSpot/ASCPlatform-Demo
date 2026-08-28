@@ -16,12 +16,7 @@ import { money } from '@/lib/format';
 
 export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
   return (
-    <div className="card" style={{ marginBottom: 22 }}>
-      <h3 style={{ marginBottom: 4 }}>Watchlist</h3>
-      <p className="small" style={{ marginBottom: 14 }}>
-        Deals you have saved to come back to.
-      </p>
-
+    <div className="card">
       {deals.length === 0 ? (
         <p className="tiny">
           Nothing saved yet. Use Add to watchlist on any deal page and it shows up

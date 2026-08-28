@@ -1,0 +1,264 @@
+/* ============================================================
+   Dashboard.
+
+   The page was one column of identical cards: the four figures, the
+   chart, the holdings, the watchlist and the news all wore the same
+   surface, so nothing said which was the portfolio and which was
+   context. Structure comes from three things here, and no new colours:
+
+     1. A tone per figure, carried on a 3px top bar. Money in, money
+        now, the change, and what is owed are four different questions
+        and now read as four different things.
+     2. Eyebrows between blocks, so the page has sections rather than a
+        stack.
+     3. Context blocks (watchlist, news) sit quieter than the portfolio
+        blocks, because they are not your money.
+   ============================================================ */
+
+/* ---------- the figure strip ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+@media (max-width: 1080px) {
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.stat {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 20px 20px 18px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-lg);
+  background: var(--fill-card);
+  backdrop-filter: blur(6px);
+  transition:
+    border-color var(--dur-1) ease,
+    transform var(--dur-1) var(--ease-layout);
+}
+
+.stat:hover {
+  transform: translateY(-2px);
+  border-color: var(--hair-gold-active);
+}
+
+/* The tone bar. One line of colour is enough to separate four cards
+   that otherwise carry the same shape. */
+.stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--tone, var(--hair-neutral));
+}
+
+.statHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.statKey {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+}
+
+.statIcon {
+  color: var(--tone, var(--as-text-faint));
+  flex: none;
+  opacity: 0.85;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 31px;
+  line-height: 1;
+  letter-spacing: -0.018em;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.statDetail {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--as-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Money now is the headline of the four, so it carries the warm fill.
+   The other three stay glass. */
+.toneValue {
+  --tone: var(--as-gold);
+  background: linear-gradient(180deg, rgba(199, 154, 75, 0.08), rgba(199, 154, 75, 0.01));
+}
+.toneValue .statValue {
+  color: var(--accent-hot);
+}
+
+.toneInvested {
+  --tone: var(--as-champagne, var(--accent-quiet));
+}
+
+/* Direction, not chrome. Same reasoning as the bull and bear bullets on
+   Radar: an investor reads gain and loss in these two colours and
+   inverting that costs more comprehension than it buys compliance. */
+.toneUp {
+  --tone: var(--good);
+}
+.toneUp .statValue {
+  color: var(--good);
+}
+.toneDown {
+  --tone: var(--bad);
+}
+.toneDown .statValue {
+  color: var(--bad);
+}
+
+/* Owed money is ember while it is owed, and quiet when it is not. */
+.toneOwed {
+  --tone: var(--as-ember);
+}
+.toneOwed .statValue {
+  color: var(--as-ember-soft);
+}
+.toneSettled {
+  --tone: var(--hair-neutral);
+}
+
+/* ---------- section rhythm ---------- */
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 30px 0 14px;
+}
+
+.sectionEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  margin: 0;
+}
+
+.sectionRule {
+  display: inline-block;
+  width: 34px;
+  height: 1px;
+  flex: none;
+  background: var(--as-cta-gradient);
+}
+
+.sectionNote {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--as-text-faint);
+}
+
+/* ---------- holdings ---------- */
+
+/* The company's own mark, on the warm plate for the same reason as
+   Radar: marks arrive in their own colours and some are solid black. */
+.posCell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.posPlate {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  background: var(--as-cream);
+  border: 1px solid var(--hair-cream);
+}
+
+.posLogo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.posMono {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 13px;
+  color: var(--as-cream-ink);
+}
+
+.posName {
+  min-width: 0;
+}
+
+/* ---------- the call to action ---------- */
+
+/* A slow ring rather than a flash. It should read as lit, not as an
+   alert: 3.2s, low amplitude, and it stops the moment the pointer
+   arrives, because by then it has done its job. */
+.attract {
+  animation: attract 3.2s var(--ease-in-out) infinite;
+}
+
+@keyframes attract {
+  0%,
+  100% {
+    box-shadow: var(--shadow-cta);
+  }
+  50% {
+    box-shadow:
+      var(--shadow-cta),
+      0 0 0 7px rgba(243, 152, 7, 0.09);
+  }
+}
+
+.attract:hover {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .attract {
+    animation: none;
+  }
+  .stat:hover {
+    transform: none;
+  }
+}
