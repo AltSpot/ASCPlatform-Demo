@@ -430,6 +430,8 @@ function fullDeal(): DealView {
     tag: 'AltSpot-led · Series Seed',
     kind: 'led',
     sector: 'Vertical AI · Senior Care',
+    assetClass: 'venture',
+    industry: 'artificial-intelligence',
     stage: 'Series Seed Preferred',
     art: 'linear-gradient(120deg,#1b1410,#2a1c10)',
     logoUrl: '/logos/calder.svg',
@@ -466,10 +468,18 @@ describe('redactDeal', () => {
   test('the teaser is exactly the agreed public shell, and nothing else', () => {
     // Written out rather than derived, so widening what an unverified
     // member can see requires changing this list on purpose.
+    //
+    // assetClass and industry are on the list deliberately. They say
+    // what the company is, which is the same category as sector and the
+    // tag, both of which were already public. They say nothing about
+    // price, allocation, terms or the thesis, which are the things the
+    // gate exists to withhold.
     assert.deepEqual(Object.keys(redactDeal(fullDeal())).sort(), [
       'art',
+      'assetClass',
       'blurb',
       'id',
+      'industry',
       'kind',
       'logoUrl',
       'name',

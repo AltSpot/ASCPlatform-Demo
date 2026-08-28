@@ -66,6 +66,8 @@ export function toDealView(row: Deal): DealView {
     tag: row.tag,
     kind: row.kind,
     sector: row.sector,
+    assetClass: row.assetClass,
+    industry: row.industry,
     stage: row.stage,
     art: row.art,
     logoUrl: row.logoUrl,

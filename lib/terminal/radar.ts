@@ -78,47 +78,17 @@ export interface RadarResearch {
   newsroomUrl: string;
 }
 
-/**
- * Asset classes AltSpot actually transacts in. The deck's line is the
- * scope: institutional venture and growth equity positions taken onto
- * the balance sheet, plus the secondary and real-asset routes into the
- * same companies. Anything outside these four is not a Radar name.
- *
- * The two cool tints are the V18 category set, which exists for exactly
- * this: taxonomy, never chrome.
- */
-export const ASSET_CLASSES = {
-  venture: { label: 'Venture', tint: 'gold' },
-  growth: { label: 'Growth equity', tint: 'signal' },
-  secondary: { label: 'Secondaries', tint: 'secondary' },
-  'real-asset': { label: 'Real assets', tint: 'realasset' },
-} as const;
+/* The taxonomy is shared with deals, so it lives in lib/taxonomy.ts.
+   Re-exported here because every Radar call site already imports from
+   this module and there is nothing to gain from making them all move. */
+import type { AssetClass, Industry } from '../taxonomy';
 
-export type AssetClass = keyof typeof ASSET_CLASSES;
-
-/**
- * The industry taxonomy. Deliberately the standard private-markets set
- * rather than only what is on the board today, so a name added next
- * week has a bucket waiting instead of inventing one. The filter offers
- * only the industries actually present, because a control that filters
- * to nothing is worse than no control.
- */
-export const INDUSTRIES = {
-  'artificial-intelligence': 'Artificial intelligence',
-  'enterprise-software': 'Enterprise software',
-  'data-infrastructure': 'Data infrastructure',
-  cybersecurity: 'Cybersecurity',
-  fintech: 'Financial technology',
-  healthcare: 'Healthcare and life sciences',
-  'aerospace-defense': 'Aerospace and defence',
-  'energy-climate': 'Energy and climate',
-  industrials: 'Industrials and manufacturing',
-  'consumer-marketplaces': 'Consumer and marketplaces',
-  'logistics-supply-chain': 'Logistics and supply chain',
-  'real-estate': 'Real estate',
-} as const;
-
-export type Industry = keyof typeof INDUSTRIES;
+export {
+  ASSET_CLASSES,
+  INDUSTRIES,
+  type AssetClass,
+  type Industry,
+} from '../taxonomy';
 
 export interface RadarCompany {
   /** Stable key. Also the value persisted on RadarInterest.companySlug. */

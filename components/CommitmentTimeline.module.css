@@ -1,0 +1,102 @@
+/* The funding window, as a dated line rather than a number in a chip.
+   Ember throughout: this section is money the investor owes, and that
+   is the one thing on the dashboard that runs on a clock. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+.row:last-child {
+  border-bottom: none;
+}
+
+.who {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  color: var(--as-text);
+  font-size: 14px;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.window {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.track {
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  transition: width var(--dur-2) var(--ease-out);
+}
+
+.left {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+/* Inside three days the window stops being background information. */
+.row[data-urgent='true'] .fill {
+  background: linear-gradient(90deg, var(--as-ember), var(--as-ember-soft));
+}
+.row[data-urgent='true'] .left {
+  color: var(--as-ember-soft);
+}
+
+.foot {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair-neutral);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--as-text-muted);
+}
+.foot b {
+  color: var(--as-ember-soft);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 10px;
+  }
+  .window,
+  .row > a {
+    grid-column: 2;
+  }
+}

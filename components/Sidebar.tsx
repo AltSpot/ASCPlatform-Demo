@@ -10,6 +10,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
+  ChartPie,
   FileText,
   LayoutDashboard,
   Newspaper,
@@ -54,6 +55,13 @@ const NAV: NavEntry[] = [
     href: '/marketplace',
     icon: Store,
     match: ['/marketplace', '/deals', '/invest'],
+  },
+  {
+    id: 'portfolio',
+    label: 'Portfolio',
+    href: '/portfolio',
+    icon: ChartPie,
+    match: ['/portfolio'],
   },
   {
     id: 'docs',

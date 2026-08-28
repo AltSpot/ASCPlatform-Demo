@@ -44,6 +44,10 @@ interface SeedDeal {
   kind: string;
   sector: string;
   stage: string;
+  /** Asset class key from lib/taxonomy.ts. */
+  assetClass: string;
+  /** Industry key from lib/taxonomy.ts. Null for a multi-deal fund. */
+  industry: string | null;
   art: string;
   logoUrl?: string;
   headline: string;
@@ -93,6 +97,8 @@ const DEALS: SeedDeal[] = [
     kind: 'led',
     sector: 'Grid AI · Energy Infrastructure',
     stage: 'Series A Preferred',
+    assetClass: 'venture',
+    industry: 'energy-climate',
     art: 'linear-gradient(135deg,#0A1322 0%,#14325A 55%,#2E6FD1 115%)',
     logoUrl: '/calder-logo.svg',
     headline:
@@ -300,6 +306,8 @@ const DEALS: SeedDeal[] = [
     kind: 'fund',
     sector: 'Multi-Deal Fund · Venture',
     stage: 'Fund I · $10M target',
+    assetClass: 'venture',
+    industry: null,
     art: 'linear-gradient(135deg,#3B2E12 0%,#8F6B25 55%,#C9A14A 100%)',
     logoUrl: '/brand/altspot-logo-black.png',
     headline: 'Every AltSpot-led deal in one commitment.',
@@ -393,6 +401,8 @@ const DEALS: SeedDeal[] = [
     kind: 'secondary',
     sector: 'Foundation Models · Consumer AI',
     stage: 'Late stage · issuer-approved',
+    assetClass: 'secondary',
+    industry: 'artificial-intelligence',
     art: 'radial-gradient(120% 170% at 50% 40%,rgba(0,0,0,.05) 0%,rgba(0,0,0,0) 58%),linear-gradient(135deg,#FFFFFF 0%,#F6F4EF 55%,#E9E4DA 115%)',
     logoUrl: '/openai-logo.svg',
     headline: 'The most used AI product in the world, below its last tender price.',
@@ -483,6 +493,8 @@ const DEALS: SeedDeal[] = [
     kind: 'secondary',
     sector: 'Data · Enterprise AI',
     stage: 'Late stage · issuer-approved',
+    assetClass: 'secondary',
+    industry: 'data-infrastructure',
     art: 'radial-gradient(120% 170% at 50% 40%,rgba(255,120,90,.22) 0%,rgba(255,120,90,0) 58%),linear-gradient(135deg,#1A0B08 0%,#4A150D 55%,#B33A24 115%)',
     logoUrl: '/databricks-logo.svg',
     headline: 'The data platform underneath the enterprise AI build-out.',
@@ -576,6 +588,8 @@ async function main() {
       kind: deal.kind,
       sector: deal.sector,
       stage: deal.stage,
+      assetClass: deal.assetClass,
+      industry: deal.industry,
       art: deal.art,
       logoUrl: deal.logoUrl ?? null,
       headline: deal.headline,

@@ -7,6 +7,7 @@
 import {
   Clock,
   CircleCheck,
+  Landmark,
   FileSignature,
   Hourglass,
   TrendingDown,
@@ -15,7 +16,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import CommitmentTimeline, {
+  type CommitmentDue,
+} from '@/components/CommitmentTimeline';
 import CompanyMark from '@/components/CompanyMark';
+import RadarPositions from '@/components/RadarPositions';
 import PortfolioChart, {
   type PortfolioPoint,
   type PortfolioRange,
@@ -30,6 +35,8 @@ import { dateStr, daysLeft, EMPTY, money } from '@/lib/format';
 import { getDealsByIds, getDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
+import { getDistributions } from '@/lib/repositories/distributions';
+import { getRadarBoard } from '@/lib/repositories/radar';
 import { getMarketNews } from '@/lib/terminal/news';
 import { listWatchlist } from '@/lib/repositories/watchlist';
 
@@ -40,13 +47,16 @@ export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
   const user = await requireUser();
 
-  const [subscriptions, wizard, headlines, watchlist] = await Promise.all([
-    listSubscriptions(user.id),
-    getWizardView(user.id),
-    // Three is the whole budget. The dashboard belongs to the portfolio.
-    getMarketNews({ limit: 3 }),
-    listWatchlist(user.id),
-  ]);
+  const [subscriptions, wizard, headlines, watchlist, radar, distributions] =
+    await Promise.all([
+      listSubscriptions(user.id),
+      getWizardView(user.id),
+      // Three is the whole budget. The dashboard belongs to the portfolio.
+      getMarketNews({ limit: 3 }),
+      listWatchlist(user.id),
+      getRadarBoard(user.id),
+      getDistributions(user.id),
+    ]);
 
   const [deals, watched] = await Promise.all([
     getDealsByIds([...new Set(subscriptions.map((s) => s.dealId))]),
@@ -70,6 +80,16 @@ export default async function DashboardPage() {
     (s) => s.state === 'started' || s.state === 'docs_signed',
   );
   const positions = [...held, ...inFlight];
+
+  const commitmentsDue: CommitmentDue[] = pending.map((s) => ({
+    id: s.id,
+    dealId: s.dealId,
+    dealName: deals.get(s.dealId)?.name ?? s.dealId,
+    logoUrl: deals.get(s.dealId)?.logoUrl ?? null,
+    amount: s.amount,
+    fundingDeadline: s.fundingDeadline,
+    daysRemaining: daysLeft(s.fundingDeadline),
+  }));
 
   const invested = held.reduce((sum, s) => sum + s.amount, 0);
   const value = held.reduce((sum, s) => sum + (s.currentValue ?? s.amount), 0);
@@ -137,7 +157,7 @@ export default async function DashboardPage() {
         }))}
       />
 
-      <div className={d.stats}>
+      <div className={`${d.stats} ${d.statsFive}`}>
         <Stat
           tone={d.toneInvested}
           icon={<Wallet size={16} strokeWidth={1.5} aria-hidden="true" />}
@@ -164,6 +184,17 @@ export default async function DashboardPage() {
           k="Unrealized gain"
           v={`${gain >= 0 ? '+' : '−'}${money(Math.abs(gain))}`}
           detail={`${gain >= 0 ? '+' : ''}${pct.toFixed(1)}% against cost`}
+        />
+        <Stat
+          tone={distributions.total > 0 ? d.toneUp : d.toneSettled}
+          icon={<Landmark size={16} strokeWidth={1.5} aria-hidden="true" />}
+          k="Capital returned"
+          v={money(distributions.total)}
+          detail={
+            distributions.total > 0
+              ? `${money(distributions.returnOfCapital)} of capital, ${money(distributions.gain)} of gain`
+              : 'Nothing has exited yet'
+          }
         />
         <Stat
           tone={pending.length ? d.toneOwed : d.toneSettled}
@@ -322,6 +353,24 @@ export default async function DashboardPage() {
           </table>
         )}
       </div>
+
+      <div className={d.sectionHead}>
+        <p className={d.sectionEyebrow}>
+          <span className={d.sectionRule} aria-hidden="true" />
+          Your Radar
+        </p>
+        <span className={d.sectionNote}>Demand signal, not a commitment</span>
+      </div>
+      <RadarPositions companies={radar} />
+
+      <div className={d.sectionHead}>
+        <p className={d.sectionEyebrow}>
+          <span className={d.sectionRule} aria-hidden="true" />
+          Commitment timeline
+        </p>
+        <span className={d.sectionNote}>10 day funding window</span>
+      </div>
+      <CommitmentTimeline due={commitmentsDue} />
 
       <div className={d.sectionHead}>
         <p className={d.sectionEyebrow}>

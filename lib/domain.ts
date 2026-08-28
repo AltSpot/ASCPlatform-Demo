@@ -201,6 +201,8 @@ export interface DealTeaser {
   tag: string;
   kind: string;
   sector: string;
+  assetClass: string;
+  industry: string | null;
   art: string;
   logoUrl: string | null;
   blurb: string;
@@ -216,6 +218,8 @@ export interface DealView {
   tag: string;
   kind: string;
   sector: string;
+  assetClass: string;
+  industry: string | null;
   stage: string;
   art: string;
   logoUrl: string | null;
@@ -409,6 +413,8 @@ export function redactDeal(deal: DealView): DealTeaser {
     tag: deal.tag,
     kind: deal.kind,
     sector: deal.sector,
+    assetClass: deal.assetClass,
+    industry: deal.industry,
     art: deal.art,
     logoUrl: deal.logoUrl,
     blurb: deal.blurb,

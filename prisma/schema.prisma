@@ -191,6 +191,11 @@ model Deal {
   kind                String
   sector              String
   stage               String
+  /// Asset class key from lib/taxonomy.ts. Groups the portfolio page.
+  assetClass          String @default("venture")
+  /// Industry key from lib/taxonomy.ts. Null for a multi-deal fund,
+  /// which spans industries by construction.
+  industry            String?
   art                 String
   blurb               String
   risks               String
@@ -274,6 +279,29 @@ model WatchlistItem {
 
 /// started -> docs_signed -> funded -> accepted -> closed
 /// exits:   expired (10-day funding window lapsed) | refunded | cut_back
+/// Cash returned to an investor from a position. Production shape:
+/// distributions are events with a date and a character, not a running
+/// total, because return of capital and gain are taxed differently and
+/// a statement has to be able to say which was which.
+///
+/// Empty today. Nothing on the platform has exited.
+model Distribution {
+  id             String   @id @default(cuid())
+  subscriptionId String
+  /// Integer dollars, like every other amount on the platform.
+  amount         Int
+  paidAt         DateTime
+  /// "return_of_capital" | "gain"
+  kind           String
+  note           String?
+  createdAt      DateTime @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([subscriptionId])
+  @@map("distributions")
+}
+
 model Subscription {
   id        String  @id @default(cuid())
   userId    String
@@ -306,6 +334,7 @@ model Subscription {
   user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   deal      Deal               @relation(fields: [dealId], references: [id])
   profile   InvestmentProfile? @relation(fields: [profileId], references: [id])
+  distributions Distribution[]
   documents Document[]
 
   @@index([userId])
