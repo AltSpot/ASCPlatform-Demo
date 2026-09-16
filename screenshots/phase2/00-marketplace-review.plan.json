@@ -1,0 +1,10 @@
+{
+  "out": "screenshots/phase2/00-marketplace-review",
+  "shots": [
+    { "name": "ember-engine", "steps": [{ "go": "/reshoot?to=/marketplace" }] },
+    { "name": "ember-shelf", "steps": [{ "go": "/reshoot?to=/marketplace" }], "scroll": "#lane-invest" },
+    { "name": "ember-radar", "steps": [{ "go": "/reshoot?to=/marketplace" }], "scroll": "#lane-vote" },
+    { "name": "daylight-shelf", "steps": [{ "go": "/reshoot?to=/marketplace" }, { "eval": "localStorage.setItem('asc.theme','light')" }, { "go": "/marketplace" }], "scroll": "#lane-invest" },
+    { "name": "daylight-radar", "steps": [{ "go": "/reshoot?to=/marketplace" }, { "eval": "localStorage.setItem('asc.theme','light')" }, { "go": "/marketplace" }], "scroll": "#lane-vote" }
+  ]
+}

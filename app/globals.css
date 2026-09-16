@@ -358,7 +358,10 @@
   --accent-signal:var(--as-orange); /* live indicators */
   --accent-hot:var(--as-amber);     /* hover, key numerals */
   --accent-quiet:var(--as-champagne);
-  --accent-soft:var(--as-ember-soft); /* pending, awaiting, in flight */
+  /* Pending, awaiting, in flight. Was --as-ember-soft; burnt orange is
+     retired as type on both canvases (Tyler, 2026-09-17), so the quiet
+     states read in the gold family with everything else. */
+  --accent-soft:#D9B679;
   --fg-on-gold:var(--as-ink);
 
   /* Focus is a graphic, so it answers to the 3:1 non-text floor rather
@@ -939,6 +942,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-figure)}
 .progress .p{height:100%;background:var(--as-tri-gradient);transition:width .4s ease;border-radius:var(--r-pill)}
 
 /* fee table */
+/* Visually hidden, still read by assistive tech: the words behind an icon. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
 .fee-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--hair-soft);font-size:13.5px}
 .fee-row:last-child{border-bottom:none}
 .fee-row .l{color:var(--soft)}
@@ -1138,19 +1144,21 @@ html[data-theme='light']{
      the darkened editions that carry the same warmth and actually get
      read. --as-gold itself is untouched: gradients, bar fills, the orb
      and every glyph stroke still use it. */
-  /* THE BRIGHTEST AMBER THAT STILL READS. Small type on a light ground
-     cannot wear the brand orange: #F39807 is 2:1 on dust. These are the
-     lightest values that clear 4.5:1 against the dust the cards mostly
-     sit on (about #F1E6D6), and the ground below is calmed so the hot
-     corner no longer pulls every accent down to brown. Big figures do
-     not need this: at 24px and up they wear --figure-hot, which is the
-     real orange. */
-  --accent:#9F510A;         /*  4.6:1 — amber. Eyebrows, labels, our figures */
-  --accent-hot:#B4470C;     /*  4.4:1 — ember. Hover, urgent, closing */
-  --accent-quiet:#9A5A1A;   /*  4.4:1 — the quiet layer */
-  --accent-soft:#A8540C;    /*  4.3:1 — pending, awaiting, in flight */
-  --accent-signal:#B4470C;  /* section eyebrows, live markers as type */
-  --focus-ring:#B4470C;     /*  4.4:1, well clear of the 3:1 graphic floor */
+  /* BRONZE, NOT BURNT ORANGE (Tyler, 2026-09-17). Small type on a light
+     ground cannot wear the brand orange: #F39807 is 2:1 on dust. The
+     amber-browns that replaced it read as burnt orange beside the gold
+     CTAs, so small accents are now one antique-bronze family at three
+     depths: the same hue as the gold paint, taken dark enough to read.
+     Ratios are against the dust the cards mostly sit on (about
+     #F1E6D6). Big figures do not need this: at 24px and up they wear
+     --figure-hot. Do not reintroduce #9F510A, #9A5A1A, #A8540C or
+     #B4470C as type anywhere. */
+  --accent:#7A5B1E;         /*  5.1:1 — bronze. Eyebrows, labels, our figures */
+  --accent-hot:#5F4712;     /*  6.8:1 — deep bronze. Hover, urgent, closing */
+  --accent-quiet:#76612F;   /*  4.8:1 — the quiet layer */
+  --accent-soft:#735A26;    /*  5.3:1 — pending, awaiting, in flight */
+  --accent-signal:#5F4712;  /* section eyebrows, live markers as type */
+  --focus-ring:#5F4712;     /*  6.8:1, well clear of the 3:1 graphic floor */
   --fg-on-gold:#1C1508;     /* NOT --as-ink. Gold CTAs keep dark type */
 
   /* ---- status ---- */
@@ -1158,7 +1166,7 @@ html[data-theme='light']{
   --good-paint:#22C55E;     /* paint: dots, bars, fills. Never type */
   --good-line:rgba(34,197,94,.55);
   --good-fill:rgba(34,197,94,.14);
-  --warn:#B4470C;           /*  4.4:1 */
+  --warn:#5F4712;           /*  6.8:1 — work owed. The dot carries the heat, not the type */
   --bad:#B42318;            /*  5.3:1 — a red, not a brown */
 
   /* ---- category tints ----

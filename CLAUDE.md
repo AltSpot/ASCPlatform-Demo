@@ -422,23 +422,25 @@ in their fills. Module tags (kind, badge, class, filter chips, the
 industry menu button) follow the same rule. Outlined pills read as holes
 on glass, and three chip styles on one page read as three products.
 Category tints stay off chips; the watchlist's class chip is neutral like
-the Radar's. Daylight's text accents are one amber-brown family at three
-depths plus an ember for heat (`--accent`, `--accent-quiet`,
-`--accent-soft`, `--accent-hot`), never four browns drifting between
-olive and rust.
+the Radar's. Daylight's text accents are one antique-bronze family at
+four depths (`--accent`, `--accent-quiet`, `--accent-soft`,
+`--accent-hot`).
 
-**Brightness goes where it can be read** (Daylight, 2026-09-16). Small
-type on a light ground cannot wear the brand orange: `#F39807` is 2:1 on
-dust. So Daylight's small accents are the brightest amber that clears
-4.5:1 on the dust the cards mostly sit on (`--accent #9F510A` and its
-family), the ground's hot corners are calmed so that holds across the
-page, and large figures (24px and up) wear `--figure-hot`, a real orange
-that passes the 3:1 large-text floor. Do not push the small accents
-brighter to match; make the figure bigger instead.
+**No burnt orange as type, on either canvas** (Tyler, 2026-09-17). Small
+type on a light ground cannot wear the brand orange (`#F39807` is 2:1 on
+dust), and the amber-browns that replaced it (`#9F510A`, `#9A5A1A`,
+`#A8540C`, `#B4470C`) read as burnt orange beside the gold CTAs. Daylight's
+small accents are antique bronze (`--accent #7A5B1E` and its family, all
+above 4.5:1 on dust); Ember's `--accent-soft` is a warm gold rather than
+`--as-ember-soft`. Large figures (24px and up) still wear `--figure-hot`.
+A member's own number (a vote, an amount) is page ink with a gold glyph
+beside it, not an accent colour.
 
-**Gold means invest, green means vote.** `.btn-vote` (`--vote-gradient`,
-`--fg-on-vote`) is the Radar's button on both canvases: "Cast your vote"
-and the scale's confirm. It is never used for anything that moves money.
+**Gold means invest, green means vote, and green is rationed.** On a Radar
+card green is one small mark, the glyph on the quiet Vote button; the
+demand bar is gold paint. `.btn-vote` (`--vote-gradient`) is kept for the
+scale's confirm, where the vote is actually cast. It is never used for
+anything that moves money.
 
 **Green is two tokens.** `--good` is type (gains, approved, live labels) and
 clears 4.5:1 on both canvases; `--good-paint` is the brighter green for
@@ -630,12 +632,16 @@ keep voting. Concretely (`components/marketplace/MarketplaceLanes.tsx`,
   the one pulse for anything happening right now), a gold "Vote" on the
   Radar. No lede under Invest.
 - **Cards are compact, four across**, so two rows of ten fit a viewport.
-  A shelf card carries the art band (mark, tag, who else is on the round),
-  the name, a pulsing green "From your Radar" pill when it applies, the
-  headline at two lines, one row of figures (min, closes, left), the bar
-  with its percentage in gold, and the button. No sector line. **A Radar
-  card is the vote**: plate, name, class, demand (ink figure, green bar),
-  "Cast your vote" (the scale opens on press) and "Details". Everything
+  A shelf card carries the art band (mark, tag, and a gold Radar glyph
+  when the deal came off the member's Radar), the name, the headline at
+  two lines, the bar with its percentage, and the button. **No minimum,
+  closing date, amount left or co-investor on the card** (Tyler,
+  2026-09-17): those are on the deal page, whose hero and overview carry
+  the backer. **A Radar card is the vote**: plate, name, an info icon for
+  the detail, demand (ink figure, gold bar) with the asset class as a
+  tinted glyph beside a voter-count icon, and a quiet Vote button (the
+  scale opens on press). Labels become icons wherever an icon carries the
+  meaning; the words stay for screen readers and on hover. Everything
   else, the description, the three prices as tiles, who led the last
   round, the two cases and the news, is in the detail dialog, which is
   portalled to `<body>` so opening it never moves the page.

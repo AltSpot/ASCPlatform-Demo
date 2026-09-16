@@ -136,11 +136,7 @@ export default function DealShelf({
             lane is for in the one sentence that matters. */}
         {bridgeHref ? (
           <Link className={s.bridge} href={bridgeHref}>
-            <span className="eyebrow muted">Not here yet?</span>
             <span className={s.bridgeTitle}>Vote for what you want next.</span>
-            <span className={s.bridgeNote}>
-              Enough votes and AltSpot goes and sources it. Votes move no money.
-            </span>
             <span className={s.bridgeArrow} aria-hidden="true">
               ↓
             </span>

@@ -29,6 +29,7 @@
  * dashboard links there and Spot reads the query to know which room
  * it is in.
  */
+import { Clock, Radar, Store, Users } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import TaxonomyFilters, {
@@ -154,35 +155,38 @@ export default function MarketplaceLanes({
         <div className={s.engineCopy}>
           <p className="eyebrow">The engine</p>
           <h1 className={s.engineTitle}>Vote for it. We source it. It fills.</h1>
-          <p className={s.engineLede}>
-            Open deals are what you can invest in today. The Radar is where the next
-            one comes from: enough votes and AltSpot goes and gets it, and because
-            the demand was counted first, it fills fast.
-          </p>
         </div>
         <div className={s.engineFigures}>
           <button type="button" className={`${s.engineFigure} ${s.engineLive}`} onClick={() => jump('invest')}>
-            <span className={s.engineKey}>Open now</span>
+            <span className={s.engineKey}>
+              <Store size={14} strokeWidth={1.6} aria-hidden="true" />
+              Open now
+            </span>
             {/* Before the gate opens the server sends no deals, so a
                 count would read "0 open" when the truth is "not shown to
                 you yet". A dash says the second thing. */}
             <span className={s.engineValue}>{locked ? EMPTY : deals.length}</span>
-            <span className={s.engineHint}>{locked ? 'once offerings open to you' : 'deals to invest in'}</span>
           </button>
           <button type="button" className={`${s.engineFigure} ${s.engineHot}`} onClick={() => jump('invest')}>
-            <span className={s.engineKey}>Closing soon</span>
+            <span className={s.engineKey} title="Closing inside 14 days">
+              <Clock size={14} strokeWidth={1.6} aria-hidden="true" />
+              Closing soon
+            </span>
             <span className={s.engineValue}>{locked ? EMPTY : closingSoon}</span>
-            <span className={s.engineHint}>inside 14 days</span>
           </button>
           <button type="button" className={s.engineFigure} onClick={() => jump('radar')}>
-            <span className={s.engineKey}>On the Radar</span>
+            <span className={s.engineKey}>
+              <Radar size={14} strokeWidth={1.6} aria-hidden="true" />
+              On the Radar
+            </span>
             <span className={s.engineValue}>{companies.length}</span>
-            <span className={s.engineHint}>names to vote on</span>
           </button>
           <button type="button" className={s.engineFigure} onClick={() => jump('radar')}>
-            <span className={s.engineKey}>Members voting</span>
+            <span className={s.engineKey}>
+              <Users size={14} strokeWidth={1.6} aria-hidden="true" />
+              Members voting
+            </span>
             <span className={s.engineValue}>{voters.toLocaleString('en-US')}</span>
-            <span className={s.engineHint}>shaping what comes next</span>
           </button>
         </div>
       </section>
@@ -250,10 +254,7 @@ export default function MarketplaceLanes({
           <h2 className={s.laneTitle} id="lane-vote">
             On the Radar.
           </h2>
-          <p className={s.laneLede}>
-            Companies AltSpot does not own yet. Demand decides where sourcing goes
-            next. A vote reserves nothing and moves no money.
-          </p>
+          <p className={s.laneLede}>A vote reserves nothing and moves no money.</p>
         </header>
         <RadarBoard companies={companies} filter={filter} />
       </section>

@@ -228,5 +228,13 @@ run()
     process.exit(1);
   })
   .finally(() => {
-    setTimeout(() => fs.rmSync(profile, { recursive: true, force: true }), 500);
+    // The browser can still hold the profile for a moment after exit on
+    // Windows. A leftover temp folder is harmless; a crash here is not.
+    setTimeout(() => {
+      try {
+        fs.rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 300 });
+      } catch {
+        /* left for the OS temp sweep */
+      }
+    }, 800);
   });

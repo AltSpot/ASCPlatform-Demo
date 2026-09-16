@@ -85,9 +85,11 @@
 
 /* A card the member has already spoken on reads differently at a
    glance, without shouting. */
+/* The pane keeps its fill: the shorthand dropped it and left a flat
+   gold wash. A faint gold tint layered as an image is enough. */
 .card[data-indicated='true'] {
   border-color: var(--hair-champagne);
-  background: linear-gradient(180deg, rgba(199, 154, 75, 0.05), rgba(199, 154, 75, 0.01));
+  background-image: var(--glass-tint-gold), var(--card-sheen);
 }
 
 /* The one masked texture the V18 card spec allows. Decorative, behind
@@ -149,8 +151,38 @@
   color: var(--as-cream-ink);
 }
 
+/* The detail button, top right. */
+.corner {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.infoButton {
+  display: inline-grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: var(--surface-2);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  transition: color var(--dur-1) ease, background var(--dur-1) ease;
+}
+
+.infoButton:hover,
+.infoButton:focus-visible {
+  color: var(--as-text);
+  background: var(--surface-3);
+  outline: none;
+}
+
 .identity {
   min-width: 0;
+  align-self: center;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -165,9 +197,12 @@
   line-height: 1.1;
   letter-spacing: -0.014em;
   color: var(--as-text);
-  white-space: nowrap;
+  /* Two lines rather than an ellipsis: a truncated company name is the
+     one thing on the card a member cannot work out. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 100%;
 }
 
@@ -243,7 +278,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* The asset class glyph and the voter count, together on the right. */
+.demandMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .demandWho {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: var(--w-medium);
@@ -260,14 +305,24 @@
   overflow: hidden;
 }
 
-/* Demand grows, so the bar is green: the one colour on the platform
-   that already means "up". Gold here read as a fill level in a tank. */
+/* Gold paint, the platform's own colour. It was green, and with a green
+   button under it every card on a board of twenty was two green shapes
+   (Tyler, 2026-09-17). Green on the card is now one small mark: the
+   glyph on the vote button. */
 .demandFill {
   height: 100%;
   border-radius: var(--r-pill);
-  background: linear-gradient(90deg, var(--good-line), var(--good-paint));
-  box-shadow: 0 0 10px var(--good-fill);
+  background: linear-gradient(90deg, var(--as-gold), var(--as-champagne));
   transition: width var(--dur-2) var(--ease-out);
+}
+
+/* A quiet button with one green mark, instead of a green slab per card. */
+.voteButton {
+  gap: 8px;
+}
+
+.voteButton svg {
+  stroke: var(--good-paint);
 }
 
 .demandKey {
@@ -768,13 +823,18 @@
 .done {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   border: 1px solid var(--hair-neutral);
-  border-left: 2px solid var(--accent-quiet);
   background: var(--surface-1);
-  border-radius: var(--r-md);
-  padding: 14px 16px;
+  border-radius: var(--r-pill);
+  padding: 7px 8px 7px 14px;
   animation: settle 0.28s ease;
+}
+
+/* The mark says done. Gold paint, not an accent used as type. */
+.doneMark {
+  flex: none;
+  stroke: var(--as-gold);
 }
 
 @keyframes settle {
@@ -794,11 +854,11 @@
   min-width: 0;
 }
 
-/* Gold, not green. A confirmation is chrome, and the card this sits in
-   already reads gold in its indicated state. The bull and bear bullets
-   below keep their green and red: those are direction, not chrome. */
+/* The member's own number in page ink. It was the burnt-orange accent,
+   which is retired as type platform wide (Tyler, 2026-09-17); the gold
+   check beside it is what marks it as theirs. */
 .doneText b {
-  color: var(--accent-quiet);
+  color: var(--as-text);
   font-family: var(--fm);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -807,19 +867,22 @@
 .change {
   margin-left: auto;
   flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: var(--r-pill);
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--fm);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--soft);
+  color: var(--as-text-muted);
 }
 
-.change:hover {
-  color: var(--accent-hot);
+.change:hover,
+.change:focus-visible {
+  color: var(--as-text);
+  background: var(--surface-2);
+  outline: none;
 }
 
 /* ---------- section framing ---------- */

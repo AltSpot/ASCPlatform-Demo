@@ -28,10 +28,11 @@
  * card's own overflow clip and hover transform, and opening it scrolled
  * the page to the top. In the top layer from <body> it does neither.
  */
-import { ArrowUpRight, X } from 'lucide-react';
+import { ArrowUpRight, CircleCheck, Info, Pencil, Users, Vote, X } from 'lucide-react';
 import { useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 
+import AssetClassIcon from '@/components/AssetClassIcon';
 import BackerMark from '@/components/BackerMark';
 import { useToast } from '@/components/Toast';
 import { api, ApiError } from '@/lib/client/api';
@@ -269,11 +270,23 @@ export default function RadarCard({
           and behind everything. */}
       <span className={s.texture} aria-hidden="true" />
 
+      {/* The detail is an icon in the corner and the class is a glyph
+          beside the voter count: the face carries the name and the vote. */}
       <header className={s.head}>
         <div className={s.plate}>{plate}</div>
         <div className={s.identity}>
           <h3 className={s.name}>{view.name}</h3>
-          <span className={s.sector}>{ASSET_CLASSES[view.assetClass].label}</span>
+        </div>
+        <div className={s.corner}>
+          <button
+            type="button"
+            className={s.infoButton}
+            onClick={openDetail}
+            aria-label={`Details on ${view.name}`}
+            title="Details"
+          >
+            <Info size={15} strokeWidth={1.6} aria-hidden="true" />
+          </button>
         </div>
       </header>
 
@@ -282,8 +295,16 @@ export default function RadarCard({
       <div className={s.demand}>
         <div className={s.demandTop}>
           <span className={s.demandValue}>{compact(view.interestDollars)}</span>
-          <span className={s.demandWho}>
-            {view.interestInvestors.toLocaleString('en-US')} voted
+          <span className={s.demandMeta}>
+          <AssetClassIcon assetClass={view.assetClass} size={12} />
+          <span
+            className={s.demandWho}
+            title={`${view.interestInvestors.toLocaleString('en-US')} members voted`}
+          >
+            <Users size={13} strokeWidth={1.6} aria-hidden="true" />
+            {view.interestInvestors.toLocaleString('en-US')}
+            <span className="sr-only"> members voted</span>
+          </span>
           </span>
         </div>
         <div className={s.demandBar}>
@@ -296,11 +317,19 @@ export default function RadarCard({
 
       {voted ? (
         <div className={s.done}>
+          <CircleCheck className={s.doneMark} size={16} strokeWidth={1.7} aria-hidden="true" />
           <span className={s.doneText}>
-            You voted <b>{money(view.yourAmount ?? 0)}</b>
+            <span className="sr-only">You voted </span>
+            <b>{money(view.yourAmount ?? 0)}</b>
           </span>
-          <button type="button" className={s.change} onClick={() => setEditing(true)}>
-            Change
+          <button
+            type="button"
+            className={s.change}
+            onClick={() => setEditing(true)}
+            aria-label="Change your vote"
+            title="Change your vote"
+          >
+            <Pencil size={14} strokeWidth={1.6} aria-hidden="true" />
           </button>
         </div>
       ) : voting || editing ? (
@@ -319,17 +348,13 @@ export default function RadarCard({
       ) : (
         <button
           type="button"
-          className="btn btn-vote btn-sm btn-block"
+          className={`btn btn-ghost btn-sm btn-block ${s.voteButton}`}
           onClick={() => setVoting(true)}
         >
-          Cast your vote
+          <Vote size={15} strokeWidth={1.6} aria-hidden="true" />
+          Vote
         </button>
       )}
-
-      <button type="button" className={s.disclose} onClick={openDetail}>
-        <span className={s.discloseLabel}>Details</span>
-        <ArrowUpRight size={13} strokeWidth={1.6} aria-hidden="true" />
-      </button>
 
       {mounted ? createPortal(detail, document.body) : null}
     </article>

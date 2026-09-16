@@ -39,13 +39,6 @@
   color: var(--as-text);
   text-wrap: balance;
 }
-.engineLede {
-  margin: 0;
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--as-text-muted);
-  max-width: 48ch;
-}
 .engineFigures {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -79,6 +72,9 @@
   outline-offset: 2px;
 }
 .engineKey {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: var(--w-medium);
@@ -99,24 +95,16 @@
   background-clip: text;
   color: transparent;
 }
-.engineHint {
-  font-size: var(--fs-label);
-  color: var(--as-text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+/* The key's glyph carries the colour, not the number: the four figures
+   read as one gold family, and each lane gets one small tinted mark. */
+.engineKey svg {
+  stroke: var(--as-gold);
 }
-/* Open now is live; closing soon is the clock. */
-.engineLive .engineValue {
-  background: linear-gradient(100deg, var(--good-paint), var(--good) 70%, var(--accent));
-  -webkit-background-clip: text;
-  background-clip: text;
+.engineLive .engineKey svg {
+  stroke: var(--good-paint);
 }
-.engineHot .engineValue {
-  background: linear-gradient(100deg, var(--figure-hot), var(--as-ember));
-  -webkit-background-clip: text;
-  background-clip: text;
+.engineHot .engineKey svg {
+  stroke: var(--figure-hot);
 }
 
 /* ---------- the bar ----------
@@ -270,31 +258,30 @@
   letter-spacing: -0.015em;
   color: var(--as-text);
 }
-.bridgeNote {
-  font-size: var(--fs-meta);
-  line-height: 1.5;
-}
 .bridgeArrow {
   margin-top: auto;
   font-size: 20px;
   color: var(--accent);
 }
 
-/* A deal that came off the member's own Radar. One quiet line, gold
-   because it is the one claim on the card that is about them. */
+/* A deal that came off the member's own Radar: one gold glyph seated on
+   the artwork, bottom left, on the same scrim the tag chip wears. */
 .fromRadar {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  align-self: flex-start;
-  padding: 4px 10px 4px 9px;
+  position: absolute;
+  z-index: 1;
+  left: 12px;
+  bottom: 12px;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
   border-radius: var(--r-pill);
-  background: var(--good-fill);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  color: var(--good);
+  background: var(--scrim-media-strong);
+  backdrop-filter: blur(4px);
+}
+
+.fromRadar svg {
+  stroke: var(--as-champagne);
 }
 
 @media (max-width: 900px) {
@@ -421,55 +408,14 @@
   min-height: 40px;
 }
 
-/* ---------- the figures, as one row ---------- */
-
-.facts {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding-top: 12px;
-  border-top: 1px solid var(--hair-neutral);
-}
-
-.fact {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  min-width: 0;
-}
-
-.factKey {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-  white-space: nowrap;
-}
-
-.factValue {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: var(--w-medium);
-  letter-spacing: -0.01em;
-  color: var(--as-text);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-/* Closing inside a fortnight. The same signal a commitment with a
-   running clock carries on the dashboard. */
-.factValue[data-soon='true'] {
-  color: var(--accent-soft);
-}
-
 /* ---------- allocation: one bar, one figure ---------- */
 
 .alloc {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair-neutral);
 }
 
 .allocBar {
@@ -497,21 +443,6 @@
   font-variant-numeric: tabular-nums;
   min-width: 3ch;
   text-align: right;
-}
-
-/* Who else is on the round, on the artwork. Same scrim as the sector
-   pill used to wear, so it seats on any art. */
-.backing {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  z-index: 1;
-  max-width: calc(100% - 20px);
-  padding: 4px 9px;
-  border-radius: var(--r-pill);
-  background: var(--scrim-media-soft);
-  color: var(--on-media);
-  backdrop-filter: blur(4px);
 }
 
 /* The locked figures on a teaser: quiet rules where numbers would be. */
