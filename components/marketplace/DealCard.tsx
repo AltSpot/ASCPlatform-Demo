@@ -32,7 +32,7 @@
  * No 'use client': nothing here holds state, so a server page can
  * render it directly. The star inside it is its own client island.
  */
-import { Radar } from 'lucide-react';
+import { Eye, Radar } from 'lucide-react';
 import Link from 'next/link';
 
 import WatchStar from '@/components/marketplace/WatchStar';
@@ -95,6 +95,19 @@ export default function DealCard({
         {resume ? (
           <span className={s.resumeChip}>
             {resume.state === 'docs_signed' ? 'Awaiting funding' : 'In progress'}
+          </span>
+        ) : null}
+
+        {/* View-only under Rule 506(b): the deal opened before this
+            member joined. One glyph on the art; the deal page says why. */}
+        {!deal.redacted && !deal.subscribable && !resume ? (
+          <span
+            className={s.viewOnlyMark}
+            role="img"
+            aria-label="View only: opened before you joined"
+            title="View only: opened before you joined"
+          >
+            <Eye size={14} strokeWidth={1.7} aria-hidden="true" />
           </span>
         ) : null}
 

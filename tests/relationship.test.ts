@@ -19,11 +19,13 @@ import {
   STAGE_LABEL,
   YEARS_OPTIONS,
   canSeeOfferings,
+  canSubscribeToDeal,
   evaluateQuestionnaire,
   gateCopy,
   parseQuestionnaire,
   questionnaireSubmitted,
   relationshipStage,
+  viewOnlyCopy,
   type QuestionnaireAnswers,
   type RelationshipStage,
 } from '@/lib/relationship';
@@ -228,5 +230,41 @@ describe('member-facing copy', () => {
       const waiting = stage === 'cooling_off' || stage === 'under_review';
       assert.equal(copy.action === null, waiting, `stage ${stage} action mismatch`);
     }
+  });
+});
+
+describe('canSubscribeToDeal', () => {
+  const established = '2026-08-01T12:00:00.000Z';
+  const eligible = { stage: 'eligible' as const, establishedAt: established, unlocksAt: '2026-08-31T12:00:00.000Z' };
+
+  test('a deal that opened after the relationship may be subscribed to', () => {
+    assert.equal(canSubscribeToDeal(eligible, '2026-08-01T12:00:00.001Z'), true);
+    assert.equal(canSubscribeToDeal(eligible, '2026-09-10T00:00:00.000Z'), true);
+  });
+
+  test('a deal that opened before, or at the same instant, is view-only', () => {
+    assert.equal(canSubscribeToDeal(eligible, '2026-07-15T00:00:00.000Z'), false);
+    assert.equal(canSubscribeToDeal(eligible, established), false);
+  });
+
+  test('nobody short of eligible may subscribe, whatever the dates', () => {
+    for (const stage of ['questionnaire', 'under_review', 'declined', 'cooling_off'] as const) {
+      assert.equal(
+        canSubscribeToDeal({ ...eligible, stage }, '2027-01-01T00:00:00.000Z'),
+        false,
+        `stage ${stage} could subscribe`,
+      );
+    }
+  });
+
+  test('a missing or unreadable date fails closed', () => {
+    assert.equal(canSubscribeToDeal({ ...eligible, establishedAt: null }, '2027-01-01T00:00:00.000Z'), false);
+    assert.equal(canSubscribeToDeal(eligible, 'not a date'), false);
+  });
+
+  test('the view-only line names the relationship date and carries no em dash', () => {
+    const line = viewOnlyCopy(eligible, () => 'Aug 1, 2026');
+    assert.equal(line, 'Opened before you joined. You are eligible for deals that open after Aug 1, 2026.');
+    assert.ok(!line.includes('\u2014'));
   });
 });

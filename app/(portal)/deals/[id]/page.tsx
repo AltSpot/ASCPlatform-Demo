@@ -33,6 +33,7 @@ import KeyIndicators from '@/components/deal/KeyIndicators';
 import RoundHistory from '@/components/deal/RoundHistory';
 import SummaryMedia from '@/components/deal/SummaryMedia';
 import TermsTable from '@/components/deal/TermsTable';
+import ViewOnly from '@/components/deal/ViewOnly';
 import WatchToggle from '@/components/deal/WatchToggle';
 import WhatWeLike from '@/components/deal/WhatWeLike';
 import s from '@/components/deal/Deal.module.css';
@@ -129,7 +130,13 @@ export default async function DealPage({
    * not cleared the gate is routed to the step they are missing and
    * carried back. Two hand-written copies of that would eventually
    * disagree, and the disagreement would be about money.
+   *
+   * A deal that opened before the member's relationship date is view-only
+   * under Rule 506(b): no ask at all, only the reason, unless they are
+   * somehow already mid-commitment in it.
    */
+  const viewOnly = !deal.subscribable && !resume;
+
   const ctaFor = (className: string) =>
     resume ? (
       resume.state === 'docs_signed' ? (
@@ -145,7 +152,11 @@ export default async function DealPage({
       <InvestButton dealId={deal.id} gate={gate} className={className} />
     );
 
-  const cta = ctaFor('btn btn-gold');
+  const cta = viewOnly ? (
+    <ViewOnly relationship={wizard.relationship} size="hero" />
+  ) : (
+    ctaFor('btn btn-gold')
+  );
 
   return (
     <>
@@ -160,7 +171,15 @@ export default async function DealPage({
 
       <DealHero deal={deal} cta={cta} tools={watch} />
 
-      <DealNav cta={ctaFor(s.dealNavCta)} />
+      <DealNav
+        cta={
+          viewOnly ? (
+            <ViewOnly relationship={wizard.relationship} size="nav" />
+          ) : (
+            ctaFor(s.dealNavCta)
+          )
+        }
+      />
 
       <SummaryMedia
         summary={deal.summary}
@@ -187,7 +206,11 @@ export default async function DealPage({
 
 
       <div className={s.section}>
-        <ClosingCta minInvestment={deal.minInvestment} cta={cta} />
+        {viewOnly ? (
+          <ViewOnly relationship={wizard.relationship} size="closing" />
+        ) : (
+          <ClosingCta minInvestment={deal.minInvestment} cta={cta} />
+        )}
 
         <p className={s.disclosure}>
           Prepared by AltSpot Capital from company-provided materials and AltSpot

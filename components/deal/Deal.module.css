@@ -330,6 +330,33 @@
   font-style: normal;
 }
 
+/* The view-only reason, where the ask would be. Body type, muted, with
+   the eye glyph in gold paint: an explanation, not a warning. */
+.viewOnly {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--as-text-body);
+}
+
+.viewOnly svg {
+  flex: none;
+  margin-top: 2px;
+  stroke: var(--as-gold);
+}
+
+.viewOnlyEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
 .actions {
   display: flex;
   gap: 12px;

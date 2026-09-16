@@ -2,16 +2,18 @@
  * Invest — profile and amount, then the split-screen subscription
  * agreement that fills itself in as the investor confirms each section.
  *
- * The gate is checked here as well as on the API: an investor who is not
- * verified is routed back into setup rather than shown a document they
- * cannot sign.
+ * The gates are checked here as well as on the API. A member who cannot
+ * see offerings, or who is looking at a deal that opened before their
+ * relationship date (view-only under Rule 506(b)), is sent back to the
+ * deal page rather than shown a document they may not sign. A member
+ * with setup outstanding is routed into it.
  */
 import { notFound, redirect } from 'next/navigation';
 
 import InvestFlow from '@/components/invest/InvestFlow';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
-import { getDealRecord } from '@/lib/repositories/deals';
+import { getDealAccess } from '@/lib/repositories/deals';
 import {
   getVault,
   getWizardView,
@@ -29,8 +31,12 @@ export default async function InvestPage({
   const user = await requireUser();
   const { dealId } = await params;
 
-  const deal = await getDealRecord(dealId, user.id);
-  if (!deal) notFound();
+  const access = await getDealAccess(dealId, user.id);
+  if (!access) notFound();
+  if (access.access === 'locked' || !access.deal.subscribable) {
+    redirect(`/deals/${dealId}`);
+  }
+  const { deal } = access;
 
   const wizard = await getWizardView(user.id);
   const gate = evaluateInvestGate(wizard);

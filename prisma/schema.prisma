@@ -216,6 +216,10 @@ model Deal {
   allocationTotal     Int
   allocationRemaining Int
   targetClose         String
+  /// When the offering opened to members. Rule 506(b): a member may subscribe
+  /// only to deals launched after their relationship was established
+  /// (User.relationshipEstablishedAt); earlier deals are shown view-only.
+  launchedAt          DateTime @default(now())
   altspotCommitted    Int
   committedNote       String
   status              String @default("open")

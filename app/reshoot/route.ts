@@ -14,6 +14,8 @@
  *   /reshoot?to=/deals/calder       Hannah, on the lead deal, nothing signed
  *   /reshoot?as=new                 empty account, onboarding wizard
  *   /reshoot?as=new&to=/marketplace empty account, at the gate
+ *   /reshoot?as=recent&to=/marketplace joined 40 days ago: eligible, no book,
+ *                                   and the older deals are view-only
  *
  * `as=new` mints an address carrying "+new", which lib/repositories/
  * investor.ts treats as the clean-account seam: no positions, no votes, no
@@ -35,9 +37,9 @@ import {
 import { prisma } from '@/lib/db';
 
 /** Same shape the wizard expects, and never a real person's address. */
-function cleanAddress(): string {
+function cleanAddress(kind: 'new' | 'recent'): string {
   const suffix = Math.random().toString(36).slice(2, 8);
-  return `recording+new+${suffix}@altspot.demo`;
+  return `recording+${kind}+${suffix}@altspot.demo`;
 }
 
 /**
@@ -59,7 +61,8 @@ export async function GET(request: Request) {
   }
 
   const target = safePath(url.searchParams.get('to'));
-  const wantsEmpty = url.searchParams.get('as') === 'new';
+  const as = url.searchParams.get('as');
+  const minted = as === 'new' || as === 'recent' ? as : null;
 
   // Clear whoever is signed in, exactly as the Settings control does.
   const current = await getSessionUser();
@@ -76,10 +79,10 @@ export async function GET(request: Request) {
     await deleteInvestor(current.id);
   }
 
-  if (wantsEmpty) {
+  if (minted) {
     const user = await prisma.user.create({
       data: {
-        email: cleanAddress(),
+        email: cleanAddress(minted),
         name: 'Demo Investor',
         passwordHash: await hashPassword('demo-password'),
       },

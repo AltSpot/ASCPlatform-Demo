@@ -179,6 +179,18 @@ const SEED_PENDING = {
  */
 const CLEAN_ADDRESS = /\+new(\+|@)/i;
 
+/**
+ * DEMO SEAM — the address that mints a member who joined recently.
+ *
+ * Onboarded, eligible, and holding nothing, with a relationship
+ * established RECENT_RELATIONSHIP_DAYS_AGO days ago: past the cooling-off
+ * period, but after some open deals launched. That is the only way to
+ * show the Rule 506(b) view-only state, where a deal that opened before
+ * the member joined can be read but not joined, without waiting a month.
+ */
+const RECENT_ADDRESS = /\+recent(\+|@)/i;
+const RECENT_RELATIONSHIP_DAYS_AGO = 40;
+
 export async function ensureInvestorRecords(userId: string): Promise<void> {
   const existing = await prisma.wizardState.findUnique({ where: { userId } });
   if (existing) return;
@@ -197,6 +209,12 @@ export async function ensureInvestorRecords(userId: string): Promise<void> {
 
   /* A brand-new account, and nothing is written into it. */
   if (!user || CLEAN_ADDRESS.test(user.email)) return;
+
+  /* A recent member: onboarded, no book. */
+  if (RECENT_ADDRESS.test(user.email)) {
+    await completeOnboarding(userId, user.name, RECENT_RELATIONSHIP_DAYS_AGO);
+    return;
+  }
 
   /*
    * ONBOARDING COMES WITH THE BOOK, AND HAS TO.
@@ -248,7 +266,11 @@ const SEED_ANSWERS: QuestionnaireAnswers = {
  *
  * Production contract: there is none. Delete this with the rest.
  */
-async function completeOnboarding(userId: string, name: string): Promise<void> {
+async function completeOnboarding(
+  userId: string,
+  name: string,
+  relationshipDaysAgo: number = SEED_RELATIONSHIP_DAYS_AGO,
+): Promise<void> {
   const now = new Date();
   const [first, ...rest] = name.trim().split(/\s+/);
   const last = rest.join(' ') || DEMO_PERSONA.vault.last;
@@ -256,7 +278,7 @@ async function completeOnboarding(userId: string, name: string): Promise<void> {
   await recordQuestionnaire(
     userId,
     SEED_ANSWERS,
-    new Date(now.getTime() - SEED_RELATIONSHIP_DAYS_AGO * DAY_MS),
+    new Date(now.getTime() - relationshipDaysAgo * DAY_MS),
   );
   await saveVault(userId, {
     ...DEMO_PERSONA.vault,

@@ -1,0 +1,47 @@
+{
+  "out": "screenshots/phase2/02-deal-eligibility",
+  "shots": [
+    {
+      "name": "01-shelf-recent-member",
+      "steps": [{ "go": "/reshoot?as=recent&to=/marketplace" }],
+      "scroll": "#lane-invest"
+    },
+    {
+      "name": "02-deal-view-only-hero",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/deals/aurelia" },
+        { "eval": "(() => { const t = document.body.innerText; if (!t.includes('Opened before you joined. You are eligible for deals that open after')) throw new Error('view-only copy missing'); if (/Begin investment/.test(t)) throw new Error('subscribe button present on a view-only deal'); })()" }
+      ]
+    },
+    {
+      "name": "03-deal-view-only-close",
+      "steps": [{ "go": "/reshoot?as=recent&to=/deals/aurelia" }],
+      "scroll": "#terms"
+    },
+    {
+      "name": "04-deal-open-to-recent-member",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/deals/calder" },
+        { "eval": "(() => { const t = document.body.innerText; if (t.includes('Opened before you joined')) throw new Error('calder wrongly view-only'); if (!/Begin investment/.test(t)) throw new Error('no subscribe button on an eligible deal'); })()" },
+        { "post": "/api/subscriptions", "expect": 403, "body": { "dealId": "aurelia", "amount": 10000 } },
+        { "post": "/api/subscriptions", "expect": 403, "body": { "dealId": "kestrel", "amount": 25000 } },
+        { "post": "/api/subscriptions", "expect": 201, "body": { "dealId": "calder", "amount": 10000 } }
+      ]
+    },
+    {
+      "name": "05-invest-url-on-view-only-redirects",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/invest/aurelia" },
+        { "eval": "(() => { if (!location.pathname.startsWith('/deals/aurelia')) throw new Error('invest page did not redirect: ' + location.pathname); })()" }
+      ],
+      "capture": false
+    },
+    {
+      "name": "06-seeded-member-same-deal-open",
+      "steps": [
+        { "go": "/reshoot?to=/deals/halyard" },
+        { "eval": "(() => { if (document.body.innerText.includes('Opened before you joined')) throw new Error('long-standing member wrongly view-only'); })()" }
+      ]
+    }
+  ]
+}

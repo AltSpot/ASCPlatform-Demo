@@ -298,6 +298,15 @@ export interface DealView {
   allocationTotal: number;
   allocationRemaining: number;
   targetClose: string;
+  /** ISO. When the offering opened to members. */
+  launchedAt: string;
+  /**
+   * May THIS viewer subscribe? False unless a viewer-aware read set it:
+   * a deal read without a viewer is never subscribable by default. Rule
+   * 506(b): only deals launched after the member's relationship date.
+   * A deal the member can see but not join renders view-only.
+   */
+  subscribable: boolean;
   altspotCommitted: number;
   committedNote: string;
   status: string;

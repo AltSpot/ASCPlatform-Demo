@@ -2,14 +2,26 @@
  * GET  /api/subscriptions — every commitment this investor holds.
  * POST /api/subscriptions — begin one.
  *
- * Starting a subscription is gated on accreditation + W-9 + KYC, enforced
- * here rather than in the UI: the client-side gate is a courtesy, this is
- * the control.
+ * Starting a subscription is gated here rather than in the UI: the
+ * client-side gate is a courtesy, this is the control. Three checks, in
+ * order: the 506(b) relationship gate (may the member see offerings at
+ * all), the per-deal rule (the deal must have opened after the member's
+ * relationship date, or it is view-only), then W-9 and KYC.
  */
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
-import { NotFoundError, ok, readJson, requireInt, route, ValidationError } from '@/lib/http';
-import { getDealRecord } from '@/lib/repositories/deals';
+import { dateStr } from '@/lib/format';
+import {
+  ForbiddenError,
+  NotFoundError,
+  ok,
+  readJson,
+  requireInt,
+  route,
+  ValidationError,
+} from '@/lib/http';
+import { viewOnlyCopy } from '@/lib/relationship';
+import { getDealAccess } from '@/lib/repositories/deals';
 import { getWizardView, listProfiles } from '@/lib/repositories/investor';
 import {
   getResumable,
@@ -35,8 +47,17 @@ export const POST = route(async (request: Request) => {
     throw new ValidationError('"dealId" is required');
   }
 
-  const deal = await getDealRecord(body.dealId);
-  if (!deal) throw new NotFoundError('Deal not found');
+  const access = await getDealAccess(body.dealId, user.id);
+  if (access?.access === 'locked') {
+    throw new ForbiddenError('Offerings open once your investor questionnaire is approved.');
+  }
+  if (!access) throw new NotFoundError('Deal not found');
+  const { deal } = access;
+
+  if (!deal.subscribable) {
+    const wizard = await getWizardView(user.id);
+    throw new ForbiddenError(viewOnlyCopy(wizard.relationship, dateStr));
+  }
 
   const gate = evaluateInvestGate(await getWizardView(user.id));
   if (!gate.ok) {

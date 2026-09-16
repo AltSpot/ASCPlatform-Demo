@@ -361,6 +361,31 @@ export function gateCopy(
 }
 
 /**
+ * May this member subscribe to a deal that opened at `launchedAt`?
+ *
+ * Rule 506(b): only to offerings that began after the relationship was
+ * established. Seeing a deal (once eligible) and subscribing to it are
+ * different permissions: a deal that opened before the member joined is
+ * shown to them view-only. Strictly after, so a deal launched the same
+ * instant the relationship was recorded does not count as later.
+ */
+export function canSubscribeToDeal(view: RelationshipView, launchedAt: string): boolean {
+  if (view.stage !== 'eligible' || !view.establishedAt) return false;
+  const launched = Date.parse(launchedAt);
+  const established = Date.parse(view.establishedAt);
+  if (!Number.isFinite(launched) || !Number.isFinite(established)) return false;
+  return launched > established;
+}
+
+/** The view-only line, word for word from the work order. */
+export function viewOnlyCopy(
+  view: RelationshipView,
+  formatDate: (iso: string | null) => string,
+): string {
+  return `Opened before you joined. You are eligible for deals that open after ${formatDate(view.establishedAt)}.`;
+}
+
+/**
  * May this member be shown offerings at all?
  *
  * Eligible only. Before that there is nothing to redact, because no deal

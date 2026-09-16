@@ -148,7 +148,10 @@ the invest gate: a setup banner over a live portfolio contradicts itself. **An
 address containing `+new` mints a genuinely empty, un-onboarded account**, which
 is how the empty states, the questionnaire and the relationship gate are reached.
 A `+new` account that submits the questionnaire waits out the real cooling-off
-period (`ASC_COOLING_OFF_DAYS`, default 30) before any offering appears.
+period (`ASC_COOLING_OFF_DAYS`, default 30) before any offering appears. **An
+address containing `+recent` mints a member who joined 40 days ago**: eligible,
+no book, and the three deals that opened before then (Halyard, Aurelia,
+Kestrel) are view-only. `/reshoot?as=recent&to=/marketplace` lands there.
 
 ## Architecture
 
@@ -709,6 +712,15 @@ These are the claims the product makes. Do not let a change quietly break them.
   the answers and timestamps are the record. `canViewDealDetail` in
   `lib/domain.ts` is the rule, and it turns on the relationship alone: the W-9
   and KYC gate investing, not seeing
+- **A member may subscribe only to deals launched after their relationship date**
+  (`Deal.launchedAt` against `User.relationshipEstablishedAt`, strictly after).
+  An earlier deal is shown in full but view-only: every place the page would ask
+  for money shows "Opened before you joined. You are eligible for deals that open
+  after [date]." instead, and the shelf card carries an eye glyph.
+  `canSubscribeToDeal` in `lib/relationship.ts` is the rule; `DealView.subscribable`
+  defaults to false and only the viewer-aware reads in `lib/repositories/deals.ts`
+  set it. `POST /api/subscriptions` refuses with a 403 and the invest page
+  redirects to the deal, so the UI is the explanation, not the control
 - SpotBot **explains, never advises** — every answer cites its provenance
 - Secondaries is visible but disabled, pending a BD partner and counsel
 

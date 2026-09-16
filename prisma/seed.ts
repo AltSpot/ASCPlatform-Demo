@@ -67,6 +67,13 @@ interface SeedDeal {
   targetClose?: string;
   /** Days from the seed run. Open deals use this; closed deals do not. */
   closesInDays?: number;
+  /**
+   * Days before the seed run the offering opened to members. Rule 506(b):
+   * a member may subscribe only to deals launched after their relationship
+   * date, so this decides which deals a newer member sees view-only. Closed
+   * deals derive it from targetClose.
+   */
+  launchedDaysAgo?: number;
   altspotCommitted: number;
   committedNote: string;
   sortOrder: number;
@@ -210,6 +217,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 2000000,
     allocationRemaining: 640000,
     closesInDays: 19,
+    launchedDaysAgo: 26,
     altspotCommitted: 600000,
     committedNote:
       'AltSpot participated in the seed and is leading this round with $600,000 of its own capital.',
@@ -444,6 +452,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 10000000,
     allocationRemaining: 6900000,
     closesInDays: 47,
+    launchedDaysAgo: 13,
     altspotCommitted: 1000000,
     committedNote:
       'AltSpot is the general partner and has committed $1,000,000 of the $10M target.',
@@ -562,6 +571,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 3000000,
     allocationRemaining: 480000,
     closesInDays: 12,
+    launchedDaysAgo: 44,
     altspotCommitted: 300000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
     sortOrder: 1,
@@ -630,6 +640,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 2500000,
     allocationRemaining: 900000,
     closesInDays: 26,
+    launchedDaysAgo: 30,
     altspotCommitted: 250000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
     sortOrder: 8,
@@ -709,6 +720,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 2500000,
     allocationRemaining: 1650000,
     closesInDays: 27,
+    launchedDaysAgo: 21,
     altspotCommitted: 500000,
     committedNote: 'AltSpot participated in the Series A and is leading this round.',
     sortOrder: 2,
@@ -784,6 +796,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 1500000,
     allocationRemaining: 1120000,
     closesInDays: 33,
+    launchedDaysAgo: 22,
     altspotCommitted: 300000,
     committedNote: 'AltSpot is leading this round.',
     sortOrder: 3,
@@ -854,6 +867,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 750000,
     allocationRemaining: 410000,
     closesInDays: 41,
+    launchedDaysAgo: 15,
     altspotCommitted: 150000,
     committedNote: 'AltSpot is leading this round.',
     sortOrder: 5,
@@ -927,6 +941,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 4000000,
     allocationRemaining: 2300000,
     closesInDays: 16,
+    launchedDaysAgo: 42,
     altspotCommitted: 400000,
     committedNote: 'AltSpot is co-investing alongside the round lead.',
     sortOrder: 4,
@@ -995,6 +1010,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 5000000,
     allocationRemaining: 3100000,
     closesInDays: 22,
+    launchedDaysAgo: 36,
     altspotCommitted: 500000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
     sortOrder: 6,
@@ -1069,6 +1085,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 3500000,
     allocationRemaining: 900000,
     closesInDays: 9,
+    launchedDaysAgo: 48,
     altspotCommitted: 700000,
     committedNote: 'AltSpot is leading this round and takes a board seat.',
     sortOrder: 7,
@@ -1211,6 +1228,20 @@ const DEALS: SeedDeal[] = [
  * way the rest of the product formats dates, because this string is
  * displayed as well as parsed.
  */
+/** Closed deals opened about fifty days before they closed. */
+const CLOSED_OFFERING_DAYS = 50;
+
+function launchedAt(deal: SeedDeal): Date {
+  if (deal.launchedDaysAgo !== undefined) {
+    return new Date(Date.now() - deal.launchedDaysAgo * 86_400_000);
+  }
+  const closed = Date.parse(deal.targetClose ?? '');
+  if (!Number.isFinite(closed)) {
+    throw new Error(`${deal.id} has neither launchedDaysAgo nor a readable targetClose`);
+  }
+  return new Date(closed - CLOSED_OFFERING_DAYS * 86_400_000);
+}
+
 function closesIn(days: number): string {
   const when = new Date(Date.now() + days * 86_400_000);
   return when.toLocaleDateString('en-US', {
@@ -1246,6 +1277,7 @@ async function main() {
         deal.closesInDays !== undefined
           ? closesIn(deal.closesInDays)
           : (deal.targetClose ?? ''),
+      launchedAt: launchedAt(deal),
       altspotCommitted: deal.altspotCommitted,
       committedNote: deal.committedNote,
       sortOrder: deal.sortOrder,

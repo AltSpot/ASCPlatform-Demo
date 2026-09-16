@@ -422,6 +422,8 @@ function fullDeal(): DealView {
     allocationTotal: 2_000_000,
     allocationRemaining: 640_000,
     targetClose: 'WITHHELD_CLOSE',
+    launchedAt: '2026-08-01T00:00:00.000Z',
+    subscribable: false,
     altspotCommitted: 250_000,
     committedNote: 'WITHHELD_COMMITTED_NOTE',
     status: 'open',

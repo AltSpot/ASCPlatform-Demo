@@ -284,6 +284,25 @@
   stroke: var(--as-champagne);
 }
 
+/* View only, bottom right on the art, the same seat and scrim. */
+.viewOnlyMark {
+  position: absolute;
+  z-index: 1;
+  right: 12px;
+  bottom: 12px;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  background: var(--scrim-media-strong);
+  backdrop-filter: blur(4px);
+}
+
+.viewOnlyMark svg {
+  stroke: var(--on-media);
+}
+
 @media (max-width: 900px) {
   .switcher {
     width: 100%;

@@ -22,7 +22,7 @@ import { prisma } from '../db';
 import { ISOLATED_ALLOCATION } from '../config';
 import { parseBacking } from '../backers';
 import { canViewDealDetail } from '../domain';
-import type { RelationshipView } from '../relationship';
+import { canSubscribeToDeal, type RelationshipView } from '../relationship';
 import type {
   DealFees,
   DealChart,
@@ -100,6 +100,9 @@ export function toDealView(row: Deal): DealView {
     allocationTotal: row.allocationTotal,
     allocationRemaining: row.allocationRemaining,
     targetClose: row.targetClose,
+    launchedAt: row.launchedAt.toISOString(),
+    // Fails closed. Only a viewer-aware read (withViewer below) opens it.
+    subscribable: false,
     altspotCommitted: row.altspotCommitted,
     committedNote: row.committedNote,
     status: row.status,
@@ -219,6 +222,11 @@ export type DealAccess =
  * simulated is the seeded history, not the restriction.
  */
 
+/** Stamp whether this viewer may subscribe, from the one rule that decides it. */
+function withViewer(deal: DealView, relationship: RelationshipView): DealView {
+  return { ...deal, subscribable: canSubscribeToDeal(relationship, deal.launchedAt) };
+}
+
 /** The shelf as this member is entitled to see it: all of it, or none. */
 export async function listDealsForViewer(
   userId: string,
@@ -226,7 +234,8 @@ export async function listDealsForViewer(
   const relationship = await getRelationshipView(userId);
   if (!canViewDealDetail(relationship)) return [];
 
-  return listDealRecords(userId);
+  const deals = await listDealRecords(userId);
+  return deals.map((deal) => withViewer(deal, relationship));
 }
 
 /**
@@ -245,7 +254,7 @@ export async function getDealAccess(
   if (!canViewDealDetail(relationship)) return { access: 'locked', relationship };
 
   const deal = await getDealRecord(id, userId);
-  return deal ? { access: 'open', deal } : null;
+  return deal ? { access: 'open', deal: withViewer(deal, relationship) } : null;
 }
 
 /**
@@ -267,7 +276,8 @@ export async function getDealsForViewer(
 
   return ids
     .map((id) => byId.get(id))
-    .filter((deal): deal is DealView => deal !== undefined);
+    .filter((deal): deal is DealView => deal !== undefined)
+    .map((deal) => withViewer(deal, relationship));
 }
 
 /**
