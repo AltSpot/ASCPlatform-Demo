@@ -16,7 +16,7 @@
 .dot:hover{border-color:var(--hairg);transform:scale(1.2)}
 .dotDone{background:linear-gradient(135deg,var(--gold),var(--orange));border-color:transparent}
 .dotNow{
-  border-color:var(--orange);
+  border-color:var(--accent-signal);
   box-shadow:0 0 0 3px rgba(243,152,7,.16);
   transform:scale(1.15);
 }
@@ -32,5 +32,55 @@
   content:"";position:absolute;left:-9px;top:50%;
   width:1px;height:12px;margin-top:-6px;background:var(--hair);
 }
-.dotSign:disabled{opacity:.35;cursor:not-allowed}
+.dotSign:disabled{background:var(--panel-2);color:var(--as-text-muted);border-color:var(--hair);box-shadow:none;cursor:not-allowed}
 .dotSign:disabled:hover{transform:none;border-color:var(--hair)}
+
+/* ---------- the amount field ----------
+
+   The currency mark sits outside the input rather than inside its
+   value, so the field's own text stays parseable and the caret never
+   has to step over a symbol. */
+
+.amountField {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-md);
+  background: var(--fill-input, var(--surface-well));
+  transition:
+    border-color var(--dur-micro) ease,
+    box-shadow var(--dur-micro) ease;
+}
+.amountField:focus-within {
+  border-color: var(--hair-gold-active);
+  box-shadow: 0 0 0 3px rgba(199, 154, 75, 0.14);
+}
+
+.amountUnit {
+  display: grid;
+  place-items: center;
+  padding: 0 4px 0 16px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--as-text-faint);
+  user-select: none;
+}
+
+/* The border and background belong to the wrapper now, so the input
+   contributes nothing but the text and the caret. */
+.amountInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  padding-left: 4px;
+  font-size: 22px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.amountInput:focus,
+.amountInput:focus-visible {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}

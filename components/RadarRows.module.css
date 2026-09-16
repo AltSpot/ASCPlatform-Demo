@@ -1,0 +1,186 @@
+/* Your Radar as rows. Name, what you said, whether it has arrived. */
+
+.card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.6fr);
+  align-items: center;
+  gap: 18px;
+  padding: 17px 24px;
+}
+.row + .row {
+  border-top: 1px solid var(--hair-neutral);
+}
+
+/* Marks arrive in the company's own colours, and some of them are solid
+   black. A warm plate is what makes any of them legible on the canvas
+   without touching the mark itself. Same plate as the Radar board. */
+.plate {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  padding: 7px;
+  background: var(--as-cream);
+  border: 1px solid var(--hair-cream);
+}
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.monogram {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 15px;
+  color: var(--as-cream-ink);
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.name {
+  font-size: 15.5px;
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kind {
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+.vote {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.voteKey {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+.voteValue {
+  font-size: 15.5px;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-width: 0;
+}
+
+.tracking {
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+/* The live indicator is the one functional use of signal orange on
+   this page, which is what V18 reserves it for. */
+.liveDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-signal);
+  box-shadow: 0 0 0 4px rgba(243, 152, 7, 0.18);
+}
+.liveText {
+  font-size: var(--fs-meta);
+  color: var(--as-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.inIt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 22px;
+  border-top: 1px solid var(--hair-soft);
+  background: var(--fill-card);
+}
+.more {
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.more:hover {
+  color: var(--accent-hot);
+}
+.legal {
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- nothing voted yet ---------- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.emptyLead {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 20px;
+  color: var(--as-text);
+}
+.emptyNote {
+  margin: 0 0 6px;
+  max-width: 52ch;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--as-text-muted);
+}
+
+@media (max-width: 860px) {
+  .row {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    row-gap: 10px;
+  }
+  .status {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}

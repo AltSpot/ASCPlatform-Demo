@@ -1,3 +1,4 @@
+import type { Backing } from './backers';
 /**
  * Domain vocabulary — the types and invariants the whole platform agrees on.
  *
@@ -66,6 +67,22 @@ export const HELD_STATES: readonly SubscriptionState[] = [
   'closed',
 ];
 
+/**
+ * Capital actually at work today: in a held state, and not yet exited.
+ *
+ * HELD_STATES alone is not enough once a position can exit. `closed` is
+ * the healthy end of the subscription lifecycle, not the end of the
+ * investment, so a realized position is still in a held state while
+ * being worth nothing to mark. Anything totalling current exposure has
+ * to use this rather than the state list.
+ */
+export function isLivePosition(sub: {
+  state: string;
+  realizedAt: string | null;
+}): boolean {
+  return HELD_STATES.includes(sub.state as SubscriptionState) && !sub.realizedAt;
+}
+
 /** States a user can resume from the marketplace. */
 export const RESUMABLE_STATES: readonly SubscriptionState[] = [
   'started',
@@ -109,6 +126,40 @@ export interface DealMedia {
   label: string;
   series: number[];
   caption: string;
+}
+
+/** One period on a chart. The label is the axis, not a tooltip. */
+export interface DealChartPoint {
+  label: string;
+  value: number;
+}
+
+/**
+ * One series from the data room.
+ *
+ * A financial data room does not hand over a single line. It hands over
+ * a revenue schedule, a customer list, a margin bridge and a pipeline
+ * report, and an investor reads them against each other: revenue rising
+ * while margin falls is a different company from revenue rising while
+ * margin holds. So the deal page carries several, drawn to one scale
+ * each and captioned with where the numbers came from.
+ *
+ * `unit` decides how the figures are read, not how they are stored.
+ * Money stays in whole units of whatever `unit` names, so nothing here
+ * carries a float that has to be un-rounded later.
+ */
+export interface DealChart {
+  key: string;
+  label: string;
+  /** usd-k is thousands, usd-m is millions. pct is whole percent. */
+  unit: 'usd' | 'usd-k' | 'usd-m' | 'pct' | 'count';
+  /** A continuous measure reads as an area; a counted one as bars. */
+  kind: 'area' | 'bar';
+  points: DealChartPoint[];
+  /** What the series is, in one line. */
+  caption: string;
+  /** The data-room artefact it came from. A figure with no source is decoration. */
+  source: string;
 }
 
 export interface SpotbotEntry {
@@ -223,6 +274,8 @@ export interface DealView {
   stage: string;
   art: string;
   logoUrl: string | null;
+  /** A walkthrough film, when one has been recorded. */
+  videoUrl: string | null;
   headline: string | null;
   summary: string | null;
   pricePerShare: string | null;
@@ -245,6 +298,10 @@ export interface DealView {
   thesis: string[];
   fees: DealFees;
   media: DealMedia;
+  /** Series from the data room. Empty for a deal with no company data. */
+  charts: DealChart[];
+  /** The other firms on the round. Empty when AltSpot is alone. */
+  backing: Backing[];
   docs: string[];
   spotbot: SpotbotEntry[];
   deck: DeckSlide[];
@@ -307,6 +364,8 @@ export interface SubscriptionView {
   fundingMethod: string | null;
   acceptedAt: string | null;
   currentValue: number | null;
+  /** ISO date this position exited, or null while it is still held. */
+  realizedAt: string | null;
   seeded: boolean;
   createdAt: string;
   updatedAt: string;

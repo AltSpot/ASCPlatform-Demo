@@ -1,306 +1,163 @@
 /* ============================================================
    Dashboard.
 
-   The page was one column of identical cards: the four figures, the
-   chart, the holdings, the watchlist and the news all wore the same
-   surface, so nothing said which was the portfolio and which was
-   context. Structure comes from three things here, and no new colours:
-
-     1. A tone per figure, carried on a 3px top bar. Money in, money
-        now, the change, and what is owed are four different questions
-        and now read as four different things.
-     2. Eyebrows between blocks, so the page has sections rather than a
-        stack.
-     3. Context blocks (watchlist, news) sit quieter than the portfolio
-        blocks, because they are not your money.
+   One hero, then sections. The page used to open on five figures in
+   five colours; now it opens on one figure and one sentence, and the
+   colour on this page means one thing, the direction of a change.
    ============================================================ */
 
-/* ---------- the figure strip ---------- */
+/* ---------- the greeting ---------- */
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 26px;
-}
-
-@media (max-width: 1080px) {
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 620px) {
-  .stats {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.stat {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  padding: 20px 20px 18px;
-  border: 1px solid var(--hair-neutral);
-  border-radius: var(--r-lg);
-  background: var(--fill-card);
-  backdrop-filter: blur(6px);
-  transition:
-    border-color var(--dur-1) ease,
-    transform var(--dur-1) var(--ease-layout);
-}
-
-.stat:hover {
-  transform: translateY(-2px);
-  border-color: var(--hair-gold-active);
-}
-
-/* The tone bar. One line of colour is enough to separate four cards
-   that otherwise carry the same shape. */
-.stat::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 3px;
-  background: var(--tone, var(--hair-neutral));
-}
-
-.statHead {
+/* Small, because it says nothing a member needs. The first thing that
+   should catch the eye is the figure in the hero. */
+.head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
 }
 
-.statKey {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-quiet);
-}
-
-.statIcon {
-  color: var(--tone, var(--as-text-faint));
-  flex: none;
-  opacity: 0.85;
-}
-
-.statValue {
+.greeting {
+  margin: 0;
   font-family: var(--font-display);
   font-weight: var(--w-medium);
-  font-size: 31px;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--as-text);
+}
+
+/* ---------- the hero ---------- */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px 30px 26px;
+  /* Warmth in the glass, over the card's own frosted fill. Setting the
+     background shorthand here used to drop that fill, which left the
+     hero a 7% tint the page gradient showed straight through. */
+  background-image: var(--glass-tint-gold), var(--card-sheen);
+}
+
+.heroFoot {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding-top: 18px;
+  border-top: 1px solid var(--hair-neutral);
+}
+
+.heroFig {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.heroKey {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.heroValue {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 22px;
   line-height: 1;
-  letter-spacing: -0.018em;
+  letter-spacing: -0.01em;
   color: var(--as-text);
   font-variant-numeric: tabular-nums;
 }
 
-.statDetail {
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--as-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 5px;
+/* Nothing invested yet. The same card, with the sentence where the
+   figure would be, so a member's first dashboard has the shape their
+   tenth will. */
+.heroEmpty {
+  gap: 10px;
 }
 
-/* Money now is the headline of the four, so it carries the warm fill.
-   The other three stay glass. */
-.toneValue {
-  --tone: var(--as-gold);
-  background: linear-gradient(180deg, rgba(199, 154, 75, 0.08), rgba(199, 154, 75, 0.01));
+.emptyValue {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 30px;
+  letter-spacing: -0.015em;
+  color: var(--as-text);
 }
-.toneValue .statValue {
+
+.emptyLine {
+  margin: 0;
+  max-width: 56ch;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--as-text-muted);
+}
+
+/* ---------- sections ---------- */
+
+.sectionLink {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.sectionLink:hover {
   color: var(--accent-hot);
 }
 
-.toneInvested {
-  --tone: var(--as-champagne, var(--accent-quiet));
+/* Two cards, not a shelf. Wider tracks than the marketplace so the
+   pair fills the column rather than leaving a third slot empty. */
+/* Saved beside voted. One column again below the width where two
+   tables of rows stop being readable. */
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 32px;
+  align-items: start;
 }
-
-/* Direction, not chrome. Same reasoning as the bull and bear bullets on
-   Radar: an investor reads gain and loss in these two colours and
-   inverting that costs more comprehension than it buys compliance. */
-.toneUp {
-  --tone: var(--good);
-}
-.toneUp .statValue {
-  color: var(--good);
-}
-.toneDown {
-  --tone: var(--bad);
-}
-.toneDown .statValue {
-  color: var(--bad);
-}
-
-/* Owed money is ember while it is owed, and quiet when it is not. */
-.toneOwed {
-  --tone: var(--as-ember);
-}
-.toneOwed .statValue {
-  color: var(--as-ember-soft);
-}
-.toneSettled {
-  --tone: var(--hair-neutral);
-}
-
-/* ---------- section rhythm ---------- */
-
-.sectionHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin: 30px 0 14px;
-}
-
-.sectionEyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--as-text-muted);
-  margin: 0;
-}
-
-.sectionRule {
-  display: inline-block;
-  width: 34px;
-  height: 1px;
-  flex: none;
-  background: var(--as-cta-gradient);
-}
-
-.sectionNote {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--as-text-faint);
-}
-
-/* ---------- holdings ---------- */
-
-/* The company's own mark, on the warm plate for the same reason as
-   Radar: marks arrive in their own colours and some are solid black. */
-.posCell {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.posName {
-  min-width: 0;
-}
-
-/* ---------- the call to action ---------- */
-
-/* A slow ring rather than a flash. It should read as lit, not as an
-   alert: 3.2s, low amplitude, and it stops the moment the pointer
-   arrives, because by then it has done its job. */
-.attract {
-  animation: attract 3.2s var(--ease-in-out) infinite;
-}
-
-@keyframes attract {
-  0%,
-  100% {
-    box-shadow: var(--shadow-cta);
-  }
-  50% {
-    box-shadow:
-      var(--shadow-cta),
-      0 0 0 7px rgba(243, 152, 7, 0.09);
+@media (max-width: 1240px) {
+  .pair {
+    grid-template-columns: 1fr;
   }
 }
 
-.attract:hover {
-  animation: none;
+/* The positions, inside the hero card. A hairline, not a second card:
+   glass on glass is fog, and the table is the itemisation of the
+   figure above it, not a separate thing. */
+.heroPositions {
+  margin: 8px -30px -26px;
+  padding: 0 4px;
+  border-top: 1px solid var(--hair);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .attract {
-    animation: none;
-  }
-  .stat:hover {
-    transform: none;
-  }
-}
-
-/* ------------------------------------------------------------------
-   Holding status. The chip says what is needed; the left mark makes
-   the table scannable without reading a word of it. Ember is "you owe
-   this an action", champagne is "we owe you one", good is settled.
-   ------------------------------------------------------------------ */
-.row td:first-child {
-  box-shadow: inset 3px 0 0 var(--row-tone, transparent);
-}
-
-.row[data-status='action'] {
-  --row-tone: var(--as-ember);
-}
-.row[data-status='progress'] {
-  --row-tone: var(--accent-quiet);
-}
-.row[data-status='active'] {
-  --row-tone: var(--good);
-}
-
-.statusAction {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--as-ember-soft);
-  border-color: var(--hair-ember);
-  background: rgba(229, 102, 26, 0.08);
-}
-.statusProgress {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--accent-quiet);
-  border-color: var(--hair-champagne);
-  background: rgba(199, 154, 75, 0.07);
-}
-.statusActive {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--good);
-  border-color: rgba(111, 169, 124, 0.4);
-  background: rgba(111, 169, 124, 0.07);
-}
-
-/* Five figures rather than four. Auto-fit so the row stays even rather
-   than leaving one card stranded on a second line. */
-.statsFive {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-@media (max-width: 1340px) {
-  .statsFive {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 1080px) {
-  .statsFive {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 620px) {
-  .statsFive {
+@media (max-width: 760px) {
+  .openGrid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- the demo line ---------- */
+
+/* A disclosure, at body size. Nothing a regulator would read is set
+   smaller than the copy around it. */
+.disclosure {
+  margin: 26px 0 0;
+  max-width: 78ch;
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 20px 18px 18px;
+  }
+  .heroFoot {
+    gap: 24px;
   }
 }

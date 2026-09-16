@@ -1,19 +1,9 @@
 /**
- * The four V18 primitives, ported from the AltSpot Capital
- * design-system handoff. Import from '@/components/ui'.
- *
- * Anything built from here inherits the pill geometry, the type
- * ladder and the accent discipline for free. Reach for these before
- * writing a new one-off control.
+ * The one V18 primitive that ships as a component: the orb. Buttons,
+ * cards and eyebrows are the global `.btn`, `.card` and `.eyebrow`
+ * classes in app/globals.css, which every surface already uses; the
+ * component versions of those three duplicated them at slightly
+ * different sizes and were deleted. Import from '@/components/ui'.
  */
-export { Button } from './Button';
-export type { ButtonVariant, ButtonSize } from './Button';
-
-export { Card } from './Card';
-export type { CardSurface, CardAccent } from './Card';
-
-export { Eyebrow } from './Eyebrow';
-export type { EyebrowTone } from './Eyebrow';
-
 export { Orb } from './Orb';
 export type { OrbVariant } from './Orb';

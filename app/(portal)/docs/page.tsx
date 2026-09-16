@@ -8,6 +8,8 @@ import { getDealsByIds } from '@/lib/repositories/deals';
 import { listDocuments } from '@/lib/repositories/documents';
 import { getVault, getWizardView } from '@/lib/repositories/investor';
 
+import docStyles from './Docs.module.css';
+
 export const dynamic = 'force-dynamic';
 
 export const metadata = { title: 'Docs · AltSpot Capital' };
@@ -25,6 +27,12 @@ export default async function DocsPage() {
     [...new Set(documents.map((d) => d.dealId).filter((id): id is string => Boolean(id)))],
   );
 
+  /* Two lists, one store. Agreements are what the member executed; K-1s
+     are what was issued to them. They are filed differently and read at
+     different times of year, so they do not share a table. */
+  const agreements = documents.filter((doc) => doc.type !== 'k1');
+  const taxForms = documents.filter((doc) => doc.type === 'k1');
+
   return (
     <>
       <div className="page-head">
@@ -41,7 +49,7 @@ export default async function DocsPage() {
       <div className="card" style={{ marginBottom: 22 }}>
         <h3 style={{ marginBottom: 14 }}>Signed agreements</h3>
 
-        {documents.length === 0 ? (
+        {agreements.length === 0 ? (
           <div className="dz" style={{ cursor: 'default' }}>
             <b style={{ color: 'var(--paper)' }}>Nothing signed yet</b>
             <br />
@@ -66,7 +74,7 @@ export default async function DocsPage() {
               </tr>
             </thead>
             <tbody>
-              {documents.map((doc) => (
+              {agreements.map((doc) => (
                 <tr key={doc.id}>
                   <td>
                     <b>{doc.name}</b>
@@ -156,13 +164,34 @@ export default async function DocsPage() {
           <p className="small" style={{ marginBottom: 14 }}>
             K-1s arrive here for each deal you hold, each season.
           </p>
-          <div className="dz" style={{ cursor: 'default' }}>
-            <b style={{ color: 'var(--paper)' }}>No tax documents yet</b>
-            <br />
-            <span className="tiny">
-              Your first K-1 will be delivered after your first full tax year in a deal.
-            </span>
-          </div>
+
+          {taxForms.length === 0 ? (
+            <div className="dz" style={{ cursor: 'default' }}>
+              <b style={{ color: 'var(--paper)' }}>No tax documents yet</b>
+              <br />
+              <span className="tiny">
+                Your first K-1 will be delivered after your first full tax year
+                in a deal.
+              </span>
+            </div>
+          ) : (
+            /* Newest season first. A member opening this in March wants
+               the year they are filing, not the year they started. */
+            <ul className={docStyles.taxList}>
+              {taxForms.map((doc) => (
+                <li className={docStyles.taxRow} key={doc.id}>
+                  <span className={docStyles.taxWhat}>
+                    <b>{doc.name}</b>
+                    <span className={docStyles.taxNote}>
+                      {doc.dealId ? (deals.get(doc.dealId)?.name ?? doc.dealId) : EMPTY}
+                      {doc.note ? ` · ${doc.note}` : ''}
+                    </span>
+                  </span>
+                  <span className={docStyles.taxWhen}>{dateStr(doc.savedAt)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </>

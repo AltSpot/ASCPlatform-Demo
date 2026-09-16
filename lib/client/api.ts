@@ -18,6 +18,10 @@ import type {
   WizardView,
   InvestGate,
 } from '../domain';
+import type {
+  ExternalPositionInput,
+  ExternalPositionView,
+} from '../repositories/external';
 import type { RadarCompanyView } from '../terminal/radar';
 
 export class ApiError extends Error {
@@ -97,6 +101,13 @@ export const api = {
       email,
       password,
     }),
+  /** Create an account from a name the member typed, not one guessed. */
+  register: (name: string, email: string, password: string) =>
+    post<{ user: SessionUser; wizardComplete: boolean }>('/auth/register', {
+      name,
+      email,
+      password,
+    }),
   demoLogin: () =>
     post<{ user: SessionUser; wizardComplete: boolean }>('/auth/demo-login'),
   logout: () => post<void>('/auth/logout'),
@@ -169,12 +180,31 @@ export const api = {
     put<WatchlistResult>(`/watchlist/${dealId}`),
   unwatchDeal: (dealId: string) =>
     del<WatchlistResult>(`/watchlist/${dealId}`),
+  /** The investor's own order for their saved deals. A preference. */
+  reorderWatchlist: (order: string[]) =>
+    patch<string[]>('/watchlist/order', { order }),
 
   // ---- radar ----
   radar: () => request<RadarCompanyView[]>('/radar'),
   /** Demand signal, not a commitment. Amount is whole dollars. */
   indicateRadarInterest: (companySlug: string, amount: number) =>
     post<RadarCompanyView>('/radar/interest', { companySlug, amount }),
+  /** The member's own ordering for Your Radar. A preference, not a signal. */
+  reorderRadar: (order: string[]) =>
+    patch<RadarCompanyView[]>('/radar/order', { order }),
+
+  // ---- holdings held elsewhere ----
+  /**
+   * Self-reported. Every figure on these is the member's own, and no
+   * surface may total them into an AltSpot figure without saying so.
+   */
+  externalPositions: () => request<ExternalPositionView[]>('/external-positions'),
+  addExternalPosition: (input: ExternalPositionInput) =>
+    post<ExternalPositionView>('/external-positions', input),
+  updateExternalPosition: (id: string, input: ExternalPositionInput) =>
+    patch<ExternalPositionView>(`/external-positions/${id}`, input),
+  removeExternalPosition: (id: string) =>
+    del<{ id: string }>(`/external-positions/${id}`),
 
   // ---- documents ----
   documents: () => request<DocumentView[]>('/documents'),

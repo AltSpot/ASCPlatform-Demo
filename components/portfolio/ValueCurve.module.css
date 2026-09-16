@@ -1,0 +1,177 @@
+/* The value curve. */
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.when {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--accent-quiet);
+}
+
+.total {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.against {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.08em;
+  color: var(--bad);
+  font-variant-numeric: tabular-nums;
+}
+.against[data-up='true'] {
+  color: var(--good);
+}
+
+.keys {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.swatch {
+  width: 14px;
+  height: 2px;
+  flex: none;
+  border-radius: 2px;
+}
+.swatchValue {
+  background: var(--as-gold);
+}
+.swatchPaid {
+  background: repeating-linear-gradient(
+    to right,
+    var(--accent-quiet) 0 4px,
+    transparent 4px 7px
+  );
+}
+
+/* ---------- plot ---------- */
+
+.plot {
+  position: relative;
+  height: 260px;
+  touch-action: none;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.fill {
+  stroke: none;
+}
+
+/* preserveAspectRatio="none" stretches strokes with the box, so widths
+   are set in user units and non-scaling-stroke keeps them honest. */
+.value {
+  fill: none;
+  stroke: var(--as-gold);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.paid {
+  fill: none;
+  stroke: var(--accent-quiet);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.85;
+}
+
+/* Marker and crosshair are HTML, positioned in percent. Drawn inside
+   the SVG they would be stretched into ellipses by the aspect override. */
+.cross {
+  position: absolute;
+  top: 0;
+  bottom: 10px;
+  width: 1px;
+  background: var(--hair-gold-active);
+  transform: translateX(-0.5px);
+  pointer-events: none;
+}
+
+.marker {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--as-text);
+  box-shadow: 0 0 0 3px var(--fill-card);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* ---------- axis ---------- */
+
+.axis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair-neutral);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.scale {
+  color: var(--as-text-muted);
+}
+
+@media (max-width: 720px) {
+  .plot {
+    height: 220px;
+  }
+  .total {
+    font-size: 25px;
+  }
+}

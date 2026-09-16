@@ -1,0 +1,459 @@
+/* The portal rail.
+
+   Moved out of app/globals.css, which is where these rules had been
+   living: nothing else on the site uses them, and the standing rule is
+   that a component needing its own rules gets a module beside it. The
+   brand block stays global because the login page and the wizard draw
+   the same wordmark.
+
+   The rail is the one surface a member sees on every page, so it is
+   built to be read in a glance and then ignored: two groups, one lit
+   row, and no color anywhere except on the row you are standing on. */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  /* Above the page, below the overlays. The rail and the content are
+     both positioned with z-index auto and the rail comes first in the
+     DOM, so without this a full-bleed section scrolling leftward
+     painted OVER the navigation instead of under it. 20 sits clear of
+     everything in content (0-5) and clear of the sticky filter bar
+     (40), the Plaid modal (60), Spot (150) and the toast (200). */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 14px 16px;
+  border-right: 1px solid var(--hair-neutral);
+  /* Darker at the foot, so the user chip sits on ground rather than
+     floating on the same flat panel as the nav. */
+  background: var(--rail-bg);
+  backdrop-filter: blur(var(--rail-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 6px 20px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+.railToggle {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--as-text-faint);
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
+}
+.railToggle:hover {
+  color: var(--as-text);
+  background: var(--surface-2);
+  border-color: var(--hair-neutral);
+}
+.railToggle:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+/* ---------- collapsed ----------
+
+   Icons, the lit row and the toggle survive. Everything that is words
+   goes: labels, group headings, the Soon badge and the member's name.
+   What is left is still a nav, not a drawer, which is the difference
+   between narrowing the rail and hiding it. */
+
+:global(html[data-rail='mini']) .sidebar {
+  padding-left: 10px;
+  padding-right: 10px;
+  align-items: center;
+}
+
+:global(html[data-rail='mini']) .brandRow {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* The wordmark cannot shrink to 54px and stay a wordmark, so at this
+   width the toggle is the only thing in the row. */
+:global(html[data-rail='mini']) .brandRow :global(.brand-logo) {
+  display: none;
+}
+
+:global(html[data-rail='mini']) .nav {
+  align-items: center;
+  width: 100%;
+}
+
+:global(html[data-rail='mini']) .groupLabel,
+:global(html[data-rail='mini']) .itemLabel,
+:global(html[data-rail='mini']) .badge,
+:global(html[data-rail='mini']) .who {
+  display: none;
+}
+
+:global(html[data-rail='mini']) .group {
+  width: 100%;
+  align-items: center;
+}
+
+/* A rule where the group heading was, so the two groups are still two
+   groups when their names are gone. */
+:global(html[data-rail='mini']) .group + .group {
+  padding-top: 16px;
+  border-top: 1px solid var(--hair-neutral);
+}
+
+:global(html[data-rail='mini']) .item {
+  justify-content: center;
+  padding: 8px;
+  width: 44px;
+}
+
+:global(html[data-rail='mini']) .user {
+  justify-content: center;
+  padding: 8px;
+  gap: 0;
+}
+
+:global(html[data-rail='mini']) .exit {
+  display: none;
+}
+
+/* ---------- the groups ---------- */
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* A short viewport scrolls the nav rather than crushing the foot.
+     `overflow-y: auto` computes `overflow-x` to auto as well, so this
+     box clips its children sideways whether or not it ever scrolls:
+     hence the 3px of inline padding, which is what keeps a focus ring
+     on a nav item from being sliced off. The negative margin puts the
+     rows back in line with the brand and the user card, and is safe
+     because it moves this box inside the aside, which does not clip. */
+  padding: 16px 3px 6px;
+  margin-inline: -3px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar {
+  display: none;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Two groups rather than one list of eight. The first four are the
+   product; the last three are the member's own paperwork, and nobody
+   goes looking for their tax forms in the same breath as a deal. */
+.groupLabel {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 10px 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+/* A short rule that stops at the text, so the label reads as a
+   section marker rather than a heading. */
+.groupRule {
+  flex: 1;
+  height: 1px;
+  background: var(--hair-neutral);
+}
+
+/* ---------- one row ---------- */
+
+.itemLabel {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  color: var(--as-text-muted);
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
+}
+.item:hover {
+  color: var(--as-text);
+  background: var(--surface-1);
+  text-decoration: none;
+}
+.item:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+/* ---------- the slots ----------
+
+   One construction for all seven, whatever is inside them. Five hold a
+   Lucide glyph and two hold a product's own mark, and the marks decide
+   the shape of the rule: they arrive in AltSpot's gold and ember, they
+   do not take `currentColor`, and they cannot sit on the gold ramp the
+   lit row used to fill its slot with. So every slot is a dark tile with
+   a hairline, in every state, and what changes on the active row is the
+   glyph inside it rather than the tile behind it. A rail where two of
+   seven icons are built differently reads as a mistake, however good
+   the reason. */
+
+.slot {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: var(--r-sm);
+  background: var(--slot-tile);
+  box-shadow: inset 0 0 0 1px var(--slot-edge);
+  color: var(--slot-ink);
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    box-shadow var(--dur-micro) ease;
+}
+
+.item:hover .slot {
+  color: var(--slot-ink-strong);
+  background: var(--slot-tile-strong);
+  box-shadow: inset 0 0 0 1px var(--hair-champagne);
+}
+
+.active {
+  color: var(--as-text);
+  background: linear-gradient(90deg, rgba(243, 152, 7, 0.17), rgba(243, 152, 7, 0.02));
+  border-color: transparent;
+  box-shadow: 0 1px 0 var(--edge-top) inset;
+}
+
+/* The lit row marks itself on the glyph, not on the tile. */
+.active .slot {
+  color: var(--slot-ink-active);
+  background: var(--slot-tile-strong);
+  box-shadow: inset 0 0 0 1px var(--hair-champagne);
+}
+
+/* A mark needs the breathing room a stroked glyph does not. */
+.slot[data-mark='true'] {
+  padding: 5px;
+}
+
+/* Contain rather than cover: the Terminal mark is nearly two to one and
+   the Marketplace mark is square, and both sit in the same tile without
+   either being cropped. */
+.mark {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* No rail mark on the panel edge. One was drawn there and clipped by
+   the scroller above, and chasing it was the wrong instinct anyway:
+   the lit slot, the tint and the gold hairline already say which row
+   you are on, and a fourth signal for one state is decoration. */
+
+/* ---------- not yet ---------- */
+
+.soon {
+  cursor: default;
+  color: var(--as-text-faint);
+}
+.soon:hover {
+  background: none;
+  color: var(--as-text-faint);
+}
+/* Nothing to hover into: the row is disabled, so its tile does not
+   answer the pointer. */
+.soon:hover .slot {
+  background: var(--slot-tile);
+  box-shadow: inset 0 0 0 1px var(--slot-edge);
+  color: var(--slot-ink);
+}
+
+.badge {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 3px 8px;
+  background: var(--surface-2);
+}
+
+/* ---------- the foot ---------- */
+
+.foot {
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+/* A card rather than a row on the panel: this is the member's own
+   identity and the one control on the rail that signs them out, so it
+   reads as an object you can act on. */
+.user {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  transition: border-color var(--dur-micro) ease;
+}
+.user:hover {
+  border-color: var(--hair-champagne);
+}
+
+.avatar {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-weight: var(--w-medium);
+  font-size: 13px;
+  color: var(--fg-on-gold);
+  background: var(--as-orb-metal);
+  box-shadow: var(--shadow-orb-sm);
+}
+
+.who {
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.name {
+  display: block;
+  font-size: 13px;
+  color: var(--as-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 108px;
+}
+
+/* Verified is a real status in this product, so it gets a mark rather
+   than being stated in grey text nobody reads. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+}
+
+.statusDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-quiet);
+}
+
+.exit {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--as-text-faint);
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.exit:hover {
+  color: var(--accent-soft);
+  background: rgba(229, 102, 26, 0.1);
+}
+.exit:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .slot,
+  .user,
+  .exit {
+    transition: none;
+  }
+}
+
+/* The status carries its own colour, because the three states mean
+   different things and a member should be able to tell at a glance
+   which one they are in. Green is a claim we can stand behind; ember
+   is work still owed. */
+.status[data-status='approved'],
+.status[data-status='approved'] .statusDot {
+  color: var(--good);
+}
+.status[data-status='approved'] .statusDot {
+  background: var(--good);
+}
+
+.status[data-status='setup'],
+.status[data-status='setup'] .statusDot {
+  color: var(--warn);
+}
+.status[data-status='setup'] .statusDot {
+  background: var(--as-ember);
+}
+
+/* On Daylight the tile is clear glass and the product marks are gold
+   gradients with no plate of their own, so the palest stops would sink
+   into the tile. A one-pixel warm edge under the artwork gives the shape
+   an outline without tinting it: the mark stays the mark. */
+:global(html[data-theme='light']) .mark {
+  filter: drop-shadow(0 0 0.6px rgba(74, 56, 26, 0.85));
+}

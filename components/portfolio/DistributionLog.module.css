@@ -1,0 +1,146 @@
+/* Cash returned. Capital and gain never share a line. */
+
+.split {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 20px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+.bar {
+  height: 10px;
+  border-radius: var(--r-pill);
+  /* Gain fills the track; capital is drawn over it from the left, in
+     the quieter tone. Getting your own money back is not a result, so
+     the bright part of this bar is the part that is. */
+  background: var(--as-gold);
+  overflow: hidden;
+}
+
+.capital {
+  height: 100%;
+  border-radius: var(--r-pill) 0 0 var(--r-pill);
+  background: var(--as-bar-base);
+  box-shadow: inset -2px 0 0 var(--as-bar-divide);
+}
+
+.keys {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+.key b {
+  font-family: var(--font-mono);
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+}
+.dotCapital {
+  background: var(--as-bar-base);
+}
+.dotGain {
+  background: var(--as-gold);
+}
+
+/* ---------- the log ---------- */
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+.row:last-child {
+  border-bottom: none;
+}
+
+.when {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.what {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.deal {
+  font-size: 13.5px;
+  color: var(--as-text);
+}
+
+.note {
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+.kind {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--accent-quiet);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  white-space: nowrap;
+  background: var(--surface-2);
+}
+.kind[data-gain='true'] {
+  color: var(--good);
+  border-color: var(--good-line);
+  background: var(--good-fill);
+}
+
+.amount {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 8px;
+  }
+  .when {
+    grid-column: 1 / -1;
+  }
+}

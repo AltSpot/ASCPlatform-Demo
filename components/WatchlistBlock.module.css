@@ -1,8 +1,212 @@
-/* The mark sits beside the name, same as the holdings table, so the
-   two lists on the dashboard read as one family. */
+/* The watchlist.
 
-.cell {
+   A row per saved deal: the name, its class, when it closes, and one
+   bar. The bars line up down the column, so three saved deals can be
+   compared without reading a single number. Gold is spent on the bar,
+   which is the one thing here that decides whether waiting is still an
+   option; everything else stays quiet until the closing date is near. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 6px;
+  border-bottom: 1px solid var(--hair-neutral);
+  border-radius: var(--r-md);
+  cursor: grab;
+  transition:
+    background var(--dur-micro) ease,
+    opacity var(--dur-1) ease;
+}
+.row:last-child {
+  border-bottom: none;
+}
+.row:hover {
+  background: var(--surface-1);
+}
+.row:active {
+  cursor: grabbing;
+}
+
+/* The row being carried. Faded rather than hidden, so the reader can
+   see what they are holding while the list opens around it. */
+.row[data-lifted='true'] {
+  opacity: 0.5;
+  background: var(--surface-2);
+}
+
+.handle {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 30px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--as-text-faint);
+  cursor: grab;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.handle:hover {
+  color: var(--accent-quiet);
+  background: var(--surface-2);
+}
+.handle:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+.body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.top {
   display: flex;
   align-items: center;
-  gap: 11px;
+  flex-wrap: wrap;
+  gap: 6px 9px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: var(--as-text);
+}
+
+/* The asset class in its own color, outlined rather than filled, the
+   same treatment the Radar filter chips carry. Taxonomy, never chrome. */
+.klass {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  border: 1px solid transparent;
+  background: var(--surface-2);
+  border-radius: var(--r-pill);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+/* The date, pushed to the far end of the line. It is the only figure
+   left on the row, so it gets the whole right side to itself. */
+.closes {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.closes[data-soon='true'] {
+  color: var(--accent-soft);
+}
+
+/* ---------- how much is spoken for ---------- */
+
+.bar {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--accent-quiet), var(--as-gold));
+  transition: width var(--dur-2) var(--ease-out);
+}
+
+/* Inside the last fortnight the date is the story, so the bar says so
+   at a glance, in the same color the date beside it takes. */
+.bar[data-soon='true'] .fill {
+  background: linear-gradient(90deg, var(--as-ember), var(--as-ember-soft));
+}
+
+.locked {
+  margin: 0;
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
+/* ---------- the way in ---------- */
+
+.go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-body);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+  background: var(--surface-2);
+}
+.go:hover {
+  color: var(--as-text);
+  border-color: var(--hair-gold-active);
+  background: var(--surface-2);
+}
+.go svg {
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+.go:hover svg {
+  transform: translateX(2px);
+}
+
+.foot {
+  margin: 14px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid var(--hair-neutral);
+  font-size: var(--fs-meta);
+  line-height: 1.6;
+  color: var(--as-text-muted);
+}
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    row-gap: 10px;
+  }
+  /* The action drops under the body rather than squeezing it. */
+  .row > a {
+    grid-column: 3;
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
 }

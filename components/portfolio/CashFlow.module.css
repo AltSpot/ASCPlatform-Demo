@@ -1,0 +1,233 @@
+/* Cash in and cash out, quarter by quarter, around a zero line. */
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.when {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--accent-quiet);
+}
+
+.figure {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.cume {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.08em;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.keys {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex: none;
+}
+.swatchGain {
+  background: var(--as-gold);
+}
+.swatchCapital {
+  background: var(--as-bar-base);
+}
+.swatchOut {
+  background: var(--hair-champagne);
+  box-shadow: inset 0 0 0 1px var(--accent-quiet);
+}
+
+/* ---------- plot ---------- */
+
+.plot {
+  position: relative;
+}
+
+/* How much of the money in has come back. Behind the bars on purpose. */
+.progress {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: var(--hair-neutral);
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+}
+
+.bars {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  height: 200px;
+  padding-top: 14px;
+}
+
+/* The axis. Money back stands on it, money in hangs from it. */
+.zero {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(14px + (100% - 14px) / 2);
+  height: 1px;
+  background: var(--hair-champagne);
+  pointer-events: none;
+}
+
+.slot {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+.slot:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+/* The reading marker is a hairline under the column, not a filled box.
+   A panel behind the bars competes with the bars for the same pixels
+   and reads as data. */
+.slot::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -5px;
+  height: 2px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  transition: background var(--dur-micro) ease;
+}
+.slot:hover::after,
+.slot[aria-current='true']::after {
+  background: var(--as-gold);
+}
+
+/* Equal halves, so the axis does not drift with the data. */
+.up,
+.down {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+}
+.up {
+  justify-content: flex-end;
+}
+.down {
+  justify-content: flex-start;
+}
+
+.gain,
+.capital,
+.out {
+  display: block;
+  /* Capped, so a quarter stays a bar rather than becoming a panel when
+     the series is short. */
+  width: min(100%, 34px);
+  min-height: 0;
+}
+
+.gain {
+  background: var(--as-gold);
+  border-radius: 3px 3px 0 0;
+}
+
+.capital {
+  background: var(--as-bar-base);
+}
+
+/* Outbound. Hollow rather than filled: money leaving is not an
+   achievement and should not carry the weight of money arriving. */
+.out {
+  border: 1px solid rgba(230, 199, 122, 0.42);
+  border-top: none;
+  background: rgba(230, 199, 122, 0.13);
+  border-radius: 0 0 3px 3px;
+}
+
+/* ---------- axis ---------- */
+
+.axis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair-neutral);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.dpi {
+  color: var(--accent-quiet);
+}
+
+@media (max-width: 720px) {
+  .bars {
+    height: 150px;
+  }
+  .figure {
+    font-size: 20px;
+  }
+}

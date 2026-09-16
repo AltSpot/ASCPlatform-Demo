@@ -1,0 +1,191 @@
+/* The episode player. Transport, timeline, chapters. */
+
+.player {
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  border-radius: var(--r-lg);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  padding: 22px 24px 8px;
+  margin-bottom: 34px;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.play {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--fg-on-gold);
+  background: var(--as-cta-gradient);
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+.play:hover {
+  transform: scale(1.05);
+}
+.play:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 3px;
+}
+
+.skip {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border: 1px solid var(--hair-neutral);
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  color: var(--as-text-muted);
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
+}
+.skip:hover {
+  color: var(--as-text);
+  border-color: var(--hair-gold);
+}
+.skip:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+.timeline {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track {
+  position: relative;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  cursor: pointer;
+}
+.track:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 4px;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+}
+
+/* A chapter start. Sits above the fill so it stays visible on the part
+   of the bar already played. */
+.tick {
+  position: absolute;
+  top: -2px;
+  width: 1px;
+  height: 12px;
+  background: var(--tick-mark);
+  pointer-events: none;
+}
+
+.clock {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.demo {
+  margin: 16px 0 0;
+  font-size: var(--fs-label);
+  line-height: 1.5;
+  color: var(--as-text-muted);
+}
+
+/* ---------- chapters ---------- */
+
+.chapters {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  counter-reset: chapter;
+  border-top: 1px solid var(--hair-neutral);
+}
+
+.chapter {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 12px 6px;
+  border-bottom: 1px solid var(--hair-neutral);
+  transition: background var(--dur-micro) ease;
+}
+.chapters li:last-child .chapter {
+  border-bottom: none;
+}
+.chapter:hover {
+  background: var(--surface-1);
+}
+.chapter:hover .chapterLabel {
+  color: var(--as-text);
+}
+.chapter:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: -2px;
+}
+
+.chapterAt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.1em;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+  width: 46px;
+}
+
+.chapterLabel {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--as-text-muted);
+  transition: color var(--dur-micro) ease;
+}
+
+/* Where the clock is now. Gold on the timestamp only: highlighting the
+   whole row would fight the hover state a reader is about to use. */
+.chapter[aria-current='true'] .chapterAt {
+  color: var(--accent-hot);
+}
+.chapter[aria-current='true'] .chapterLabel {
+  color: var(--as-text);
+}
+
+@media (max-width: 620px) {
+  .player {
+    padding: 18px 16px 6px;
+  }
+  .transport {
+    gap: 10px;
+  }
+}

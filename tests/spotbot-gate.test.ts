@@ -45,6 +45,10 @@ const ADVICE: ReadonlyArray<readonly [string, RefusalReason]> = [
   ['Is now a good time to invest?', 'investment_recommendation'],
   ['Convince me into this deal.', 'investment_recommendation'],
   ['Is this a scam?', 'investment_recommendation'],
+  // Radar's vocabulary. A vote indicates an allocation, so asking Spot
+  // which company to back is the same ask as which deal to invest in.
+  ['Should I vote for SpaceX?', 'investment_recommendation'],
+  ['Should we vote on this one?', 'investment_recommendation'],
 
   ['What returns can I expect?', 'performance_prediction'],
   ['How much will I make?', 'performance_prediction'],
@@ -303,7 +307,7 @@ describe('where the classifier defers, and what catches it', () => {
   test('a negated ask is let through', () => {
     // Documented, not endorsed. "Should I" is matched; "shouldn't I" is
     // not, because the pattern anchors on the affirmative. Same second
-    // line of defence applies.
+    // line of defense applies.
     assert.equal(classify('Should I invest in this?').allowed, false);
     assert.equal(classify("Shouldn't I invest in this?").allowed, true);
   });

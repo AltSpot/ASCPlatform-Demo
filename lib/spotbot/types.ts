@@ -32,6 +32,12 @@ export interface SpotBotAnswer {
 
 export interface SpotBotRequest {
   question: string;
-  /** Pathname the investor asked from. Answers are page aware. */
+  /**
+   * Where the investor asked from, path plus query.
+   *
+   * The name is historical and the query matters: Radar and the
+   * marketplace shelf are one route apart only by `?view=radar`, and
+   * dropping it made the two rooms indistinguishable to the engine.
+   */
   pathname: string;
 }

@@ -14,22 +14,77 @@
 
 /* ---------- shared section rhythm ---------- */
 
+/* ---------- the sections, as cards ----------
+
+   The page is one long narrative and it was one long scroll: nothing
+   marked where a beat ended, so a reader who wanted the terms again had
+   to drag back through the thesis to find them. Each beat is a card
+   now, and each card rises and rotates into place as it arrives.
+
+   The motion is a scroll-driven animation, not a scroll listener. The
+   browser runs it off the compositor against the element's own position
+   in the viewport, so it costs no JavaScript and cannot fall behind a
+   fast scroll. Where `animation-timeline` is unsupported the cards are
+   simply already in place, which is the same page without the flourish.
+
+   Ten degrees and six percent. Enough to read as a card turning toward
+   you, far short of the carousel effect that makes text unreadable
+   mid-scroll. */
 .section {
-  padding: 62px 0;
-  border-top: 1px solid var(--hair);
+  position: relative;
+  padding: 40px 40px 44px;
+  margin-bottom: 28px;
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  border-radius: var(--r-lg);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  transform-origin: 50% 100%;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section {
+      animation: sectionRise linear both;
+      animation-timeline: view();
+      /*
+       * A FIXED SCROLL DISTANCE, NOT A PERCENTAGE OF THE ELEMENT.
+       *
+       * This was `entry 0% cover 34%`. A percentage of the cover range
+       * scales with the element, so a section taller than the viewport
+       * finished far too late: the Terminal's first section sat at 73%
+       * opacity while it was the only thing on screen, and the scale
+       * transform on a 1,400px card pushed its top edge down far enough
+       * to open a visible gap under the header.
+       *
+       * 320px of scroll after first contact settles every card the
+       * same way, whatever its height, and a card already in view on
+       * load is past the end of its own range and therefore at rest.
+       */
+      animation-range: entry 0% entry 320px;
+    }
+  }
+}
+
+@keyframes sectionRise {
+  from {
+    opacity: 0;
+    transform: perspective(1400px) rotateX(10deg) scale(0.94) translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1400px) rotateX(0) scale(1) translateY(0);
+  }
 }
 
 .sectionHead {
   margin-bottom: 30px;
 }
 
+/* The eyebrow itself is the global .eyebrow (one definition, in
+   globals.css); these carry only the spacing each placement needs. */
 .eyebrow {
-  font-family: var(--fm);
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--orange);
-  font-weight: 500;
   margin-bottom: 14px;
 }
 
@@ -40,7 +95,11 @@
   line-height: 1.13;
   letter-spacing: -0.02em;
   color: var(--ink);
-  max-width: 24ch;
+  /* Wide enough that the shortest titles hold one line. At 24ch a title
+     of this length broke one word early and left the full stop
+     stranded on a line of its own. */
+  max-width: 32ch;
+  text-wrap: balance;
 }
 
 .sectionLede {
@@ -56,96 +115,218 @@
 .hero {
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--hair);
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
   border-radius: var(--r);
-  padding: 46px 48px 38px;
-  background: var(--panel);
-  backdrop-filter: blur(6px);
+  padding: 26px;
+  background-color: var(--panel);
+  background-image: var(--card-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
 }
 
-/* The deal's own colour, pushed far enough back that type still wins. */
+/* Film left, ask right. The film takes the larger share because it is
+   the thing that does the persuading; the column beside it holds only
+   what a member needs in order to act. */
+.heroGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  /* The ask needs about 380px before the headline starts breaking
+     badly, so the film gives ground rather than taking it. */
+  grid-template-columns: minmax(0, 1.25fr) minmax(340px, 1fr);
+  gap: 26px;
+  align-items: stretch;
+}
+
+/* ---------- the film ---------- */
+
+/* THE OVERLAP THIS FIXES. A grid item stretches to the row height by
+   default, and an item with `aspect-ratio` that has been stretched
+   derives its WIDTH from that height. So on a laptop, where the column
+   beside it is taller than 9/16 of its own width, the film computed a
+   width wider than its track and spilled over the type to its right.
+   `align-self: start` stops the stretch, and the width then drives the
+   height, which is the direction that was intended. */
+.film {
+  position: relative;
+  align-self: start;
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--r-frame);
+  overflow: hidden;
+  border: 1px solid var(--hair-neutral);
+  background: var(--surface-sunk);
+  aspect-ratio: 16 / 9;
+}
+
+.filmVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* No film yet. The deal's own artwork stands in, with its mark and a
+   play affordance, so the hero keeps its shape and its weight. */
+.filmEmpty {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.filmEmpty::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.15), rgba(10, 8, 6, 0.6));
+}
+
+.filmMark {
+  position: relative;
+  z-index: 1;
+  width: min(38%, 190px);
+  height: auto;
+  opacity: 0.9;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.55));
+}
+
+.filmPlay {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  color: var(--fg-on-gold);
+  background: var(--as-cta-gradient);
+  box-shadow: var(--shadow-cta);
+  padding-left: 3px;
+}
+
+.filmLabel {
+  position: absolute;
+  z-index: 2;
+  left: 16px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  /* On the artwork, not on the page: this follows the scrim rather
+     than the theme, the same as the sector pill on a shelf card. */
+  color: var(--on-media);
+}
+
+/* ---------- the ask ---------- */
+
+.ask {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* The deal's own color, pushed far enough back that type still wins. */
 .heroWash {
   position: absolute;
   inset: -55% -20% auto -20%;
   height: 420px;
-  opacity: 0.34;
+  opacity: var(--hero-wash);
   filter: blur(52px);
   pointer-events: none;
-}
-
-.heroInner {
-  position: relative;
-  z-index: 1;
 }
 
 /* Identity on the left, header controls hard right. */
 .heroTop {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 30px;
+  gap: 14px;
+  width: 100%;
 }
 
 .identity {
   display: flex;
   align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
 }
 
 .logo {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   flex: none;
   border-radius: var(--r-md);
   object-fit: contain;
-  padding: 6px;
-  background: rgba(10, 8, 6, 0.55);
+  padding: 5px;
+  background: var(--scrim-media-soft);
   border: 1px solid var(--hair);
 }
 
 .name {
   font-family: var(--fd);
   font-weight: 500;
-  font-size: 21px;
+  font-size: 19px;
   letter-spacing: -0.01em;
   color: var(--ink);
 }
 
+/* Sized to the column it now sits in rather than to the page. It is
+   still the largest type on the screen, and it no longer has to carry
+   the hero on its own: the film beside it does that. */
 .headline {
   font-family: var(--fd);
   font-weight: 500;
-  font-size: clamp(30px, 4.4vw, 46px);
-  line-height: 1.07;
-  letter-spacing: -0.025em;
+  font-size: clamp(26px, 2.2vw, 33px);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
   color: var(--ink);
-  max-width: 20ch;
+}
+
+/* The gated hero. No film and no ask, so a single column, and the one
+   line a teaser is allowed to carry is set at reading size rather than
+   as a headline: the headline is one of the withheld fields. */
+.heroInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 72ch;
 }
 
 .heroLede {
-  margin-top: 20px;
-  font-size: 16px;
-  line-height: 1.7;
+  font-family: var(--fb);
+  font-weight: var(--w-regular);
+  font-size: 19px;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
   color: var(--ink-2);
-  max-width: 60ch;
+  margin: 0;
 }
 
 .heroMeta {
-  margin-top: 24px;
+  margin: -2px 0 0;
   font-family: var(--fm);
-  font-size: 10.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
   color: var(--soft);
   display: flex;
-  gap: 10px;
+  gap: 9px;
   flex-wrap: wrap;
 }
 
 .heroMeta i {
   color: var(--faint);
-  opacity: 0.7;
   font-style: normal;
 }
 
@@ -153,40 +334,96 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 30px;
+  margin-top: 4px;
+  width: 100%;
 }
 
+/* Three facts, not five, and evenly divided rather than spaced: in a
+   column this narrow a flex gap left one of them orphaned on a second
+   line at most widths. */
 .heroFacts {
-  display: flex;
-  gap: 44px;
-  flex-wrap: wrap;
-  margin-top: 34px;
-  padding-top: 26px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 18px;
   border-top: 1px solid var(--hair);
 }
 
 .fact {
-  min-width: 128px;
+  min-width: 0;
 }
 
 .factK {
   font-family: var(--fm);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--faint);
-  margin-bottom: 8px;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  margin-bottom: 6px;
+  white-space: nowrap;
 }
 
 .factV {
   font-family: var(--fm);
   font-variant-numeric: tabular-nums;
-  font-size: 17px;
+  font-size: 16px;
   color: var(--ink);
+  white-space: nowrap;
 }
 
 .heroAlloc {
-  margin-top: 22px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heroBar {
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.heroFill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+}
+
+/* The fee model rides on the same line as the subscription figure. It
+   is the same on every deal, so it belongs beside a number rather than
+   occupying two of five slots above it. */
+.heroBarLab {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Below this the two columns stop being two columns worth having: the
+   sidebar has already taken 236px, and what is left splits into a film
+   too small to watch beside a headline with nowhere to break. Measured
+   against the viewport, so a laptop at 1440 with the rail open lands on
+   the stacked layout rather than the squeezed one. */
+@media (max-width: 1280px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .film {
+    max-width: 720px;
+  }
 }
 
 /* ---------- watchlist toggle ----------
@@ -200,13 +437,14 @@
   flex: none;
   cursor: pointer;
   padding: 8px 14px;
-  border: 1px solid var(--hair);
+  border: 1px solid transparent;
   border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-1);
   font-family: var(--fm);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
   color: var(--soft);
   transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease;
 }
@@ -217,7 +455,7 @@
 }
 
 .watch[aria-pressed='true'] {
-  color: var(--orange-b);
+  color: var(--accent-hot);
   border-color: var(--hairg);
   background: rgba(243, 152, 7, 0.08);
 }
@@ -239,9 +477,12 @@
   flex-wrap: wrap;
   margin-top: 34px;
   padding: 26px 28px;
-  border: 1px solid var(--hairg);
+  border: 1px solid var(--card-edge);
   border-radius: var(--r);
-  background: linear-gradient(180deg, rgba(243, 152, 7, 0.09), rgba(243, 152, 7, 0.02));
+  background-color: var(--fill-card);
+  background-image: var(--glass-tint-gold), var(--card-sheen);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
 }
 
 .gateBody {
@@ -250,12 +491,6 @@
 }
 
 .gateEyebrow {
-  font-family: var(--fm);
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--orange);
-  font-weight: 500;
   margin-bottom: 12px;
 }
 
@@ -286,8 +521,9 @@
 
 .veilLabel {
   font-family: var(--fm);
-  font-size: 11px;
-  letter-spacing: 0.24em;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--soft);
   margin-bottom: 22px;
@@ -305,8 +541,8 @@
   border-radius: var(--r-pill);
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.09),
-    rgba(255, 255, 255, 0.03)
+    var(--surface-3),
+    var(--surface-1)
   );
 }
 
@@ -319,9 +555,12 @@
   flex-wrap: wrap;
   margin-top: 22px;
   padding: 22px 26px;
-  border: 1px solid var(--hairg);
+  border: 1px solid var(--card-edge);
   border-radius: var(--r);
-  background: linear-gradient(180deg, rgba(243, 152, 7, 0.09), rgba(243, 152, 7, 0.02));
+  background-color: var(--fill-card);
+  background-image: var(--glass-tint-gold), var(--card-sheen);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
 }
 
 .committedOrb {
@@ -346,7 +585,7 @@
 .committedFigure {
   font-family: var(--fm);
   font-variant-numeric: tabular-nums;
-  color: var(--orange-b);
+  color: var(--accent-hot);
 }
 
 .committedNote {
@@ -379,10 +618,11 @@
 
 .statK {
   font-family: var(--fm);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--faint);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
   margin-bottom: 12px;
   line-height: 1.5;
 }
@@ -398,7 +638,7 @@
 
 .statNote {
   margin-top: 10px;
-  font-size: 12px;
+  font-size: var(--fs-meta);
   line-height: 1.5;
   color: var(--soft);
 }
@@ -411,12 +651,6 @@
 }
 
 .chapterKicker {
-  font-family: var(--fm);
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--orange);
-  font-weight: 500;
   margin-bottom: 18px;
 }
 
@@ -481,9 +715,9 @@
 
 .thesisNum {
   font-family: var(--fm);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  color: var(--orange);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--accent-signal);
   padding-top: 6px;
   border-top: 1px solid var(--hairg);
 }
@@ -498,19 +732,23 @@
 /* ---------- chart ---------- */
 
 .chart {
-  border: 1px solid var(--hair);
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
   border-radius: var(--r);
-  background: var(--panel);
+  background-color: var(--panel);
+  background-image: var(--card-sheen);
   padding: 26px 26px 20px;
 }
 
 .source {
   margin-top: 14px;
   font-family: var(--fm);
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: var(--faint);
+  color: var(--as-text-muted);
   line-height: 1.7;
 }
 
@@ -519,10 +757,13 @@
 /* Ember rather than orange: this is the one section that should read
    as a caution and not as an accent. */
 .risk {
-  border: 1px solid rgba(229, 102, 26, 0.32);
+  border: 1px solid var(--card-edge);
   border-radius: var(--r);
   padding: 34px 36px;
-  background: linear-gradient(180deg, rgba(229, 102, 26, 0.07), rgba(229, 102, 26, 0.015));
+  background-color: var(--fill-card);
+  background-image: var(--glass-tint-ember), var(--card-sheen);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
 }
 
 .riskBody {
@@ -536,9 +777,12 @@
 
 .tableWrap {
   overflow-x: auto;
-  border: 1px solid var(--hair);
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
   border-radius: var(--r);
-  background: var(--panel);
+  background-color: var(--panel);
+  background-image: var(--card-sheen);
 }
 
 .tableWrap table {
@@ -562,9 +806,12 @@
 }
 
 .feeCard {
-  border: 1px solid var(--hair);
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
   border-radius: var(--r);
-  background: var(--panel);
+  background-color: var(--panel);
+  background-image: var(--card-sheen);
   padding: 28px 26px;
 }
 
@@ -574,16 +821,17 @@
   font-size: 42px;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: var(--orange-b);
+  color: var(--accent-hot);
 }
 
 .feeK {
   margin-top: 14px;
   font-family: var(--fm);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--faint);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
 }
 
 .feeNote {
@@ -611,9 +859,12 @@
   gap: 22px;
   flex-wrap: wrap;
   padding: 34px 36px;
-  border: 1px solid var(--hairg);
+  border: 1px solid var(--card-edge);
   border-radius: var(--r);
-  background: linear-gradient(180deg, rgba(243, 152, 7, 0.08), rgba(243, 152, 7, 0.02));
+  background-color: var(--fill-card);
+  background-image: var(--glass-tint-gold), var(--card-sheen);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
 }
 
 .closingTitle {
@@ -635,8 +886,8 @@
 /* Read at length, so body type rather than the monospace source style. */
 .disclosure {
   margin-top: 26px;
-  font-size: 12px;
-  color: var(--faint);
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
   line-height: 1.65;
   max-width: 84ch;
 }
@@ -670,77 +921,310 @@
 }
 
 /* ============================================================
-   Overview: summary beside media
-   Media leads, because it is the thing worth looking at. The
-   summary is deliberately narrow so it stays a few sentences.
+   Overview: the short version.
+
+   The media that used to sit beside this text is now the hero, so what
+   is left is one paragraph at a readable measure.
    ============================================================ */
-.summaryGrid{
-  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
-  gap:36px;align-items:center;
-}
-.mediaSlot{
-  position:relative;aspect-ratio:16/9;border-radius: var(--r-frame);overflow:hidden;
-  border:1px solid var(--hair);
-  background:
-    radial-gradient(60% 70% at 30% 25%,rgba(243,152,7,.10),transparent 70%),
-    rgba(0,0,0,.34);
-}
-.mediaInner{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:12px;
-}
-.mediaPlay{
-  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
-  border:1px solid var(--hairg);color:var(--orange);font-size:17px;
-  background:rgba(243,152,7,.08);padding-left:3px;
-}
-.mediaLabel{
-  font-family:var(--fm);font-size:10.5px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--soft);
-}
 .summaryText{
-  color:var(--ink-2);font-size:16px;line-height:1.68;max-width:52ch;
+  color:var(--ink-2);font-size:16px;line-height:1.68;max-width:62ch;
 }
 
-/* ---------- What we like ---------- */
-.likeList{list-style:none;display:flex;flex-direction:column;gap:20px;margin:0;padding:0}
-.likeItem{
-  display:flex;gap:16px;align-items:flex-start;
-  color:var(--ink-2);font-size:16px;line-height:1.6;max-width:74ch;
+/* ---------- Overview: prose beside the walkthrough ---------- */
+.overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 40px;
+  align-items: start;
 }
-/* A small gold to orange tick rather than a bullet glyph. */
-.likeMark{
-  width:8px;height:8px;flex:none;margin-top:9px;border-radius: var(--r-xs);
-  background:linear-gradient(135deg,var(--gold),var(--orange));
+.overviewSolo {
+  max-width: 560px;
+}
+.overviewCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+/* Who else is on the round. The mark and the firm on one line, the
+   sentence under it, in the page ink. */
+.backingList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--hair);
+}
+.backingRow {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--accent);
+}
+.backingNote {
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+@media (max-width: 900px) {
+  .overview {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The thumbnail is media, so it is a frame (18px), not a card, and it
+   sits on the deal's artwork under the same dark scrim the hero uses. */
+.videoThumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-frame);
+  background: var(--surface-sunk);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) ease;
+}
+.videoThumb:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.videoThumb:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+.videoArt,
+.videoPending {
+  position: absolute;
+  inset: 0;
+}
+.videoArt::after,
+.videoPending::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--scrim-media-soft) 0%, transparent 40%, var(--scrim-media-strong) 100%);
+  opacity: 0.8;
+}
+.videoMark {
+  position: relative;
+  z-index: 1;
+  width: min(30%, 120px);
+  height: auto;
+  opacity: 0.55;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+  transition: opacity var(--dur-1) ease;
+}
+.videoPlay {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  padding-left: 3px;
+  border-radius: 50%;
+  color: var(--fg-on-gold);
+  background: var(--as-cta-gradient);
+  box-shadow: var(--shadow-cta);
+  transition: transform var(--dur-1) var(--ease-out);
+}
+.videoThumb:hover .videoPlay {
+  transform: scale(1.08);
+}
+.videoCaption {
+  position: absolute;
+  z-index: 2;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+}
+.videoKicker {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--on-media);
+}
+.videoTitle {
+  font-size: var(--fs-meta);
+  color: var(--on-media);
+}
+
+/* The player. A floating surface over the page, so the thick edition of
+   glass for the backdrop, and a media frame for the film itself. */
+.videoDialog {
+  width: min(960px, calc(100vw - 32px));
+  max-width: none;
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-2xl);
+  background: transparent;
+  overflow: visible;
+}
+.videoDialog::backdrop {
+  background: var(--scrim-modal);
+  backdrop-filter: blur(12px);
+}
+.videoFrame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--r-2xl);
+  background: var(--surface-sunk);
+  box-shadow: var(--shadow-lg);
+}
+.videoPending {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+}
+.videoPendingText {
+  position: relative;
+  z-index: 2;
+  max-width: 42ch;
+  padding: 0 24px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--on-media);
+}
+.videoPending .videoMark {
+  z-index: 2;
+  opacity: 0.8;
+}
+.videoClose {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--scrim-media);
+  color: var(--on-media);
+  cursor: pointer;
+}
+.videoClose:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- Company highlights ---------- */
+/* Numbered reasons, not bullets. The number is the point: it tells a
+   reader how long the argument is and where they are in it. */
+.likeList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  counter-reset: reason;
+}
+
+.likeItem {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 16px 14px 16px 8px;
+  border-radius: var(--r-md);
+  border-top: 1px solid var(--hair-neutral);
+  transition: background var(--dur-micro) ease;
+  animation: reasonIn 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.likeItem:first-child {
+  border-top: none;
+}
+.likeItem:hover {
+  background: var(--surface-1);
+}
+
+@keyframes reasonIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.likeNum {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0.04em;
+  color: var(--accent-quiet);
+  font-variant-numeric: tabular-nums;
+  padding-top: 3px;
+  transition: color var(--dur-micro) ease;
+}
+.likeItem:hover .likeNum {
+  color: var(--accent-hot);
+}
+
+.likeText {
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.62;
+  max-width: 72ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .likeItem {
+    animation: none;
+  }
 }
 
 /* ---------- Potential outcomes ---------- */
 .scenarioRow{display:flex;gap:48px;flex-wrap:wrap;margin-top:6px}
 .scenario{min-width:150px}
 .scenarioK{
-  font-family:var(--fm);font-size:10px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--faint);margin-bottom:9px;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-text);
+  text-transform: none;color: var(--as-text-muted);margin-bottom:9px;
 }
 .scenarioV{
   font-family:var(--fd);font-size:34px;font-weight:500;letter-spacing:-.02em;
-  line-height:1;color:var(--orange-b);
+  line-height:1;color:var(--accent-hot);
 }
-.scenarioNote{font-size:12.5px;color:var(--soft);margin-top:8px}
+.scenarioNote{font-size: var(--fs-meta);color:var(--soft);margin-top:8px}
 
 /* Source and caveat lines sit quiet, in mono, under their section. */
 .sourceNote{
-  margin-top:22px;font-family:var(--fm);font-size:10.5px;line-height:1.7;
-  letter-spacing:.04em;color:var(--faint);max-width:88ch;
+  margin-top:22px;font-family:var(--fm);font-size: var(--fs-label);line-height:1.7;
+  letter-spacing:.04em;color: var(--as-text-muted);max-width:88ch;
 }
 
 /* Qualifier under a hero fact, e.g. "one time". */
 .factNote{
-  font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--faint);margin-top:6px;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-text);
+  text-transform: none;color: var(--as-text-muted);margin-top:6px;
 }
 
 @media (max-width:900px){
-  .summaryGrid{grid-template-columns:1fr;gap:24px}
   .scenarioRow{gap:28px}
 }
 
@@ -749,22 +1233,177 @@
    Identical grid on every deal. Undisclosed entries stay in
    place, dimmed, because the gap is information.
    ============================================================ */
-.indicatorGrid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));
-  gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius: var(--r-md);
-  overflow:hidden;margin-top:8px;
+/* ---------- the disclosure score ---------- */
+
+.discHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 26px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
-.indicator{background:var(--bg);padding:20px 22px}
-.indicatorEmpty .indicatorV{color:var(--faint);font-family:var(--fb);font-size:15px;letter-spacing:0}
-.indicatorK{
-  font-family:var(--fm);font-size:9.5px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--faint);margin-bottom:10px;
+
+.disc {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: none;
 }
-.indicatorV{
-  font-family:var(--fd);font-size:29px;font-weight:500;letter-spacing:-.02em;
-  line-height:1;color:var(--ink);
+
+.discMarks {
+  display: flex;
+  gap: 4px;
 }
-.indicatorWhy{font-size:12px;color:var(--soft);margin-top:9px;line-height:1.5}
+
+/* One mark per indicator. Lit means the company gave us the figure;
+   hollow means they did not, and that gap is the diligence list. */
+.discMark {
+  width: 22px;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  transition: background var(--dur-1) var(--ease-out);
+}
+.discMark[data-on='true'] {
+  background: var(--as-cta-gradient);
+}
+
+.discLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  text-align: right;
+}
+.discLabel b {
+  color: var(--accent-quiet);
+  font-weight: var(--w-medium);
+}
+
+/* ---------- the indicators ---------- */
+
+/* Separate cards rather than cells in a hairline grid. A grid of
+   dividers made eight different questions look like one table of the
+   same thing, and made a withheld figure look like a value. */
+.indicatorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(228px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.indicator {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 20px 20px;
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  border-radius: var(--r-md);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) ease,
+    background var(--dur-1) ease;
+  animation: indicatorIn 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+@keyframes indicatorIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A gold hairline along the top edge, drawn on hover. The card is a
+   figure someone is weighing, so it answers the pointer. */
+.indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--as-cta-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.indicator:hover {
+  transform: translateY(-3px);
+  border-color: var(--hair-gold-active);
+  background: var(--surface-1);
+}
+.indicator:hover::before {
+  transform: scaleX(1);
+}
+
+/* Withheld. A dashed outline and no fill, because it is the absence of
+   a figure rather than a quiet one, and the two should never be
+   mistaken for each other at a glance. */
+.indicatorEmpty {
+  border-style: dashed;
+  background: none;
+}
+.indicatorEmpty:hover {
+  transform: none;
+  border-color: var(--hair-neutral);
+  background: none;
+}
+.indicatorEmpty:hover::before {
+  transform: scaleX(0);
+}
+.indicatorEmpty .indicatorV {
+  color: var(--as-text-faint);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+}
+
+.indicatorK {
+  font-family: var(--fm);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  margin-bottom: 12px;
+}
+
+.indicatorV {
+  font-family: var(--fd);
+  font-size: 31px;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.indicatorWhy {
+  font-size: var(--fs-meta);
+  color: var(--soft);
+  margin-top: 11px;
+  line-height: 1.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    animation: none;
+  }
+  .indicator:hover {
+    transform: none;
+  }
+}
 
 .extrasRule{height:1px;background:var(--hair);margin:30px 0 24px}
 .extrasGrid{display:flex;gap:44px;flex-wrap:wrap}
@@ -778,20 +1417,21 @@
    Steps, not a curve. A private company has no traded price.
    ============================================================ */
 .rounds{display:flex;flex-direction:column;gap:22px;margin-top:8px}
-.round{padding:18px 20px;border:1px solid var(--hair);border-radius: var(--r-lg);background:rgba(0,0,0,.2)}
+.round{padding:18px 20px;border:1px solid var(--hair);border-radius: var(--r-lg);background:var(--surface-well)}
 .roundNow{border-color:var(--hairg);background:rgba(243,152,7,.05)}
 .roundHead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
 .roundName{
-  font-family:var(--fm);font-size:10.5px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--orange);
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);
+  text-transform:uppercase;color:var(--accent-signal);
 }
-.roundDate{font-family:var(--fm);font-size:10.5px;letter-spacing:.14em;color:var(--faint)}
-.roundBarTrack{height:6px;border-radius: var(--r-pill);background:rgba(255,255,255,.05);overflow:hidden}
+.roundDate{font-family:var(--fm);font-size: var(--fs-label);letter-spacing: var(--ls-label);color: var(--as-text-muted)}
+.roundBarTrack{height:6px;border-radius: var(--r-pill);background:var(--track);overflow:hidden}
 .roundBar{height:100%;border-radius: var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--orange),var(--ember))}
 .roundFacts{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-top:12px;flex-wrap:wrap}
 .roundValue{font-family:var(--fd);font-size:24px;letter-spacing:-.02em;color:var(--ink)}
-.roundPps{font-family:var(--fm);font-size:11px;letter-spacing:.06em;color:var(--faint)}
-.roundNote{font-size:12.5px;color:var(--soft);margin-top:10px;line-height:1.5}
+.roundPps{font-family:var(--fm);font-size: var(--fs-label);letter-spacing:.06em;color: var(--as-text-muted)}
+.roundNote{font-size: var(--fs-meta);color:var(--soft);margin-top:10px;line-height:1.5}
 
 @media (max-width:900px){
   .extrasGrid{gap:24px}
@@ -801,27 +1441,137 @@
    Jump nav. The deal page is one long read; this is how you get back
    to a section without scrolling through the argument again.
    ------------------------------------------------------------------ */
+/* A floating pill, not a bar.
+
+   It was a full-bleed block with a gradient fading to nothing at the
+   bottom, which on a dark page reads as exactly what it is: a black
+   rectangle sitting behind the links, with a hard top edge and a soft
+   one below. A segmented control is what this actually is, so it takes
+   the same shape as the other two on the platform, sized to its own
+   content and floating clear of the cards that pass beside it. */
+/* The bar. It no longer scrolls: the list inside it does, so the action
+   on the right cannot slide out of reach on a deal with many
+   sections. */
 .dealNav {
   position: sticky;
-  top: 0;
+  top: 14px;
   z-index: 5;
   display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
+  gap: 3px;
   align-items: center;
-  margin: 0 0 22px;
-  padding: 10px 0;
-  background: linear-gradient(180deg, var(--as-ink) 72%, transparent);
-  backdrop-filter: blur(10px) saturate(1.4);
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 24px;
+  padding: 5px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: var(--glass-solid);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow:
+    0 1px 0 var(--edge-top) inset,
+    var(--shadow-md);
+}
+
+.dealNavList {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.dealNavList::-webkit-scrollbar {
+  display: none;
+}
+
+/* A hairline, not a gap. The action is a different kind of thing from
+   the labels beside it and the bar should say so before the styling
+   does. */
+.dealNavDivide {
+  flex: none;
+  width: 1px;
+  align-self: stretch;
+  margin: 0 5px;
+  background: var(--hair-neutral);
+}
+
+/* The action.
+ *
+ * DISTINGUISHED BY KIND, NOT BY BEING LOUDER. The active section pill
+ * already carries the gold gradient, so painting this gold too would
+ * have put two identical shapes on one bar with two unrelated
+ * meanings: one says where you are, the other spends money. Every
+ * signal here is the opposite of a nav label instead. Figtree against
+ * their JetBrains Mono, sentence case against their uppercase, no
+ * letter-spacing against their 0.14em, and the text arrow this product
+ * uses for anything that goes somewhere. It reads as a button among
+ * labels at a glance and never competes with the highlight. */
+.dealNavCta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    filter var(--dur-micro) ease,
+    transform var(--dur-micro) var(--ease-out),
+    box-shadow var(--dur-micro) ease;
+}
+/* Text, as V18 requires, and not an icon. Generated here rather than in
+   the markup because three different labels can land in this slot
+   (begin, resume, fund) and all three want the arrow. The `/ ''` gives
+   it empty alternative text, so it is drawn but never announced. */
+.dealNavCta::after {
+  content: '→' / '';
+  font-size: 13px;
+  line-height: 1;
+}
+
+.dealNavCta:hover:not(:disabled) {
+  color: var(--fg-on-gold);
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(199, 154, 75, 0.32);
+}
+.dealNavCta:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+.dealNavCta:disabled {
+  background: var(--panel-2);
+  color: var(--as-text-muted);
+  box-shadow: none;
+  cursor: default;
+}
+
+/* Below this the bar is mostly labels already and a second gold pill
+   crowds them. The hero's button is still a scroll away. */
+@media (max-width: 720px) {
+  .dealNavCta,
+  .dealNavDivide {
+    display: none;
+  }
 }
 
 .dealNavLink {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
   color: var(--as-text-muted);
-  padding: 7px 14px;
+  padding: 8px 15px;
   border: 1px solid transparent;
   border-radius: var(--r-pill);
   white-space: nowrap;
@@ -838,7 +1588,7 @@
 
 /* Active section. Gold leads, so the marker is gold, not signal. */
 .dealNavOn {
-  color: var(--as-ink);
+  color: var(--fg-on-gold);
   background: var(--as-cta-gradient);
   border-color: transparent;
 }
@@ -846,15 +1596,28 @@
    specificity, so without this the hover background wins and the ink
    text lands on a near-transparent pill, which reads as blank. */
 .dealNavOn:hover {
-  color: var(--as-ink);
+  color: var(--fg-on-gold);
   background: var(--as-cta-gradient);
   border-color: transparent;
 }
 
 /* Clear the sticky nav when an anchor jump lands. */
-.section[id] {
-  scroll-margin-top: 74px;
+/* Clearance for the sticky nav, applied to every card rather than only
+   the ones with an id: `scroll-snap-align` snaps the scroll-margin box,
+   so this is what stops a snapped card from parking underneath the nav
+   bar, as well as what an anchor jump lands against. */
+.section {
+  scroll-margin-top: 92px;
 }
+
+/* Scroll snapping was tried here and taken out again. Proximity
+   snapping settles the scroll onto a card, which is pleasant on the way
+   down and wrong the moment the jump nav is used: the anchor lands
+   correctly, the snap then pulls to the nearest snap point, and the
+   section eyebrow ends up parked under the nav bar. The cards already
+   read as discrete beats through the rise and the borders, and the nav
+   is the way to move between them. A gesture that fights a control is
+   not worth the flourish. */
 
 @media (max-width: 720px) {
   .dealNav {
@@ -864,5 +1627,423 @@
   }
   .dealNav::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* ==================================================================
+   Moving between deals.
+
+   A reader on a deal page is one of two people: someone about to act,
+   or someone who has decided this one is not for them. The second used
+   to have no way onward except the back button and a trip through the
+   marketplace, which is a strange thing to ask of an investor at the
+   exact moment they are still willing to look at something else.
+
+   Two answers, for two moments. The step control sits in the crumb row
+   for someone who decided three paragraphs in; the rail at the foot is
+   for someone who read to the end.
+   ================================================================== */
+
+.crumbRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ---------- previous and next ---------- */
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: var(--glass);
+}
+
+/* Separates the two halves. One pill with a dimmed arrow on the left
+   and a live name on the right reads as a single control until this is
+   between them. */
+.stepDivide {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 0;
+  background: var(--hair-neutral);
+  flex: none;
+}
+
+.stepLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 210px;
+  padding: 6px 13px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.stepLink:hover {
+  color: var(--as-text);
+  background: var(--surface-2);
+  text-decoration: none;
+}
+
+.stepName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The end of the shelf. The control stays in place and stops offering,
+   rather than wrapping silently back to the first deal. */
+.stepOff {
+  color: var(--as-text-muted);
+  cursor: default;
+}
+.stepOff:hover {
+  background: none;
+  color: var(--as-text-muted);
+}
+
+/* ---------- the rail at the foot ---------- */
+
+.more {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--hair-neutral);
+}
+
+.moreHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.moreEyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+.moreAll {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--accent-quiet);
+  text-decoration: none;
+}
+.moreAll:hover {
+  color: var(--accent-hot);
+  text-decoration: none;
+}
+
+.moreGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.moreCard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  border-radius: var(--r-md);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  text-decoration: none;
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) ease,
+    background var(--dur-1) ease;
+  animation: moreIn 0.45s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+}
+.moreCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--hair-gold-active);
+  background: var(--surface-1);
+  text-decoration: none;
+}
+
+@keyframes moreIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.moreBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.moreName {
+  font-size: 14px;
+  color: var(--as-text);
+}
+
+/* One line, clipped. This is a way out of the page, not a second pitch
+   competing with the one the reader is standing in. */
+.moreLine {
+  font-size: var(--fs-meta);
+  line-height: 1.4;
+  color: var(--as-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.moreFig {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--accent-quiet);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .stepLink {
+    max-width: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moreCard {
+    animation: none;
+  }
+  .moreCard:hover {
+    transform: none;
+  }
+}
+
+/* ==================================================================
+   The trend: several series from the data room, side by side.
+
+   Small on purpose. Four charts read against each other beat one large
+   chart read alone, and at this size the shape is the message: nobody
+   is measuring a pixel off these, they are asking whether the line goes
+   up and whether the other three agree with it.
+   ================================================================== */
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px;
+  margin-top: 6px;
+}
+
+/* An even count fills its rows. Odd counts keep auto-fit, where a
+   trailing gap is unavoidable and a wider chart is the better trade. */
+.chartGrid[data-count='2'],
+.chartGrid[data-count='4'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 720px) {
+  .chartGrid[data-count='2'],
+  .chartGrid[data-count='4'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.chartCard {
+  margin: 0;
+  padding: 18px 20px 16px;
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  border-radius: var(--r-md);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) ease;
+  animation: chartIn 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+.chartCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--hair-gold-active);
+}
+
+@keyframes chartIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.chartHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.chartLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.chartNow {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+}
+.chartNow b {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+}
+
+/* How far it travelled across the window. Champagne, because it is a
+   reading rather than a claim. */
+.chartMove {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.1em;
+  color: var(--accent-quiet);
+  font-variant-numeric: tabular-nums;
+}
+
+.mini {
+  width: 100%;
+  height: 96px;
+  display: block;
+}
+
+/* The line and its fill wipe in together, in step with the card.
+ *
+ * These two rules used to name `draw` and `fadeArea`, and neither
+ * keyframe is defined in this module. CSS Modules scopes the NAME as
+ * well as the declaration, so the references resolved to
+ * `Deal-module__…__draw` and matched nothing: the animations silently
+ * never ran. Nobody noticed because a line that never animates just
+ * renders, and it rendered correctly. What gave it away is that the bar
+ * variant's `barIn` IS defined here and does run, so bar cards animated
+ * and line cards did not.
+ *
+ * A clip wipe rather than the stroke-dash draw those names implied. The
+ * dash version is what left the dashboard's curve cut short: with
+ * `pathLength` normalising against user space and
+ * `vector-effect: non-scaling-stroke` measuring dashes in screen space,
+ * a stretched viewBox draws only part of the path. See
+ * PortfolioChart.module.css for the full account. */
+.miniReveal {
+  animation: miniReveal 0.7s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
+
+@keyframes miniReveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Bars grow from the baseline, in order, so the series reads left to
+   right the way it was measured. */
+.miniBar {
+  fill: var(--as-gold);
+  transform-origin: 50% 100%;
+  animation: barIn 0.45s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 160ms);
+}
+
+@keyframes barIn {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.chartAxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.chartCaption {
+  margin: 12px 0 0;
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
+/* Where the numbers came from. Every chart carries one. */
+.chartSource {
+  margin: 8px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--hair-neutral);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chartCard,
+  .miniReveal,
+  .miniBar {
+    animation: none;
+  }
+  .chartCard:hover {
+    transform: none;
   }
 }

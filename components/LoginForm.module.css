@@ -1,10 +1,132 @@
-/* A quiet rule between the two ways in. */
-.divider{
-  display:flex;align-items:center;gap:14px;
-  margin:20px 0 16px;
-  font-family:var(--fm);font-size:9.5px;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--faint);
+/* The card's own controls. */
+
+/* Pill geometry, like every other segmented control on the platform.
+   The two are the same size on purpose: creating an account is not a
+   lesser action than signing in, and sizing it down would say it was. */
+.modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 4px;
+  margin-bottom: 22px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: var(--glass);
 }
-.divider::before,.divider::after{
-  content:"";flex:1;height:1px;background:var(--hair);
+
+.mode {
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--r-pill);
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.mode:hover {
+  color: var(--as-text);
+}
+.mode:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+/* Champagne, not the CTA gradient. This selects which form is showing;
+   the gold in this card belongs to the button that actually does
+   something. */
+.mode[aria-pressed='true'] {
+  color: var(--fg-on-gold);
+  background: var(--as-champagne);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.field > span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 6px;
+}
+
+/* A text button, not a link: it opens a flow rather than going to a
+   page, and styling it as a link would promise a destination. */
+.quiet {
+  display: inline-block;
+  margin-top: 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--as-text-muted);
+  transition: color var(--dur-micro) ease;
+}
+.quiet:hover {
+  color: var(--accent-hot);
+}
+.quiet:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* A quiet rule between the two ways in. */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0 18px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hair-neutral);
+}
+
+/* The demo caveat. Ember-tinted so it reads as a notice rather than as
+   product copy, but quiet enough not to compete with the form. */
+.demo {
+  margin: 22px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--hair-ember);
+  border-radius: var(--r-md);
+  background: rgba(229, 102, 26, 0.06);
+  font-size: var(--fs-label);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+.demo b {
+  color: var(--accent-hot);
+  font-weight: var(--w-medium);
 }

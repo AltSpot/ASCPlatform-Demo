@@ -1,21 +1,17 @@
 /**
- * Marketplace — two views behind one switcher.
+ * Marketplace — two lanes on one page.
  *
- * Current opportunities is the shelf: sourced, underwritten, open for
- * subscription today. AltSpot Radar is the other half of the same
- * conversation, where members say which private companies they want us
- * to go after next. Keeping them on one page and one control is the
- * point; keeping them visibly separate is the rule.
+ * Open now is the shelf: sourced, underwritten, open for subscription
+ * today. The Radar beneath it is the other half of the same
+ * conversation, where members say which private companies they want
+ * us to go after next. One page and one filter row, because they are
+ * one pipeline; two lanes told apart by verb, because they are
+ * opposite promises. See components/marketplace/MarketplaceLanes.
  *
- * Both panels are rendered here, on the server, and handed to the
- * client switcher as children, so every number is correct on first
- * paint and toggling costs nothing.
+ * Everything is read here, on the server, so every number is correct
+ * on first paint.
  */
-import DealShelf from '@/components/marketplace/DealShelf';
-import MarketplaceTabs, {
-  type MarketplaceView,
-} from '@/components/marketplace/MarketplaceTabs';
-import RadarBoard from '@/components/radar/RadarBoard';
+import MarketplaceLanes from '@/components/marketplace/MarketplaceLanes';
 import { requireUser } from '@/lib/auth';
 import { RESUMABLE_STATES } from '@/lib/domain';
 import { listDealsForViewer } from '@/lib/repositories/deals';
@@ -40,29 +36,26 @@ export default async function MarketplacePage({
     listWatchlist(user.id),
   ]);
 
-  const resumable = new Map(
-    subscriptions
-      .filter((s) => RESUMABLE_STATES.includes(s.state))
-      .map((s) => [s.dealId, s]),
-  );
+  /* Plain arrays rather than a Map and a Set: the shelf is a client
+     island now, so everything handed to it crosses the serialization
+     boundary. It rebuilds both on the other side. */
+  const resumable = subscriptions.filter((s) => RESUMABLE_STATES.includes(s.state));
 
-  const initial: MarketplaceView = view === 'radar' ? 'radar' : 'current';
+  /* A deal the member voted for on the Radar and that AltSpot then
+     opened. Set on the company by hand (lib/terminal/radar.ts), so the
+     card can prove the mechanic rather than claim it. */
+  const fromRadar = radar
+    .filter((company) => company.dealId && company.yourAmount !== null)
+    .map((company) => company.dealId as string);
 
   return (
-    <>
-      <MarketplaceTabs
-        initial={initial}
-        dealCount={deals.length}
-        radarCount={radar.length}
-        current={
-          <DealShelf
-            deals={deals}
-            resumable={resumable}
-            watched={new Set(watchlist)}
-          />
-        }
-        radar={<RadarBoard companies={radar} />}
-      />
-    </>
+    <MarketplaceLanes
+      deals={deals}
+      resumable={resumable}
+      watched={watchlist}
+      fromRadar={fromRadar}
+      companies={radar}
+      initialView={view === 'radar' ? 'radar' : 'current'}
+    />
   );
 }

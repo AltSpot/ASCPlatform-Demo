@@ -13,16 +13,31 @@
  * Asset classes AltSpot actually transacts in. The deck's line is the
  * scope: institutional venture and growth equity positions taken onto
  * the balance sheet, plus the secondary and real-asset routes into the
- * same companies.
+ * same companies, and the funds that hold several of them at once.
  *
- * The two cool tints are the V18 category set, which exists for exactly
+ * A fund is its own class rather than a wrapper around one of the
+ * others, because what an investor gets from it, several positions and
+ * a manager choosing between them, is not what any single-company
+ * class gives them.
+ *
+ * The cool tints are the V18 category set, which exists for exactly
  * this: taxonomy, never chrome.
+ *
+ * A TINT NAMES A TOKEN RATHER THAN A VALUE. These were hex literals,
+ * which meant the allocation bars and legend swatches kept the dark
+ * palette when the rest of the product turned over: a tint here is
+ * handed to React as an inline style, and inline styles do not cascade,
+ * so nothing downstream could correct them. The values now live in
+ * app/globals.css with every other colour on the platform, where a
+ * theme can restate them. This module stays pure and isomorphic: a
+ * tint is still just a string, and a string is all the caller wanted.
  */
 export const ASSET_CLASSES = {
-  venture: { label: 'Venture', tint: '#C79A4B' },
-  growth: { label: 'Growth equity', tint: '#F39807' },
-  secondary: { label: 'Secondaries', tint: '#7CB4F5' },
-  'real-asset': { label: 'Real assets', tint: '#55D0B0' },
+  venture: { label: 'Venture', tint: 'var(--as-cat-venture)' },
+  growth: { label: 'Growth equity', tint: 'var(--as-cat-growth)' },
+  secondary: { label: 'Secondaries', tint: 'var(--as-cat-secondary)' },
+  'real-asset': { label: 'Real assets', tint: 'var(--as-cat-realasset)' },
+  fund: { label: 'Funds', tint: 'var(--as-cat-fund)' },
 } as const;
 
 export type AssetClass = keyof typeof ASSET_CLASSES;
@@ -45,7 +60,7 @@ export const INDUSTRIES = {
   cybersecurity: 'Cybersecurity',
   fintech: 'Financial technology',
   healthcare: 'Healthcare and life sciences',
-  'aerospace-defense': 'Aerospace and defence',
+  'aerospace-defense': 'Aerospace and defense',
   'energy-climate': 'Energy and climate',
   industrials: 'Industrials and manufacturing',
   'consumer-marketplaces': 'Consumer and marketplaces',
@@ -75,21 +90,13 @@ export function industryLabel(key: string | null | undefined): string {
 }
 
 /**
- * A colour per industry for the allocation charts. Deliberately warm:
+ * A color per industry for the allocation charts. Deliberately warm:
  * these are portfolio surfaces, and the category tints are reserved for
- * asset class, which is the axis they were defined for.
+ * asset class, which is the axis they were defined for. The twelve
+ * values are --as-ind-1 through --as-ind-12 in app/globals.css; see the
+ * note on ASSET_CLASSES for why they are tokens and not literals.
  */
-export const INDUSTRY_TINTS: string[] = [
-  '#C79A4B',
-  '#F39807',
-  '#E5661A',
-  '#E6C77A',
-  '#F08A4B',
-  '#A07A22',
-  '#FFB84D',
-  '#8A6D35',
-  '#D4AE72',
-  '#B8924A',
-  '#F2E394',
-  '#6C6459',
-];
+export const INDUSTRY_TINTS: string[] = Array.from(
+  { length: 12 },
+  (_unused, i) => `var(--as-ind-${i + 1})`,
+);

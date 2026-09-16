@@ -15,10 +15,20 @@
 import type { ReactNode } from 'react';
 
 import styles from '@/components/invest/ConfirmPanel.module.css';
+import {
+  personalizeText,
+  type DocumentParty,
+} from '@/lib/documents/personalize';
 import type { SubscriptionSection } from '@/lib/subscription-sections';
 
 interface ConfirmPanelProps {
   section: SubscriptionSection;
+  /**
+   * The vehicle and company this subscription is for. The panel copy is
+   * written against the lead deal and names it directly, so it is bound
+   * to the actual deal here for the same reason the binder is.
+   */
+  party: DocumentParty;
   index: number;
   total: number;
   confirmed: boolean;
@@ -31,6 +41,7 @@ interface ConfirmPanelProps {
 
 export default function ConfirmPanel({
   section,
+  party,
   index,
   total,
   confirmed,
@@ -54,7 +65,7 @@ export default function ConfirmPanel({
         </span>
       </div>
 
-      <p>{section.panelIntro}</p>
+      <p>{personalizeText(section.panelIntro, party)}</p>
 
       <ul className={styles.points}>
         {section.points.map((point) => (
@@ -63,7 +74,7 @@ export default function ConfirmPanel({
             className={point.lead ? `${styles.point} ${styles.leadPoint}` : styles.point}
           >
             {point.lead && <span className={styles.lead}>{point.lead}</span>}
-            {point.text}
+            {personalizeText(point.text, party)}
           </li>
         ))}
       </ul>

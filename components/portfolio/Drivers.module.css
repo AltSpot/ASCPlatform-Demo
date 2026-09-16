@@ -1,0 +1,141 @@
+/* Gain and loss per position, in dollars, around a shared zero line. */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+.net {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 27px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--bad);
+  font-variant-numeric: tabular-nums;
+}
+.net[data-up='true'] {
+  color: var(--good);
+}
+
+.split {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.1fr) minmax(0, 2fr) minmax(120px, auto);
+  align-items: center;
+  gap: 18px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+.row:last-child {
+  border-bottom: none;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.name {
+  font-size: 13.5px;
+  color: var(--as-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The zero line runs down the middle of every row, so a bar's direction
+   is readable without looking at its color. */
+.plot {
+  position: relative;
+  height: 14px;
+  display: block;
+}
+
+.axis {
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  bottom: -6px;
+  width: 1px;
+  background: var(--hair-neutral);
+}
+
+.barUp,
+.barDown {
+  position: absolute;
+  top: 3px;
+  height: 8px;
+  border-radius: var(--r-pill);
+}
+
+.barUp {
+  left: 50%;
+  background: linear-gradient(90deg, var(--as-gold-deep), var(--as-gold));
+}
+
+.barDown {
+  right: 50%;
+  background: linear-gradient(270deg, var(--as-ember), #A8461A);
+}
+
+.effect {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--good);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.effect[data-up='false'] {
+  color: var(--bad);
+}
+
+/* Realized. The number is settled cash rather than a reported mark, and
+   that difference is worth one word. */
+.settled {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 3px 8px;
+  background: var(--surface-2);
+}
+
+@media (max-width: 760px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 10px;
+  }
+  .plot {
+    grid-column: 1 / -1;
+  }
+}

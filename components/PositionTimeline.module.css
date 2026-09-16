@@ -1,0 +1,176 @@
+/* The timeline under an open position.
+
+   It sits inside the positions table rather than in a section of its
+   own, so it is styled as a continuation of the row above it: inset,
+   quieter, and clearly subordinate. Ember is reserved for the one
+   state that runs on a clock. */
+
+.wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: 18px 32px;
+  padding: 16px 20px 18px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  border: 1px solid var(--hair-neutral);
+}
+
+/* ---------- the three steps ---------- */
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+/* The rail: each mark carries the line down to the next one, so the
+   three steps read as one sequence rather than three bullets. */
+.mark {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hair-neutral);
+  background: var(--surface-well);
+  color: var(--fg-on-gold);
+}
+
+.step:not(:last-child) .mark::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1px;
+  height: 15px;
+  transform: translateX(-50%);
+  background: var(--hair-neutral);
+}
+
+.step[data-done='true'] .mark {
+  background: var(--as-gold);
+  border-color: var(--accent);
+}
+
+.step[data-current='true'] .mark {
+  border-color: var(--accent-hot);
+  box-shadow: 0 0 0 3px rgba(255, 158, 44, 0.14);
+}
+
+.stepLabel {
+  font-size: 13px;
+  color: var(--as-text-muted);
+}
+
+.step[data-done='true'] .stepLabel,
+.step[data-current='true'] .stepLabel {
+  color: var(--as-text);
+}
+
+.stepDetail {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.step[data-current='true'] .stepDetail {
+  color: var(--accent-quiet);
+}
+
+/* ---------- what happens next ---------- */
+
+.now {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  min-width: 0;
+}
+
+.track {
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  transition: width var(--dur-2) var(--ease-out);
+}
+
+.line {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--as-text-muted);
+  max-width: 46ch;
+}
+
+/* The headline of the state, inline with the sentence that explains
+   it. One reading, not two. */
+.left {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--accent-quiet);
+  margin-bottom: 3px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Inside three days the window stops being background information. */
+.wrap[data-urgent='true'] .fill {
+  background: linear-gradient(90deg, var(--as-ember), var(--as-ember-soft));
+}
+.wrap[data-urgent='true'] .left {
+  color: var(--accent-soft);
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .stepDetail {
+    font-size: var(--fs-label);
+  }
+
+  .actions :global(.btn) {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

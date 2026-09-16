@@ -1,0 +1,52 @@
+/* The Tax Center list. A K-1 has no status worth a column: it either
+   exists for a season or it does not, so the row is the name, what it
+   is for, and when it landed. */
+
+.taxList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.taxRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 2px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+.taxRow:last-child {
+  border-bottom: none;
+}
+
+.taxWhat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.taxWhat b {
+  font-size: 13.5px;
+  color: var(--as-text);
+}
+
+.taxNote {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.taxWhen {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}

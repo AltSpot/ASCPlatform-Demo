@@ -50,7 +50,7 @@ export default function DealGate({
 
           <div className={s.gate}>
             <div className={s.gateBody}>
-              <div className={s.gateEyebrow}>Accreditation required</div>
+              <div className={`eyebrow signal ${s.gateEyebrow}`}>Accreditation required</div>
               <p className={s.gateText}>
                 This offering is made under Rule 506(c), so the terms, the numbers
                 and the data room are available only to investors who have verified

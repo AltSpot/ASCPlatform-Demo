@@ -17,6 +17,21 @@
  * The read is deferred to the frame after mount. It is a layout read of
  * siblings this component does not own, so it belongs after paint
  * rather than synchronously inside the commit.
+ *
+ * THE ACTION RIDES ALONG WITH THE NAV. The page is long and the only
+ * thing it is asking for sat at the very top of it, so a reader who
+ * had just finished the terms had to scroll back up to act. The nav
+ * already follows them down; the button follows on the same bar.
+ *
+ * It is handed in rather than built here, because which action to
+ * offer depends on whether this member is mid-commitment and on
+ * whether they have cleared the invest gate. The page works that out
+ * once and gives the same node to the hero, so the two can never end
+ * up offering different things.
+ *
+ * It sits outside the scrolling list on purpose. The labels scroll
+ * sideways when a deal has more sections than fit; an action that
+ * scrolls out of reach is not much of an action.
  */
 import { useEffect, useState } from 'react';
 
@@ -30,7 +45,7 @@ interface Entry {
 /** Below this, a nav is more chrome than help. */
 const MIN_ENTRIES = 3;
 
-export default function DealNav() {
+export default function DealNav({ cta }: { cta?: React.ReactNode }) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [active, setActive] = useState<string | null>(null);
 
@@ -76,19 +91,28 @@ export default function DealNav() {
   if (entries.length < MIN_ENTRIES) return null;
 
   return (
-    <nav className={s.dealNav} aria-label="Sections of this deal">
-      {entries.map((entry) => (
-        <a
-          key={entry.id}
-          href={`#${entry.id}`}
-          className={
-            active === entry.id ? `${s.dealNavLink} ${s.dealNavOn}` : s.dealNavLink
-          }
-          aria-current={active === entry.id ? 'true' : undefined}
-        >
-          {entry.label}
-        </a>
-      ))}
-    </nav>
+    <div className={s.dealNav}>
+      <nav className={s.dealNavList} aria-label="Sections of this deal">
+        {entries.map((entry) => (
+          <a
+            key={entry.id}
+            href={`#${entry.id}`}
+            className={
+              active === entry.id ? `${s.dealNavLink} ${s.dealNavOn}` : s.dealNavLink
+            }
+            aria-current={active === entry.id ? 'true' : undefined}
+          >
+            {entry.label}
+          </a>
+        ))}
+      </nav>
+
+      {cta ? (
+        <>
+          <span className={s.dealNavDivide} aria-hidden="true" />
+          {cta}
+        </>
+      ) : null}
+    </div>
   );
 }

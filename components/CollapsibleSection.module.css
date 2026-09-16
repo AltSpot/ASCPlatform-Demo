@@ -1,0 +1,126 @@
+/* A foldable dashboard section.
+
+   The title is a heading, set in Figtree at 17px, not a mono eyebrow.
+   The section titles are the words that tell a member what each block
+   is, and they were the least visible type on the page. The gradient
+   rule keeps the page's rhythm; the whole heading is the control, so a
+   member reaching for it on a phone does not have to find a 14px
+   chevron. The mono treatment survives only on the optional note. */
+
+.section {
+  display: block;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 48px 0 20px;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  margin: -4px 0;
+  cursor: pointer;
+  color: var(--as-text);
+  transition: color var(--dur-micro) ease;
+}
+.toggle:hover {
+  color: var(--accent-hot);
+}
+.toggle:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 4px;
+  border-radius: var(--r-sm);
+}
+
+.rule {
+  display: inline-block;
+  width: 34px;
+  height: 1px;
+  flex: none;
+  background: var(--as-cta-gradient);
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: var(--w-medium);
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+}
+
+.chev {
+  flex: none;
+  color: var(--as-text-muted);
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    color var(--dur-micro) ease;
+}
+.toggle:hover .chev {
+  color: inherit;
+}
+.toggle[aria-expanded='false'] .chev {
+  transform: rotate(-90deg);
+}
+
+.note {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+/* The fold. 0fr to 1fr animates a height nobody had to measure, and
+   `visibility` keeps everything inside out of the tab order while it is
+   closed. */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--dur-2) var(--ease-out),
+    visibility var(--dur-2);
+}
+
+.panel[data-open='true'] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.panelInner {
+  min-height: 0;
+  /* A grid item's automatic minimum is its min-content width, so a wide
+     child would stretch this past its own track and take the column
+     with it. Same reason .main carries it. */
+  min-width: 0;
+  /* Clipped only while folding. Open, the section lets a child reach
+     past its box (Most popular runs to the window edge). The overflow
+     flips to visible after the fold has finished opening, and back to
+     hidden the instant a fold starts closing: a transition reads its
+     timing from the state it is moving into. */
+  overflow: hidden;
+  transition: overflow 0s linear 0s;
+}
+.panel[data-open='true'] .panelInner {
+  overflow: visible;
+  transition: overflow 0s linear var(--dur-2) allow-discrete;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+  .chev {
+    transition: none;
+  }
+}

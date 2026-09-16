@@ -83,7 +83,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       '501',
     ],
     answer:
-      'Accredited investor is an SEC definition in Rule 501(a) of Regulation D. The common paths are income over 200,000 dollars individually or 300,000 dollars with a spouse in each of the last two years with the same expected this year, or a net worth over 1,000,000 dollars excluding your primary residence. Certain licence holders and entities qualify too. AltSpot offerings are open only to accredited investors. Your certification here is good for five years, and the portal shows the date it was verified.',
+      'Accredited investor is an SEC definition in Rule 501(a) of Regulation D. The common paths are income over 200,000 dollars individually or 300,000 dollars with a spouse in each of the last two years with the same expected this year, or a net worth over 1,000,000 dollars excluding your primary residence. Certain license holders and entities qualify too. AltSpot offerings are open only to accredited investors. Your certification here is good for five years, and the portal shows the date it was verified.',
     source: 'Regulation D, Rule 501(a) and Rule 506(c)',
     related: ['verification-506c', 'kyc', 'wizard-steps'],
   },
@@ -126,7 +126,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
     ],
     answer:
       'Know Your Customer is the anti-money-laundering requirement that sits on anyone moving investor capital. You photograph a government ID and take a live capture, and both are screened against sanctions and watch lists including OFAC. It confirms you are who the agreement says you are and that the funds can be accepted. The images are checked and the result is retained. AltSpot keeps the outcome and the reference, not the documents themselves.',
-    source: 'AltSpot onboarding requirements, AML programme',
+    source: 'AltSpot onboarding requirements, AML program',
     related: ['vault', 'accreditation', 'wizard-steps'],
   },
   {
@@ -167,7 +167,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
     answer:
       'A special purpose vehicle is a single-purpose LLC formed to hold one investment and nothing else. You subscribe for membership interests in the SPV, and the SPV holds the position in the underlying company or asset. It exists so a group of investors can come in through one line on the cap table, with one set of documents and one administrator. The deal page names the SPV that issues your agreement. AltSpot manages it and invests its own capital alongside you in the same vehicle.',
     source: 'AltSpot subscription agreement, offering entity',
-    related: ['fees', 'altspot-committed', 'documents'],
+    related: ['fees', 'documents'],
   },
   {
     id: 'fees',
@@ -267,23 +267,6 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
     source: 'AltSpot platform guide, roadmap',
     related: ['illiquidity', 'position-value'],
   },
-  {
-    id: 'altspot-committed',
-    question: 'What does AltSpot committed capital mean?',
-    keywords: [
-      'altspot committed',
-      'own capital',
-      'skin in the game',
-      'do you invest',
-      'alongside',
-      'gp commitment',
-      'your own money',
-    ],
-    answer:
-      'Every deal page shows the dollar amount AltSpot has put into that deal from its own balance sheet, on the same terms as you. It is there because the alternative model is placing someone else\'s listing and collecting a fee whatever happens. AltSpot takes positions instead. That number is the honest version of alignment: not a statement about conviction, a wire.',
-    source: 'AltSpot platform guide, sourcing and alignment',
-    related: ['sourcing', 'spv', 'fees'],
-  },
 
   // ---------------- the marketplace and the deal page ----------------
   {
@@ -306,7 +289,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
     answer:
       'It is a shelf, not a listing board. Deals reach AltSpot through operators and specialists it already knows, then go through diligence: the operator and their record, the unit economics, the structure and the terms, and the specific way this one loses money. Most stop there. What survives is offered only if AltSpot is willing to commit its own capital on the same terms. That is why the marketplace holds a handful of deals at a time rather than a scrolling feed. Diligence reduces surprises. It does not remove risk.',
     source: 'AltSpot platform guide, sourcing and diligence',
-    related: ['altspot-committed', 'deal-page', 'data-room'],
+    related: ['deal-page', 'data-room'],
   },
   {
     id: 'deal-page',
@@ -382,7 +365,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'nav',
     ],
     answer:
-      'The value shown is the most recent reported mark for the underlying asset, carried at cost until there is a reason to change it. A mark is an estimate on a reporting date. It is not a price anyone has offered you and not an amount you can sell at. Nothing is realised until the deal exits and the SPV distributes.',
+      'The value shown is the most recent reported mark for the underlying asset, carried at cost until there is a reason to change it. A mark is an estimate on a reporting date. It is not a price anyone has offered you and not an amount you can sell at. Nothing is realized until the deal exits and the SPV distributes.',
     source: 'AltSpot platform guide, reporting',
     related: ['illiquidity', 'after-funding', 'dashboard-numbers'],
   },
@@ -579,7 +562,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'home page',
     ],
     answer:
-      'Total invested is the capital you have actually funded. Portfolio value is that capital carried at the most recent reported mark for each position. The change between them is unrealised and moves only when a mark is updated. The positions table lists funded deals plus anything still in flight, which is a started or signed commitment carrying no value yet. Anything needing action, a signed commitment waiting on funds or an unfinished setup step, sits at the top with the deadline on it. Start there.',
+      'Total invested is the capital you have actually funded. Portfolio value is that capital carried at the most recent reported mark for each position. The change between them is unrealized and moves only when a mark is updated. The positions table lists funded deals plus anything still in flight, which is a started or signed commitment carrying no value yet. Anything needing action, a signed commitment waiting on funds or an unfinished setup step, sits at the top with the deadline on it. Start there.',
     source: 'AltSpot platform guide, dashboard',
     related: ['position-value', 'signing', 'wizard-steps'],
   },
@@ -680,6 +663,129 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'Settings carries the contact details for the AltSpot team, and every deal page names the person who ran that transaction. For anything about a live commitment, a wire that will land late or a document that looks wrong, contact them directly rather than working around it in the portal. Deal-specific questions go faster if you name the deal and your profile.',
     source: 'AltSpot platform guide, contact',
     related: ['expiry', 'cancel', 'spotbot-scope'],
+  },
+
+  // ---------------- radar ----------------
+  /*
+   * Radar and the Marketplace are the two halves of one page and were
+   * the same thing to Spot, because the view is a query parameter and
+   * page context was matched on the pathname alone. Asking about Radar
+   * returned the shelf's answers. These entries exist so the difference
+   * is stated rather than implied: the Marketplace is what AltSpot is
+   * offering, Radar is what it does not own and is asking about.
+   */
+  {
+    id: 'radar',
+    question: 'What is Radar, and how is it different from the marketplace?',
+    keywords: [
+      'radar',
+      'what is radar',
+      'radar board',
+      'difference between radar and marketplace',
+      'marketplace vs radar',
+      'radar vs marketplace',
+      'the board',
+      'this board',
+      'vote board',
+      'what should altspot buy',
+      'pursue next',
+      'wish list',
+      'request a company',
+      'not offering',
+      'buy on radar',
+    ],
+    answer:
+      'They are opposites, and the tab is the only thing they share. The Marketplace is what AltSpot is offering right now: deals it sourced, underwrote and committed its own capital to, each one open to subscribe today. Radar is the other direction. It is a board of private companies AltSpot does not own, is not raising for, and is not offering, listed so members can say which ones AltSpot should go after next. Names are ranked by how much money the membership has put behind them, so the board reads as what the room wants. Nothing on Radar can be bought, and nothing on the Marketplace is voted on.',
+    source: 'AltSpot Radar, board disclosure',
+    related: ['radar-vote', 'sourcing', 'secondaries'],
+  },
+  {
+    id: 'radar-vote',
+    question: 'What does voting on Radar actually do?',
+    keywords: [
+      'vote',
+      'voting',
+      'radar vote',
+      'my vote',
+      'change my vote',
+      'does voting commit',
+      'am i committing',
+      'vote amount',
+      'indicate allocation',
+      'demand signal',
+      'does it reserve',
+    ],
+    answer:
+      'A vote is a demand signal and nothing else. You pick a name and indicate the allocation you would want, and that amount is what ranks the board. It reserves no allocation, moves no money, creates no obligation, and is not an order. What it does is decide where sourcing goes: demand on the board is what AltSpot takes to a broker when it goes looking for supply, so the votes are the membership deciding what gets pursued. You can change or withdraw a vote at any time. Every figure on a Radar card, including the market average, the last-round reference and the AltSpot target range, is illustrative rather than market data.',
+    source: 'AltSpot Radar, board disclosure',
+    related: ['radar', 'sourcing', 'allocation'],
+  },
+
+  // ---------------- the other rooms ----------------
+  {
+    id: 'portfolio-page',
+    question: 'What is the Portfolio page telling me?',
+    keywords: [
+      'portfolio',
+      'portfolio page',
+      'tvpi',
+      'dpi',
+      'rvpi',
+      'irr',
+      'net irr',
+      'moic',
+      'multiple',
+      'invested',
+      'fair value',
+      'realized',
+      'total value',
+      'unrealized',
+      'my book',
+      'performance',
+    ],
+    answer:
+      'Portfolio is your whole book in a capital account’s vocabulary rather than a brokerage’s. Invested is the capital you contributed, which is your cost basis. Fair value is the latest reported mark on what you still hold, and it goes to zero once a position exits. Realized is cash distributed back to you. Total value is fair value plus realized, and a multiple counts both, so a position that has returned cash is not read as a loss. TVPI is that ratio across the whole book, DPI is the realized half, RVPI the unrealized half, and the two always sum to TVPI. Net IRR is money-weighted and annualized. Marks arrive per reporting period and do not move between them.',
+    source: 'AltSpot platform guide, Portfolio',
+    related: ['position-value', 'external-positions', 'dashboard-numbers'],
+  },
+  {
+    id: 'external-positions',
+    question: 'Can I track deals I did not do through AltSpot?',
+    keywords: [
+      'external',
+      'held elsewhere',
+      'other platform',
+      'outside altspot',
+      'add a holding',
+      'add a position',
+      'syndicate',
+      'my other deals',
+      'elsewhere',
+      'self reported',
+    ],
+    answer:
+      'Yes. Portfolio has a section for holdings you have somewhere else, a syndicate, a fund, or shares held direct, so the page can show your whole private book rather than only the part bought here. Those rows are self-reported. There is no administrator behind them and no mark AltSpot can stand behind, so they are labelled on every row and are deliberately excluded from Invested, Fair value, Realized, TVPI and Net IRR. AltSpot will not fold a number it cannot verify into its own performance figures.',
+    source: 'AltSpot platform guide, Portfolio',
+    related: ['portfolio-page', 'position-value'],
+  },
+  {
+    id: 'terminal',
+    question: 'What is the Terminal for?',
+    keywords: [
+      'terminal',
+      'articles',
+      'reading',
+      'research',
+      'podcast',
+      'newsletter',
+      'the wire',
+      'news',
+      'library',
+    ],
+    answer:
+      'The Terminal is AltSpot’s reading room: articles, reports and podcasts on how private markets work, plus a wire of outside headlines. Everything AltSpot writes is hosted here and read here, so nothing sends you off the platform. Every piece names its source for the same reason I do. It is explanatory writing, not deal writing: no piece names a return, projects one, or recommends an action, and anything specific to an offering belongs on that deal’s page where the disclosures are.',
+    source: 'AltSpot Terminal, library',
+    related: ['spotbot-scope', 'sourcing'],
   },
 ];
 

@@ -1,0 +1,261 @@
+/* Holdings held away from AltSpot. Every surface in here says so. */
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 68ch;
+}
+
+.headTitle {
+  font-size: 15px;
+  color: var(--as-text);
+}
+
+.headNote {
+  font-size: var(--fs-meta);
+  line-height: 1.6;
+  color: var(--as-text-muted);
+}
+
+/* ---------- the form ---------- */
+
+.form {
+  margin: 18px 0 4px;
+  padding: 20px;
+  border: 1px solid var(--hair-champagne);
+  border-radius: var(--r-lg);
+  background: var(--glass);
+}
+
+.formHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.formHead b {
+  font-size: 14px;
+  color: var(--as-text);
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  color: var(--as-text-muted);
+}
+.close:hover {
+  color: var(--as-text);
+  border-color: var(--hair-gold);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.field > span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.actionNote {
+  font-size: var(--fs-label);
+  color: var(--as-text-muted);
+}
+
+/* ---------- the list ---------- */
+
+.empty {
+  margin: 18px 0 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--as-text-muted);
+  max-width: 70ch;
+}
+
+.rows {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 15px 2px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+.row:last-child {
+  border-bottom: none;
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+  flex: 1;
+}
+
+.name {
+  font-size: 14px;
+  color: var(--as-text);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.figures {
+  display: flex;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--as-text-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.figureKey {
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.up {
+  color: var(--good);
+}
+.down {
+  color: var(--bad);
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The label that keeps these honest. It is on every row, not only in
+   the section header, because a row can be screenshotted alone. */
+.selfTag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  margin-right: 4px;
+  background: var(--surface-2);
+}
+
+.iconBtn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  color: var(--as-text-muted);
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease;
+}
+.iconBtn:hover:not(:disabled) {
+  color: var(--as-text);
+  border-color: var(--hair-gold);
+}
+.iconBtn:disabled {
+  color: var(--as-text-muted);
+  border-color: var(--hair-neutral);
+  cursor: default;
+}
+.iconBtn:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair-neutral);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.totalNote {
+  color: var(--as-text-faint);
+}

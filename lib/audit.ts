@@ -34,6 +34,12 @@ export type AuditAction =
   | 'radar.interest_indicated'
   | 'watchlist.added'
   | 'watchlist.removed'
+  /* Self-reported holdings. Not a securities transaction, but they
+     change what a member's own statements total, and anything that
+     moves a reported figure leaves a trail. */
+  | 'external_position.added'
+  | 'external_position.updated'
+  | 'external_position.removed'
   | 'demo.reset';
 
 interface AuditInput {

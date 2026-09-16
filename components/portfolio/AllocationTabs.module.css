@@ -1,0 +1,61 @@
+/* One bar, three axes, one control. */
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: var(--glass);
+}
+
+.tab {
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--r-pill);
+  padding: 8px 15px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.tab:hover {
+  color: var(--as-text);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+/* Champagne, not the CTA gradient. This selects a view of the same
+   money; it does not commit anything. */
+.tab[aria-pressed='true'] {
+  color: var(--fg-on-gold);
+  background: var(--as-champagne);
+}
+
+.total {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}

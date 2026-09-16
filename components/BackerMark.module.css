@@ -1,0 +1,30 @@
+/* A firm's mark and name. One line, mono, currentColor throughout so
+   the parent decides the ink. */
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.label {
+  opacity: 0.72;
+}
+
+.glyph {
+  flex: none;
+  display: block;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

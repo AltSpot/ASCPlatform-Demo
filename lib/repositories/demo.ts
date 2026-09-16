@@ -22,7 +22,7 @@
 import 'server-only';
 
 import { prisma } from '../db';
-import { DEMO_TTL_HOURS, EPHEMERAL_DEMO } from '../config';
+import { DEMO_TTL_HOURS, EPHEMERAL_DEMO, ISOLATED_ALLOCATION } from '../config';
 
 const HOUR_MS = 3_600_000;
 
@@ -81,16 +81,20 @@ export async function sweepStaleDemoAccounts(): Promise<number> {
  * one is real. Called before `deleteInvestor`, because the cascade takes
  * the subscription rows with it.
  *
- * KNOWN BUG, left as found and carried through a refactor unchanged:
- * this increments unconditionally, but `signSubscription` only decrements
- * when ISOLATED_ALLOCATION is OFF. With it on, which is the default, the
- * deal row was never debited, so every reset inflates
- * `allocationRemaining` by the amount reset. It drifts upward over a long
- * demo run and only a reseed corrects it. The fix is to make this
- * symmetric with the sign path, guarded by the same flag. Not changed
- * here because the change is behavioural, not hygiene.
+ * FIXED 9 Sep 2026. This used to increment unconditionally while
+ * `signSubscription` only decrements when ISOLATED_ALLOCATION is OFF.
+ * With the flag on, which is the default, the deal row was never debited,
+ * so every reset handed back allocation that had never been taken and
+ * `allocationRemaining` climbed on each pass. A demo run of a dozen
+ * resets had Calder Grid drifting off 68% subscribed, and only a reseed
+ * put it back. It is now symmetric with the sign path: under isolated
+ * allocation there is nothing to return, because nothing was reserved.
  */
 export async function releaseHeldAllocation(userId: string): Promise<void> {
+  // Nothing was ever taken off the deal row, so there is nothing to give
+  // back. Mirrors the guard in `signSubscription` and `cancelSubscription`.
+  if (ISOLATED_ALLOCATION) return;
+
   const reserved = await prisma.subscription.findMany({
     where: { userId, state: 'docs_signed' },
   });

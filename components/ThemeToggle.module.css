@@ -1,0 +1,92 @@
+/* The appearance switch on the rail foot.
+
+   Built from the system's own geometry: a pill holding two pills, the
+   same construction as every other segmented control in the product.
+   The lit segment is the only coloured thing in the rail's foot, so it
+   is deliberately quiet: a raised surface and brighter type rather than
+   a gold fill, which at this size would pull the eye off the nav it
+   sits under. */
+
+.wrap {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  margin-bottom: 10px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: var(--surface-well);
+}
+
+.seg {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 4px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--as-text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    box-shadow var(--dur-micro) ease;
+}
+
+.seg:hover {
+  color: var(--as-text-body);
+}
+
+/* Disabled and quiet states are colour, never opacity: the label still
+   has to be read. */
+.seg[data-on='true'] {
+  color: var(--as-text);
+  background: var(--surface-2);
+  box-shadow:
+    inset 0 1px 0 var(--edge-top),
+    0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.seg:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Collapsed, the words go the way every other word on the rail goes and
+   the pill stacks into two 28px tiles, which is the width the rail has
+   left. Still both segments, still one lit: a control that stops
+   showing its state when the rail narrows is a control you have to
+   click to read. */
+:global(html[data-rail='mini']) .wrap {
+  flex-direction: column;
+  gap: 3px;
+}
+:global(html[data-rail='mini']) .label {
+  display: none;
+}
+:global(html[data-rail='mini']) .seg {
+  padding: 7px 0;
+}
+
+/* The lit segment on cream needs a warm contact shadow rather than the
+   black one that seats it on the ember canvas. */
+:global(html[data-theme='light']) .seg[data-on='true'] {
+  box-shadow:
+    inset 0 1px 0 var(--edge-top),
+    0 1px 2px rgba(74, 56, 26, 0.10);
+}

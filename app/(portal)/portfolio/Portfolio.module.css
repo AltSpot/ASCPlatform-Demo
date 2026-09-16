@@ -1,57 +1,88 @@
-/* Portfolio. Two breakdowns side by side, because asset class and
-   industry are read together: "venture in energy" is one thought. */
+/* Portfolio. The snapshot band on top, then three sections that answer
+   one question each: where the money is, what every position is doing,
+   and what has actually come back. */
 
+/* The six lines of a capital account. A summary that stops at "value
+   today" is answering a public-markets question with a private-markets
+   book: it omits what has come back, the multiple that counts it, and
+   the annualized figure that knows when it came back. */
 .summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 16px;
-  margin-bottom: 26px;
-  padding: 20px 22px;
-  border: 1px solid var(--hair-neutral);
+  margin-bottom: 30px;
+  padding: 22px 24px;
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
   border-radius: var(--r-lg);
-  background: var(--fill-card);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
 }
 
 .figure {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
   min-width: 0;
+  padding-left: 20px;
+  border-left: 1px solid var(--hair-neutral);
+}
+.figure:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+/* Total value is the one figure that answers "how am I doing" on its
+   own, so it carries the gold. The others are its inputs. */
+.figureLead .figureKey {
+  color: var(--accent);
+}
+.figureLead .figureValue {
+  color: var(--figure-hot);
 }
 
 .figureKey {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
   color: var(--accent-quiet);
 }
 
 .figureValue {
   font-family: var(--font-display);
   font-weight: var(--w-medium);
-  font-size: 26px;
+  font-size: 24px;
   line-height: 1;
-  letter-spacing: -0.016em;
+  letter-spacing: -0.018em;
   color: var(--as-text);
   font-variant-numeric: tabular-nums;
 }
 
 .figureNote {
-  font-size: 11.5px;
+  font-size: var(--fs-label);
   line-height: 1.4;
   color: var(--as-text-muted);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  align-items: start;
+.up {
+  color: var(--good);
+}
+.down {
+  color: var(--bad);
 }
 
-.head {
-  margin-bottom: 18px;
+/* ---------- section headers ---------- */
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 34px 0 16px;
 }
 
 .eyebrow {
@@ -59,8 +90,9 @@
   align-items: center;
   gap: 12px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.22em;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--as-text-muted);
   margin: 0;
@@ -74,26 +106,63 @@
   background: var(--as-cta-gradient);
 }
 
+/* The caveat belongs beside the header, not under the chart. A reader
+   who knows what "weighted by cost" means never has to look for it, and
+   a reader who does not sees it before the numbers rather than after. */
+.sectionNote {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
 .note {
-  margin-top: 24px;
+  margin-top: 26px;
   max-width: 84ch;
-  font-size: 12.5px;
+  font-size: var(--fs-meta);
   line-height: 1.7;
   color: var(--as-text-muted);
 }
 
-@media (max-width: 1080px) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
+@media (max-width: 1420px) {
   .summary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 24px;
+  }
+  .figure:nth-child(3n + 1) {
+    padding-left: 0;
+    border-left: none;
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 720px) {
+  .summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .figure:nth-child(3n + 1) {
+    padding-left: 20px;
+    border-left: 1px solid var(--hair-neutral);
+  }
+  .figure:nth-child(2n + 1) {
+    padding-left: 0;
+    border-left: none;
+  }
+}
+
+@media (max-width: 460px) {
   .summary {
     grid-template-columns: minmax(0, 1fr);
   }
+  .figure {
+    padding-left: 0;
+    border-left: none;
+  }
+}
+
+/* Two cards under one header, when the second is the detail behind the
+   first. The chart and the log that backs it are one section, not two. */
+.stack {
+  height: 14px;
 }

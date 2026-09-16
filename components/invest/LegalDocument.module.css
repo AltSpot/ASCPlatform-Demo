@@ -28,13 +28,14 @@
   letter-spacing:.06em;text-transform:uppercase;color:#12100C;margin-bottom:10px;
 }
 .docSub{
-  font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);
   text-transform:uppercase;color:#8A7B5E;line-height:1.7;
 }
 
 .article{margin-bottom:30px}
 .articleHead{
-  font-family:var(--fm);font-size:10.5px;letter-spacing:.18em;
+  font-family:var(--fm);font-size: var(--fs-label);letter-spacing: var(--ls-label);
   text-transform:uppercase;color:#12100C;font-weight:500;
   margin:32px 0 16px;padding-bottom:9px;
   border-bottom:1px solid rgba(0,0,0,.12);
@@ -55,7 +56,7 @@
 }
 .clauseDone{background:rgba(184,146,74,.11);border-color:rgba(184,146,74,.34)}
 .clauseN{
-  font-family:var(--fm);font-size:11px;color:#A07A22;
+  font-family:var(--fm);font-size: var(--fs-label);color:#A07A22;
   letter-spacing:.06em;font-weight:500;min-width:34px;
 }
 .clauseTitle{
@@ -63,8 +64,9 @@
   color:#12100C;letter-spacing:-.005em;
 }
 .tick{
-  margin-left:auto;font-family:var(--fm);font-size:9px;
-  letter-spacing:.14em;text-transform:uppercase;color:#A07A22;
+  margin-left:auto;font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);text-transform:uppercase;color:#A07A22;
 }
 
 .body{margin:0 0 14px;max-width:70ch;color:#221E18}
@@ -96,15 +98,16 @@
   padding:11px 0;border-bottom:1px solid rgba(0,0,0,.1);
 }
 .summaryK{
-  font-family:var(--fm);font-size:10px;letter-spacing:.16em;
-  text-transform:uppercase;color:#8A7B5E;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-text);
+  text-transform: none;color:#8A7B5E;
 }
 .summaryV{font-size:15px}
 
 .foot{
   margin-top:34px;padding-top:18px;
   border-top:1px solid rgba(0,0,0,.1);
-  font-family:var(--fm);font-size:9.5px;line-height:1.7;
+  font-family:var(--fm);font-size: var(--fs-label);line-height:1.7;
   letter-spacing:.04em;color:#8A7B5E;
 }
 
@@ -116,28 +119,30 @@
 .wrap{position:sticky;top:28px}
 .tabs{
   display:flex;gap:4px;margin-bottom:10px;
-  background:rgba(0,0,0,.28);border:1px solid var(--hair);
+  background:var(--surface-well);border:1px solid var(--hair);
   border-radius: var(--r-pill);padding:4px;
 }
 .tab{
   flex:1;padding:9px 10px;border:none;background:none;cursor:pointer;
   border-radius: var(--r-pill);color:var(--soft);
-  font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);
   text-transform:uppercase;transition:background .12s,color .12s;
 }
 .tab:hover{color:var(--ink)}
-.tabOn{background:rgba(243,152,7,.13);color:var(--orange-b)}
+.tabOn{background:var(--tint-gold-hover);color:var(--accent-hot)}
 
 /* What this instrument is, and whether it gets signed. */
 .roleTag{
   display:inline-block;margin-top:14px;
-  font-family:var(--fm);font-size:9px;letter-spacing:.16em;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);
   text-transform:uppercase;color:#A07A22;
   border:1px solid rgba(184,146,74,.4);border-radius: var(--r-pill);padding:4px 11px;
 }
 .purpose{
   margin:14px auto 0;max-width:60ch;
-  font-family:var(--fb);font-size:12.5px;line-height:1.6;color:#5A5044;
+  font-family:var(--fb);font-size: var(--fs-meta);line-height:1.6;color:#5A5044;
 }
 
 /* Counsel's emphasis. Bold marks defined terms; do not restyle it away. */
@@ -148,7 +153,7 @@
 
 /* Tables carry the questionnaire, so they must stay tabular. */
 .tableWrap{margin:18px 0;overflow-x:auto}
-.table{width:100%;border-collapse:collapse;font-size:12.5px}
+.table{width:100%;border-collapse:collapse;font-size: var(--fs-meta)}
 .table td{
   border:1px solid rgba(0,0,0,.16);padding:9px 11px;
   vertical-align:top;line-height:1.55;
@@ -160,5 +165,19 @@
    import artifact in the middle of body text. */
 .marker{
   text-align:center;font-style:italic;color:#8A7B5E;
-  font-size:12px;margin:24px 0;
+  font-size: var(--fs-meta);margin:24px 0;
+}
+
+/* The memorandum is a specimen below the party names. An investor who
+   reads it and finds another company's business described has to be
+   able to see why, at the top, before they start. */
+.specimen {
+  margin: 12px 0 0;
+  padding: 11px 14px;
+  border: 1px solid var(--hair-ember, rgba(229, 102, 26, 0.3));
+  border-radius: var(--r-md);
+  background: rgba(229, 102, 26, 0.07);
+  font-size: var(--fs-label);
+  line-height: 1.55;
+  color: var(--as-text-muted);
 }

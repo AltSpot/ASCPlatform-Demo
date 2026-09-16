@@ -95,7 +95,11 @@ export const POST = route(
           taxId: maskTin(vault.tinLast4),
           profile: profile ? `${profile.name} (${profile.type})` : '',
         },
-        { investorName: user.name, dealName: deal.name },
+        {
+          investorName: user.name,
+          dealName: deal.name,
+          party: { entity: deal.entity, company: deal.name },
+        },
       );
 
       await saveDocument(user.id, {

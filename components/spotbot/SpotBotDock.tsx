@@ -4,8 +4,15 @@
  * Spot — the guide that follows the investor around the portal.
  *
  * Mounted once in the portal shell, so the conversation survives client
- * navigation. It reads the pathname, which is what makes the greeting,
- * the brief and the suggested questions match the page you are on.
+ * navigation. It reads the location, which is what makes the brief and
+ * the suggested questions match the page you are on.
+ *
+ * LOCATION, NOT PATHNAME. The marketplace shelf and the Radar board are
+ * tabs on one route and the view is a query parameter, so reading the
+ * pathname alone made the platform's two most opposite surfaces the
+ * same room: Radar was offered the shelf's questions about allocation
+ * bars and committed capital. The search params are part of the address
+ * here.
  *
  * The gate in lib/spotbot/gate.ts is what keeps "explains, never
  * advises" true. Nothing in this component is a control: it is the
@@ -17,7 +24,7 @@
  * own, and Spot answers from a local knowledge base.
  */
 import { Copy, Check, Maximize2, Minimize2, Trash2, X } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ask } from '@/lib/spotbot/client';
@@ -33,9 +40,6 @@ interface Message {
   source?: string;
   refused?: boolean;
 }
-
-const GREETING =
-  'I explain how AltSpot works. Ask me what a step needs, what a term means, or what a document says. I will not tell you whether to invest.';
 
 /** Shown when the request itself fails. Honest about which part broke. */
 const UNREACHABLE: Omit<Message, 'id'> = {
@@ -73,7 +77,14 @@ function loadThread(): Message[] {
 
 export default function SpotBotDock() {
   const pathname = usePathname() ?? '/';
-  const page = useMemo(() => pageContext(pathname), [pathname]);
+  /* The marketplace writes its tab with replaceState. Next instruments
+     history, so this hook re-runs on that write and Spot changes rooms
+     with the tab rather than only on a real navigation. */
+  const search = useSearchParams();
+  const query = search?.toString() ?? '';
+  const here = query ? `${pathname}?${query}` : pathname;
+
+  const page = useMemo(() => pageContext(here), [here]);
 
   const [open, setOpen] = useState(false);
   const [wide, setWide] = useState(false);
@@ -209,21 +220,23 @@ export default function SpotBotDock() {
       if (inputRef.current) inputRef.current.style.height = 'auto';
 
       try {
-        const answer: SpotBotAnswer = await ask({ question, pathname });
+        // `here`, not `pathname`: the engine biases topics by room, and
+        // Radar's room is a query parameter away from the marketplace's.
+        const answer: SpotBotAnswer = await ask({ question, pathname: here });
         push({
           role: 'spotbot',
           body: answer.body,
           source: answer.source,
           refused: answer.refused,
         });
-        setFollowUps({ path: pathname, questions: answer.followUps });
+        setFollowUps({ path: here, questions: answer.followUps });
       } catch {
         push(UNREACHABLE);
       } finally {
         setBusy(false);
       }
     },
-    [busy, pathname, push],
+    [busy, here, push],
   );
 
   const clearThread = useCallback(() => {
@@ -269,7 +282,7 @@ export default function SpotBotDock() {
     el.style.height = `${el.scrollHeight}px`;
   }
 
-  const fresh = followUps?.path === pathname ? followUps.questions : [];
+  const fresh = followUps?.path === here ? followUps.questions : [];
   const suggestions = (fresh.length > 0 ? fresh : page.suggested).slice(0, 3);
   const hasThread = messages.length > 0;
 
@@ -324,13 +337,6 @@ export default function SpotBotDock() {
             </div>
           </div>
 
-          {!hasThread && (
-            <div className={styles.brief}>
-              <span className={styles.briefLabel}>On this page</span>
-              <p className={styles.briefText}>{page.brief}</p>
-            </div>
-          )}
-
           <div className={styles.logWrap}>
             <div
               className={styles.log}
@@ -340,7 +346,25 @@ export default function SpotBotDock() {
               aria-live="polite"
               aria-relevant="additions"
             >
-              {!hasThread && <p className={styles.greeting}>{GREETING}</p>}
+              {/* The page brief, as Spot's opening turn.
+                  It was a band above the log with an ON THIS PAGE
+                  label, and under it a fixed greeting that said Spot
+                  explains and never advises. That line is already
+                  under the composer permanently, so the empty panel
+                  stated it twice and spent four lines doing it. One
+                  page-aware opener says more than a greeting that
+                  reads the same in every room, and putting it in the
+                  log means the panel opens looking like a
+                  conversation rather than a form with a notice on
+                  top. It still clears on the first question. */}
+              {!hasThread && (
+                <div className={styles.botRow}>
+                  <span className={`orb ${styles.botOrb}`} aria-hidden="true" />
+                  <div className={styles.bot} data-refused="false">
+                    <p className={styles.botBody}>{page.brief}</p>
+                  </div>
+                </div>
+              )}
 
               {messages.map((message) =>
                 message.role === 'you' ? (

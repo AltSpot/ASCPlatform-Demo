@@ -1,0 +1,72 @@
+/* Three lines, read down. The figure is the point, so it sits in the
+   display face and the note explains it underneath rather than beside. */
+
+.rows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  padding-left: 22px;
+  border-left: 1px solid var(--hair-neutral);
+}
+.row:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--accent-quiet);
+}
+
+.amount {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -0.016em;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  font-size: var(--fs-label);
+  line-height: 1.45;
+  color: var(--as-text-muted);
+}
+
+/* Nothing is owed on this yet, and a figure printed at full strength
+   beside two that were actually charged would read as if it were. */
+.row[data-contingent='true'] .amount {
+  color: var(--as-text-muted);
+}
+
+.model {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--hair-neutral);
+  font-size: var(--fs-meta);
+  line-height: 1.65;
+  color: var(--as-text-muted);
+}
+
+@media (max-width: 760px) {
+  .rows {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+  .row {
+    padding-left: 0;
+    border-left: none;
+  }
+}

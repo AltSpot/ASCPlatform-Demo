@@ -41,6 +41,7 @@ model User {
   profiles      InvestmentProfile[]
   bankAccounts  BankAccount[]
   subscriptions Subscription[]
+  externalPositions ExternalPosition[]
   documents     Document[]
   auditLogs     AuditLog[]
   radarInterest RadarInterest[]
@@ -210,6 +211,10 @@ model Deal {
 
   /// Company mark, served from /public. Null falls back to the gradient.
   logoUrl String?
+  /// A walkthrough, if one has been recorded. The deal page leads with
+  /// it when present and falls back to the artwork when it is null, so
+  /// a deal without a film is not a deal with a hole in its hero.
+  videoUrl String?
 
   /// One-line pull quote used at the top of the deal page.
   headline String?
@@ -224,6 +229,9 @@ model Deal {
   thesisJson  String
   feesJson    String
   mediaJson   String
+  /// Series from the financial data room, as DealChart[]. Empty for a
+  /// deal with no company data behind it, which is every secondary.
+  chartsJson          String?
   docsJson    String
   spotbotJson String
   deckJson    String
@@ -241,6 +249,9 @@ model Deal {
   indicatorsJson     String @default("{}")
   /// Priced-round history: valuation and price per share, round by round.
   roundsJson         String @default("[]")
+  /// The other firms on the round, as Backing[] from lib/backers.ts.
+  /// Who led, who is co-investing. Empty when AltSpot is alone.
+  backingJson        String @default("[]")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -265,6 +276,10 @@ model WatchlistItem {
   id        String   @id @default(cuid())
   userId    String
   dealId    String
+  /// The investor's own order for the list, 1-indexed. Zero means they
+  /// have never reordered, and an unranked row falls back to newest
+  /// first, so a list nobody has dragged still reads sensibly.
+  rank      Int      @default(0)
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -302,6 +317,78 @@ model Distribution {
   @@map("distributions")
 }
 
+/// A holding the member has somewhere else.
+///
+/// AltSpot is trying to be the place a member reads their whole private
+/// book, not only the part they bought here. A portfolio page that
+/// silently omits two thirds of someone's private allocation is a page
+/// they will check once and then go back to a spreadsheet.
+///
+/// SELF-REPORTED, AND NEVER LAUNDERED INTO AN ALTSPOT FIGURE. Every
+/// value on this record is whatever the member typed. AltSpot has no
+/// administrator behind it, no mark it can stand behind and no way to
+/// verify any of it. Anything that totals these rows alongside AltSpot
+/// positions has to say which is which.
+model ExternalPosition {
+  id     String @id @default(cuid())
+  userId String
+
+  /// The company or fund. Free text: this is not an AltSpot deal.
+  name String
+  /// Where it is actually held, e.g. "AngelList", "Carta", "Direct".
+  custodian String?
+  /// Taxonomy, so an external holding lands in the same breakdowns.
+  assetClass String
+  industry   String?
+
+  /// Integer dollars, like every other amount on the platform.
+  invested  Int
+  /// The member's own latest mark on what is still held.
+  fairValue Int @default(0)
+  /// Cash they have had back.
+  realized  Int @default(0)
+
+  /// When the money went in. Drives vintage and the IRR.
+  investedAt DateTime
+  /// The date the member's fair value is as of.
+  markedAt   DateTime?
+  note       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("external_positions")
+}
+
+/// A reported mark on one position, at one date.
+///
+/// `Subscription.currentValue` is the latest of these, denormalised so
+/// every list read does not have to join. This table is the history,
+/// and it is what makes a portfolio value curve real rather than
+/// interpolated: private marks arrive per reporting period, they do not
+/// move between periods, and a chart that pretends otherwise is drawing
+/// a line nobody reported.
+model PositionMark {
+  id             String   @id @default(cuid())
+  subscriptionId String
+  /// The reporting date this mark is as of.
+  asOf           DateTime
+  /// Integer dollars, like every other amount on the platform.
+  value          Int
+  /// Where it came from: "409a", "round", "vehicle", "exit".
+  basis          String   @default("vehicle")
+  createdAt      DateTime @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriptionId, asOf])
+  @@index([subscriptionId])
+  @@map("position_marks")
+}
+
 model Subscription {
   id        String  @id @default(cuid())
   userId    String
@@ -325,6 +412,12 @@ model Subscription {
   /// Latest reported mark. Null until the position is accepted.
   currentValue Int?
 
+  /// When this position exited and its proceeds were distributed. Null
+  /// while held. `state` cannot carry this: `closed` is the healthy end
+  /// of the subscription lifecycle, meaning the deal closed and the
+  /// investor is in it, not that the investment is over.
+  realizedAt DateTime?
+
   /// True for demo-seeded positions, so a fresh login feels lived-in.
   seeded Boolean @default(false)
 
@@ -335,6 +428,7 @@ model Subscription {
   deal      Deal               @relation(fields: [dealId], references: [id])
   profile   InvestmentProfile? @relation(fields: [profileId], references: [id])
   distributions Distribution[]
+  marks     PositionMark[]
   documents Document[]
 
   @@index([userId])
@@ -407,6 +501,11 @@ model RadarInterest {
   userId      String
   companySlug String
   amount      Int
+  /// The member's own priority order for Your Radar, 1-indexed.
+  /// Zero means unranked, and an unranked row falls back to demand
+  /// order, so a member who never drags anything still sees a sensible
+  /// board. This is a display preference, not a claim about the deal.
+  rank        Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

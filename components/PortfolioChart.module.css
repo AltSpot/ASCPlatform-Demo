@@ -1,11 +1,12 @@
-/* Portfolio chart. The readout sits above the plot rather than beside
-   the cursor: a tooltip that follows the mouse covers the line you are
-   reading, and on a portfolio the number is the point. */
+/* The dashboard hero. One figure, one sentence, the curve under them.
+   The readout sits above the plot rather than beside the cursor: a
+   tooltip that follows the mouse covers the line you are reading, and
+   on a portfolio the number is the point. */
 
 .wrap {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 
 .top {
@@ -19,45 +20,41 @@
 .readout {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
   min-width: 0;
 }
 
+/* The one figure on the page that is allowed to be this big. */
 .readValue {
   font-family: var(--font-display);
   font-weight: var(--w-medium);
-  font-size: 34px;
+  font-size: 44px;
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--as-text);
   font-variant-numeric: tabular-nums;
   /* The figure changes on every pointer move. Reserving the baseline
      stops the row below it from jittering. */
-  min-height: 34px;
+  min-height: 44px;
 }
 
-.readMeta {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+/* A sentence, in body type. Colour only on the change, and only to say
+   which way it went. */
+.readLine {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--as-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-/* Direction, not chrome. Same rule as the gain figure on the dashboard. */
 .up {
   color: var(--good);
+  font-weight: var(--w-medium);
 }
 .down {
   color: var(--bad);
-}
-
-.readWhen {
-  color: var(--as-text-faint);
+  font-weight: var(--w-medium);
 }
 
 /* ---------- range switcher ---------- */
@@ -80,9 +77,9 @@
   border-radius: var(--r-pill);
   padding: 7px 14px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: var(--fs-label);
   font-weight: var(--w-medium);
-  letter-spacing: 0.16em;
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--as-text-muted);
   transition:
@@ -94,14 +91,55 @@
 }
 
 .rangeOn {
-  color: var(--as-ink);
+  color: var(--fg-on-gold);
   background: var(--as-cta-gradient);
 }
 .rangeOn:hover {
-  color: var(--as-ink);
+  color: var(--fg-on-gold);
 }
 
 /* ---------- plot ---------- */
+
+/* The marker and the crosshair are HTML over the SVG rather than
+   shapes inside it. The plot stretches its viewBox to the card width,
+   which is what keeps the geometry simple, and that same stretch drew
+   the old dot as an ellipse that changed shape with the window. */
+.plotWrap {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 10px;
+}
+
+.plotArea {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+}
+
+/* The scale gutter. Labels sit on their gridlines, positioned in
+   percent for the same reason the marker is. */
+.scale {
+  position: relative;
+  height: 240px;
+}
+
+.scaleLabel {
+  position: absolute;
+  right: 0;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.04em;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.gridline {
+  stroke: var(--hair-neutral);
+  stroke-width: 1;
+}
 
 .plot {
   width: 100%;
@@ -116,12 +154,131 @@
   outline-offset: 3px;
 }
 
+/* The plot wipes in from the left, once, and again when the range
+   changes.
+ *
+ * THIS WAS A DASH ANIMATION AND IT LEFT THE LINE CUT SHORT.
+ * `pathLength="1"` normalises stroke-dasharray against the path's length
+ * in USER space, but `vector-effect: non-scaling-stroke` makes Chrome
+ * measure dashes in SCREEN space, and `preserveAspectRatio="none"`
+ * stretches this 900-unit viewBox across the whole card. So the dash
+ * that was meant to cover the path covered only viewBox width over card
+ * width of it: on a 1226px card, a 905-unit dash over a ~1233-unit path,
+ * and the gold stroke stopped roughly three quarters of the way across
+ * while the fill and the end marker ran on to the right edge. It got
+ * worse the wider the card, which is why it looked arbitrary.
+ *
+ * `animation-fill-mode: both` is what made it permanent rather than a
+ * flicker: the truncated end state was held forever. Switching to
+ * `backwards` would have fixed the resting state and left the same
+ * truncation during the animation, then popped the missing quarter in at
+ * the end.
+ *
+ * A clip wipe has no relationship to path length, so none of the above
+ * can come back. It reveals the line and its fill together, which is
+ * also one motion instead of a draw and a fade that were never quite in
+ * step. */
+.reveal {
+  animation: reveal 0.9s var(--ease-out) both;
+}
+
+@keyframes reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------- the marker ---------- */
+
+.marker {
+  position: absolute;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--as-cream, #f5f3e0);
+  box-shadow:
+    0 0 0 1.5px var(--as-gold),
+    var(--shadow-sm);
+  pointer-events: none;
+  /* The glide. Quarters are far apart on a wide card, and a marker
+     that teleports between them reads as a redraw rather than as a
+     value being tracked. */
+  transition:
+    left var(--dur-2) var(--ease-out),
+    top var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-1) ease,
+    transform var(--dur-1) var(--ease-out);
+}
+
+/* Under the pointer it grows a halo rather than changing color: the
+   reader is already looking at it, and the halo is what separates it
+   from the line it is sitting on. */
+.marker[data-live='true'] {
+  transform: scale(1.12);
+  box-shadow:
+    0 0 0 1.5px var(--as-gold),
+    0 0 0 7px rgba(199, 154, 75, 0.16),
+    var(--shadow-sm);
+}
+
+.cross {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  margin-left: -0.5px;
+  background: linear-gradient(
+    180deg,
+    rgba(199, 154, 75, 0),
+    rgba(199, 154, 75, 0.34) 18%,
+    rgba(199, 154, 75, 0.34) 82%,
+    rgba(199, 154, 75, 0)
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    left var(--dur-2) var(--ease-out),
+    opacity var(--dur-1) ease;
+}
+.cross[data-live='true'] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+  .marker,
+  .cross {
+    transition: none;
+  }
+}
+
 .axis {
   display: flex;
   justify-content: space-between;
+  padding-left: 62px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--as-text-faint);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+@media (max-width: 720px) {
+  .readValue {
+    font-size: 36px;
+    min-height: 36px;
+  }
+  .plot,
+  .scale {
+    height: 200px;
+  }
 }

@@ -8,12 +8,41 @@
   gap: 18px;
 }
 
+/* Two bars on one scale: the allocation decision, and what it is worth
+   now. Both start at the same left edge so the difference in total
+   length is the whole read. */
+.tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.trackKey {
+  flex: none;
+  width: 64px; /* "AT COST" at the 12px floor with label tracking */
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  text-align: right;
+}
+
 .bar {
   display: flex;
   height: 12px;
+  flex: 1;
+  min-width: 0;
   border-radius: var(--r-pill);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--track);
   gap: 2px;
 }
 
@@ -21,6 +50,18 @@
   display: block;
   height: 100%;
   min-width: 3px;
+}
+
+/* The same slices, quieter. The cost bar is the reference and this one
+   is read against it; two bars at equal strength compete instead. */
+.segToday {
+  opacity: 0.62;
+  /* Opacity means "quieter" on both canvases, but it does not mean the
+     same amount of quieter. Fading toward black keeps a colour's hue and
+     only drops its brightness; fading toward cream drains the chroma
+     too, and at .62 the second bar arrived as five pastels with no
+     relationship to the five saturated segments above it. Lifted here
+     until the pair reads as one colour said twice. */
 }
 
 .legend {
@@ -34,7 +75,7 @@
 
 .item {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
   align-items: baseline;
   gap: 12px;
   padding: 11px 0;
@@ -60,7 +101,7 @@
 .pct {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--accent-hot);
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
 
@@ -73,16 +114,32 @@
   text-align: right;
 }
 
+/* What this slice has done with the money in it. Quiet, because the
+   allocation is the subject of this card and the multiple is the
+   consequence. */
+.multiple {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  color: var(--bad);
+  font-variant-numeric: tabular-nums;
+  min-width: 52px;
+  text-align: right;
+}
+.multiple[data-up='true'] {
+  color: var(--good);
+}
+
 /* Sits under the label rather than in its own column: it is context,
    not a figure to compare across rows. */
 .count {
   grid-column: 2;
   grid-row: 2;
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--as-text-faint);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
   margin-top: -6px;
 }
 
@@ -90,4 +147,8 @@
   font-size: 13px;
   line-height: 1.6;
   color: var(--as-text-muted);
+}
+
+:global(html[data-theme='light']) .segToday {
+  opacity: 0.8;
 }

@@ -29,6 +29,12 @@ interface Tally {
   dollars: number;
 }
 
+/** What one member has said about one company: their number and their order. */
+interface Mine {
+  amount: number;
+  rank: number;
+}
+
 async function tallies(): Promise<Map<string, Tally>> {
   const rows = await prisma.radarInterest.groupBy({
     by: ['companySlug'],
@@ -47,13 +53,16 @@ async function tallies(): Promise<Map<string, Tally>> {
 function merge(
   company: RadarCompany,
   tally: Tally | undefined,
-  yourAmount: number | null,
+  mine: Mine | undefined,
 ): RadarCompanyView {
   return {
     ...company,
     interestInvestors: company.baselineInvestors + (tally?.investors ?? 0),
     interestDollars: company.baselineDollars + (tally?.dollars ?? 0),
-    yourAmount,
+    yourAmount: mine?.amount ?? null,
+    // Zero is the stored "never reordered" value. It reaches the view as
+    // null so the UI has one thing to test rather than two.
+    yourRank: mine && mine.rank > 0 ? mine.rank : null,
   };
 }
 
@@ -64,15 +73,53 @@ export async function getRadarBoard(userId: string): Promise<RadarCompanyView[]>
     tallies(),
     prisma.radarInterest.findMany({
       where: { userId },
-      select: { companySlug: true, amount: true },
+      select: { companySlug: true, amount: true, rank: true },
     }),
   ]);
 
-  const yours = new Map(mine.map((row) => [row.companySlug, row.amount]));
+  const yours = new Map(
+    mine.map((row) => [row.companySlug, { amount: row.amount, rank: row.rank }]),
+  );
 
   return companies.map((company) =>
-    merge(company, counts.get(company.slug), yours.get(company.slug) ?? null),
+    merge(company, counts.get(company.slug), yours.get(company.slug)),
   );
+}
+
+/**
+ * Store the member's own ordering for Your Radar.
+ *
+ * Ranks are rewritten from the submitted order rather than patched, so
+ * the stored sequence is always 1..n with no gaps and no way for two
+ * names to tie. Slugs the member has not indicated on are ignored: a
+ * rank is a property of their indication, so there is nothing to rank
+ * without one.
+ *
+ * Returns the refreshed board so the client can settle on server truth
+ * without a second round trip.
+ */
+export async function reorderRadar(
+  userId: string,
+  order: string[],
+): Promise<RadarCompanyView[]> {
+  const held = await prisma.radarInterest.findMany({
+    where: { userId },
+    select: { companySlug: true },
+  });
+  const ranked = new Set(held.map((row) => row.companySlug));
+
+  const updates = order
+    .filter((slug) => ranked.has(slug))
+    .map((slug, index) =>
+      prisma.radarInterest.update({
+        where: { userId_companySlug: { userId, companySlug: slug } },
+        data: { rank: index + 1 },
+      }),
+    );
+
+  if (updates.length > 0) await prisma.$transaction(updates);
+
+  return getRadarBoard(userId);
 }
 
 /**

@@ -140,7 +140,7 @@ describe('money is integer dollars', () => {
   });
 
   test('a subscription not divisible by 20 yields a fractional fee, and the display still adds up', () => {
-    // Documented behaviour, deliberately not asserted as integral.
+    // Documented behavior, deliberately not asserted as integral.
     // Subscriptions are validated as integers with a floor, not a step, so
     // $10,001 is a legal amount and 5% of it is $500.05. That figure is
     // derived and never persisted, and because the subscription itself is

@@ -20,12 +20,15 @@ import assert from 'node:assert/strict';
 import { DAY_MS } from '@/lib/domain';
 import {
   EMPTY,
+  MINUS,
+  compact,
   dateStr,
   daysLeft,
   initials,
   maskTin,
   money,
   nameFromEmail,
+  percent,
 } from '@/lib/format';
 
 describe('the EMPTY placeholder', () => {
@@ -211,5 +214,88 @@ describe('nameFromEmail', () => {
 
   test('runs of separators collapse to one space', () => {
     assert.equal(nameFromEmail('jane..doe@example.com'), 'Jane Doe');
+  });
+});
+
+describe('nameFromEmail', () => {
+  test('reads a name out of a local part', () => {
+    assert.equal(nameFromEmail('hannah.smith@altspot.demo'), 'Hannah Smith');
+    assert.equal(nameFromEmail('james_okonkwo@x.com'), 'James Okonkwo');
+  });
+
+  /* Sub-addressing is how people route mail to themselves. Greeting
+     someone as "Demo+New" is worse than any name we could guess. */
+  test('a plus-address tag is not part of the name', () => {
+    assert.equal(nameFromEmail('alex.rivera+new@altspot.demo'), 'Alex Rivera');
+    assert.equal(nameFromEmail('tyler+demo+two@x.com'), 'Tyler');
+  });
+
+  test('a local part that is only a tag still greets someone', () => {
+    assert.equal(nameFromEmail('+new@altspot.demo'), 'Investor');
+    assert.equal(nameFromEmail(''), 'Investor');
+  });
+});
+
+/* Five components used to carry their own compactor, and one of them
+   abbreviated at $1,000 while the rest waited for $10,000, so the chart
+   axis and the table beside it disagreed. There is one now. */
+describe('compact', () => {
+  test('stays whole below ten thousand', () => {
+    assert.equal(compact(0), '$0');
+    assert.equal(compact(9_640), '$9,640');
+    assert.equal(compact(4_200), '$4,200');
+    assert.equal(compact(9_999), '$9,999');
+  });
+
+  test('rounds to the thousand from ten thousand', () => {
+    assert.equal(compact(10_000), '$10K');
+    assert.equal(compact(58_400), '$58K');
+    assert.equal(compact(640_000), '$640K');
+    assert.equal(compact(999_499), '$999K');
+  });
+
+  test('one decimal for millions and billions until it stops mattering', () => {
+    assert.equal(compact(1_000_000), '$1M');
+    assert.equal(compact(1_250_000), '$1.3M');
+    assert.equal(compact(2_500_000), '$2.5M');
+    assert.equal(compact(120_400_000), '$120M');
+    assert.equal(compact(1_400_000_000), '$1.4B');
+    assert.equal(compact(300_000_000_000), '$300B');
+  });
+
+  test('a loss keeps its sign as a typographic minus', () => {
+    assert.equal(compact(-42_300), `${MINUS}$42K`);
+    assert.equal(compact(-500), `${MINUS}$500`);
+    assert.notEqual(MINUS, '-');
+  });
+
+  test('a missing value is the placeholder', () => {
+    assert.equal(compact(null), EMPTY);
+    assert.equal(compact(Number.NaN), EMPTY);
+  });
+});
+
+describe('percent', () => {
+  test('takes a ratio and one decimal by default', () => {
+    assert.equal(percent(0.296), '29.6%');
+    assert.equal(percent(1), '100.0%');
+    assert.equal(percent(0.296, 0), '30%');
+    assert.equal(percent(0.12345, 2), '12.35%');
+  });
+
+  test('signed prefixes a plus on a gain and never on zero', () => {
+    assert.equal(percent(0.296, 1, { signed: true }), '+29.6%');
+    assert.equal(percent(0, 1, { signed: true }), '0.0%');
+    assert.equal(percent(-0.0004, 1, { signed: true }), '0.0%');
+  });
+
+  test('a loss carries the typographic minus, hyphen never', () => {
+    assert.equal(percent(-0.113), `${MINUS}11.3%`);
+    assert.ok(!percent(-0.113).includes('-'));
+  });
+
+  test('a missing or infinite value is the placeholder', () => {
+    assert.equal(percent(null), EMPTY);
+    assert.equal(percent(Number.POSITIVE_INFINITY), EMPTY);
   });
 });

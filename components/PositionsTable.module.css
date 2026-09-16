@@ -1,0 +1,406 @@
+/* Your positions.
+
+   The table is the one place on the dashboard where a reader compares
+   numbers to each other rather than reading one, so everything here
+   serves the column: tabular figures, right alignment, one lead figure
+   per view carrying the emphasis, and every other number quiet enough
+   to let it lead. */
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+/* ---------- what the table shows ---------- */
+
+.views {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--hair-neutral);
+  border-radius: var(--r-pill);
+  background: var(--glass);
+}
+
+.view {
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--r-pill);
+  padding: 8px 15px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.view:hover {
+  color: var(--as-text);
+}
+.view:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+/* Champagne rather than the CTA gradient. This selects a view; it does
+   not commit anything, and the gradient is spoken for. */
+.view[aria-pressed='true'] {
+  color: var(--fg-on-gold);
+  background: var(--as-champagne);
+}
+
+/* ---------- sort ---------- */
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--as-text-faint);
+}
+
+.sortSelect {
+  appearance: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  padding: 6px 2px;
+}
+.sortSelect:hover {
+  color: var(--as-text);
+}
+.sortSelect:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+.sortSelect option {
+  background: #17130e;
+  color: var(--as-text);
+  letter-spacing: normal;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* ---------- the table ---------- */
+
+/* Narrow screens scroll the table rather than crushing it. The view
+   switcher is the real answer to a phone: three columns at a time. */
+.scroll {
+  overflow-x: auto;
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+
+.table th {
+  padding: 16px 14px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-regular);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 17px 14px;
+  border-bottom: 1px solid var(--hair-neutral);
+  font-size: var(--fs-figure);
+  color: var(--as-text-body);
+  vertical-align: middle;
+}
+
+.table th:first-child,
+.table td:first-child {
+  padding-left: 14px;
+}
+
+.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* One figure per view carries the emphasis. Everything else in the row
+   is context for it. */
+.lead {
+  color: var(--as-text);
+  font-size: 14px;
+}
+
+.empty {
+  color: var(--as-text-faint);
+}
+
+.up {
+  color: var(--good);
+}
+.down {
+  color: var(--bad);
+}
+
+/* A row with something still to happen carries a coloured edge, so the
+   table can be scanned for "what needs me" without reading the chips.
+   The edge follows the position, not the fold: putting the timeline
+   away does not make the deadline go away.
+
+   It sits in its own gutter rather than hard against the mark. At 4px
+   of cell padding the rule and the company logo were touching, which
+   read as a rendering fault rather than as a marker. */
+.row td:first-child {
+  box-shadow: inset 2px 0 0 var(--row-tone, transparent);
+  padding-left: 14px;
+}
+.row[data-attention='true'] {
+  --row-tone: var(--as-ember);
+}
+
+/* Only while the timeline is showing does the row give up its rule, so
+   the two read as one block. Folded, it is an ordinary row again. */
+.row[data-open='true'] > td {
+  border-bottom: none;
+  padding-bottom: 8px;
+}
+
+/* ---------- the fold ---------- */
+
+.fold {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text);
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.fold:hover {
+  color: var(--as-text);
+  background: var(--surface-2);
+}
+.fold:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+
+.foldChev {
+  flex: none;
+  color: var(--as-text-muted);
+  transition: transform var(--dur-1) var(--ease-out);
+}
+.fold[aria-expanded='false'] .foldChev {
+  transform: rotate(-90deg);
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.whoText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.name {
+  color: var(--as-text);
+  font-size: var(--fs-figure);
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+.vehicle {
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+.action {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------- the cost and gain bar ---------- */
+
+.shapeHead,
+.shape {
+  width: 34%;
+  min-width: 150px;
+}
+
+/* Full width is the largest position on the table, so the rows compare
+   to each other. The neutral segment is invested capital; every
+   coloured pixel past it is the difference, gold for gain and ember for
+   shortfall.
+ *
+ * ONE PAINTED LAYER, NOT TWO STACKED ONES.
+ * This was a gold parent with a grey child laid over its left end, and
+ * the gold showed through the grey along the rounded cap. Nothing was
+ * transparent: both shapes carried the same pill radius, so each drew
+ * its own antialiased curve, and on the pixels that curve passes
+ * through the child covers only a fraction of the parent. The rest is
+ * the gold underneath. `overflow: hidden` on the parent added a third
+ * antialiased edge in the same place and made it worse.
+ *
+ * A hard-stop gradient has no layer underneath to show through. The
+ * boundary between the two colours is a straight vertical line, which
+ * antialiases cleanly, and the pill cap is now rounded exactly once.
+ * The 2px divider that was an inset shadow is simply the middle stop. */
+.bar {
+  display: block;
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    var(--as-bar-base) 0 calc(var(--cost, 100%) - 2px),
+    var(--as-bar-divide) calc(var(--cost, 100%) - 2px) var(--cost, 100%),
+    var(--as-gold) var(--cost, 100%) 100%
+  );
+  transition: width var(--dur-2) var(--ease-out);
+}
+
+/* Marked below cost. The bar stops at the mark and the shortfall is
+   the part that is missing, not a second bar pointing the other way. */
+.bar[data-down='true'] {
+  background: linear-gradient(
+    90deg,
+    var(--as-bar-base) 0 calc(var(--cost, 100%) - 2px),
+    var(--as-bar-divide) calc(var(--cost, 100%) - 2px) var(--cost, 100%),
+    var(--as-ember) var(--cost, 100%) 100%
+  );
+}
+
+.barEmpty {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+/* ---------- status chips ---------- */
+
+.action_ {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent-soft);
+  border-color: var(--hair-ember);
+  background: rgba(229, 102, 26, 0.08);
+}
+.progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent-quiet);
+  border-color: var(--hair-champagne);
+  background: rgba(199, 154, 75, 0.07);
+}
+.active {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--good);
+  border-color: var(--good-line);
+  background: var(--good-fill);
+}
+
+/* ---------- the timeline row ---------- */
+
+.timelineRow > td {
+  padding: 0 12px 16px 14px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+@media (max-width: 640px) {
+  .controls {
+    gap: 10px;
+  }
+  .views {
+    flex: 1 1 auto;
+    justify-content: space-between;
+  }
+  .view {
+    padding: 8px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
+}
+
+/* ---------- the compact table's way out ---------- */
+
+/* The dashboard table carries four columns and no controls. The
+   footer is where the rest of the vocabulary lives, said once. */
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 14px 2px;
+}
+.more {
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.more:hover {
+  color: var(--accent-hot);
+}

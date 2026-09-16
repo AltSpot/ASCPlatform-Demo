@@ -25,7 +25,7 @@ export default function Section({
   return (
     <section className={s.section} id={id} data-nav-label={id ? eyebrow : undefined}>
       <div className={s.sectionHead}>
-        <div className={s.eyebrow}>{eyebrow}</div>
+        <div className={`eyebrow signal ${s.eyebrow}`}>{eyebrow}</div>
         {title && <h2 className={s.sectionTitle}>{title}</h2>}
         {lede && <p className={s.sectionLede}>{lede}</p>}
       </div>

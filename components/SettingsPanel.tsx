@@ -32,11 +32,6 @@ export default function SettingsPanel({ email }: { email: string }) {
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  async function signOut() {
-    await api.logout().catch(() => {});
-    router.push('/');
-    router.refresh();
-  }
 
   async function resetDemo() {
     if (busy) return;
@@ -119,13 +114,6 @@ export default function SettingsPanel({ email }: { email: string }) {
         </div>
 
         <div style={{ display: 'grid', gap: 18 }}>
-          <div className="card">
-            <h3 style={{ marginBottom: 14 }}>Session</h3>
-            <button className="btn btn-quiet" onClick={signOut}>
-              Sign out
-            </button>
-          </div>
-
           <div className="card" style={{ borderColor: 'rgba(184,92,92,.35)' }}>
             <h3 style={{ marginBottom: 4 }}>Demo controls</h3>
             <p className="small" style={{ marginBottom: 14 }}>

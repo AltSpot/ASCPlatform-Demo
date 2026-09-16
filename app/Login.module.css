@@ -1,0 +1,246 @@
+/* The front door.
+ *
+ * This is thealtspot.com's hero with the card set down in the middle of
+ * it. The site opens on a small wordmark, "Investing made easy" in
+ * Borna with the last word running gold to ember and the orb as its
+ * period, and four hairline rings converging on the centre of the
+ * frame. Somebody who applied on the site and then comes here to sign
+ * in should recognise the room. Every value below is the site's own.
+ *
+ * The proportion is the site's too, and it is worth stating because it
+ * is the opposite of what a login page usually does: the mark is small
+ * and the line is large. The site never leads with the logo, so neither
+ * does the door. The line is scaled down from the site's 104px because
+ * here it shares the frame with a form, and a hero that shouts over the
+ * thing you came to use is not the hero working.
+ */
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 32px 24px 24px;
+}
+
+/* ---------- the site's hero furniture ---------- */
+
+/* One centre for all of it, a little above the middle of the frame so
+   the rings sit around the mark and the line rather than around the
+   card's feet. Everything inside is centred on this point by the same
+   translate, which is what keeps the rings concentric at any width. */
+.aura {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.aura > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  translate: -50% -50%;
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
+
+/* Signal orange, not gold. The site's centre bloom is #F39807 and the
+   gold belongs to the rings around it. A gold bloom under gold rings
+   was the version of this page before I looked at the site, and it read
+   as one undifferentiated warm patch. */
+.bloom {
+  width: min(1283px, 132vw);
+  background: radial-gradient(
+    circle,
+    rgba(243, 152, 7, 0.14),
+    rgba(229, 102, 26, 0.05) 34%,
+    transparent 62%
+  );
+}
+
+.ring {
+  border: 1px solid transparent;
+}
+
+/* Outermost is the brightest and they fade inward, which is the
+   opposite of the obvious choice and is what stops the rings competing
+   with the card sitting at the centre of them. */
+.ring1 {
+  width: min(958px, 98vw);
+  border-color: rgba(199, 154, 75, 0.16);
+}
+.ring2 {
+  width: min(785px, 82vw);
+  border-color: rgba(199, 154, 75, 0.11);
+}
+.ring3 {
+  width: min(594px, 64vw);
+  border-color: rgba(243, 152, 7, 0.09);
+}
+.ring4 {
+  width: min(402px, 46vw);
+  border-color: rgba(199, 154, 75, 0.07);
+}
+
+/* The lit arc on the outer ring. A conic gradient masked down to the
+   ring's own 2px edge, so it reads as one ring catching the light
+   rather than as a second shape. */
+.arc {
+  width: min(958px, 98vw);
+  background: conic-gradient(
+    from 210deg,
+    transparent 0deg,
+    transparent 62%,
+    rgba(243, 152, 7, 0.5) 74%,
+    rgba(229, 102, 26, 0.25) 82%,
+    transparent 90%
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 2px)
+  );
+}
+
+.body {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 38px;
+  width: 100%;
+  padding: 24px 0;
+}
+
+/* ---------- the mark and the line ---------- */
+
+.masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  text-align: center;
+}
+
+/* Small on purpose. See the note at the top of the file. */
+.mark {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.line {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: clamp(34px, 4.4vw, 54px);
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+  color: var(--as-text);
+  text-wrap: balance;
+}
+
+/* The site's own gradient on the last word, clipped to the glyphs.
+   `--as-em-gradient` was already in globals.css and is this exact ramp,
+   champagne to amber to ember at 100deg: the design system shipped the
+   token for the headline em and nothing had used it yet. */
+.hot {
+  font-style: normal;
+  background: var(--as-em-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* The period is the orb, which is the one piece of punctuation this
+   brand owns. Sized and offset off the line's own font-size so it
+   tracks the clamp. */
+.period {
+  margin-left: 0.08em;
+  vertical-align: baseline;
+}
+
+/* ---------- the way in ---------- */
+
+.card {
+  width: 100%;
+  max-width: 428px;
+  padding: 28px 30px 26px;
+  border: 1px solid var(--card-edge);
+  border-radius: var(--r-2xl);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift), var(--shadow-lg);
+}
+
+/* ---------- footer ---------- */
+
+.foot {
+  position: relative;
+  z-index: 2;
+  max-width: 60ch;
+  margin: 0 auto;
+  padding-top: 18px;
+  text-align: center;
+  font-size: var(--fs-label);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
+@media (max-width: 620px) {
+  .page {
+    padding: 24px 18px 18px;
+  }
+  .body {
+    gap: 30px;
+    justify-content: flex-start;
+    padding-top: 40px;
+  }
+  .card {
+    padding: 24px 20px 22px;
+  }
+  .mark {
+    height: 20px;
+  }
+  /* The two outer rings run off a phone anyway, and the two inner ones
+     are enough to say the same thing. */
+  .ring1,
+  .arc {
+    display: none;
+  }
+}
+
+/* The appearance switch, bottom right and out of the way. The rail
+   carries it everywhere else, and the rail is behind auth: this is the
+   only place a member can choose Daylight before signing in, which is
+   the order anyone being walked through the product needs. Narrow
+   enough that it reads as a preference, not as a second call to
+   action beside the one that matters. */
+.appearance {
+  position: fixed;
+  right: 22px;
+  bottom: 20px;
+  z-index: 3;
+  width: 210px;
+}
+
+@media (max-width: 720px) {
+  /* Below this the card is the whole screen and a fixed control over it
+     is in the way. It goes back into the flow, under the footer. */
+  .appearance {
+    position: static;
+    width: 210px;
+    margin: 4px auto 22px;
+  }
+}

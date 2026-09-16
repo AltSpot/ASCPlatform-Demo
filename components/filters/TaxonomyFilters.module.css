@@ -1,0 +1,269 @@
+/* ==================================================================
+   Filtering by taxonomy: asset class and industry.
+
+   Shared. The Radar board and the deal shelf ask the same question of
+   the same two axes, and a member who has learned the control on one
+   should not have to learn it again on the other. It lived in
+   components/radar until the shelf needed it, which is the moment a
+   thing stops belonging to the feature that happened to need it first.
+
+   ================================================================== */
+
+
+/* The controls sit clear of whatever explains them above, and clear of
+   the board below. Nine pixels between the two rows was fine; the rows
+   themselves were pressed against the copy and the cards on either
+   side. */
+/* One line. Class chips, then the industry menu, then Clear when it
+   applies. This was two rows with a count under them, which on a shelf
+   of four deals was more chrome than shelf. */
+.filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 26px;
+}
+
+.filtersInline {
+  margin-bottom: 0;
+  gap: 6px 10px;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  width: 92px;
+  flex: none;
+}
+
+/* Quiet at rest, champagne when chosen. The same construction as the
+   segmented controls elsewhere, so a member who has used one has used
+   them all. No category colour: colour on a filter chip says "this one
+   is special" and nothing on a row of options is special until it is
+   chosen. The category tints keep their one real job, the exposure
+   legend on Portfolio, where a colour means a slice. */
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  border: 1px solid transparent;
+  background: var(--surface-1);
+  border-radius: var(--r-pill);
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.filterChip:hover {
+  color: var(--as-text);
+  border-color: var(--hair-strong);
+}
+.filterChip:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.filterOn {
+  color: var(--fg-on-gold);
+  background: var(--as-champagne);
+  border-color: transparent;
+}
+
+.filterFoot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ---------- the industry menu ----------
+
+   Drawn rather than delegated. A native select cannot be made to match
+   a dark institutional page: the closed state styles, the open list
+   does not. Both halves are here, and the open list is a panel, not a
+   popup: hairline rows, mono labels, a count on the right, a check on
+   the choice. */
+
+.menu {
+  position: relative;
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  color: var(--as-text-body);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.menuButton:hover {
+  border-color: var(--hair-gold-active);
+  background: var(--surface-2);
+}
+.menuButton:focus-visible {
+  outline: 2px solid var(--accent-signal);
+  outline-offset: 2px;
+}
+/* Once a filter is doing work, its control says so on its own edge. */
+.menuButton[data-chosen='true'] {
+  border-color: var(--hair-champagne);
+}
+
+
+.menuValue {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text);
+  white-space: nowrap;
+}
+
+.menuChev {
+  flex: none;
+  color: var(--as-text-muted);
+  transition: transform var(--dur-1) var(--ease-out);
+}
+.menuButton[aria-expanded='true'] .menuChev {
+  transform: rotate(180deg);
+}
+
+.menuList {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 264px;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--hair-champagne);
+  border-radius: var(--r-md);
+  /* Opaque, not translucent. A filter list that lets the board show
+     through is a decoration; this one is being read. The toast surface
+     is the one opaque panel token, and it follows the theme. */
+  background: var(--surface-toast);
+  box-shadow:
+    0 1px 0 var(--edge-top) inset,
+    var(--shadow-lg);
+  animation: menuIn 0.16s var(--ease-out);
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.menuRow {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  color: var(--as-text-muted);
+  transition:
+    background var(--dur-micro) ease,
+    color var(--dur-micro) ease;
+}
+.menuRow:hover,
+.menuRow:focus-visible {
+  outline: none;
+  background: var(--surface-2);
+  color: var(--as-text);
+}
+.menuRow[data-chosen='true'] {
+  color: var(--as-text);
+}
+
+.menuCheck {
+  display: grid;
+  place-items: center;
+  color: var(--accent-quiet);
+}
+
+.menuName {
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+/* Counts right-aligned in mono, so the column reads as a column even
+   though the names beside it are proportional. */
+.menuCount {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.1em;
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+.filterClear {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  padding: 0;
+}
+.filterClear:hover {
+  color: var(--accent-hot);
+}
+
+

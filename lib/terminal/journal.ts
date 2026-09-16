@@ -1,32 +1,38 @@
 /**
- * Terminal — the AltSpot Journal.
+ * Back-catalogue importer for the AltSpot Journal.
  *
- * Real content, not a fixture. These are the published posts of the
- * AltSpot newsletter, read from its public web feed on the server and
- * cached, then linked out to. Nothing is republished in full: the
- * portal shows the headline, the standfirst and the art, and the reader
- * goes to the publication to read it.
+ * NOT WIRED TO ANY PAGE, ON PURPOSE. Terminal content is hosted in the
+ * portal and read at /terminal/<slug>: see lib/terminal/library.ts.
+ * Nothing in the product links a member out to the publication.
  *
- * CONFIG-DRIVEN ON PURPOSE. The publication is called AltSpot Terminal
- * today and will be renamed, which moves its public URL. Both the feed
- * and the site root are read from the environment so the rename is a
- * deploy variable, never a code change:
+ * This module exists because the newsletter has a back catalogue that
+ * predates the portal, and that archive has to come in once. It reads
+ * the publication's own public feed and returns the metadata of each
+ * published post, which is the input to the one-time import that
+ * creates a LibraryItem per issue. It never fetches an article body:
+ * the bodies are migrated deliberately, with an editor, because a
+ * newsletter issue and a portal piece are not the same document.
+ *
+ * Run it, import the archive, then delete this file and the two
+ * environment variables. It has no runtime role after launch.
+ *
+ * CONFIG-DRIVEN. The publication is called AltSpot Terminal today and
+ * will be renamed, which moves its public URL. Both the feed and the
+ * site root are read from the environment so the rename is a deploy
+ * variable, never a code change:
  *
  *   ASC_JOURNAL_FEED_URL   the RSS/Atom feed
  *   ASC_JOURNAL_SITE_URL   the publication root, used by the fallback
  *
  * TWO PATHS, ONE CONTRACT:
  *  1. RSS. The preferred path. beehiiv generates a feed URL once RSS is
- *     switched on for the publication (Settings, Publication, RSS). It
- *     is not switched on yet, which is why path 2 exists.
+ *     switched on for the publication (Settings, Publication, RSS).
  *  2. Public sitemap plus per-post Open Graph tags. Same public site, no
  *     API key, no scraping of article bodies: only the metadata a post
- *     already publishes for social cards. Delete this path the day the
- *     RSS feed URL lands in the environment.
+ *     already publishes for social cards.
  *
  * Both paths are best-effort. Any failure at any stage resolves to an
- * empty array so the section renders its quiet empty state and the page
- * still paints. This function never throws.
+ * empty array. This function never throws.
  */
 import 'server-only';
 

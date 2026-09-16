@@ -45,7 +45,7 @@ export async function getDocument(
  * subscriptionId so a caller cannot annotate somebody else's paperwork.
  *
  * Silently matches nothing when no agreement was filed, which is the
- * existing behaviour: a missing document must not fail the funding call.
+ * existing behavior: a missing document must not fail the funding call.
  */
 export async function noteSubscriptionAgreement(
   userId: string,

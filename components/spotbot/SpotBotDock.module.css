@@ -44,7 +44,7 @@
 .launcher:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-cta-hover);
-  border-color: var(--as-gold);
+  border-color: var(--accent);
 }
 .launcher:active {
   transform: translateY(0);
@@ -57,9 +57,9 @@
 }
 .launcherLabel {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--fs-label);
   font-weight: var(--w-medium);
-  letter-spacing: 0.2em;
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--as-text);
 }
@@ -75,8 +75,8 @@
   flex-direction: column;
   border: 1px solid var(--hair-gold-active);
   border-radius: var(--r-2xl);
-  background: linear-gradient(180deg, rgba(22, 17, 10, 0.97), rgba(10, 8, 6, 0.99));
-  backdrop-filter: blur(20px) saturate(1.5);
+  background: var(--dock-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   animation: dockIn var(--dur-2) var(--ease-entrance);
@@ -152,10 +152,11 @@
 .headPage {
   display: block;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--as-text-faint);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
   margin-top: 3px;
 }
 
@@ -191,27 +192,6 @@
 
 /* ---------- the page brief ---------- */
 
-.brief {
-  position: relative;
-  padding: 13px 16px 14px;
-  border-bottom: 1px solid var(--hair-neutral);
-  background: rgba(255, 255, 255, 0.02);
-  flex: none;
-}
-.briefLabel {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent-quiet);
-  margin-bottom: 7px;
-}
-.briefText {
-  font-size: 12.8px;
-  line-height: 1.62;
-  color: var(--as-text-muted);
-}
 
 /* ---------- the log ---------- */
 
@@ -230,20 +210,14 @@
   flex-direction: column;
   gap: 14px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+  scrollbar-color: var(--hair-strong) transparent;
 }
 .log::-webkit-scrollbar {
   width: 8px;
 }
 .log::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--surface-3);
   border-radius: var(--r-pill);
-}
-
-.greeting {
-  font-size: 13.2px;
-  line-height: 1.68;
-  color: var(--as-text-body);
 }
 
 /* Back to the bottom, when the member has scrolled up to reread. */
@@ -253,10 +227,11 @@
   bottom: 12px;
   transform: translateX(-50%);
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--as-ink);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--fg-on-gold);
   background: var(--as-cta-gradient);
   border: none;
   border-radius: var(--r-pill);
@@ -315,7 +290,7 @@
   max-width: 88%;
   padding: 12px 14px 11px;
   border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--r-xs);
-  border: 1px solid var(--hair-neutral);
+  border: 1px solid var(--hair-soft);
   background: var(--fill-card);
 }
 
@@ -340,10 +315,11 @@
   padding-right: 32px;
   border-top: 1px solid var(--hair-neutral);
   font-family: var(--font-mono);
-  font-size: 8.8px;
-  letter-spacing: 0.13em;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: var(--as-text-faint);
+  color: var(--as-text-muted);
   line-height: 1.5;
 }
 
@@ -387,7 +363,7 @@
   gap: 6px;
   padding: 12px 14px;
   border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--r-xs);
-  border: 1px solid var(--hair-neutral);
+  border: 1px solid var(--hair-soft);
   background: var(--fill-card);
 }
 
@@ -420,10 +396,11 @@
 .thinkWord {
   margin-left: 4px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--as-text-faint);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
 }
 
 /* ---------- suggestions ---------- */
@@ -440,20 +417,21 @@
 }
 .suggestLabel {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
   color: var(--accent-quiet);
   margin-bottom: 2px;
 }
 .suggest {
   text-align: left;
-  border: 1px solid var(--hair-neutral);
+  border: 1px solid transparent;
   border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-1);
   color: var(--as-text-body);
   padding: 9px 15px;
-  font-size: 12.6px;
+  font-size: var(--fs-meta);
   font-family: var(--font-sans);
   cursor: pointer;
   transition:
@@ -467,7 +445,8 @@
   background: var(--fill-gold-tint);
 }
 .suggest:disabled {
-  opacity: 0.45;
+  color: var(--as-text-muted);
+  border-color: var(--hair-neutral);
   cursor: not-allowed;
 }
 
@@ -500,7 +479,7 @@
 .input::placeholder {
   color: var(--as-text-faint);
 }
-/* Signal is the focus colour. Functional, not brand. */
+/* Signal is the focus color. Functional, not brand. */
 .input:focus {
   outline: none;
   border-color: var(--accent-signal);
@@ -514,10 +493,10 @@
   background: var(--as-cta-gradient);
   color: var(--fg-on-gold);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: var(--fs-label);
   font-weight: var(--w-semi);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: var(--ls-text);
+  text-transform: none;
   padding: 12px 18px;
   cursor: pointer;
   box-shadow: var(--shadow-cta);
@@ -532,7 +511,8 @@
   color: var(--fg-on-gold);
 }
 .send:disabled {
-  opacity: 0.4;
+  background: var(--panel-2);
+  color: var(--as-text-muted);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -543,10 +523,11 @@
   position: relative;
   padding: 0 16px 13px;
   font-family: var(--font-mono);
-  font-size: 8.8px;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--as-text-faint);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
   line-height: 1.7;
   flex: none;
 }
@@ -557,9 +538,9 @@
   padding: 1px 5px;
   border: 1px solid var(--hair-neutral);
   border-radius: var(--r-xs);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-1);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: var(--fs-label);
   color: var(--as-text-muted);
 }
 

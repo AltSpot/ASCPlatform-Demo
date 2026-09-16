@@ -1,0 +1,197 @@
+/* The ledger. Read down a column, not across a row: tabular figures,
+   right alignment, one lead figure carrying the emphasis. */
+
+.scroll {
+  overflow-x: auto;
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.table th {
+  padding: 4px 12px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+.table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--hair-neutral);
+  font-size: var(--fs-figure);
+  color: var(--as-text-body);
+  vertical-align: middle;
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table th:first-child,
+.table td:first-child {
+  padding-left: 4px;
+}
+
+.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.lead {
+  font-size: 14px;
+}
+
+.empty {
+  color: var(--as-text-faint);
+}
+
+.up {
+  color: var(--good);
+}
+.down {
+  color: var(--bad);
+}
+
+.row {
+  transition: background var(--dur-micro) ease;
+}
+.row:hover {
+  background: var(--surface-1);
+}
+
+/* A realized position stays on the ledger. Quieter, because there is
+   nothing to do about it, but present, because it is the only evidence
+   of what the process produced. */
+.row[data-exited='true'] td {
+  color: var(--as-text-muted);
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  text-decoration: none;
+}
+.who:hover {
+  text-decoration: none;
+}
+.who:hover .name {
+  color: var(--accent-hot);
+}
+
+.whoText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.name {
+  color: var(--as-text);
+  font-size: var(--fs-figure);
+  transition: color var(--dur-micro) ease;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+/* ---------- cost against total value ---------- */
+
+.shapeHead,
+.shape {
+  width: 26%;
+  min-width: 150px;
+}
+
+/* The full bar is total value, on one scale across the table. The
+   neutral segment inside it is invested capital, so every coloured
+   pixel is the difference: gold is gain, ember is shortfall. This was
+   two golds one step apart in lightness, which at 8px on a dark card
+   could not be told apart at all. */
+/* One painted layer. This was a gold parent under a grey child, and the
+   gold showed through the grey along the rounded cap: both shapes drew
+   the same antialiased curve, and the child covers only part of each
+   pixel that curve passes through. A hard-stop gradient has nothing
+   underneath to show through, and the 2px boundary that colour alone
+   cannot carry at this height is the middle stop. Same fix, and the
+   same reasoning, as components/PositionsTable.module.css. */
+.bar {
+  display: block;
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    var(--as-bar-base) 0 calc(var(--cost, 100%) - 2px),
+    var(--as-bar-divide) calc(var(--cost, 100%) - 2px) var(--cost, 100%),
+    var(--as-gold) var(--cost, 100%) 100%
+  );
+}
+
+/* Marked below what went in. The bar's length is then the cost, and the
+   tail past the mark is the shortfall rather than a gain. */
+.bar[data-down='true'] {
+  background: linear-gradient(
+    90deg,
+    var(--as-bar-base) 0 calc(var(--cost, 100%) - 2px),
+    var(--as-bar-divide) calc(var(--cost, 100%) - 2px) var(--cost, 100%),
+    var(--as-ember) var(--cost, 100%) 100%
+  );
+}
+
+/* ---------- what the bar means ---------- */
+
+.key {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair-neutral);
+}
+
+.keyItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+}
+
+.keySwatch {
+  width: 14px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+}
+.keyBase {
+  background: var(--as-bar-base);
+}
+.keyGain {
+  background: var(--as-gold);
+}
+.keyLoss {
+  background: var(--as-ember);
+}

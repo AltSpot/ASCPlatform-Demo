@@ -70,9 +70,9 @@ export default function PaymentFlow({
           You&rsquo;re in, pending countersign.
         </h1>
         <p className="sub" style={{ margin: '0 auto 10px' }}>
-          {money(fees.allIn)} is on its way to the {deal.name} account. AltSpot
-          countersigns at close. You&rsquo;ll get confirmation, and the position will
-          appear in your portfolio.
+          {money(fees.allIn)} is on its way to the {deal.name}{' '}
+          account. AltSpot countersigns at close. You&rsquo;ll get confirmation,
+          and the position will appear in your portfolio.
         </p>
         <p className="small" style={{ marginBottom: 34 }}>
           Signed documents live in your <Link href="/docs">Docs</Link>. Deal updates
@@ -213,11 +213,16 @@ export default function PaymentFlow({
         </div>
 
         <div className="card">
-          <h3 style={{ marginBottom: 12 }}>Transfer summary</h3>
-          <div className="fee-row">
-            <span className="l">{deal.name} subscription</span>
-            <span className="r">{money(subscription.amount)}</span>
-          </div>
+          {/* The deal name belongs in the heading, not in a row above
+              the fee table. As its own line it printed the subscription
+              amount immediately above the fee table's "Investment" row,
+              which prints the same number: one figure, twice, under two
+              different labels, in the summary a member checks before
+              moving money. */}
+          <h3 style={{ marginBottom: 4 }}>Transfer summary</h3>
+          <p className="small" style={{ marginBottom: 12 }}>
+            {deal.name} · {deal.entity}
+          </p>
           <FeeTable fees={deal.fees} amount={subscription.amount} />
           <div className="hr" />
           <p className="tiny">

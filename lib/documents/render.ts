@@ -20,6 +20,7 @@ import 'server-only';
 
 import { createHash } from 'node:crypto';
 
+import { personalizeDocument, type DocumentParty } from './personalize';
 import { BINDER, binderVersion } from './registry';
 import { mergeRuns, type MergeValues, type TextRun } from './types';
 
@@ -108,9 +109,16 @@ export interface RenderedBinder {
  */
 export function renderBinder(
   values: Partial<MergeValues>,
-  context: { investorName: string; dealName: string },
+  context: { investorName: string; dealName: string; party: DocumentParty },
 ): RenderedBinder {
-  const instruments = BINDER.map((entry) => {
+  const instruments = BINDER.map((raw) => {
+    /* The stored record has to name the same parties the investor read
+       on screen. Same substitution, same place in the pipeline. */
+    const entry = {
+      ...raw,
+      document: personalizeDocument(raw.document, context.party),
+    };
+
     const articles = entry.document.articles
       .map((article) => {
         const heading =

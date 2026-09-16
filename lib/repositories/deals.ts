@@ -19,9 +19,11 @@ import 'server-only';
 
 import { prisma } from '../db';
 import { ISOLATED_ALLOCATION } from '../config';
+import { parseBacking } from '../backers';
 import { canViewDealDetail, redactDeal } from '../domain';
 import type {
   DealFees,
+  DealChart,
   DealMedia,
   DealMetric,
   DealOutcomes,
@@ -71,6 +73,7 @@ export function toDealView(row: Deal): DealView {
     stage: row.stage,
     art: row.art,
     logoUrl: row.logoUrl,
+    videoUrl: row.videoUrl,
     headline: row.headline,
     summary: row.summary,
     pricePerShare: row.pricePerShare,
@@ -101,6 +104,8 @@ export function toDealView(row: Deal): DealView {
     thesis: parseJson<string[]>(row.thesisJson, [], `${row.id}.thesis`),
     fees: parseJson<DealFees>(row.feesJson, FALLBACK_FEES, `${row.id}.fees`),
     media: parseJson<DealMedia>(row.mediaJson, FALLBACK_MEDIA, `${row.id}.media`),
+    charts: parseJson<DealChart[]>(row.chartsJson ?? '[]', [], `${row.id}.charts`),
+    backing: parseBacking(parseJson<unknown>(row.backingJson, [], `${row.id}.backing`)),
     docs: parseJson<string[]>(row.docsJson, [], `${row.id}.docs`),
     spotbot: parseJson<SpotbotEntry[]>(row.spotbotJson, [], `${row.id}.spotbot`),
     deck: parseJson<DeckSlide[]>(row.deckJson, [], `${row.id}.deck`),

@@ -6,7 +6,7 @@
  * deployment would keep. Passwords are hashed with scrypt even in demo
  * mode, so nothing here has to change when demo mode is switched off.
  *
- * The ONLY demo-specific behaviour lives in `authenticate`: any password
+ * The ONLY demo-specific behavior lives in `authenticate`: any password
  * is accepted, and an unknown email mints a new investor. That is the
  * single line to delete when real credentials arrive.
  */
@@ -20,6 +20,7 @@ import { prisma } from './db';
 import { DEMO_MODE, SESSION_COOKIE, SESSION_TTL_DAYS } from './config';
 import { DAY_MS, type SessionUser } from './domain';
 import { nameFromEmail } from './format';
+import { ValidationError } from './http';
 
 const scrypt = promisify(scryptCb) as (
   password: string,
@@ -115,6 +116,48 @@ export async function requireUser(): Promise<SessionUser> {
   const user = await getSessionUser();
   if (!user) throw new UnauthorizedError();
   return user;
+}
+
+// ---------------- registration ----------------
+
+/**
+ * Create an investor from a name they typed rather than one guessed
+ * from their address.
+ *
+ * Sign in and create account are genuinely different operations, even
+ * though demo mode lets either one through. Signing in with an unknown
+ * address mints an account named after the local part, which is a guess
+ * and often a poor one. This asks. The name goes on every subscription
+ * document the member ever signs, so it is worth one field.
+ *
+ * An address already in use is refused in both modes. That is not a
+ * demo concession: silently signing someone into an existing account
+ * because they mistyped their own address is the one failure here that
+ * could put a person inside another investor's book.
+ */
+export async function registerInvestor(
+  name: string,
+  email: string,
+  password: string,
+): Promise<SessionUser> {
+  const normalized = email.trim().toLowerCase();
+  const existing = await prisma.user.findUnique({ where: { email: normalized } });
+
+  if (existing) {
+    throw new ValidationError(
+      'An account already exists for that address. Sign in instead.',
+    );
+  }
+
+  const created = await prisma.user.create({
+    data: {
+      email: normalized,
+      name: name.trim() || nameFromEmail(normalized),
+      passwordHash: await hashPassword(password || 'demo-password'),
+    },
+  });
+
+  return { id: created.id, email: created.email, name: created.name };
 }
 
 // ---------------- credential check ----------------

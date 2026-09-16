@@ -106,7 +106,11 @@ const RULES: readonly GateRule[] = [
   {
     reason: 'investment_recommendation',
     patterns: [
-      /\bshould (i|we)\b.*\b(invest|buy|subscribe|commit|participate|back this|get in)\b/,
+      // `vote` is here because Radar gave the product a second verb for
+      // putting your name behind a company. "Should I vote for X" is
+      // asking Spot to pick one, which is the same ask as "should I
+      // invest in X" wearing the board's vocabulary.
+      /\bshould (i|we)\b.*\b(invest|buy|subscribe|commit|participate|back this|get in|vote)\b/,
       /\bshould (i|we) do (this|it|that)\b/,
       /\b(do|would|can|could) you (recommend|advise|suggest)\b/,
       /\bwhat (would|do) you (do|invest in|pick|choose|buy)\b/,

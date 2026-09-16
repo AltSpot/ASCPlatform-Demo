@@ -22,6 +22,7 @@ import {
   DAY_MS,
   FUNDING_WINDOW_DAYS,
   HELD_STATES,
+  isLivePosition,
   InvalidTransitionError,
   RESUMABLE_STATES,
   SUBSCRIPTION_STATES,
@@ -194,6 +195,33 @@ describe('held and resumable state sets', () => {
   test('a state is never both held and resumable', () => {
     for (const state of HELD_STATES) {
       assert.equal(RESUMABLE_STATES.includes(state), false, `${state} is both`);
+    }
+  });
+
+  /* The distinction that cost the dashboard a wrong number once: a
+     realized position is still `closed`, and `closed` is held. Totalling
+     current exposure on the state alone reported an exit that returned
+     2.4x as a position worth nothing. */
+  test('a realized position is held but not live', () => {
+    const exited = { state: 'closed', realizedAt: '2026-07-19T00:00:00.000Z' };
+
+    assert.ok(HELD_STATES.includes('closed'));
+    assert.equal(isLivePosition(exited), false);
+  });
+
+  test('a position still held is live in every held state', () => {
+    for (const state of HELD_STATES) {
+      assert.equal(
+        isLivePosition({ state, realizedAt: null }),
+        true,
+        `${state} holds capital but was not counted as live`,
+      );
+    }
+  });
+
+  test('an unheld state is never live, realized or not', () => {
+    for (const state of ['started', 'docs_signed', 'expired', 'refunded'] as const) {
+      assert.equal(isLivePosition({ state, realizedAt: null }), false, state);
     }
   });
 
@@ -435,6 +463,9 @@ function fullDeal(): DealView {
     stage: 'Series Seed Preferred',
     art: 'linear-gradient(120deg,#1b1410,#2a1c10)',
     logoUrl: '/logos/calder.svg',
+    videoUrl: null,
+    charts: [],
+    backing: [],
     headline: 'WITHHELD_HEADLINE',
     summary: 'WITHHELD_SUMMARY',
     pricePerShare: 'WITHHELD_PPS',

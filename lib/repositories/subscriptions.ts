@@ -49,6 +49,7 @@ export function toSubscriptionView(row: Subscription): SubscriptionView {
     fundingMethod: row.fundingMethod,
     acceptedAt: row.acceptedAt?.toISOString() ?? null,
     currentValue: row.currentValue,
+    realizedAt: row.realizedAt?.toISOString() ?? null,
     seeded: row.seeded,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),

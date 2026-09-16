@@ -1,38 +1,53 @@
 /**
- * The opening beat: a short summary beside the deal's media.
+ * The opening beat: the short version, in prose, beside the walkthrough.
  *
- * This slot replaces the old committed-capital band. Media is the point
- * here, so the summary stays to a few sentences and gets out of the way.
- * When a real video or image is attached it renders in place of the
- * placeholder.
+ * The film leads the hero at size; the thumbnail here is the second
+ * door to it, next to the paragraph a member reads first. Every deal
+ * carries the thumbnail, including the thinner ones with no summary
+ * yet, so the overview has the same shape on every deal page. The prose
+ * stays at a readable measure: this is the one part of the page meant
+ * to be read rather than scanned.
  */
+import BackerMark from '@/components/BackerMark';
+import { backingSentence, type Backing } from '@/lib/backers';
+
+import DealVideo from './DealVideo';
 import Section from './Section';
 import s from './Deal.module.css';
 
 export default function SummaryMedia({
   summary,
-  dealName,
+  name,
+  art,
+  logoUrl,
+  videoUrl,
+  backing,
 }: {
   summary: string | null;
-  dealName: string;
+  name: string;
+  art: string;
+  logoUrl: string | null;
+  videoUrl: string | null;
+  /** The other firms on the round, when there are any. */
+  backing: Backing[];
 }) {
-  if (!summary) return null;
-
   return (
     <Section eyebrow="Overview" title="The short version." id="overview">
-      <div className={s.summaryGrid}>
-        <div className={s.mediaSlot}>
-          {/* Placeholder until a walkthrough is attached to the deal. */}
-          <div className={s.mediaInner}>
-            <span className={s.mediaPlay} aria-hidden="true">
-              ▶
-            </span>
-            <span className={s.mediaLabel}>{dealName} walkthrough</span>
-            <span className="demo-tag">Media placeholder</span>
-          </div>
+      <div className={summary ? s.overview : s.overviewSolo}>
+        <div className={s.overviewCopy}>
+          {summary && <p className={s.summaryText}>{summary}</p>}
+          {backing.length > 0 ? (
+            <ul className={s.backingList}>
+              {backing.map((b) => (
+                <li key={b.firm} className={s.backingRow}>
+                  <BackerMark backing={b} />
+                  <span className={s.backingNote}>{backingSentence(b)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
-
-        <p className={s.summaryText}>{summary}</p>
+        <DealVideo name={name} art={art} logoUrl={logoUrl} videoUrl={videoUrl} />
       </div>
     </Section>
   );

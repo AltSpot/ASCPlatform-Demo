@@ -13,10 +13,14 @@
  * plain-language question and the operative text are visibly the same
  * agreement, not two different documents.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { BINDER } from '@/lib/documents/registry';
 import { panelForClause } from '@/lib/documents/panel-map';
+import {
+  personalizeDocument,
+  type DocumentParty,
+} from '@/lib/documents/personalize';
 import { mergeRuns, type MergeValues, type TextRun } from '@/lib/documents/types';
 
 import s from './LegalDocument.module.css';
@@ -31,10 +35,13 @@ export default function LegalDocument({
   values,
   confirmedPanels,
   focusPanel,
+  party,
 }: {
   values: Partial<MergeValues>;
   confirmedPanels: number[];
   focusPanel?: number | null;
+  /** The vehicle and company this binder is being issued for. */
+  party: DocumentParty;
 }) {
   /**
    * Open on the memorandum, which is the document counsel expects read
@@ -45,7 +52,15 @@ export default function LegalDocument({
   const paneRef = useRef<HTMLDivElement | null>(null);
   const confirmed = new Set(confirmedPanels);
 
-  const entry = BINDER.find((b) => b.slug === activeSlug) ?? BINDER[0];
+  const found = BINDER.find((b) => b.slug === activeSlug) ?? BINDER[0];
+
+  /* Counsel's export names one worked example throughout. Bind it to
+     the deal before anything renders, so the reader never sees another
+     company's name on the agreement they are executing. */
+  const entry = useMemo(
+    () => ({ ...found, document: personalizeDocument(found.document, party) }),
+    [found, party],
+  );
 
   /**
    * Confirming a panel is always about the subscription agreement, so
@@ -135,10 +150,22 @@ export default function LegalDocument({
         <header className={s.head}>
           <h4 className={s.docTitle}>{entry.document.title ?? entry.title}</h4>
           <div className={s.docSub}>
-            ASC Calder I, LLC · Managed by AltSpot Capital, LLC
+            {party.entity} · Managed by AltSpot Capital, LLC
           </div>
           <div className={s.roleTag}>{ROLE_LABEL[entry.role]}</div>
           <p className={s.purpose}>{entry.purpose}</p>
+
+          {/* The memorandum's party names are bound to this deal, but its
+              business description is still the worked example counsel
+              supplied. Saying so is better than a document that reads as
+              though it were written about this company. */}
+          {entry.slug === 'ppm' && (
+            <p className={s.specimen}>
+              Demo environment. The parties, the vehicle and the terms are this
+              deal&rsquo;s. The business description is from the specimen
+              memorandum and is not about {party.company}.
+            </p>
+          )}
         </header>
 
         {entry.document.articles.map((article, articleIndex) => {
@@ -245,9 +272,10 @@ export default function LegalDocument({
         })}
 
         <p className={s.foot}>
-          Rendered from the executed form of the {entry.title} for ASC Calder I,
-          LLC. Wording, clause numbering and emphasis are counsel&rsquo;s. Version{' '}
-          {entry.document.contentHash}. Demo environment.
+          Rendered from the executed form of the {entry.title} for{' '}
+          {party.entity}. Wording, clause numbering and emphasis are
+          counsel&rsquo;s. Version {entry.document.contentHash}. Demo
+          environment.
         </p>
       </div>
     </div>

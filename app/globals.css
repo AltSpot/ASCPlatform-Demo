@@ -29,16 +29,12 @@
    retargeted onto them, so existing components keep working.
    Add tokens to :root before introducing one-off values.
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
-/* Borna is an owned asset and is not on Google Fonts. */
-@font-face {
-  font-family: 'Borna';
-  src: url('/fonts/borna-medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
+/* Fonts are loaded in app/layout.tsx through next/font/local, which
+   sets --font-display, --font-sans and --font-mono on <html>. They
+   are deliberately NOT declared here: a :root declaration in this
+   sheet has the same specificity as next/font's class and loads
+   later, so it would win and every page would render in the
+   fallback faces. */
 
 :root{
   /* ============ CANVAS & TEXT LADDER (V18 canonical) ============ */
@@ -48,7 +44,28 @@
   --as-text:#F6F2E9;           /* headings */
   --as-text-body:#DAD4C8;      /* body */
   --as-text-muted:#9A9184;     /* muted, axis labels */
-  --as-text-faint:#6C6459;     /* fine print, sources */
+  /* Fine print and sources. Was #6C6459, which measured about 3.4:1
+     against the canvas: legible as a shape, not as a sentence, and on a
+     10px mono numeral not legible at all. #8A8276 is about 5.1:1, which
+     clears AA for body text and gives the smallest type on the platform
+     a fighting chance. Still clearly the quietest grey of the four.
+     Rule: faint is permitted at 13px and above only. Anything smaller
+     (labels, eyebrows, table headers, source lines) uses --as-text-muted. */
+  --as-text-faint:#8A8276;
+
+  /* ============ TYPE FLOOR ============
+     The smallest type on the platform, as tokens, so a label cannot be
+     set at 10px by accident. Labels are 12px mono with 0.10em tracking:
+     tracking scales with size, and the 0.14-0.16em the older rules used
+     reads as gaps once the glyphs are this small. Meta lines (sub-labels,
+     notes, sources) are 13px. Figures in tables are 14.5px, tabular,
+     with no tracking and no uppercase: digits do not need either. */
+  --fs-label:12px;
+  --ls-label:0.10em;
+  /* Sentence-case mono labels track a hair, never the caps amount. */
+  --ls-text:0.02em;
+  --fs-meta:13px;
+  --fs-figure:14.5px;
 
   /* ============ ACCENT FAMILY ============ */
   --as-gold:#C79A4B;           /* CAPITAL SIGNAL. Glyphs, rules, gradient heads */
@@ -58,6 +75,17 @@
   --as-champagne:#E6C77A;      /* quiet layer. Micro-labels, form labels, chips */
   --as-ember-soft:#F08A4B;     /* umbrella kicker */
   --as-gold-deep:#8A6D35;
+
+  /* COST-BASIS BARS. Capital already invested is drawn in a warm
+     neutral, never in a second gold. Two golds a step apart in
+     lightness and identical in hue are indistinguishable at 8px on a
+     dark card, which is what the invested-vs-total-value bars were.
+     A neutral base makes every coloured pixel mean the same thing:
+     gold is gain, ember is shortfall, grey is the money that went in.
+     The divider is a hard edge at the boundary so the split survives
+     any display, any brightness, and any colour vision. */
+  --as-bar-base:#4C4740;
+  --as-bar-divide:rgba(8,6,4,.9);
 
   /* ---- Orb stops, canonical from the exported logo SVGs ---- */
   --as-orb-stop-0:#F3E8BC;  --as-orb-stop-38:#E7CE86;
@@ -73,6 +101,41 @@
   --as-cat-violet:#A98BE6;
   --as-cat-info:#9CC4F0;
 
+  /* ============ THE PLOT PALETTE ============
+     Every colour a chart fills a shape with, and the reason it is here
+     rather than in lib/taxonomy.ts, where these lived as hex literals.
+     A hex in a TypeScript constant cannot answer to a theme: it is
+     handed to React as an inline style and inline styles do not
+     cascade. The allocation bars, the legend swatches and the watchlist
+     rows were therefore the one part of the product that stayed on the
+     dark palette when everything around them turned over, and pale gold
+     on cream is not a colour, it is an absence.
+
+     lib/taxonomy.ts still owns the taxonomy. It now names these
+     variables instead of spelling out values, which leaves it pure and
+     isomorphic and puts the visual truth back in the one file that is
+     supposed to hold it.
+
+     These are FILLS, judged against the 3:1 floor for graphics rather
+     than the 4.5:1 one for text, and each light value below was checked
+     against the card it sits on. */
+  --as-cat-venture:#C79A4B;    /* venture. Gold, and the shelf's lead */
+  --as-cat-growth:#F39807;
+  --as-cat-fund:var(--as-cat-violet);
+
+  /* Twelve industries, deliberately warm: the cool category tints are
+     reserved for asset class, which is the axis they were defined for. */
+  --as-ind-1:#C79A4B;   --as-ind-2:#F39807;   --as-ind-3:#E5661A;
+  --as-ind-4:#E6C77A;   --as-ind-5:#F08A4B;   --as-ind-6:#A07A22;
+  --as-ind-7:#FFB84D;   --as-ind-8:#8A6D35;   --as-ind-9:#D4AE72;
+  --as-ind-10:#B8924A;  --as-ind-11:#F2E394;  --as-ind-12:#6C6459;
+
+  /* Vintage is not a taxonomy, so it gets no taxonomy colours: one
+     ordered ramp in the Capital gold, deepest year oldest, so the bar
+     reads as a sequence rather than as five unrelated categories. */
+  --as-vintage-1:#6E5629; --as-vintage-2:#8A6D35; --as-vintage-3:#C79A4B;
+  --as-vintage-4:#E6C77A; --as-vintage-5:#F2E0B4;
+
   /* ============ LIGHT / CREAM — opt-in themes ============
      Used today only by the subscription document surface, which is
      paper by design. Not a page theme. */
@@ -85,22 +148,185 @@
 
   /* ============ HAIRLINES ============ */
   --hair-neutral:rgba(255,255,255,.10);
+  --hair-gold:rgba(199,154,75,.30);      /* resting gold hairline */
   --hair-gold-active:rgba(243,152,7,.30);
   --hair-ember:rgba(229,102,26,.26);
   --hair-champagne:rgba(199,154,75,.30);
   --hair-cream:rgba(184,146,74,.28);   /* hairlines on the paper surface */
 
   /* ============ FILLS ============ */
-  --fill-card:rgba(255,255,255,.04);
+  --fill-card:rgba(255,255,255,.03);
   --fill-input:rgba(255,255,255,.05);
   --fill-gold-tint:rgba(243,152,7,.05);
   --glass:rgba(10,8,6,.62);
   --glass-solid:rgba(10,8,6,.86);
 
+  /* ============ THE DEPTH LADDER ============
+     Every surface in the product is one of these six steps, so a theme
+     is a redefinition of this block rather than a sweep through thirty
+     stylesheets. Before this existed, components reached for
+     rgba(255,255,255,.04) directly: correct on the ember canvas and
+     meaningless on any other, which is exactly what made a second
+     theme impossible.
+
+     Read them as depth, not as colour. 1 is the quietest fill INSIDE a
+     card, 3 is the most present; well and sunk are recesses, cut into
+     the surface rather than raised off it. On dark, raised means adding
+     light and recessed means removing it. On light it is the reverse,
+     and that inversion is the whole job.
+
+     Rule: a component picks the step by what the element IS, never by
+     which literal happened to look right on the dark canvas. */
+  --surface-1:rgba(255,255,255,.03);   /* quiet fill: rows at rest, bar tracks */
+  --surface-2:rgba(255,255,255,.05);   /* raised: hover rows, chips, segments */
+  --surface-3:rgba(255,255,255,.09);   /* present: filled tracks, thumbs, knobs */
+  --surface-well:rgba(0,0,0,.24);      /* recessed: inputs, inset panels */
+  --surface-sunk:rgba(0,0,0,.42);      /* deepest: the rail foot, code blocks */
+  --hair-strong:rgba(255,255,255,.14); /* a hairline that has to be seen */
+
+  /* A BAR TRACK IS A RECESS, NOT A RAISED SURFACE, and that is the one
+     place where reading the ember theme's literals back out gives the
+     wrong answer. Tracks were written as rgba(255,255,255,.07), which
+     on dark is indistinguishable from the raised step and so looks like
+     one. Invert that honestly and a track ends up LIGHTER than the card
+     holding it, which is a groove lit from inside. Every unfilled
+     portion of every meter on the platform reads from here. */
+  --track:rgba(255,255,255,.07);
+
+  /* The lit top edge that makes a raised surface read as a surface and
+     not a rectangle of slightly different paint. On dark it is a sliver
+     of white; on light it is the specular edge of glass and does far
+     more work, which is why it is a token and not an inline inset. */
+  --edge-top:rgba(255,255,255,.09);
+  /* The rim of a pane. Transparent in both themes: a pane is told apart
+     from the page by DEPTH, not by a drawn line. The edge a member reads
+     is the light caught on the top of the glass and the shade under its
+     lower lip, both of which live in --card-lift. A border is kept on
+     the rule (rather than removed) so no card changes size. */
+  --card-edge:transparent;
+
+  /* Glass. The blur and the saturation lift are tokens because the two
+     themes want genuinely different amounts: the ember canvas is nearly
+     uniform so there is little to refract, while the light canvas is
+     built to be refracted and needs both turned up. */
+  --glass-blur:28px;
+  --glass-sat:140%;
+  /* Frost. Brightness is part of the material, not the tint: a pane
+     that lifts what is behind it reads as ice, a pane that paints white
+     over it reads as milk. Neutral on ember. */
+  --glass-bright:1;
+  /* The grain of frosted glass: a fine white speckle, tiled, well under
+     the threshold of reading as texture. None on ember, where the page
+     already carries its own grain. */
+  --glass-grain:linear-gradient(transparent,transparent);
+  /* THE WARM TIER. Glass that carries a little of the brand in it, for
+     the surfaces that are asking something of a member (a gate, a
+     commitment, the close, the lead story, the strip of things that need
+     them). Layered as a background-image over the ordinary pane, so the
+     glass itself never changes, only the light inside it. */
+  --glass-tint-gold:linear-gradient(180deg,rgba(243,152,7,.10),rgba(243,152,7,.02));
+  --glass-tint-ember:linear-gradient(180deg,rgba(229,102,26,.09),rgba(229,102,26,.015));
+  /* What a card adds on top of its fill. Nothing on the ember canvas,
+     where a panel is defined by its hairline; on light it is the
+     specular edge plus a warm cast shadow, and it is doing the whole
+     job of lifting the pane off the page. */
+  /* Smoked glass. A lit top lip, a faint inner ring that stands in for
+     the hairline without reading as one, a shade gathering at the
+     bottom inside the pane, and a cast shadow pulled in under it. */
+  --card-lift:
+    inset 0 1px 1px rgba(255,255,255,.10),
+    inset 0 -1px 1px rgba(0,0,0,.18),
+    inset 0 16px 28px -22px rgba(255,255,255,.07),
+    inset 0 -18px 28px -22px rgba(0,0,0,.45),
+    0 1px 1px rgba(0,0,0,.4),
+    0 22px 48px -20px rgba(0,0,0,.7);
+  /* Light falling across the pane. On dark it is a breath: six percent
+     of white in the lit corner, gone by the middle. Enough that a panel
+     over the ember bloom reads as smoked glass rather than a hole cut
+     in the page; any more and it reads as a smudge. */
+  --card-sheen:var(--glass-grain),linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.015) 42%,rgba(255,255,255,0) 70%);
+  /* How much of a deal's own artwork bleeds across the top of its
+     hero. A dark banner blurred over a dark card is atmosphere; the
+     same wash over glass is a grey cloud with type in it. */
+  --hero-wash:.34;
+
+  /* ============ ON ARBITRARY ARTWORK ============
+     Deal banners are supplied art, light or dark, and no theme knows
+     what is under them. Anything sitting ON that art carries its own
+     dark scrim and light type in BOTH themes. These deliberately do not
+     invert: a sector pill that flipped to dark-on-light in light mode
+     would be unreadable over half the shelf. */
+  --scrim-media:rgba(10,8,6,.66);
+  --scrim-media-soft:rgba(10,8,6,.55);
+  --scrim-media-strong:rgba(10,8,6,.84);
+  --on-media:rgba(255,255,255,.88);
+
+  /* THE MARK SLOTS ARE DARK IN BOTH THEMES. Five of the seven rail
+     tiles hold a Lucide glyph and take currentColor; the other two hold
+     the Marketplace and Terminal marks, which arrive as AltSpot gold
+     and ember artwork and take nothing. Gold on a pale tile is barely
+     there, so the tile stays dark and the marks stay legible, and
+     because a rail where two of seven icons are built differently reads
+     as a mistake, all seven follow. The same pair of marks appears on
+     the marketplace tabs, which is why this is a token and not a rule
+     in one stylesheet. */
+  --slot-tile:rgba(0,0,0,.30);
+  --slot-tile-strong:rgba(0,0,0,.42);
+  --slot-edge:rgba(255,255,255,.07);
+  /* The five Lucide glyphs sit INSIDE those tiles and take
+     currentColor, so their ink is pinned to the tile rather than to
+     the page. On the ember canvas the two happen to agree and this
+     looks like indirection for its own sake; on cream they disagree
+     completely, and without the split a dark glyph lands on a dark
+     tile and the rail loses five of its seven icons. */
+  --slot-ink:var(--as-text-muted);
+  --slot-ink-strong:var(--as-text);
+  --slot-ink-active:var(--accent-hot);
+
+  /* Surfaces that are one composed thing rather than a step on the
+     ladder. Each is a whole background, gradient included, so a theme
+     can restate it without a component learning about themes. */
+  --rail-bg:
+    linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.42)),
+    rgba(10,8,6,.4);
+  --rail-blur:10px;
+  --dock-bg:linear-gradient(180deg,rgba(22,17,10,.97),rgba(10,8,6,.99));
+  --scrim-modal:rgba(6,5,4,.72);          /* dims the page, not artwork */
+  --tick-mark:rgba(255,255,255,.32);      /* chapter marks on a played bar */
+
+  /* ============ ACCENT WASHES ============
+     The quiet gold and ember fills behind chips, selected choices and
+     Spot's answers. Tokens because alpha does not survive a change of
+     canvas: 7% orange reads as a warm glow on the ember ground and as
+     absolutely nothing on cream, so light lifts every one of these. */
+  --tint-gold:rgba(243,152,7,.07);
+  --tint-gold-hover:rgba(243,152,7,.08);
+  /* The filled secondary pill. Warmer than a tint, quieter than a CTA. */
+  --btn-fill:rgba(243,152,7,.16);
+  --btn-fill-hover:rgba(243,152,7,.24);
+  --tint-gold-faint:rgba(243,152,7,.02);
+  --tint-ember:rgba(229,102,26,.08);
+  --tint-ember-line:rgba(229,102,26,.45);
+  --hair-soft:rgba(255,255,255,.05);   /* the inner rule between table rows */
+  --focus-glow:0 0 0 3px rgba(243,152,7,.12);
+  --surface-toast:#161210;
+
   /* ============ GRADIENTS (named and reserved) ============ */
   --as-cta-gradient:linear-gradient(135deg,#C79A4B,#F39807);
   --as-tri-gradient:linear-gradient(90deg,#C79A4B,#F39807,#E5661A);
   --as-em-gradient:linear-gradient(100deg,#E6C77A,#FF9E2C 45%,#E5661A);
+  --figure-hot:var(--as-amber);
+  /* The vote. Gold means invest; green means vote, on both canvases. */
+  --vote-gradient:linear-gradient(135deg,#5CF09A,#22C55E);
+  --fg-on-vote:#06301A;
+  --shadow-vote:0 6px 22px rgba(61,235,138,.28);
+  --shadow-vote-hover:0 10px 30px rgba(61,235,138,.42);
+  /* The dot field. A masked texture is the one pattern the V18 card
+     spec allows, and it was being asked for by name in
+     components/radar/Radar.module.css before it was ever defined here,
+     which is why that texture never drew. One tile, tinted warm so it
+     reads as grain on the ember canvas rather than as a grid. */
+  --as-dot-field:radial-gradient(circle at 1px 1px,rgba(230,199,122,.16) 1px,transparent 0);
   --as-orb-metal:radial-gradient(circle at 42% 38%,#F4E7BC,#E0C074 45%,#C79A4B 100%);
   --as-orb-signal:radial-gradient(circle at 45% 40%,#FFB84D,#F39807 55%,#E5661A 100%);
   --as-orb-period:
@@ -109,11 +335,36 @@
   --as-scan-line:linear-gradient(90deg,rgba(255,255,255,.08) 40%,rgba(243,152,7,.45) 50%,rgba(255,255,255,.08) 60%);
 
   /* ============ SEMANTIC — gold leads, orange stays functional ============ */
+  /* GOLD AS TEXT AND GOLD AS PAINT ARE TWO DIFFERENT COLOURS, and on
+     the ember canvas that never had to be said out loud because one
+     value did both jobs. #C79A4B is 6.2:1 on #0A0806 and 2.3:1 on a
+     cream page, so the light theme cannot simply reuse it: every
+     eyebrow, every label and every source line on the platform is gold
+     and 12px, and all of it would fail. The split is here rather than
+     in the light block so that both themes are answering the same
+     question, and so nothing new can be written against the wrong one.
+
+       --accent / --accent-hot / --accent-quiet  are TEXT. They carry
+         a contrast guarantee against the canvas and they change value
+         between themes.
+       --as-gold / --as-orange / --as-amber      are PAINT. Gradients,
+         the orb, bar fills, glyph strokes. They never change, because
+         the brand is the brand and a gradient is not read as a
+         sentence.
+
+     If you are colouring type, reach for the semantic name. If you are
+     filling a shape, reach for the --as-* name. */
   --accent:var(--as-gold);          /* where the eye lands */
-  --accent-signal:var(--as-orange); /* focus rings, live indicators */
+  --accent-signal:var(--as-orange); /* live indicators */
   --accent-hot:var(--as-amber);     /* hover, key numerals */
   --accent-quiet:var(--as-champagne);
+  --accent-soft:var(--as-ember-soft); /* pending, awaiting, in flight */
   --fg-on-gold:var(--as-ink);
+
+  /* Focus is a graphic, so it answers to the 3:1 non-text floor rather
+     than 4.5:1, but it still has to clear it against whatever it rings.
+     Signal orange manages 1.9:1 on cream, so light retargets this. */
+  --focus-ring:var(--as-orange);
 
   /* ============ SPACING — 4px base ============ */
   --s-1:4px;  --s-2:8px;  --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px;
@@ -137,6 +388,10 @@
   --shadow-cta-hover:0 10px 34px rgba(243,152,7,.38);
   --shadow-card-hover:0 22px 54px rgba(0,0,0,.45),0 0 44px rgba(243,152,7,.22);
   --shadow-frame:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(243,152,7,.12);
+  /* What seats a small control on the surface it slides along: a
+     slider knob, a chart handle. Tight and dark on the ember canvas,
+     tight and warm on cream, never the wide card shadow. */
+  --shadow-knob:0 3px 10px rgba(0,0,0,.5);
   --shadow-orb-sm:0 0 18px rgba(243,152,7,.5);
   --shadow-orb-md:0 0 30px rgba(243,152,7,.65);
 
@@ -147,15 +402,33 @@
   --dur-micro:180ms; --dur-1:250ms; --dur-2:450ms; --dur-3:900ms;
 
   /* ============ TYPE ============ */
-  --font-display:'Borna',Georgia,'Times New Roman',serif;
-  --font-sans:'Figtree',system-ui,-apple-system,sans-serif;
-  --font-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  /* --font-display and --font-sans come from next/font in
+     app/layout.tsx. See the note above :root. The data face is one
+     level removed so the type lab can swap it: next/font writes each
+     candidate under its own name and --font-mono points at one. */
+  --font-mono:var(--font-mono-jetbrains);
   --w-light:300; --w-regular:400; --w-medium:500; --w-semi:600;
 
   /* ============ STATUS ============ */
-  --good:#6FA97C;
+  /* Green is the one color on the platform that is neither brand nor
+     taxonomy: it means a position is live and a figure is up, nothing
+     else. It started as #6FA97C, a sage that sat so close to the muted
+     greys around it that a positive return read as another piece of
+     chrome, and has been lifted twice since. It is now a proper green:
+     bright enough that a gain is the first thing found on a dark card,
+     and held just short of the screen greens a trading app uses, so
+     gold stays the loudest thing on the page. The two tints below are
+     the only ones anything should use, so a border and a fill cannot
+     drift from the color they tint. */
+  --good:#5CF09A;                      /* text: gains, approved, live */
+  --good-paint:#3DEB8A;                /* paint: dots, bars, fills. Never type */
+  --good-line:rgba(61,235,138,.5);
+  --good-fill:rgba(61,235,138,.14);
   --warn:#E5661A;
-  --bad:#B85C5C;
+  /* Was #B85C5C, exactly the 4.5:1 AA floor, and losses are set at the
+     smallest sizes on the page. This clears 7:1 and stays ember-adjacent
+     rather than trading-app red. */
+  --bad:#D9756A;
 
   /* ============ v1.2 ALIASES ===========================
      Earlier components reference these. Retargeted onto the
@@ -195,38 +468,47 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-bottom:120px}
 
 body{
   background:var(--bg);color:var(--ink-2);
   font-family:var(--fb);font-size:15px;line-height:1.6;
-  font-weight:var(--w-light);
+  font-weight:var(--w-regular);
   -webkit-font-smoothing:antialiased;min-height:100vh;
   position:relative;
 }
 
 /* Grain + vignette. Flat black reads cheap; this is what makes it
    feel like the brand. Pointer-events off so it never blocks a click. */
+/* The ember ground is a field, not two corners. Heat enters top right
+   and pools bottom right, gold settles bottom left, and a long warm
+   sweep runs corner to corner under all of it, so there is no part of
+   the page a smoked-glass card sits over flat black, and quiet enough
+   (toned down 2026-09-16) that it never competes with a card. Every
+   text ratio measured against #0A0806 holds. */
 body::before{
   content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(46% 48% at 92% 6%,rgba(243,152,7,.13),rgba(229,102,26,.05) 44%,transparent 70%),
-    radial-gradient(40% 42% at 6% 94%,rgba(199,154,75,.12),transparent 64%),
-    radial-gradient(120% 120% at 50% 50%,transparent 58%,rgba(0,0,0,.5));
+    radial-gradient(62% 56% at 96% -4%,rgba(243,152,7,.13),rgba(229,102,26,.045) 46%,transparent 74%),
+    radial-gradient(52% 52% at 104% 92%,rgba(229,102,26,.08),transparent 70%),
+    radial-gradient(56% 52% at -4% 104%,rgba(199,154,75,.11),transparent 68%),
+    radial-gradient(44% 40% at 42% 38%,rgba(199,154,75,.035),transparent 70%),
+    linear-gradient(135deg,rgba(40,26,12,0) 20%,rgba(64,34,10,.22) 100%),
+    radial-gradient(120% 120% at 50% 50%,transparent 60%,rgba(0,0,0,.42));
 }
 body::after{
   content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 /* Keep real content above the atmosphere layers. */
-.layout,.wiz-shell,.login-wrap,.toast{position:relative;z-index:1}
+.layout,.wiz-shell,.toast{position:relative;z-index:1}
 
 ::selection{background:rgba(243,152,7,.32);color:var(--as-text)}
 a{color:var(--as-text);text-decoration:none}
 a:hover{color:var(--accent-hot)}
 img{max-width:100%}
 button{font-family:inherit}
-:focus-visible{outline:2px solid var(--accent-signal);outline-offset:2px;border-radius:var(--r-xs)}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:var(--r-xs)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
@@ -236,23 +518,30 @@ button{font-family:inherit}
 h1.display{font-size:40px;letter-spacing:-.02em;line-height:1.05}
 h2.display{font-size:28px}
 
-/* Eyebrows are monospace. Non-negotiable. */
+/* Eyebrows are monospace. Non-negotiable. This is the one definition:
+   gold by default, .muted for a grey label, .signal for a live marker.
+   Component stylesheets compose these rather than restating them. */
 .eyebrow{
-  font-family:var(--fm);font-size:11px;letter-spacing:.24em;
-  text-transform:uppercase;color:var(--accent);font-weight:500;
+  font-family:var(--fm);font-size:var(--fs-label);letter-spacing:var(--ls-label);
+  text-transform:uppercase;color:var(--accent);font-weight:var(--w-medium);
+  line-height:1.4;
 }
+.eyebrow.muted{color:var(--as-text-muted)}
+.eyebrow.signal{color:var(--accent-signal)}
 .kicker{
-  font-family:var(--fm);font-size:10.5px;letter-spacing:.22em;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);
   text-transform:uppercase;color:var(--soft);
 }
 .brandmark{
-  font-family:var(--fm);font-size:10px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--faint);
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);
+  text-transform:uppercase;color: var(--as-text-muted);
 }
 .sub{color:var(--soft);font-size:15px;max-width:62ch;line-height:1.6}
 .num{font-family:var(--fm);font-variant-numeric:tabular-nums}
 .small{font-size:13.5px;color:var(--soft);line-height:1.6}
-.tiny{font-size:12px;color:var(--faint);line-height:1.55}
+.tiny{font-size:var(--fs-meta);color:var(--soft);line-height:1.55}
 
 /* ---------- the orb + lockup (brand signature) ---------- */
 .orb{
@@ -278,52 +567,47 @@ h2.display{font-size:28px}
 .brand-name span{color:var(--ink)}
 
 /* ---------- layout shell ---------- */
-.layout{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
-.sidebar{
-  border-right:1px solid var(--hair);background:rgba(0,0,0,.28);
-  backdrop-filter:blur(8px);
-  padding:26px 18px;display:flex;flex-direction:column;gap:6px;
-  position:sticky;top:0;height:100vh;
+/* The rail's width is a variable so it can be collapsed. components/
+   Sidebar.tsx sets data-rail="mini" on the root and the whole grid
+   follows, which is what keeps the transition to one animated property
+   on one element rather than a reflow the page has to chase. */
+.layout{
+  display:grid;grid-template-columns:var(--rail,236px) 1fr;min-height:100vh;
+  /* A row that bleeds to the window edge (Most popular) is sized in vw,
+     which on a Windows scrollbar overshoots by the scrollbar's width.
+     Clip here, at the window, rather than scroll. clip is not a scroll
+     container, so sticky children keep working. */
+  overflow-x:clip;
+  transition:grid-template-columns var(--dur-2) var(--ease-layout);
+  /* Anything that overhangs stops at the frame instead of scrolling
+     the page. `clip` rather than `hidden` because hidden makes a scroll
+     container and this element holds the sticky rail. */
+  overflow-x:clip;
+  /* The column's own measurements, as tokens. See .main below. */
+  --main-max:1360px;
+  --main-pad-x:56px;
 }
-.nav-label{
-  padding:14px 10px 6px;font-family:var(--fm);font-size:10px;
-  letter-spacing:.2em;color:var(--faint);text-transform:uppercase;
-}
-.nav-item{
-  display:flex;align-items:center;gap:11px;padding:10px;border-radius:var(--r-pill);
-  color:var(--soft);font-weight:500;font-size:14px;border:1px solid transparent;cursor:pointer;
-  transition:color .12s,background .12s;
-}
-.nav-item:hover{color:var(--ink);text-decoration:none;background:rgba(255,255,255,.03)}
-.nav-item.active{
-  color:var(--ink);
-  background:linear-gradient(90deg,rgba(243,152,7,.14),rgba(243,152,7,.03));
-  border-color:var(--hairg);
-}
-/* Lucide strokes carry their own size; CSS only holds the slot. */
-.nav-item .ico{width:18px;height:18px;flex:none;opacity:.9}
-.nav-item.soon{opacity:.4;cursor:default}
-.nav-item.soon:hover{background:none;color:var(--soft)}
-.badge-soon{
-  margin-left:auto;font-family:var(--fm);font-size:9px;letter-spacing:.12em;
-  color:var(--faint);border:1px solid var(--hair);border-radius:var(--r-pill);padding:2px 7px;
-}
-.side-foot{margin-top:auto;padding:14px 10px 4px;border-top:1px solid var(--hair)}
-.user-chip{display:flex;align-items:center;gap:10px}
-.avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--orange));
-  display:grid;place-items:center;font-weight:600;font-size:13px;color:#1A1204;
-  font-family:var(--fm);
-}
-.user-chip .who{line-height:1.25;min-width:0}
-.user-chip .who b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;color:var(--ink)}
-.user-chip .who span{font-size:11px;color:var(--faint)}
-.logout{margin-left:auto;color:var(--faint);font-size:12px;background:none;border:none;cursor:pointer}
-.logout:hover{color:var(--ink)}
+html[data-rail='mini']{--rail:74px}
+@media (prefers-reduced-motion:reduce){.layout{transition:none}}
+/* The rail's own rules live in components/Sidebar.module.css. Only the
+   grid slot it sits in is layout, and layout stays here. */
 
+/* Centred in the space beside the rail, not pinned to its left edge.
+   The column is capped for line length, so on anything wider than about
+   1600px the cap leaves a gutter; left-aligned, all of it piled up on
+   the right and the product sat off-centre in the frame. On a 1440p or
+   4K capture that gutter is most of the screen.
+
+   The bottom padding reserves the Spot launcher's row (26px offset,
+   a 46px pill, and room to breathe) so the last button on a page is
+   never underneath it, and scroll-padding keeps an anchored target
+   clear of it on a jump. */
 .main{
-  padding:34px 44px 70px;max-width:1360px;width:100%;
+  padding:48px var(--main-pad-x) 140px;max-width:var(--main-max);width:100%;margin-inline:auto;
+  /* A grid item's automatic minimum is its min-content width, so one
+     wide child could push this column past the frame and drag every
+     section right along with it. */
+  min-width:0;
   transition:padding-right var(--dur-2) var(--ease-layout);
 }
 
@@ -339,22 +623,42 @@ h2.display{font-size:28px}
 @media (min-width:1480px){
   body[data-spot-wide='true'] .main{padding-right:668px}
 }
-.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:26px;flex-wrap:wrap}
-.page-head .titles{display:flex;flex-direction:column;gap:8px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+.page-head .titles{display:flex;flex-direction:column;gap:12px}
 
 /* ---------- cards & panels ---------- */
+/* THE card. One rule, both themes, because the difference between an
+   ember panel and a pane of glass is entirely in the tokens: the fill,
+   the blur, the saturation lift and the lit top edge. On dark the edge
+   is a 5% sliver doing almost nothing. On light it is the specular
+   highlight that separates the pane from the page, and without it the
+   whole surface collapses into a flat white rectangle.
+
+   The saturation lift is what stops translucent white from greying out
+   the warm ground beneath it. Backdrop-filter samples what is behind
+   and averages it toward the fill; pushing saturation back up is how
+   the gold wash under a card survives being looked through, and it is
+   the single line that makes this read as glass rather than as tracing
+   paper. */
 .card{
-  background:var(--panel);
-  border:1px solid var(--hair);border-radius:var(--r);padding:22px;
-  backdrop-filter:blur(6px);
+  /* Split into colour and image rather than the shorthand so the sheen
+     can be a theme token. --fill-card is also read inside a box-shadow
+     in components/portfolio/ValueCurve.module.css, so it has to stay a
+     plain colour and cannot itself carry the gradient. */
+  background-color:var(--panel);
+  background-image:var(--card-sheen);
+  border:1px solid var(--card-edge);border-radius:var(--r);padding:26px;
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow:var(--card-lift);
 }
+/* A gold card is the same frosted pane with warmth in the glass, not a
+   gold outline and not a thin tint the page shows through. */
 .card.gold{
-  border-color:var(--hairg);
-  background:linear-gradient(180deg,rgba(243,152,7,.09),rgba(243,152,7,.02));
+  background-image:var(--glass-tint-gold),var(--card-sheen);
 }
 .card h3{font-size:16px;font-weight:600;margin-bottom:6px;color:var(--ink);letter-spacing:-.005em}
-.hr{border:none;border-top:1px solid var(--hair);margin:18px 0}
-.grid{display:grid;gap:18px}
+.hr{border:none;border-top:1px solid var(--hair);margin:24px 0}
+.grid{display:grid;gap:24px}
 .grid.c2{grid-template-columns:1fr 1fr}
 .grid.c3{grid-template-columns:repeat(3,1fr)}
 .grid.c4{grid-template-columns:repeat(4,1fr)}
@@ -385,122 +689,164 @@ h2.display{font-size:28px}
   transform:translateX(-130%);animation:cta-shine 4.6s ease-in-out infinite;
 }
 @keyframes cta-shine{0%,72%{transform:translateX(-130%)}88%,100%{transform:translateX(300%)}}
-.btn-ghost{background:transparent;border-color:var(--hairg);color:var(--ink)}
-.btn-ghost:hover{
-  background:rgba(243,152,7,.08);
-  border-color:var(--hair-gold-active);color:var(--accent-hot);
+/* Secondary buttons are FILLED pills, not outlines (Tyler, 2026-09-16).
+   Ghost is the warm second action beside a gold primary; quiet is the
+   neutral one on a row. Neither draws a line: on glass an outlined
+   pill reads as a hole. */
+.btn-ghost{background:var(--btn-fill);border-color:transparent;color:var(--ink)}
+.btn-ghost:hover{background:var(--btn-fill-hover);border-color:transparent;color:var(--accent-hot)}
+.btn-quiet{background:var(--surface-3);border-color:transparent;color:var(--as-text)}
+/* The vote. Green, because on this platform green is demand growing,
+   and a vote is demand the member is adding. Never used for money. */
+.btn-vote{
+  background:var(--vote-gradient);color:var(--fg-on-vote);
+  border-color:transparent;box-shadow:var(--shadow-vote);
 }
-.btn-quiet{background:rgba(255,255,255,.04);color:var(--soft);border-color:var(--hair)}
-.btn-quiet:hover{color:var(--as-text);border-color:var(--hair-gold-active)}
-.btn[disabled]{opacity:.4;cursor:not-allowed;box-shadow:none}
+.btn-vote:hover{transform:translateY(-2px);box-shadow:var(--shadow-vote-hover);color:var(--fg-on-vote)}
+.btn-quiet:hover{background:var(--btn-fill);color:var(--accent-hot)}
+/* Disabled is a colour, not an opacity: the label still has to be read. */
+.btn[disabled]{background:var(--panel-2);color:var(--as-text-muted);border-color:var(--hair);cursor:not-allowed;box-shadow:none}
 .btn-block{width:100%}
 .btn-sm{padding:8px 14px;font-size:13px}
 
 /* ---------- forms ---------- */
 label.field{display:block;margin-bottom:16px}
 label.field>span{
-  display:block;font-family:var(--fm);font-size:10.5px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--soft);margin-bottom:8px;
+  display:block;font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-text);
+  text-transform: none;color:var(--soft);margin-bottom:8px;
 }
 .input,select.input,textarea.input{
-  width:100%;background:rgba(0,0,0,.32);border:1px solid var(--hair);
+  width:100%;background:var(--surface-well);border:1px solid var(--hair);
   color:var(--ink);border-radius:var(--r-md);padding:12px 14px;font-size:15px;font-family:var(--fb);
 }
-.input:focus{border-color:var(--hairg);outline:none;box-shadow:0 0 0 3px rgba(243,152,7,.12)}
+.input:focus{border-color:var(--hairg);outline:none;box-shadow:var(--focus-glow)}
 .input::placeholder{color:var(--faint)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .check{display:flex;gap:11px;align-items:flex-start;font-size:14px;color:var(--soft);cursor:pointer}
-.check input{margin-top:3px;accent-color:var(--orange)}
+.check input{margin-top:3px;accent-color:var(--accent-signal)}
+
+/* ---------- live ----------
+   One pulse for anything happening right now: the Invest lane, a deal
+   that came off the member's Radar, an open deal in Most popular. Green,
+   the colour demand wears, so "live" and "growing" are one idea. */
+.live-pill{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:7px 14px 7px 12px;border-radius:var(--r-pill);
+  background:var(--good-fill);color:var(--good);
+  font-family:var(--fm);font-size:var(--fs-label);font-weight:var(--w-medium);
+  letter-spacing:var(--ls-label);text-transform:uppercase;white-space:nowrap;
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--good-paint);flex:none;
+  box-shadow:0 0 8px var(--good-paint);
+  animation:live-pulse 2.2s ease-out infinite;
+}
+@keyframes live-pulse{
+  0%{box-shadow:0 0 0 0 var(--good-line)}
+  70%{box-shadow:0 0 0 8px transparent}
+  100%{box-shadow:0 0 0 0 transparent}
+}
 
 /* ---------- chips / status ---------- */
 .chip{
   display:inline-flex;align-items:center;gap:7px;font-family:var(--fm);
-  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  border:1px solid var(--hairg);color:var(--accent-quiet);
-  padding:4px 11px;border-radius:var(--r-pill);background:rgba(243,152,7,.07);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);text-transform:uppercase;
+  border:1px solid transparent;color:var(--accent-quiet);
+  padding:4px 11px;border-radius:var(--r-pill);background:var(--tint-gold);
 }
-.chip.neutral{border-color:var(--hair);color:var(--soft);background:none}
-.chip.good{border-color:rgba(111,169,124,.4);color:var(--good);background:rgba(111,169,124,.07)}
-.chip.warn{border-color:rgba(229,102,26,.45);color:var(--ember);background:rgba(229,102,26,.08)}
+.chip.neutral{border-color:transparent;color:var(--as-text-muted);background:var(--surface-2)}
+.chip.good{border-color:transparent;color:var(--good);background:var(--good-fill)}
+.chip.warn{border-color:transparent;color:var(--warn);background:var(--tint-ember)}
 .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
 
 /* ---------- stats ---------- */
 .stat .k{
-  font-family:var(--fm);font-size:10px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--faint);margin-bottom:9px;
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-text);
+  text-transform: none;color: var(--as-text-muted);margin-bottom:9px;
 }
 .stat .v{font-family:var(--fd);font-size:32px;font-weight:500;line-height:1;letter-spacing:-.015em;color:var(--ink)}
 .stat .v small{font-size:16px;color:var(--soft);font-family:var(--fb)}
-.stat .d{font-size:12.5px;margin-top:8px;color:var(--soft)}
+.stat .d{font-size: var(--fs-meta);margin-top:8px;color:var(--soft)}
 .up{color:var(--good)}.down{color:var(--bad)}
 
 /* ---------- allocation bar ---------- */
 .alloc{margin-top:10px}
-.alloc .bar{height:5px;border-radius:var(--r-pill);background:rgba(255,255,255,.07);overflow:hidden}
+.alloc .bar{height:5px;border-radius:var(--r-pill);background:var(--track);overflow:hidden}
 .alloc .fill{
   height:100%;border-radius:var(--r-pill);
   background:var(--as-tri-gradient);
   box-shadow:0 0 12px rgba(243,152,7,.35);
 }
-.alloc .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:7px;font-family:var(--fm);letter-spacing:.04em}
+.alloc .lab{display:flex;justify-content:space-between;font-size: var(--fs-label);color: var(--as-text-muted);margin-top:7px;font-family:var(--fm);letter-spacing:.04em}
 
 /* ---------- deal cards ---------- */
-.deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:22px}
+/* Four across on a wide screen, so two rows of ten fit in a viewport. */
+.deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:22px}
 .deal-card{
   display:flex;flex-direction:column;overflow:hidden;padding:0;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  box-shadow:inset 0 1px 0 var(--edge-top);
   transition:transform .22s cubic-bezier(.2,.7,.3,1),border-color .22s ease,box-shadow .22s ease;
   animation:card-in .5s ease backwards;
 }
 .deal-card:hover{
-  transform:translateY(-5px);border-color:var(--hairg);
-  box-shadow:var(--shadow-card-hover),
-    inset 0 1px 0 rgba(255,255,255,.08);
+  transform:translateY(-5px);
+  box-shadow:var(--shadow-card-hover);
 }
 .deal-grid .deal-card:nth-child(2){animation-delay:.06s}
 .deal-grid .deal-card:nth-child(3){animation-delay:.12s}
 .deal-grid .deal-card:nth-child(4){animation-delay:.18s}
 .deal-grid .deal-card:nth-child(n+5){animation-delay:.24s}
 @keyframes card-in{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
-.thumb{height:168px;position:relative;display:flex;align-items:flex-end;padding:16px}
+.thumb{height:108px;position:relative;display:flex;align-items:flex-end;padding:12px}
 /* Quiet vignette so the pills seat into any artwork, light or dark. */
 .thumb::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background:linear-gradient(180deg,rgba(10,8,6,.10),rgba(10,8,6,0) 34%,rgba(10,8,6,0) 64%,rgba(10,8,6,.16));
 }
+/* On artwork, so it takes the on-media ink rather than the page accent:
+   the scrim is dark in both themes, and Daylight's deep gold on it is
+   dark on dark. */
 .thumb .chip{
-  position:absolute;top:14px;left:14px;background:rgba(10,8,6,.66);backdrop-filter:blur(4px);
-  font-size:9px;letter-spacing:.13em;padding:3px 9px;z-index:1;
+  position:absolute;top:10px;left:10px;background:var(--scrim-media);backdrop-filter:blur(4px);
+  color:var(--on-media);
+  font-size: var(--fs-label);letter-spacing: var(--ls-label);padding:3px 9px;z-index:1;
 }
 /* The sector line sits on arbitrary banner art, light or dark, so it
    carries its own backdrop the same way the chip does. */
 .thumb .sector{
   position:relative;z-index:1;
-  background:rgba(10,8,6,.6);color:rgba(255,255,255,.85);
+  background:var(--scrim-media-soft);color:var(--on-media);
   padding:3px 9px;border-radius:var(--r-pill);backdrop-filter:blur(4px);
 }
 /* The deal mark is the banner artwork, not a corner tile. Width leaves
    room for wordmarks; object-fit keeps square marks at 74px. */
 .deal-logo-hero{
-  position:absolute;inset:42px 0 50px 0;margin:auto;height:64px;width:min(60%,220px);
+  position:absolute;inset:26px 0 30px 0;margin:auto;height:44px;width:min(50%,150px);
   object-fit:contain;filter:drop-shadow(0 8px 28px rgba(0,0,0,.5));z-index:1;
   transition:transform .25s cubic-bezier(.2,.7,.3,1);
 }
 .deal-card:hover .deal-logo-hero{transform:scale(1.05)}
-.deal-body{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1}
-.deal-body h3{font-family:var(--fd);font-size:23px;font-weight:500;letter-spacing:-.015em;color:var(--ink)}
-.deal-meta{display:flex;gap:18px;flex-wrap:wrap}
-.deal-meta .m{font-size:11px;color:var(--faint);font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase}
-.deal-meta .m b{display:block;color:var(--ink);font-size:13.5px;font-family:var(--fm);font-weight:500;letter-spacing:0;text-transform:none;margin-top:3px}
-.deal-actions{display:flex;gap:10px;margin-top:auto}
+.deal-body{padding:18px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+.deal-body h3{
+  font-family:var(--fd);font-size:19px;font-weight:500;
+  letter-spacing:-.016em;line-height:1.1;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+/* The figure strip and the allocation bar sit closer to each other than
+   to anything else: they are the same thought said two ways. */
+.deal-actions{display:flex;gap:10px;margin-top:auto;padding-top:2px}
 
 /* ---------- tables ---------- */
-table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+table.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-figure)}
 .tbl th{
-  font-family:var(--fm);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--faint);text-align:left;padding:10px 12px;border-bottom:1px solid var(--hair);
+  font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);letter-spacing: var(--ls-label);text-transform:uppercase;
+  color: var(--as-text-muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--hair);
 }
-.tbl td{padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+.tbl td{padding:16px 14px;border-bottom:1px solid var(--hair-soft);vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
 .tbl td.num,.tbl th.num{text-align:right}
 .tbl td b{color:var(--ink);font-weight:600}
@@ -508,41 +854,46 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 /* ---------- toast ---------- */
 .toast{
   position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:#161210;border:1px solid var(--hairg);color:var(--ink);
-  padding:13px 22px;border-radius:var(--r-lg);box-shadow:var(--shadow);opacity:0;
+  background:var(--glass-solid);border:1px solid var(--card-edge);color:var(--ink);
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  padding:13px 22px;border-radius:var(--r-lg);box-shadow:var(--card-lift),var(--shadow-lg);opacity:0;
   transition:all .25s ease;z-index:200;font-size:14px;pointer-events:none;max-width:90vw;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast b{color:var(--orange-b)}
+.toast b{color:var(--accent-hot)}
 
 /* ---------- breadcrumb ---------- */
 .crumbs{
-  display:flex;align-items:center;gap:9px;font-family:var(--fm);font-size:11px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--faint);
+  display:flex;align-items:center;gap:9px;font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);text-transform:uppercase;color: var(--as-text-muted);
   margin-bottom:24px;flex-wrap:wrap;
 }
 .crumbs a{color:var(--soft)}
-.crumbs .sep{color:var(--faint);opacity:.6}
-.crumbs .here{color:var(--orange)}
+.crumbs .sep{color:var(--faint)}
+.crumbs .here{color:var(--accent-signal)}
 
 /* ---------- wizard ---------- */
 .wiz-shell{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
 .wiz-rail{
-  border-right:1px solid var(--hair);background:rgba(0,0,0,.28);backdrop-filter:blur(8px);
+  border-right:1px solid var(--hair);background:var(--surface-well);backdrop-filter:blur(8px);
   padding:36px 28px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
 }
 .wiz-steps{margin-top:38px;display:flex;flex-direction:column;gap:4px;position:relative}
 .wiz-step{display:flex;gap:14px;padding:12px 6px;border-radius:var(--r-md);color:var(--faint);align-items:flex-start}
 .wiz-step .mark{
   width:26px;height:26px;flex:none;border-radius:50%;border:1px solid var(--hair);
-  display:grid;place-items:center;font-family:var(--fm);font-size:11px;background:rgba(0,0,0,.4);
+  display:grid;place-items:center;font-family:var(--fm);font-size: var(--fs-label);background:var(--surface-sunk);
 }
-.wiz-step.done .mark{background:linear-gradient(135deg,var(--gold),var(--orange));color:#1A1204;border-color:transparent;font-weight:600}
+.wiz-step.done .mark{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--fg-on-gold);border-color:transparent;font-weight:600}
 .wiz-step.now{color:var(--ink)}
-.wiz-step.now .mark{border-color:var(--orange);color:var(--orange-b);box-shadow:0 0 14px rgba(243,152,7,.35)}
+.wiz-step.now .mark{border-color:var(--accent-signal);color:var(--accent-hot);box-shadow:0 0 14px rgba(243,152,7,.35)}
 .wiz-step .st b{display:block;font-size:14px;font-weight:600}
-.wiz-step .st span{font-size:12px}
-.wiz-main{padding:52px 60px;max-width:880px}
+.wiz-step .st span{font-size: var(--fs-meta)}
+/* Centred in the space left of the rail, not pinned to its left edge.
+   The column is capped for line length, and on a wide monitor that cap
+   left roughly 650px of void down the right of every setup step. */
+.wiz-main{padding:52px 60px;max-width:880px;margin-inline:auto;width:100%}
 .wiz-panel{display:none}
 .wiz-panel.on{display:block;animation:rise .35s ease}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -551,101 +902,86 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 .skip:hover{color:var(--soft)}
 
 /* choice cards */
-.choice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+/* 190px left a profile card narrow enough that "Hannah Smith · Personal"
+   broke across two lines and its one-line description ran to three. The
+   cards in here always carry a label plus a sentence, so the floor is
+   set by the sentence. */
+.choice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px}
 .choice{
   border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;cursor:pointer;
-  background:rgba(0,0,0,.24);transition:border-color .12s,background .12s;
+  background:var(--surface-well);transition:border-color .12s,background .12s;
 }
 .choice:hover{border-color:var(--hairg)}
-.choice.sel{border-color:var(--orange);background:rgba(243,152,7,.08);box-shadow:0 0 0 1px var(--orange) inset}
+.choice.sel{border-color:var(--accent-signal);background:var(--tint-gold-hover);box-shadow:0 0 0 1px var(--orange) inset}
 .choice b{display:block;margin-bottom:5px;font-size:14.5px;color:var(--ink)}
-.choice span{font-size:12.5px;color:var(--soft);line-height:1.5;display:block}
+.choice span{font-size: var(--fs-meta);color:var(--soft);line-height:1.5;display:block}
 
 /* dropzone / kyc */
 .dz{
   border:1.5px dashed var(--hairg);border-radius:var(--r-lg);padding:30px;text-align:center;
-  color:var(--soft);cursor:pointer;background:rgba(243,152,7,.02);
+  color:var(--soft);cursor:pointer;background:var(--tint-gold-faint);
 }
-.dz:hover{background:rgba(243,152,7,.05)}
-.dz.done{border-style:solid;border-color:rgba(111,169,124,.5);color:var(--good)}
+.dz:hover{background:var(--tint-gold)}
+.dz.done{border-style:solid;border-color:var(--good-line);color:var(--good)}
 .cam-frame{border:1px solid var(--hair);border-radius:var(--r-frame);overflow:hidden;background:#000;position:relative;aspect-ratio:4/3}
 .cam-frame video,.cam-frame canvas{width:100%;height:100%;object-fit:cover;display:block}
 
 /* ---------- split-screen invest ---------- */
 .split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:26px;align-items:start}
-/* The document pane is the one light surface in the product, because
-   it is read at length. Brand light system applies inside it. */
-.docpane{
-  background:#FFFFFF;color:#221E18;border-radius:var(--r);padding:38px 42px;
-  font-family:Georgia,'Times New Roman',serif;font-size:13.5px;line-height:1.72;
-  box-shadow:var(--shadow);max-height:calc(100vh - 170px);overflow:auto;position:sticky;top:28px;
-}
-.docpane h4{font-family:var(--fd);font-size:16px;letter-spacing:.04em;text-transform:uppercase;text-align:center;margin-bottom:4px;color:#12100C}
-.docpane .docsub{text-align:center;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8A7B5E;margin-bottom:24px}
-.docpane .sec{margin:20px 0;padding:14px 16px;border-radius:var(--r-md);border:1px solid transparent;transition:background .3s,border-color .3s;position:relative}
-.docpane .sec h5{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:9px;color:#8A7B5E}
-.docpane .sec.filled{background:rgba(184,146,74,.08);border-color:rgba(184,146,74,.3)}
-.docpane .sec .tick{position:absolute;top:12px;right:14px;font-size:12px;color:#B8924A;opacity:0;transition:opacity .3s;font-family:var(--fm)}
-.docpane .sec.filled .tick{opacity:1}
-.f{border-bottom:1px solid #C9BFA8;padding:0 3px;color:#A07A22;font-style:italic;min-width:40px;display:inline-block}
-.f.set{color:#12100C;font-style:normal;font-weight:600;background:rgba(184,146,74,.16);border-bottom-color:#B8924A;border-radius:var(--r-xs)}
-.sig-line{border-bottom:1.5px solid #12100C;min-width:220px;display:inline-block;font-family:var(--fd);font-size:20px;padding:0 6px}
 
 .qcard{margin-bottom:16px}
 .qcard .qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.qcard .qhead .n{font-family:var(--fm);font-size:10px;color:var(--orange);letter-spacing:.18em}
+.qcard .qhead .n{font-family:var(--fm);font-size: var(--fs-label);color:var(--accent-signal);letter-spacing: var(--ls-label)}
 .qcard p{color:var(--soft);font-size:13.8px;margin-bottom:14px}
-.qcard.confirmed{border-color:rgba(111,169,124,.4)}
-.qcard.confirmed .btn{background:rgba(111,169,124,.12);color:var(--good);border-color:rgba(111,169,124,.4);box-shadow:none}
-.progress{height:4px;background:rgba(255,255,255,.07);border-radius:var(--r-pill);overflow:hidden;margin:6px 0 22px}
+.qcard.confirmed{border-color:var(--good-line)}
+.qcard.confirmed .btn{background:var(--good-fill);color:var(--good);border-color:var(--good-line);box-shadow:none}
+.progress{height:4px;background:var(--track);border-radius:var(--r-pill);overflow:hidden;margin:6px 0 22px}
 .progress .p{height:100%;background:var(--as-tri-gradient);transition:width .4s ease;border-radius:var(--r-pill)}
 
 /* fee table */
-.fee-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13.5px}
+.fee-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--hair-soft);font-size:13.5px}
 .fee-row:last-child{border-bottom:none}
 .fee-row .l{color:var(--soft)}
 .fee-row .r{font-family:var(--fm);color:var(--ink)}
 .fee-row.total{border-top:1px solid var(--hairg);margin-top:4px;padding-top:13px}
-.fee-row.total .l,.fee-row.total .r{color:var(--orange-b);font-weight:600}
-.fee-sub{font-size:12px;color:var(--faint);padding:2px 0 8px 14px}
+.fee-row.total .l,.fee-row.total .r{color:var(--accent-hot);font-weight:600}
+.fee-sub{font-size: var(--fs-meta);color:var(--faint);padding:2px 0 8px 14px}
 
 /* countdown */
 .count{display:flex;align-items:baseline;gap:9px}
-.count .n{font-family:var(--fd);font-size:36px;color:var(--orange-b);letter-spacing:-.02em}
+.count .n{font-family:var(--fd);font-size:36px;color:var(--accent-hot);letter-spacing:-.02em}
 
 /* spotbot */
-.spotbot{border-color:var(--hairg)}
+.spotbot{background-image:var(--glass-tint-gold),var(--card-sheen)}
 .spot-q{
-  display:block;width:100%;text-align:left;background:rgba(255,255,255,.03);
+  display:block;width:100%;text-align:left;background:var(--surface-1);
   border:1px solid var(--hair);color:var(--soft);border-radius:var(--r-pill);
   padding:11px 14px;margin-bottom:9px;cursor:pointer;font-size:13.5px;font-family:var(--fb);
 }
 .spot-q:hover{color:var(--ink);border-color:var(--hairg)}
-.spot-a{background:rgba(243,152,7,.06);border:1px solid var(--hair);border-radius:var(--r-lg);padding:14px 16px;font-size:13.5px;color:var(--ink-2);margin-bottom:10px;line-height:1.65}
-.spot-a .src{display:block;margin-top:10px;font-family:var(--fm);font-size:9.5px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase}
+.spot-a{background:var(--tint-gold);border:1px solid var(--hair);border-radius:var(--r-lg);padding:14px 16px;font-size:13.5px;color:var(--ink-2);margin-bottom:10px;line-height:1.65}
+.spot-a .src{display:block;margin-top:10px;font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);color: var(--as-text-muted);letter-spacing: var(--ls-label);text-transform:uppercase}
 
 /* deck sections inside the deal page */
-.slide{padding:44px 48px;margin-bottom:22px}
+.slide{padding:48px 52px;margin-bottom:28px}
 .slide h2{font-family:var(--fd);font-size:32px;font-weight:500;line-height:1.1;letter-spacing:-.02em;margin-bottom:16px;max-width:20ch;color:var(--ink)}
 .slide p{color:var(--ink-2);max-width:66ch;font-size:15.5px;margin-bottom:12px;line-height:1.65}
 .slide .statrow{display:flex;gap:44px;margin-top:26px;flex-wrap:wrap}
 
 /* login */
-.login-wrap{min-height:100vh;display:grid;place-items:center;position:relative;overflow:hidden;padding:24px}
-.login-orb{position:absolute;width:560px;height:560px;top:-190px;right:-150px;opacity:.32;filter:blur(2px);pointer-events:none}
-.login-orb2{position:absolute;width:300px;height:300px;bottom:-130px;left:-90px;opacity:.16;pointer-events:none}
-.login-card{width:100%;max-width:440px;position:relative;z-index:2;padding:38px}
 
 .demo-note{
-  border:1px solid rgba(229,102,26,.4);background:rgba(229,102,26,.07);color:var(--ember);
-  border-radius:var(--r-md);padding:11px 14px;font-size:12.5px;line-height:1.55;
+  border:1px solid var(--tint-ember-line);background:var(--tint-ember);color:var(--warn);
+  border-radius:var(--r-md);padding:11px 14px;font-size: var(--fs-meta);line-height:1.55;
 }
 /* Anything tagged demo-only, removed before production. */
 .demo-tag{
-  display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:9px;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--ember);
-  border:1px solid rgba(229,102,26,.45);border-radius:var(--r-pill);padding:3px 9px;
-  background:rgba(229,102,26,.08);
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);text-transform:uppercase;color:var(--warn);
+  border:1px solid var(--tint-ember-line);border-radius:var(--r-pill);padding:3px 9px;
+  background:var(--tint-ember);
 }
 
 /* pending card */
@@ -655,7 +991,6 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 /* responsive */
 @media (max-width:1080px){
   .split{grid-template-columns:1fr}
-  .docpane{position:static;max-height:560px}
 }
 @media (max-width:900px){
   /* Grid items default to min-width:auto, so one wide child (a data
@@ -667,6 +1002,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
   .brand{padding:0 12px 0 4px}
   .nav-label,.side-foot{display:none}
   .main{padding:24px 20px 60px;min-width:0}
+  .layout{--main-pad-x:22px}
   /* Wide content scrolls inside its own card rather than clipping. */
   .card{overflow-x:auto}
   .wiz-shell{grid-template-columns:1fr}
@@ -716,7 +1052,419 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
    Structure matches the gold chip: solid text, .3 border,
    .07 fill. From AltSpot_VC_Deck_v18.
    ============================================================ */
-.chip.cat-secondary{color:var(--as-cat-secondary);border-color:rgba(124,180,245,.35);background:rgba(124,180,245,.07)}
-.chip.cat-realasset{color:var(--as-cat-realasset);border-color:rgba(85,208,176,.35);background:rgba(85,208,176,.07)}
-.chip.cat-violet{color:var(--as-cat-violet);border-color:rgba(169,139,230,.36);background:rgba(169,139,230,.07)}
-.chip.cat-info{color:var(--as-cat-info);border-color:rgba(156,196,240,.35);background:rgba(156,196,240,.07)}
+.chip.cat-secondary{color:var(--as-cat-secondary);border-color:transparent;background:rgba(124,180,245,.07)}
+.chip.cat-realasset{color:var(--as-cat-realasset);border-color:transparent;background:rgba(85,208,176,.07)}
+.chip.cat-violet{color:var(--as-cat-violet);border-color:transparent;background:rgba(169,139,230,.07)}
+.chip.cat-info{color:var(--as-cat-info);border-color:transparent;background:rgba(156,196,240,.07)}
+
+/* ============================================================
+   DAYLIGHT — the light theme
+   ============================================================
+
+   The brief was "not white widgets": panels that read the way an iOS
+   notification reads, translucent and picking up what is behind them,
+   rather than opaque white boxes ruled onto a white page. Three things
+   make that work, and all three have to be present or none of them do.
+
+   1. THE GROUND IS NOT WHITE AND IT IS NOT FLAT. The canvas is warm
+      parchment, and over it sit the same gold and ember washes the
+      ember theme carries, turned up until they are actually visible.
+      Glass has to have something to be glass over. A translucent panel
+      on a flat white page IS a white panel, which is the failure mode
+      this brief was written against.
+
+   2. SATURATION IS PUSHED BACK UP AS THE PANEL BLURS. backdrop-filter
+      averages what is behind it toward the panel's own fill, and white
+      at 55% drains the colour out of the wash underneath. saturate(180%)
+      puts it back, so a card sitting over the gold corner is warmer
+      than a card sitting over the champagne corner. That variation is
+      the entire effect, and it costs one function.
+
+   3. NOT EVERYTHING IS GLASS. The depth ladder still descends. Cards
+      are glass; rows, tracks and wells inside them are warm tints with
+      no blur of their own. Glass stacked on glass reads as fog, and if
+      every surface is translucent then nothing is, which is the usual
+      way this look fails.
+
+   CONTRAST IS NOT NEGOTIABLE HERE. Translucency makes text contrast a
+   moving target, so nothing on this platform floats over an unknown
+   backdrop: the fills below are opaque enough that the worst case, a
+   card over the hottest part of the gold wash, still clears AA. Every
+   text colour in this block was measured against the canvas and the
+   ratio is written beside it. Apple's own guidance is that the legible
+   variant of glass carries a dimming layer; these fills are ours.
+
+   WHAT DOES NOT INVERT:
+     - The orb. Gold, always, in both themes.
+     - The CTA gradient and --fg-on-gold. Dark type on gold is dark
+       type on gold whatever the rest of the page is doing.
+     - Anything sitting on deal artwork. Banners are supplied images
+       and no theme knows what is in them, so the scrims stay dark and
+       the type on them stays light.
+   ============================================================ */
+
+html[data-theme='light']{
+  color-scheme:light;
+
+  /* ---- canvas ----
+     #F4F2EE, a cool off-white that leans warm rather than a tan. The
+     first cut of this theme sat on parchment, and white glass over
+     parchment is cream: the pane took the colour of the page and read
+     as a sticker. Glass reads as ICE when the pane is whiter and cooler
+     than most of what is behind it, so the ground moved toward neutral
+     and the warmth moved into the light that falls on it, which is the
+     atmosphere layer below. Still not --as-paper: that is the document
+     surface and is nearly pure white. */
+  --as-ink:#ECE4D8;
+  --as-ink-2:#E5DCCD;
+  --as-ink-3:#DDD2C1;
+
+  /* ---- text, measured against the WORST pane, not the canvas ----
+     The ground is dust running into apricot, and the hottest point of
+     it, a card over the ember pool bottom right, composites to about
+     #F7B87E once the glass has blurred and lifted it. Every ratio below
+     is against that colour; over the dust, which is most of the page,
+     each is higher. The ladder went darker so the glass could go
+     thinner, and that trade is the whole of this revision. */
+  --as-text:#1A1208;        /* 10.7:1 — headings */
+  --as-text-body:#2E261C;   /*  8.6:1 — body */
+  --as-text-muted:#4A4237;  /*  5.7:1 — labels, table headers, axes */
+  --as-text-faint:#574F43;  /*  4.7:1 — sources, fine print, 13px up */
+
+  /* ---- accents AS TEXT ----
+     The brand golds are paint, not type, on this canvas. #C79A4B is
+     2.3:1 here and #FF9E2C is 1.9:1, and every eyebrow, source line
+     and table header in the product is one of them at 12px. These are
+     the darkened editions that carry the same warmth and actually get
+     read. --as-gold itself is untouched: gradients, bar fills, the orb
+     and every glyph stroke still use it. */
+  /* THE BRIGHTEST AMBER THAT STILL READS. Small type on a light ground
+     cannot wear the brand orange: #F39807 is 2:1 on dust. These are the
+     lightest values that clear 4.5:1 against the dust the cards mostly
+     sit on (about #F1E6D6), and the ground below is calmed so the hot
+     corner no longer pulls every accent down to brown. Big figures do
+     not need this: at 24px and up they wear --figure-hot, which is the
+     real orange. */
+  --accent:#9F510A;         /*  4.6:1 — amber. Eyebrows, labels, our figures */
+  --accent-hot:#B4470C;     /*  4.4:1 — ember. Hover, urgent, closing */
+  --accent-quiet:#9A5A1A;   /*  4.4:1 — the quiet layer */
+  --accent-soft:#A8540C;    /*  4.3:1 — pending, awaiting, in flight */
+  --accent-signal:#B4470C;  /* section eyebrows, live markers as type */
+  --focus-ring:#B4470C;     /*  4.4:1, well clear of the 3:1 graphic floor */
+  --fg-on-gold:#1C1508;     /* NOT --as-ink. Gold CTAs keep dark type */
+
+  /* ---- status ---- */
+  --good:#12873F;           /* 4.6:1 on the pale pane. Text only */
+  --good-paint:#22C55E;     /* paint: dots, bars, fills. Never type */
+  --good-line:rgba(34,197,94,.55);
+  --good-fill:rgba(34,197,94,.14);
+  --warn:#B4470C;           /*  4.4:1 */
+  --bad:#B42318;            /*  5.3:1 — a red, not a brown */
+
+  /* ---- category tints ----
+     Still the documented exception to "no blue, green, purple", still
+     taxonomy only. The deck's values are pastels built for a dark
+     ground and disappear on cream, so each is taken down to its AA
+     edition at the same hue. */
+  --as-cat-secondary:#144E8A;
+  --as-cat-realasset:#0A5A4B;
+  --as-cat-violet:#5A3E94;
+  --as-cat-info:#1F5078;
+
+  /* ---- the plot palette, deepened ----
+     Same hues, same order, taken down until each clears roughly 3:1
+     against the glass it is drawn on. The pale end of every dark ramp
+     is the problem: #F2E394 and #F2E0B4 are the brightest thing on the
+     ember canvas and completely absent on cream, so the ramps are
+     compressed from the light end rather than simply darkened. */
+  /* Secondaries and real assets need no fill edition of their own: the
+     values above are already deep enough to draw with, and one colour
+     per class is what keeps a legend swatch and its bar segment the
+     same colour. */
+  --as-cat-venture:#9A7029;
+  --as-cat-growth:#C06405;
+  --as-cat-fund:#7E5FC4;
+
+  --as-ind-1:#9A7029;   --as-ind-2:#C06405;   --as-ind-3:#A8461A;
+  --as-ind-4:#A8813C;   --as-ind-5:#B5591F;   --as-ind-6:#7A5A1C;
+  --as-ind-7:#C08420;   --as-ind-8:#6E5629;   --as-ind-9:#8F6A2A;
+  --as-ind-10:#8A6D35;  --as-ind-11:#B9A03A;  --as-ind-12:#5C5346;
+
+  --as-vintage-1:#5F4A1E; --as-vintage-2:#7E6228; --as-vintage-3:#9E7C33;
+  --as-vintage-4:#BE9C4E; --as-vintage-5:#D9BC7E;
+
+  /* ---- hairlines ----
+     Warm brown at low alpha, never neutral grey. A grey rule on a warm
+     ground is the fastest way to make a cream page look like a
+     bleached one. */
+  --hair-neutral:rgba(96,62,28,.15);
+  --hair-strong:rgba(96,62,28,.24);
+  --hair-soft:rgba(96,62,28,.09);
+  --hair-gold:rgba(184,132,50,.40);
+  --hair-gold-active:rgba(196,120,30,.46);
+  --hair-ember:rgba(168,70,26,.30);
+  --hair-champagne:rgba(160,122,52,.34);
+
+  /* ---- the depth ladder, inverted ----
+     Raised means adding white; recessed means adding warm shadow. The
+     wells are brown rather than black: black on cream goes grey and
+     drags the whole page toward newsprint. */
+  --fill-card:rgba(250,252,255,.13);   /* THE glass pane. Barely tinted, a cool white */
+  --fill-input:rgba(255,255,255,.44);
+  --panel-2:rgba(255,255,255,.50);
+  --surface-1:rgba(255,255,255,.22);   /* quiet fill inside a card */
+  --surface-2:rgba(255,255,255,.42);   /* raised: hover rows, chips */
+  --surface-3:rgba(255,255,255,.78);   /* present: thumbs, filled tracks, quiet pills */
+  --surface-well:rgba(110,70,28,.07);  /* recessed: inputs, inset panels */
+  --track:rgba(110,70,28,.14);         /* the unfilled half of a meter */
+  --surface-sunk:rgba(110,70,28,.11);  /* deepest: the rail foot */
+  --edge-top:rgba(255,255,255,.72);    /* the lit lip, softened into the pane */
+  --card-edge:transparent;             /* no drawn rim. See :root */
+  --surface-toast:rgba(255,250,244,.86);
+
+  /* ---- glass ----
+     LIQUID GLASS, after Apple's material (WWDC 2025). The principles
+     this block follows, because they are what make it read as glass
+     rather than as a pale box:
+
+     1. THE TINT IS ALMOST NOTHING. A pane is 20% cool white. What separates
+        it from the page is not paint, it is what the pane does to the
+        light behind it: a blur that dissolves every shape and a
+        vibrancy lift that keeps the colour alive through it.
+     2. EDGES ARE LIGHT, NOT LINES. There is no border. A specular
+        highlight catches the top and left edges where light enters, a
+        dimmer refraction catches the bottom and right where it leaves,
+        and a soft glow falls a little way into the glass. That is the
+        whole edge. (--card-lift.)
+     3. DEPTH IS LAYERED. A tight contact shadow and a wide soft one,
+        both pulled in under the pane, so it floats over the ground.
+     4. THICKNESS FOLLOWS JOB. Content glass is the thinnest. Anything
+        floating over other content (Spot's dock, toasts, the type lab,
+        popovers) is a thicker edition, because Apple's own rule is that
+        glass over busy content earns more frost for legibility. Rows,
+        wells and tracks inside a pane are not glass at all: glass on
+        glass reads as fog.
+     5. LEGIBILITY WINS. Every text colour above clears 4.5:1 against the
+        hottest point the ground can put behind a pane. */
+  /* ICE, NOT MILK. Frostier without letting more through: the fill stays
+     at the same alpha but turns a cooler white, the blur is heavier so
+     the ground is pure light and shade, saturation comes back toward
+     neutral so warmth reads as light rather than colour, brightness
+     lifts the pane the way frosted glass lifts what is behind it, and a
+     fine grain gives the surface the tooth of real frost. */
+  --glass-blur:34px;
+  --glass-sat:112%;
+  --glass-bright:1.07;
+  --glass-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23f)'/%3E%3C/svg%3E");
+  --glass:rgba(255,253,250,.38);
+  --glass-solid:rgba(255,252,248,.74);
+  --glass-tint-gold:linear-gradient(180deg,rgba(214,168,86,.16),rgba(214,168,86,.04));
+  --glass-tint-ember:linear-gradient(180deg,rgba(229,102,26,.11),rgba(229,102,26,.02));
+
+  /* Cards carry their own light. The sheen is a single soft diagonal,
+     brightest at the top left, so a grid of them reads as panes under
+     one light source rather than as swatches. */
+  --card-sheen:var(--glass-grain),linear-gradient(155deg,rgba(255,255,255,.30) 0%,rgba(244,249,255,.08) 34%,rgba(255,255,255,0) 58%,rgba(255,255,255,.08) 100%);
+  --hero-wash:.16;
+  /* EDGES ARE LIGHT. A specular line along the top where light enters and
+     a dimmer one along the bottom where it leaves, each offset only
+     vertically. They used to be offset diagonally as well, which drew
+     the highlight up the left side and the refraction up the right, and
+     where those met the curve of a corner the two lines stopped at an
+     angle, visibly at the bottom. Vertical offsets follow the radius all
+     the way round. A glow falls into the pane from the top, a faint warm
+     shade gathers inside the bottom, and the cast shadow is two layers
+     pulled in under it. */
+  --card-lift:
+    inset 0 1px 1px rgba(255,255,255,.85),
+    inset 0 -1px 1px rgba(255,255,255,.30),
+    inset 0 20px 28px -24px rgba(255,255,255,.70),
+    inset 0 -18px 26px -22px rgba(120,70,20,.08),
+    0 1px 2px rgba(110,62,18,.06),
+    0 12px 28px -12px rgba(130,72,20,.18),
+    0 34px 64px -32px rgba(130,72,20,.18);
+
+  /* ---- accent washes, lifted ----
+     7% orange is a warm glow on the ember canvas and literally nothing
+     on cream. Roughly doubled, and pulled toward gold, because ember at
+     full strength on a light ground reads as a warning. */
+  --tint-gold:rgba(243,152,7,.16);
+  --tint-gold-hover:rgba(243,152,7,.24);
+  /* A real gold pill, not a beige one. */
+  --btn-fill:rgba(243,152,7,.30);
+  --btn-fill-hover:rgba(243,152,7,.44);
+  --tint-gold-faint:rgba(199,154,75,.07);
+  --tint-ember:rgba(229,102,26,.11);
+  --tint-ember-line:rgba(229,102,26,.38);
+  --fill-gold-tint:rgba(199,154,75,.12);
+  --focus-glow:0 0 0 3px rgba(243,152,7,.28);
+
+  /* ---- shadows ----
+     Warm brown, never black. Black shadows on a cream page look like
+     dirt; the same shape in brown reads as depth. Two layers each: a
+     tight contact shadow that seats the element, and a wide soft one
+     that lifts it. */
+  --shadow-sm:0 1px 2px rgba(110,62,18,.05),0 6px 18px rgba(130,72,20,.07);
+  --shadow-md:0 2px 6px rgba(110,62,18,.06),0 14px 36px rgba(130,72,20,.11);
+  --shadow-lg:0 6px 18px rgba(110,62,18,.07),0 30px 70px rgba(130,72,20,.16);
+  --shadow:0 10px 34px rgba(130,72,20,.13);
+  --shadow-cta:0 6px 20px rgba(243,152,7,.42);
+  --shadow-cta-hover:0 10px 30px rgba(243,152,7,.55);
+  --shadow-card-hover:
+    inset 0 1px 1px rgba(255,255,255,.95),
+    inset 0 -1px 1px rgba(255,255,255,.38),
+    inset 0 20px 28px -24px rgba(255,255,255,.85),
+    inset 0 -18px 26px -22px rgba(120,70,20,.08),
+    0 2px 4px rgba(110,62,18,.07),
+    0 18px 36px -12px rgba(130,72,20,.22),
+    0 46px 84px -34px rgba(130,72,20,.24);
+  --shadow-frame:0 20px 56px rgba(74,56,26,.16);
+  --shadow-knob:0 1px 3px rgba(74,56,26,.22);
+  --shadow-orb-sm:0 0 14px rgba(199,154,75,.45);
+  --shadow-orb-md:0 0 24px rgba(199,154,75,.55);
+
+  /* ---- composed surfaces ----
+     The rail is glass like everything else, brightest at the head and
+     settling toward the foot so the member's own chip still sits on
+     ground rather than floating. The dock is the one panel that has to
+     stay readable over whatever page is behind it, so it is held
+     noticeably more opaque than a card. */
+  --rail-bg:
+    linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,.08)),
+    rgba(255,251,245,.16);
+  --rail-blur:26px;
+  --dock-bg:linear-gradient(180deg,rgba(255,253,250,.72),rgba(253,247,239,.80));
+  /* A backdrop dims the page it covers. On cream that wants to be far
+     lighter than the ember theme's, or the modal reads as a blackout. */
+  --scrim-modal:rgba(46,36,18,.38);
+  --tick-mark:rgba(74,56,26,.34);
+
+  /* Glass, like everything else on the rail. The first cut kept these
+     dark so the two gold product marks had a ground, and the result was
+     seven black squares down the loudest column on a pale page. The
+     tiles are now clear panes with the same rim as a card, the glyphs
+     take the page ink, and the two marks are given a hairline edge in
+     Sidebar.module.css so a gold shape still reads on pale glass. */
+  --slot-tile:rgba(255,255,255,.34);
+  --slot-tile-strong:rgba(255,255,255,.62);
+  --slot-edge:rgba(255,255,255,.80);
+  --slot-ink:var(--as-text-muted);
+  --slot-ink-strong:var(--as-text);
+  --slot-ink-active:var(--accent-hot);
+
+  /* ---- graphics that assumed a dark ground ---- */
+  --as-bar-base:#CDC2AC;                  /* cost basis. Gold is still gain */
+  --as-bar-divide:rgba(255,255,255,.92);
+  --as-dot-field:radial-gradient(circle at 1px 1px,rgba(120,96,48,.16) 1px,transparent 0);
+  --as-scan-line:linear-gradient(90deg,rgba(120,96,48,.10) 40%,rgba(229,102,26,.55) 50%,rgba(120,96,48,.10) 60%);
+  --as-em-gradient:linear-gradient(100deg,#E8890C,#E5661A 55%,#C9470F);
+  --figure-hot:#DC6410;     /* 3.1:1 — large figures only, 24px and up */
+  --vote-gradient:linear-gradient(135deg,#3DE585,#16A34A);
+  --shadow-vote:0 6px 20px rgba(34,197,94,.36);
+  --shadow-vote-hover:0 10px 30px rgba(34,197,94,.5);
+}
+
+/* ---- the ground ----
+   Dust into pale apricot, with gold and orange spread across the whole
+   viewport rather than piled into one corner: gold enters top of centre
+   and settles bottom left and bottom centre, orange sits top right and
+   ember bottom right, and two apricot pools hold the middle on both
+   sides. Revised 2026-09-16 after the first cut read as one-sided and a
+   little loud: every wash came down, gold came up, and the sweep ends
+   at #F1D6B2 rather than #F2BF8C. The gleam stays, top left. The layer
+   is fixed, so a long page still shifts warmth as it scrolls. */
+html[data-theme='light'] body::before{
+  background:
+    /* THE GLEAM, upper left */
+    radial-gradient(48% 40% at 12% 6%,rgba(255,253,249,.82),transparent 70%),
+    /* ice: two cool pools, faint, so the frost has something cold in it */
+    radial-gradient(34% 30% at 34% 40%,rgba(214,232,250,.30),transparent 72%),
+    radial-gradient(30% 28% at 82% 70%,rgba(206,228,248,.22),transparent 72%),
+    /* gold, entering top of centre */
+    radial-gradient(54% 46% at 44% -10%,rgba(214,172,98,.34),transparent 72%),
+    /* orange, top right, wider */
+    radial-gradient(56% 54% at 100% 0%,rgba(243,152,7,.20),rgba(229,102,26,.05) 50%,transparent 76%),
+    /* apricot, left of middle */
+    radial-gradient(44% 40% at 10% 56%,rgba(238,172,104,.24),transparent 72%),
+    /* apricot, right of middle */
+    radial-gradient(48% 44% at 74% 46%,rgba(240,164,92,.22),transparent 72%),
+    /* ember, bottom right */
+    radial-gradient(50% 52% at 100% 100%,rgba(229,102,26,.13),transparent 70%),
+    /* gold, bottom left */
+    radial-gradient(54% 52% at -2% 100%,rgba(214,172,98,.36),transparent 70%),
+    /* champagne, bottom centre */
+    radial-gradient(48% 36% at 50% 106%,rgba(228,192,124,.28),transparent 70%),
+    /* the sweep */
+    linear-gradient(125deg,#F6F1E9 0%,#F2E7D6 34%,#F1DEC4 68%,#F0D6B4 100%);
+}
+html[data-theme='light'] body::after{opacity:.012}
+
+html[data-theme='light'] ::selection{background:rgba(243,152,7,.28);color:var(--as-text)}
+
+/* The quiet button is a tinted pane here, not a lighter hole. */
+html[data-theme='light'] .btn-quiet{background:var(--surface-2)}
+html[data-theme='light'] .btn-ghost:hover{color:var(--accent-hot)}
+
+/* Inputs are the one place the ladder goes down rather than up: a field
+   is a recess you type into, and on glass that has to be a warm inset
+   rather than a brighter pane, or it competes with the card holding it. */
+html[data-theme='light'] .input,
+html[data-theme='light'] select.input,
+html[data-theme='light'] textarea.input{
+  background:var(--fill-input);
+  border-color:var(--card-edge);
+  box-shadow:inset 0 1px 2px rgba(60,48,28,.08),0 0 0 1px var(--hair-soft);
+}
+
+/* Glass, like every card. The rail is the surface a member sees on
+   every page, so it gets the treatment rather than an opaque column. */
+html[data-theme='light'] .wiz-rail{
+  background:var(--glass);
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+}
+html[data-theme='light'] .choice{backdrop-filter:blur(8px) saturate(140%)}
+html[data-theme='light'] .toast{
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow:var(--shadow-lg);
+}
+
+/* The deal mark sits on supplied artwork in both themes, so its own
+   drop shadow stays dark. Only the card's lift changes. */
+/* THE WORDMARK IS AN IMAGE, so it cannot take currentColor and cannot
+   be tinted without tinting the orb with it. The letterforms ship as a
+   flat cream fill and the orb ships as its own gradient, which is
+   correct and is why a filter is not an option here: invert or
+   brightness would take the orb too, and the orb is gold, always.
+
+   So there are two files, identical but for the letterform fill, and
+   the theme swaps between them. content: on an <img> replaces the
+   rendered image wholesale, which keeps this in the stylesheet rather
+   than adding a theme prop to the three places the wordmark is drawn:
+   the rail, the login page and the wizard.
+
+   Matched on the source rather than on a class, because the login page
+   sizes its copy through its own module and does not carry the global
+   one. Selecting the file means any future placement is covered the
+   moment it is added, and there is no class to remember. */
+html[data-theme='light'] img[src$='/brand/altspot-wordmark.svg']{
+  content:url('/brand/altspot-wordmark-ink.svg');
+}
+
+html[data-theme='light'] .deal-card{box-shadow:var(--card-lift)}
+html[data-theme='light'] .deal-card:hover{box-shadow:var(--shadow-card-hover)}
+
+/* ============================================================
+   TYPE LAB — the data face, on trial
+   ============================================================
+   Temporary. components/TypeLab.tsx writes data-mono on <html> and
+   these point --font-mono at the candidate, so every eyebrow, label,
+   table header and figure on the platform changes at once, in both
+   themes. JetBrains Mono is the absence of the attribute. Delete this
+   block when the face is chosen and point --font-mono at the winner.
+
+   The tabular sans faces are not monospace, so the letter-spacing
+   the labels carry (tuned for a monospace advance) is left exactly as
+   it is: the point is to see them as they would ship, not flattered. */
+html[data-mono='figtree']{--font-mono:var(--font-mono-figtree)}
+html[data-mono='manrope']{--font-mono:var(--font-mono-manrope)}
+html[data-mono='onest']{--font-mono:var(--font-mono-onest)}

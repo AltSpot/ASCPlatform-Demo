@@ -1,0 +1,91 @@
+/* The strip of things waiting on the member. One row each. */
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-lift);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  border-radius: var(--r-lg);
+  background-color: var(--fill-card);
+  background-image: var(--glass-tint-ember), var(--card-sheen);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px 18px 20px;
+  border-left: 3px solid var(--accent);
+}
+.row[data-tone='urgent'] {
+  border-left-color: var(--warn);
+}
+.row[data-tone='live'] {
+  border-left-color: var(--good-paint);
+}
+.row + .row {
+  border-top: 1px solid var(--hair-neutral);
+}
+
+/* The mark says what kind of row this is without a chip: gold for a
+   deadline or a signature, ember once it is urgent or already lapsed,
+   and the live indicator for a Radar name that has arrived. */
+.mark {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--as-gold);
+  animation: needs-pulse 2.4s ease-out infinite;
+}
+.row[data-tone='urgent'] .mark {
+  background: var(--as-ember);
+}
+.row[data-tone='live'] .mark {
+  background: var(--good-paint);
+}
+@keyframes needs-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(243, 152, 7, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.line {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--as-text-body);
+}
+.line b {
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+}
+
+.clock {
+  color: var(--as-text);
+  font-weight: var(--w-medium);
+}
+.row[data-tone='urgent'] .clock {
+  color: var(--bad);
+}
+
+@media (max-width: 720px) {
+  .row {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+  .line {
+    flex-basis: calc(100% - 22px);
+  }
+}

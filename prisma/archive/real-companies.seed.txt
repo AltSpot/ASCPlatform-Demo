@@ -1,0 +1,213 @@
+/**
+ * ARCHIVED SHELF ENTRIES — real companies, held pending legal approval.
+ *
+ * These two deals (OpenAI and Databricks secondaries) were on the shelf
+ * until 2026-09-16, when Tyler asked for every real company to come off
+ * the platform until legal has approved listing them. Nothing is lost:
+ * the entries are kept here verbatim, with their marks still in
+ * public/openai-logo.svg and public/databricks-logo.svg, so they can be
+ * put back with a paste into prisma/seed.ts.
+ *
+ * This file is not imported anywhere and is excluded from the build by
+ * being outside the app and lib trees. It is TypeScript so the shape
+ * stays checked against SeedDeal when it is restored.
+ *
+ * Their invented stand-ins are `aurelia` and `tessellate` in seed.ts.
+ * lib/repositories/investor.ts seeds the demo book against those ids.
+ */
+
+// Paste back into the DEALS array in prisma/seed.ts:
+export const ARCHIVED_REAL_DEALS = `
+  {
+    id: 'openai',
+    name: 'OpenAI',
+    entity: 'ASC OpenAI SPV, LLC',
+    tag: 'Late-stage secondary',
+    kind: 'secondary',
+    sector: 'Foundation Models · Consumer AI',
+    stage: 'Late stage · issuer-approved',
+    assetClass: 'secondary',
+    industry: 'artificial-intelligence',
+    art: 'radial-gradient(120% 170% at 50% 40%,rgba(0,0,0,.05) 0%,rgba(0,0,0,0) 58%),linear-gradient(135deg,#FFFFFF 0%,#F6F4EF 55%,#E9E4DA 115%)',
+    logoUrl: '/openai-logo.svg',
+    headline: 'The most used AI product in the world, below its last tender price.',
+    blurb:
+      'A secondary interest in OpenAI, the lab behind ChatGPT and the GPT models, sold to consumers, developers and enterprises.',
+    thesis: [
+      'ChatGPT reaches 900M+ weekly users and the OpenAI platform sits behind a large share of production AI workloads. Distribution at this scale is the hardest thing in software to replicate.',
+      'AltSpot acquired this position as principal from an early employee block, with issuer approval and full transfer documentation. No forward contracts, no synthetic exposure.',
+      'Entry is at an implied $690B, an 8% discount to the March 2026 employee tender at $750B. Reported annualized revenue is roughly $30B, growing faster than any software company at comparable scale.',
+    ],
+    metrics: [
+      { k: 'Implied valuation', v: '$690B' },
+      { k: 'Discount to last tender', v: '8%' },
+      { k: 'Weekly ChatGPT users', v: '900M+', note: 'reported, mid-2026' },
+      { k: 'Annualized revenue', v: '~$30B', note: 'reported, mid-2026' },
+    ],
+    terms: [
+      { k: 'Security', v: 'Common stock (secondary)' },
+      { k: 'Implied valuation', v: '$690B' },
+      { k: 'Transfer', v: 'Issuer-approved under ROFR' },
+      { k: 'AltSpot role', v: 'Principal acquirer' },
+    ],
+    risks:
+      'Late-stage does not mean low-risk: the entry price is set by private-market marks that can fall, OpenAI does not disclose audited financials to secondary holders, compute spending is enormous and ongoing, and the corporate structure is unusual. The interest is illiquid until a realization event, and no IPO is scheduled or promised. Total loss of capital is possible. See the memo for the full risk review.',
+    minInvestment: 10000,
+    allocationTotal: 3000000,
+    allocationRemaining: 480000,
+    closesInDays: 12,
+    altspotCommitted: 300000,
+    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    sortOrder: 1,
+    fees: FEES,
+    media: {
+      type: 'metric',
+      label: 'Entry vs. last tender',
+      series: [92, 100],
+      caption:
+        'AltSpot entry price indexed against the March 2026 employee tender (100). Source: transfer documentation.',
+    },
+    docs: [
+      'Investment Memo: OpenAI Secondary (AltSpot)',
+      'Subscription Agreement: ASC OpenAI SPV',
+      'Transfer & Issuer Approval Summary',
+      'Risk Factors & Disclosures',
+    ],
+    spotbot: [
+      {
+        q: 'What exactly am I buying?',
+        a: 'Membership interests in ASC OpenAI SPV, LLC, a special purpose vehicle holding OpenAI shares acquired in an issuer-approved secondary transfer. You own interests in the SPV, not OpenAI stock directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How was the price set?',
+        a: 'AltSpot negotiated the block at an implied $690B valuation, an 8% discount to the March 2026 employee tender at $750B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How is AltSpot paid on this deal?',
+        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. No annual fees and no capital calls. Not legal, tax, or investment advice.',
+      },
+    ],
+    deck: [
+      {
+        kicker: 'The company',
+        title: 'Distribution no one else has.',
+        body: [
+          'ChatGPT is the consumer default for AI, with 900M+ weekly users reported in mid-2026, and the API platform sits behind a large share of production AI workloads.',
+          'Reported annualized revenue is roughly $30B. No software company has grown to this scale this quickly.',
+        ],
+        stats: [
+          { k: 'Weekly users', v: '900M+' },
+          { k: 'Annualized revenue', v: '~$30B' },
+          { k: 'Last tender', v: '$750B' },
+        ],
+      },
+      {
+        kicker: 'The structure',
+        title: 'Real shares. Clean title. One vehicle.',
+        body: [
+          'The company approved the transfer under its ROFR process. AltSpot holds the shares inside ASC OpenAI SPV with full transfer documentation. No forwards, no synthetics.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'databricks',
+    name: 'Databricks',
+    entity: 'ASC Databricks SPV, LLC',
+    tag: 'Late-stage secondary',
+    kind: 'secondary',
+    sector: 'Data · Enterprise AI',
+    stage: 'Late stage · issuer-approved',
+    assetClass: 'secondary',
+    industry: 'data-infrastructure',
+    art: 'radial-gradient(120% 170% at 50% 40%,rgba(255,120,90,.22) 0%,rgba(255,120,90,0) 58%),linear-gradient(135deg,#1A0B08 0%,#4A150D 55%,#B33A24 115%)',
+    logoUrl: '/databricks-logo.svg',
+    headline: 'The data platform underneath the enterprise AI build-out.',
+    blurb:
+      'A secondary interest in Databricks, the lakehouse platform enterprises run their data and AI workloads on.',
+    thesis: [
+      'Databricks is where enterprise data and AI meet: 15,000+ customers run the lakehouse, and the enterprise AI build-out runs through the data layer it owns.',
+      'The revenue run rate crossed $4.5B growing above 50% a year, with net revenue retention around 140%. Very few private companies compound at that rate at this scale.',
+      'AltSpot acquired the block as principal, issuer-approved, at an implied $110B: an 8% discount to the June 2026 employee tender at $120B.',
+    ],
+    metrics: [
+      { k: 'Implied valuation', v: '$110B' },
+      { k: 'Discount to last tender', v: '8%' },
+      { k: 'Revenue run rate', v: '$4.5B', note: 'reported, mid-2026' },
+      { k: 'Net revenue retention', v: '~140%' },
+    ],
+    terms: [
+      { k: 'Security', v: 'Common stock (secondary)' },
+      { k: 'Implied valuation', v: '$110B' },
+      { k: 'Transfer', v: 'Issuer-approved under ROFR' },
+      { k: 'AltSpot role', v: 'Principal acquirer' },
+    ],
+    risks:
+      'Late-stage venture risk applies: the entry mark is set by private rounds and can fall, competition from hyperscalers and open-source engines is real, and growth at this scale is expensive to sustain. The interest is illiquid until a realization event, and no IPO is scheduled or promised. Total loss of capital is possible. See the memo for the full risk review.',
+    minInvestment: 10000,
+    allocationTotal: 2500000,
+    allocationRemaining: 950000,
+    closesInDays: 26,
+    altspotCommitted: 250000,
+    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    sortOrder: 2,
+    fees: FEES,
+    media: {
+      type: 'metric',
+      label: 'Revenue run rate',
+      series: [1.0, 1.4, 1.6, 2.4, 3.0, 3.7, 4.5],
+      caption:
+        'Reported revenue run rate in $B, 2023 through mid-2026. Source: company announcements.',
+    },
+    docs: [
+      'Investment Memo: Databricks Secondary (AltSpot)',
+      'Subscription Agreement: ASC Databricks SPV',
+      'Transfer & Issuer Approval Summary',
+      'Risk Factors & Disclosures',
+    ],
+    spotbot: [
+      {
+        q: 'What exactly am I buying?',
+        a: 'Membership interests in ASC Databricks SPV, LLC, a special purpose vehicle holding Databricks shares acquired in an issuer-approved secondary transfer. You own interests in the SPV, not Databricks stock directly, and AltSpot Capital, LLC is the Manager. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How was the price set?',
+        a: 'AltSpot negotiated the block at an implied $110B valuation, an 8% discount to the June 2026 employee tender at $120B. Discounts on approved secondaries reflect illiquidity and transfer friction, not a view on the company. Not legal, tax, or investment advice.',
+      },
+      {
+        q: 'How is AltSpot paid on this deal?',
+        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. No annual fees and no capital calls. Not legal, tax, or investment advice.',
+      },
+    ],
+    deck: [
+      {
+        kicker: 'The company',
+        title: 'The lakehouse won the data layer.',
+        body: [
+          'More than 15,000 customers run Databricks, and the revenue run rate crossed $4.5B in mid-2026 growing above 50% a year with roughly 140% net revenue retention.',
+          'Enterprise AI is built on enterprise data, and Databricks owns the layer where that data lives.',
+        ],
+        stats: [
+          { k: 'Revenue run rate', v: '$4.5B' },
+          { k: 'Growth', v: '50%+' },
+          { k: 'Customers', v: '15,000+' },
+        ],
+      },
+      {
+        kicker: 'The structure',
+        title: 'Real shares. Clean title. One vehicle.',
+        body: [
+          'The company approved the transfer under its ROFR process. AltSpot holds the shares inside ASC Databricks SPV with full transfer documentation. No forwards, no synthetics.',
+        ],
+      },
+    ],
+  },
+
+  /* ----------------------------------------------------------------
+     CLOSED DEALS. Not on the shelf, ever: every browse read filters on
+     status 'open'. They are here so a demo account has a portfolio with
+     more than one line in it, across more than one vintage, including
+     one position marked below cost and one that has exited and returned
+     cash. A portfolio page that only ever shows winners is a brochure.
+     ---------------------------------------------------------------- */
+`;

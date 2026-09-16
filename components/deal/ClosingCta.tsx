@@ -15,7 +15,7 @@ export default function ClosingCta({
   return (
     <div className={s.closing}>
       <div>
-        <div className={s.eyebrow}>Next step</div>
+        <div className={`eyebrow signal ${s.eyebrow}`}>Next step</div>
         <p className={s.closingTitle}>Ready to participate?</p>
         <p className={s.closingNote}>
           Minimum {money(minInvestment)}. Your saved profile pre-fills every

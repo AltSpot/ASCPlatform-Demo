@@ -2,24 +2,28 @@
  * Terminal — what is happening outside the portfolio.
  *
  * Three sections, in the order an investor actually reads them: the
- * wire (what happened), the Journal (what we think about it), the
+ * wire (what happened), the library (what we think about it), the
  * Monitor (the numbers underneath it).
  *
- * Server component. All three sources are fetched in parallel and all
- * three degrade to nothing rather than failing: `getMarketNews`,
- * `getJournalPosts` and `getMarketMonitor` each resolve to an empty
+ * The library is hosted in the portal. Every piece opens at
+ * /terminal/<slug> and is read in the portal shell, so a member who
+ * came to read something is still here when they finish. See
+ * lib/terminal/library.ts.
+ *
+ * Server component. The two remote-shaped sources are fetched in
+ * parallel and both degrade to nothing rather than failing:
+ * `getMarketNews` and `getMarketMonitor` each resolve to an empty
  * result on any error, and each section renders its own quiet state.
- * The page cannot 500 because a newsletter feed is down.
  */
 import Link from 'next/link';
 
 import Section from '@/components/deal/Section';
-import JournalRail from '@/components/terminal/JournalRail';
+import LibraryRail from '@/components/terminal/LibraryRail';
 import MonitorBoard from '@/components/terminal/MonitorBoard';
 import Tape from '@/components/terminal/Tape';
-import WireRail from '@/components/terminal/WireRail';
+import WireBoard from '@/components/terminal/WireBoard';
 import { requireUser } from '@/lib/auth';
-import { getJournalPosts, JOURNAL_SITE_URL } from '@/lib/terminal/journal';
+import { listLibrary, toCard } from '@/lib/terminal/library';
 import { getMarketMonitor } from '@/lib/terminal/monitor';
 import { getMarketNews } from '@/lib/terminal/news';
 
@@ -32,11 +36,15 @@ export const metadata = {
 export default async function TerminalPage() {
   await requireUser();
 
-  const [news, posts, indicators] = await Promise.all([
+  const [news, indicators] = await Promise.all([
     getMarketNews({ limit: 13 }),
-    getJournalPosts(6),
     getMarketMonitor(),
   ]);
+
+  /* Hosted here, not linked to. Only the card fields cross to the
+     client; the bodies stay on the server and are read on the piece's
+     own page. */
+  const library = listLibrary().map(toCard);
 
   return (
     <>
@@ -61,7 +69,7 @@ export default async function TerminalPage() {
         title="Filed today."
         lede="Private-markets headlines, newest first. Structure, pricing and process, not stock tips."
       >
-        <WireRail items={news} />
+        <WireBoard items={news} />
         <p className="tiny" style={{ marginTop: 18, maxWidth: '80ch' }}>
           Demo environment. This wire is simulated: the desks are invented and
           the stories are written for the demo. No item is a recommendation, and
@@ -70,20 +78,11 @@ export default async function TerminalPage() {
       </Section>
 
       <Section
-        eyebrow="AltSpot Journal"
+        eyebrow="The library"
         title="What we are writing."
-        lede="Published to the AltSpot newsletter. Pulled live from the publication, so what you see here is what subscribers received."
+        lede="Everything we publish, read here. Explainers on how these structures actually work, quarterly research, and the podcast. No piece is a recommendation and none of it is about a live deal."
       >
-        <JournalRail posts={posts} />
-        {posts.length > 0 && (
-          <p className="tiny" style={{ marginTop: 18 }}>
-            Read every issue at{' '}
-            <a href={JOURNAL_SITE_URL} target="_blank" rel="noreferrer noopener">
-              the publication
-            </a>
-            .
-          </p>
-        )}
+        <LibraryRail items={library} />
       </Section>
 
       <Section

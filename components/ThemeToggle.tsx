@@ -1,0 +1,112 @@
+'use client';
+
+/**
+ * Ember or Daylight, as a segmented pill on the rail.
+ *
+ * TWO BUTTONS RATHER THAN ONE. A single toggle has to choose between
+ * showing the theme you are in and showing the theme you would get,
+ * and whichever it picks half the people read it the other way. Two
+ * segments with one lit says both at once, and on a call nobody has to
+ * explain which way it goes.
+ *
+ * THE ATTRIBUTE IS THE TRUTH, not storage and not React state. This is
+ * the same arrangement the rail's collapse uses and for the same
+ * reason: the blocking script in app/layout.tsx sets data-theme before
+ * hydration, so by the time this mounts the page may already be light
+ * while React's first render believed otherwise. Reading storage in the
+ * snapshot does not fix it, because the value is right and React never
+ * re-reads it, so the first press after a reload appears to do nothing.
+ * Reading the attribute and watching it with a MutationObserver makes
+ * this component follow the document rather than race it.
+ *
+ * DARK IS THE DEFAULT AND LIGHT IS OPT IN. The ember canvas is what
+ * AltSpot Capital looks like; Daylight is a preference a member
+ * expresses, not a guess made from their operating system. Following
+ * prefers-color-scheme would mean the product opened in a different
+ * skin depending on whose laptop it was on, which is exactly the thing
+ * the fixed dashboard order exists to prevent.
+ *
+ * The choice is per device, in localStorage, for the same reason the
+ * folded sections and the rail width are: it is a fact about a screen,
+ * not about an investor, and it is not worth a column or a round trip.
+ */
+import { Moon, Sun } from 'lucide-react';
+import { useSyncExternalStore } from 'react';
+
+import s from './ThemeToggle.module.css';
+
+export type Theme = 'dark' | 'light';
+
+const STORE = 'asc.theme';
+
+/** What the document is actually painting, right now. */
+function readTheme(): Theme {
+  return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+}
+
+function subscribe(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+  // Another tab changing the preference counts as a change here too.
+  window.addEventListener('storage', onChange);
+
+  /* One nudge after mount, so React re-reads a snapshot that was
+     already true before it hydrated. */
+  const nudge = requestAnimationFrame(onChange);
+
+  return () => {
+    observer.disconnect();
+    cancelAnimationFrame(nudge);
+    window.removeEventListener('storage', onChange);
+  };
+}
+
+export function setTheme(next: Theme): void {
+  if (next === 'light') document.documentElement.dataset.theme = 'light';
+  else delete document.documentElement.dataset.theme;
+
+  try {
+    window.localStorage.setItem(STORE, next);
+  } catch {
+    /* Storage refused. The page still changes for this visit. */
+  }
+}
+
+const OPTIONS: { id: Theme; label: string; glyph: typeof Moon }[] = [
+  { id: 'dark', label: 'Ember', glyph: Moon },
+  { id: 'light', label: 'Daylight', glyph: Sun },
+];
+
+export default function ThemeToggle() {
+  /* Dark on the server and on a browser with no stored preference,
+     which is the product's own canvas and the safe default. */
+  const theme = useSyncExternalStore(subscribe, readTheme, () => 'dark' as Theme);
+
+  return (
+    <div className={s.wrap} role="group" aria-label="Appearance">
+      {OPTIONS.map(({ id, label, glyph: Glyph }) => {
+        const on = theme === id;
+        return (
+          <button
+            key={id}
+            type="button"
+            className={s.seg}
+            data-on={on}
+            /* Read the document rather than the render: whatever React
+               believes, the attribute is what the page is doing. */
+            onClick={() => setTheme(id)}
+            aria-pressed={on}
+            aria-label={label}
+            title={label}
+          >
+            <Glyph size={14} strokeWidth={1.6} aria-hidden="true" />
+            <span className={s.label}>{label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}

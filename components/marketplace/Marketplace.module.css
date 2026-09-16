@@ -1,166 +1,313 @@
 /* ============================================================
-   Marketplace sectioning — Current opportunities / AltSpot Radar.
+   Marketplace — two lanes on one page.
 
-   Two different promises live on this page. One is a shelf you can
-   buy from today. The other is a question about what we should go
-   and get. Putting them behind one control keeps that distinction
-   impossible to miss.
-
-   Tokens come from app/globals.css.
+   Invest, then Vote. The lanes are told apart by the verb in their
+   eyebrow and by what their cards carry, never by a container. One
+   filter row above both. Tokens come from app/globals.css.
    ============================================================ */
 
-.switcher {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px;
-  border: 1px solid var(--hair-neutral);
-  border-radius: var(--r-pill);
-  background: var(--glass);
-  backdrop-filter: blur(20px) saturate(1.5);
-  width: fit-content;
-  max-width: 100%;
-  margin-bottom: 30px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.switcher::-webkit-scrollbar {
-  display: none;
+.lane {
+  margin-bottom: 80px;
+  /* A section that is jumped to lands under the sticky bar otherwise. */
+  scroll-margin-top: 84px;
 }
 
-.tab {
+/* ---------- the engine ----------
+   The loop, stated once, above both lanes: copy on the left, four
+   figures as tiles on the right, each a door into the lane it counts.
+   Warm glass, because this is the one surface on the page asking the
+   member to do something. */
+.engine {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 32px 44px;
+  align-items: center;
+  padding: 32px 34px;
+  margin-bottom: 24px;
+  background-image: var(--glass-tint-gold), var(--card-sheen);
+}
+.engineCopy .eyebrow {
+  margin-bottom: 10px;
+}
+.engineTitle {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: clamp(26px, 2.8vw, 34px);
+  line-height: 1.06;
+  letter-spacing: -0.024em;
+  color: var(--as-text);
+  text-wrap: balance;
+}
+.engineLede {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--as-text-muted);
+  max-width: 48ch;
+}
+.engineFigures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.engineFigure {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px 18px 14px;
+  border: none;
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+  box-shadow: inset 0 1px 0 var(--edge-top);
+  color: var(--as-text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--dur-micro) ease,
+    transform var(--dur-1) var(--ease-out);
+}
+.engineFigure:hover {
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+.engineFigure:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.engineKey {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  white-space: nowrap;
+}
+.engineValue {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.024em;
+  font-variant-numeric: tabular-nums;
+  background: var(--as-em-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.engineHint {
+  font-size: var(--fs-label);
+  color: var(--as-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+/* Open now is live; closing soon is the clock. */
+.engineLive .engineValue {
+  background: linear-gradient(100deg, var(--good-paint), var(--good) 70%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.engineHot .engineValue {
+  background: linear-gradient(100deg, var(--figure-hot), var(--as-ember));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ---------- the bar ----------
+   Two jump pills and the filter row, stuck to the top of the scroll.
+   Floating glass, the thicker edition, because it sits over cards. */
+.bar {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 18px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  margin-bottom: 40px;
+  border-radius: var(--r-lg);
+  background: var(--glass-solid);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift);
+}
+.lanes {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface-well);
+}
+.lanePill {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  border: 1px solid transparent;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
   border-radius: var(--r-pill);
-  background: none;
+  background: transparent;
+  color: var(--as-text-muted);
   cursor: pointer;
-  padding: 11px 22px;
-  white-space: nowrap;
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: var(--soft);
-  transition: color 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+  white-space: nowrap;
+  transition: background var(--dur-micro) ease, color var(--dur-micro) ease;
+}
+.lanePill:hover {
+  color: var(--as-text);
+}
+.lanePill[data-on='true'] {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  box-shadow: var(--shadow-cta);
+}
+.lanePill:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.laneCount {
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
 }
 
-.tab:hover {
-  color: var(--ink);
+@media (max-width: 900px) {
+  .engine {
+    grid-template-columns: 1fr;
+  }
+  .engineFigures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.lane:last-child {
+  margin-bottom: 0;
 }
 
-/* The checked state is the marketing site's segmented control: solid
-   gold ramp, dark type. The active promise should look lit. */
-.tab[aria-selected='true'] {
-  color: #1a1204;
-  font-weight: 600;
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--gold), var(--orange));
-  box-shadow: 0 4px 18px rgba(243, 152, 7, 0.28);
+.laneHead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  max-width: 74ch;
+  margin: 0 0 28px;
 }
-
-.count {
-  font-family: var(--fm);
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  color: var(--faint);
-  border: 1px solid var(--hair);
+.laneHead .laneTitle {
+  margin: 0;
+}
+.laneHead .laneLede {
+  flex-basis: 100%;
+}
+.votePill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
   border-radius: var(--r-pill);
-  padding: 2px 8px;
+  background: var(--btn-fill);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
 }
 
-.tab[aria-selected='true'] .count {
-  color: #1a1204;
-  border-color: rgba(10, 8, 6, 0.4);
+.laneTitle {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: clamp(26px, 3vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--as-text);
+  margin: 0 0 10px;
+  text-wrap: balance;
 }
 
-.panel {
-  animation: fade 0.22s ease;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.panelHead {
-  margin-bottom: 22px;
-}
-
-.panelHead h2 {
-  font-family: var(--fd);
-  font-weight: 500;
-  font-size: clamp(24px, 3vw, 30px);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.panelHead p {
-  margin-top: 12px;
+.laneLede {
+  margin: 0;
   font-size: 15px;
   line-height: 1.65;
-  color: var(--soft);
-  max-width: 66ch;
+  color: var(--as-text-muted);
+  max-width: 62ch;
 }
 
-/* ---------- withheld figures on a card ----------
-   Stands in for the minimum, the fees and the allocation bar when the
-   viewer is not yet verified. The rules are not blurred numbers: no
-   number was sent to the browser to blur. */
-
-.locked {
+/* The last card on the shelf: the way to the next lane. Quiet by
+   design, a dashed outline rather than a pane, so it reads as a door
+   and not as a fifth deal. */
+.bridge {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: center;
+  gap: 10px;
+  min-height: 200px;
+  padding: 22px;
+  border: 1px dashed var(--hair-strong);
+  border-radius: var(--r-lg);
+  color: var(--as-text-muted);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.bridge:hover {
+  border-color: var(--hair-gold-active);
+  background: var(--tint-gold-faint);
+  color: var(--as-text-muted);
+}
+.bridgeTitle {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--as-text);
+}
+.bridgeNote {
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+}
+.bridgeArrow {
+  margin-top: auto;
+  font-size: 20px;
+  color: var(--accent);
 }
 
-.lockedRows {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.lockedRows span {
-  height: 8px;
+/* A deal that came off the member's own Radar. One quiet line, gold
+   because it is the one claim on the card that is about them. */
+.fromRadar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 4px 10px 4px 9px;
   border-radius: var(--r-pill);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.03)
-  );
-}
-
-.lockedNote {
-  font-family: var(--fm);
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  line-height: 1.6;
-  color: var(--faint);
+  background: var(--good-fill);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--good);
 }
 
 @media (max-width: 900px) {
   .switcher {
     width: 100%;
   }
-  /* Both labels have to fit on a phone without the control scrolling,
-     so the type tightens rather than the words shortening. */
+  /* Two words fit on any phone; they only need the room shared evenly. */
   .tab {
     flex: 1;
     justify-content: center;
-    gap: 7px;
-    padding: 9px 10px;
-    font-size: 9px;
-    letter-spacing: 0.1em;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
   }
 }
 
@@ -181,7 +328,7 @@
   padding: 0;
   border: 1px solid var(--hair-neutral);
   border-radius: var(--r-pill);
-  background: rgba(10, 8, 6, 0.66);
+  background: var(--scrim-media);
   backdrop-filter: blur(4px);
   color: var(--as-text-body);
   cursor: pointer;
@@ -196,7 +343,7 @@
   transform: translateY(-1px);
 }
 .starOn {
-  color: var(--as-gold);
+  color: var(--accent);
   border-color: var(--hair-gold-active);
 }
 .starOn:hover {
@@ -205,6 +352,242 @@
 
 /* Where an investor left off, said on the card instead of only in the
    button label, so the shelf is scannable. */
+/* The member's own state, seated on the artwork the same way the tag
+   chip is: glass over whatever the deal's banner happens to be, light
+   or dark. Ember, because it is the one chip on the shelf that means
+   something is waiting on the reader. */
 .resumeChip {
-  align-self: start;
+  position: absolute;
+  z-index: 1;
+  right: 14px;
+  bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  border: 1px solid var(--hair-ember);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  background: var(--scrim-media-strong);
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
 }
+
+/* ==================================================================
+   The shelf card.
+
+   A card is read in a grid by someone choosing which one to open, so
+   it is built to be scanned rather than read: one line of type, three
+   figures in a row, one bar. Everything dense lives on the deal page.
+   ================================================================== */
+
+/* The terms, once, above the grid. They are the same on every deal, so
+   this is a statement about the product rather than about a card. */
+/* Two lines, clamped, at a fixed height so every card in the row starts
+   its figures at the same y. Uneven blurbs were the reason nothing on
+   this shelf lined up. */
+/* Name and sector are one block. */
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.sector {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Two lines, clamped, at a fixed height so every card in the row
+   starts its figures at the same y. */
+.headline {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--as-text-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
+}
+
+/* ---------- the figures, as one row ---------- */
+
+.facts {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair-neutral);
+}
+
+.fact {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.factKey {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  text-transform: none;
+  color: var(--as-text-muted);
+  white-space: nowrap;
+}
+
+.factValue {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  letter-spacing: -0.01em;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Closing inside a fortnight. The same signal a commitment with a
+   running clock carries on the dashboard. */
+.factValue[data-soon='true'] {
+  color: var(--accent-soft);
+}
+
+/* ---------- allocation: one bar, one figure ---------- */
+
+.alloc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.allocBar {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+}
+
+.allocFill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  box-shadow: 0 0 10px rgba(243, 152, 7, 0.35);
+  transition: width var(--dur-2) var(--ease-out);
+}
+
+.allocPct {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  min-width: 3ch;
+  text-align: right;
+}
+
+/* Who else is on the round, on the artwork. Same scrim as the sector
+   pill used to wear, so it seats on any art. */
+.backing {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1;
+  max-width: calc(100% - 20px);
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: var(--scrim-media-soft);
+  color: var(--on-media);
+  backdrop-filter: blur(4px);
+}
+
+/* The locked figures on a teaser: quiet rules where numbers would be. */
+.locked {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--hair-neutral);
+}
+.lockedRows {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.lockedRows span {
+  display: block;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+}
+.lockedNote {
+  margin: 0;
+  font-size: var(--fs-label);
+  line-height: 1.4;
+  color: var(--as-text-muted);
+}
+
+/* ---------- the disclosure ---------- */
+
+.legal {
+  margin-top: 30px;
+  max-width: 82ch;
+  font-size: var(--fs-meta);
+  line-height: 1.7;
+  color: var(--as-text-muted);
+}
+
+.legalLead {
+  cursor: pointer;
+  color: var(--as-text-body);
+  list-style: none;
+}
+.legalLead::-webkit-details-marker {
+  display: none;
+}
+
+/* The affordance, drawn rather than left to the browser's triangle. */
+.legalLead::after {
+  content: ' Read the rest';
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+  white-space: nowrap;
+}
+.legal[open] .legalLead::after {
+  content: ' Hide';
+}
+.legalLead:hover::after {
+  color: var(--accent-hot);
+}
+
+.legal p {
+  margin: 10px 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .allocFill {
+    transition: none;
+  }
+}
+
+/* The claim Radar is making, set apart from the explanation above it.
+   A member who reads the lede learns the mechanism; this is the line
+   that says the mechanism belongs to them. */
+

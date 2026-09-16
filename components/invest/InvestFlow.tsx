@@ -85,6 +85,18 @@ export default function InvestFlow({
     // Trim leading zeros but keep a lone "0" so the field can be cleared.
     setAmountInput(digits.replace(/^0+(?=\d)/, ''));
   }
+
+  /**
+   * Digits are the source of truth; the separators are display only.
+   * This is the one number on the platform a member types rather than
+   * reads, and it was the only one rendered as a bare "50000" while
+   * every figure beside it read "$50,000". A six-figure commitment is
+   * easy to mistype by an order of magnitude, and grouping is what
+   * makes that visible while it is still being typed.
+   */
+  function grouped(digits: string): string {
+    return digits === '' ? '' : Number(digits).toLocaleString('en-US');
+  }
   const [showNewProfile, setShowNewProfile] = useState(false);
   const [newProfile, setNewProfile] = useState({ type: 'Personal', name: '' });
 
@@ -434,27 +446,32 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
 
             <div className="card">
               <h3 style={{ marginBottom: 4 }}>Amount</h3>
-              <p className="small" style={{ marginBottom: 14 }}>
+              <p className="small" id="amount-help" style={{ marginBottom: 14 }}>
                 Minimum {money(deal.minInvestment)} ·{' '}
                 {money(deal.allocationRemaining)} of allocation remaining.
               </p>
 
               <label className="field">
                 <span>Investment amount (USD)</span>
-                <input
-                  className="input num"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  style={{ fontSize: 22, fontFamily: 'var(--fm)' }}
-                  value={amountInput}
-                  onChange={(e) => handleAmountChange(e.target.value)}
-                  onBlur={() => {
-                    if (amountInput === '' || amount === 0) {
-                      setAmountInput(String(deal.minInvestment));
-                    }
-                  }}
-                />
+                <div className={styles.amountField}>
+                  <span className={styles.amountUnit} aria-hidden="true">
+                    $
+                  </span>
+                  <input
+                    className={`input num ${styles.amountInput}`}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    aria-describedby="amount-help"
+                    value={grouped(amountInput)}
+                    onChange={(e) => handleAmountChange(e.target.value)}
+                    onBlur={() => {
+                      if (amountInput === '' || amount === 0) {
+                        setAmountInput(String(deal.minInvestment));
+                      }
+                    }}
+                  />
+                </div>
               </label>
 
               {amount > 0 && amount < deal.minInvestment && (
@@ -514,6 +531,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 values={mergeValues}
                 confirmedPanels={SUBSCRIPTION_SECTIONS.filter((x) => done(x.id)).map((x) => x.id)}
                 focusPanel={focusPanel}
+                party={{ entity: deal.entity, company: deal.name }}
               />
             </div>
 
@@ -525,6 +543,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 <ConfirmPanel
                   key={currentSection.id}
                   section={currentSection}
+                  party={{ entity: deal.entity, company: deal.name }}
                   index={stepIndex + 1}
                   total={SUBSCRIPTION_SECTION_COUNT + 1}
                   confirmed={done(currentSection.id)}

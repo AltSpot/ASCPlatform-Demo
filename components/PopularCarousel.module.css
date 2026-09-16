@@ -1,0 +1,225 @@
+/* Most popular: a scrolling row of small tiles that float.
+
+   The tiles ride a slow, staggered drift so the row reads as alive
+   rather than parked. The global reduced-motion rule in globals.css
+   stops it for anyone who asked. */
+
+/* The row bleeds from the rail to the right edge of the window. The
+   content column is centred inside the main column, so the wrap pulls
+   itself left by exactly the gap between its own edge and the rail
+   (50% of the content box, less half the main column) and takes the
+   main column's full width, so the row runs from the rail to the
+   right edge of the window. */
+.wrap {
+  position: relative;
+  margin-left: calc(50% - 50vw + var(--rail, 236px) / 2);
+  width: calc(100vw - var(--rail, 236px));
+  /* The row starts a breath from the rail and runs off the right edge:
+     edge to edge, the way the brief put it. */
+  --edge: 18px;
+}
+
+.track {
+  display: flex;
+  gap: 18px;
+  padding: 12px var(--edge) 22px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  scrollbar-width: none;
+  /* Room for the lift on hover and the drift. */
+  margin: -10px 0 -8px;
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    margin-left: calc(50% - 50vw);
+    width: 100vw;
+  }
+}
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.tile {
+  flex: 0 0 210px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--card-edge);
+  border-radius: var(--r-lg);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift);
+  text-decoration: none;
+  color: var(--as-text);
+  animation: drift 7s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -1.1s);
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) ease;
+}
+.tile:hover {
+  animation-play-state: paused;
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+  color: var(--as-text);
+}
+.tile:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 78px;
+}
+.art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.06), rgba(10, 8, 6, 0.28));
+}
+.mark {
+  position: relative;
+  z-index: 1;
+  height: 30px;
+  width: min(60%, 120px);
+  object-fit: contain;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
+}
+.monogram {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 26px;
+  color: var(--on-media);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 16px 16px;
+}
+
+/* What kind of thing this is. The dot is live green for a deal that
+   is open, signal orange for a Radar name: both are things happening,
+   one you can buy into and one you can vote on. */
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.kindDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--as-orange);
+  box-shadow: 0 0 8px rgba(243, 152, 7, 0.55);
+}
+.tile[data-kind='deal'] .kindDot {
+  background: var(--good-paint);
+  box-shadow: 0 0 8px var(--good-paint);
+  animation: live 2.4s ease-out infinite;
+}
+.tile[data-kind='radar'] .kind {
+  color: var(--accent-hot);
+}
+@keyframes live {
+  0% {
+    box-shadow: 0 0 0 0 var(--good-line);
+  }
+  70% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 17px;
+  line-height: 1.15;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.figure {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: var(--w-medium);
+  letter-spacing: -0.01em;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.line {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.kind[data-hot='true'] {
+  color: var(--accent-hot);
+}
+
+/* The two arrows float over the ends of the row, mid-height, on the
+   thick glass, so they read over whatever tile is under them. */
+.nav {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 50%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.navBtn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--glass-solid);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift);
+  color: var(--as-text);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.navBtn:hover {
+  background: var(--btn-fill);
+}
+.navBtn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}

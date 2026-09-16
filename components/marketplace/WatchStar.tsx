@@ -4,7 +4,7 @@
  * The compact watchlist toggle that sits on a shelf card's artwork.
  *
  * Same contract as the deal page's WatchToggle, and deliberately the
- * same optimistic behaviour: flip on click, revert if the write fails.
+ * same optimistic behavior: flip on click, revert if the write fails.
  * Both directions are idempotent server side, so a fast double click
  * settles rather than errors.
  *
