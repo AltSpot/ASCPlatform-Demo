@@ -40,6 +40,14 @@ export const DEMO_TTL_HOURS = Number(process.env.ASC_DEMO_TTL_HOURS ?? 6);
  */
 export const ISOLATED_ALLOCATION = EPHEMERAL_DEMO;
 
+/**
+ * The 506(b) cooling-off period, in days, between AltSpot approving a
+ * member's questionnaire and offerings opening to them. A compliance
+ * setting rather than a constant: counsel may change it, and it applies
+ * to every member's unlock date on the next read. See lib/relationship.ts.
+ */
+export const COOLING_OFF_DAYS = Number(process.env.ASC_COOLING_OFF_DAYS ?? 30);
+
 export const SESSION_COOKIE = 'asc_session';
 
 /**
@@ -54,9 +62,9 @@ export const SESSION_TTL_DAYS = 30;
 /**
  * Named third parties the product surface references.
  *
- * Accreditation is deliberately absent: AltSpot reviews certification
- * letters itself (automated read, confirmed by a reviewer) rather than
- * handing the investor off to a verification vendor.
+ * Accreditation is deliberately absent: under Rule 506(b) it is a
+ * self-certification questionnaire AltSpot evaluates itself, so there is
+ * no verification vendor.
  */
 export const PARTNERS = {
   banking: 'Plaid',

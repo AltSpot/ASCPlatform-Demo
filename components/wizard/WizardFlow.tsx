@@ -18,19 +18,21 @@ import { useCallback, useMemo, useState } from 'react';
 import { useToast } from '@/components/Toast';
 import { evaluateInvestGate, firstIncompleteStep } from '@/lib/domain';
 import type { VaultView, WizardView } from '@/lib/domain';
+import { dateStr } from '@/lib/format';
+import { questionnaireSubmitted } from '@/lib/relationship';
 
-import StepAccreditation from './StepAccreditation';
+import StepQuestionnaire from './StepQuestionnaire';
 import StepBank from './StepBank';
 import StepInfo from './StepInfo';
 import StepKyc from './StepKyc';
 import StepProfile from './StepProfile';
 
 const STEPS = [
-  { n: 1, title: 'Accreditation', hint: 'Certify once · valid 5 years' },
+  { n: 1, title: 'Investor questionnaire', hint: 'Accreditation and experience' },
   { n: 2, title: 'Your information', hint: 'W-9 details, captured once' },
   { n: 3, title: 'Identity', hint: 'ID photo + live capture' },
   { n: 4, title: 'Investment profile', hint: 'Personal · entity · IRA' },
-  { n: 5, title: 'Link bank', hint: 'One-click funding later' },
+  { n: 5, title: 'Link bank', hint: 'Saved for when you invest' },
 ] as const;
 
 const DONE_STEP = 6;
@@ -62,7 +64,7 @@ export default function WizardFlow({
     (n: number) => {
       switch (n) {
         case 1:
-          return wizard.accreditation.status === 'verified';
+          return questionnaireSubmitted(wizard.relationship);
         case 2:
           return wizard.info.complete;
         case 3:
@@ -147,7 +149,7 @@ export default function WizardFlow({
             Welcome to the community.
           </h1>
           <p className="small" style={{ marginTop: 8 }}>
-            A few steps before your first investment. Your answers save automatically
+            A few steps before you see offerings. Your answers save automatically
             and pre-fill every document you&rsquo;ll ever sign here.
           </p>
         </div>
@@ -170,12 +172,7 @@ export default function WizardFlow({
 
       <main className="wiz-main">
         <section className={step === 1 ? 'wiz-panel on' : 'wiz-panel'}>
-          <StepAccreditation
-            userName={userName}
-            vault={initialVault}
-            wizard={wizard}
-            onComplete={advance}
-          />
+          <StepQuestionnaire wizard={wizard} onComplete={advance} />
         </section>
 
         <section className={step === 2 ? 'wiz-panel on' : 'wiz-panel'}>
@@ -214,8 +211,11 @@ export default function WizardFlow({
             You&rsquo;re set.
           </h2>
           <p className="sub" style={{ margin: '0 auto 30px' }}>
-            Your profile is saved, your documents will pre-fill themselves, and the
-            marketplace is open. Welcome in.
+            {wizard.relationship.stage === 'eligible'
+              ? 'Your profile is saved, your documents will pre-fill themselves, and offerings are open to you. Welcome in.'
+              : wizard.relationship.stage === 'cooling_off'
+                ? `Your profile is saved and your documents will pre-fill themselves. Offerings open to you on ${dateStr(wizard.relationship.unlocksAt)}.`
+                : 'Your profile is saved and your documents will pre-fill themselves. Offerings open once your questionnaire is approved.'}
           </p>
           <button
             className="btn btn-gold"

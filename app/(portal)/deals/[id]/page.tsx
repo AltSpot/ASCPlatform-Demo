@@ -12,9 +12,10 @@
  * Every section degrades to nothing when its content is missing, since
  * the deals behind the lead carry far thinner editorial than Calder.
  *
- * None of it is rendered for a member who is not a verified accredited
- * investor. The repository hands this page a teaser in that case, so the
- * branch below is not hiding anything: there is nothing to hide.
+ * None of it is rendered for a member who has not cleared the 506(b)
+ * relationship gate. The repository hands this page no deal in that case,
+ * only where the member stands, so the branch below is not hiding
+ * anything: there is nothing to hide, including the deal's name.
  */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -38,11 +39,7 @@ import s from '@/components/deal/Deal.module.css';
 import InvestButton from '@/components/InvestButton';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
-import {
-  getDealForViewer,
-  getDealRecord,
-  listDealsForViewer,
-} from '@/lib/repositories/deals';
+import { getDealAccess, listDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getResumable } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
@@ -55,9 +52,16 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  // The company name is public to every member, gated or not.
-  const deal = await getDealRecord(id);
-  return { title: deal ? `${deal.name} · AltSpot Capital` : 'Deal · AltSpot Capital' };
+  // The title is part of the page, so it follows the same gate: no deal
+  // name in a tab or a history entry before the member may see the deal.
+  const user = await requireUser();
+  const result = await getDealAccess(id, user.id);
+  return {
+    title:
+      result?.access === 'open'
+        ? `${result.deal.name} · AltSpot Capital`
+        : 'Offering · AltSpot Capital',
+  };
 }
 
 export default async function DealPage({
@@ -68,16 +72,32 @@ export default async function DealPage({
   const user = await requireUser();
   const { id } = await params;
 
-  const deal = await getDealForViewer(id, user.id);
-  if (!deal) notFound();
+  const result = await getDealAccess(id, user.id);
+  if (!result) notFound();
+
+  if (result.access === 'locked') {
+    return (
+      <>
+        <div className={s.crumbRow}>
+          <div className="crumbs">
+            <Link href="/marketplace">Marketplace</Link>
+          </div>
+        </div>
+
+        <DealGate relationship={result.relationship} />
+      </>
+    );
+  }
+
+  const { deal } = result;
 
   // Saving a deal is not reading one, so the toggle is offered either way.
   const watched = (await listWatchlist(user.id)).includes(deal.id);
   const watch = <WatchToggle dealId={deal.id} initialWatched={watched} />;
 
   /* The rest of the shelf, so a reader can move to another deal without
-     going back to the marketplace to do it. Redacted per viewer like
-     every other browse read, and in the shelf's own order, which is what
+     going back to the marketplace to do it. Gated per viewer like every
+     other browse read, and in the shelf's own order, which is what
      makes prev and next mean something. */
   const shelf = await listDealsForViewer(user.id);
   const at = shelf.findIndex((other) => other.id === deal.id);
@@ -91,25 +111,6 @@ export default async function DealPage({
       next={next ? { id: next.id, name: next.name } : null}
     />
   );
-
-  if (deal.redacted) {
-    return (
-      <>
-        <div className={s.crumbRow}>
-          <div className="crumbs">
-            <Link href="/marketplace">Marketplace</Link>
-            <span className="sep">/</span>
-            <span className="here">{deal.name}</span>
-          </div>
-          {step}
-        </div>
-
-        <DealGate deal={deal} tools={watch} />
-
-        <MoreDeals deals={others} />
-      </>
-    );
-  }
 
   const [wizard, resume] = await Promise.all([
     getWizardView(user.id),

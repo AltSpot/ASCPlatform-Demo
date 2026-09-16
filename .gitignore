@@ -60,3 +60,6 @@ next-env.d.ts
 # The .claude/ copy is kept, since this project is built with Claude Code.
 /.windsurf
 /.agents
+
+# Phase 2 review captures. Regenerate with node scripts/shoot.mjs <plan>.
+screenshots/phase2/**/*.png

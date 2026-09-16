@@ -1,17 +1,19 @@
 /**
  * Outstanding account-setup work, surfaced at the top of the dashboard.
  *
- * Deliberately a prompt, not a gate: an investor can browse the whole
- * platform — dashboard, marketplace, deals, decks — with setup
- * incomplete. Verification is only required to *invest*, and that rule is
- * enforced at the API. This banner explains what is outstanding and links
- * straight to the step, rather than trapping anyone in a wizard.
+ * A prompt, not a trap: the dashboard, the Terminal and the Radar stay
+ * open while setup is incomplete. Offerings do not. Under Rule 506(b) no
+ * offering is shown until the questionnaire is approved and the
+ * cooling-off period has passed, and investing needs the W-9 and the
+ * identity check as well. Both rules are enforced server-side; this
+ * banner explains what is outstanding and links straight to the step.
  *
  * Server component: it renders links, so it needs no client JavaScript.
  */
 import Link from 'next/link';
 
 import type { InvestGate, WizardView } from '@/lib/domain';
+import { dateStr } from '@/lib/format';
 
 export default function SetupBanner({
   gate,
@@ -35,6 +37,14 @@ export default function SetupBanner({
   const required = gate.missing;
   const blocking = required.length > 0;
   const items = blocking ? required : optional;
+  const { stage, unlocksAt } = wizard.relationship;
+
+  /* Review and cooling off are waits, not steps: nothing links to them.
+     Everything else outstanding still does. */
+  const actionable = items.filter(
+    (item) =>
+      !(item.step === 1 && (stage === 'cooling_off' || stage === 'under_review')),
+  );
 
   return (
     <div
@@ -57,24 +67,29 @@ export default function SetupBanner({
           <p className="small" style={{ marginTop: 4 }}>
             {blocking ? (
               <>
-                Browse the marketplace now. Deal terms, figures and documents open
-                once your accreditation is verified.{' '}
+                {stage === 'cooling_off'
+                  ? `Offerings open to you on ${dateStr(unlocksAt)}. `
+                  : stage === 'under_review'
+                    ? 'Your questionnaire is under review. '
+                    : 'Offerings open once your investor questionnaire is approved and a short cooling-off period has passed. '}
                 <b style={{ color: 'var(--gold-bright)' }}>
                   Investing unlocks once these are complete.
                 </b>
               </>
             ) : (
               <>
-                You&rsquo;re cleared to invest. These make checkout and funding faster,
-                and you can finish them at any time.
+                You&rsquo;re cleared to invest. These make checkout faster, and you
+                can finish them at any time.
               </>
             )}
           </p>
         </div>
 
-        <Link className="btn btn-gold" href={`/wizard?step=${items[0].step}`}>
-          {blocking ? 'Continue setup' : 'Finish setup'}
-        </Link>
+        {actionable.length > 0 && (
+          <Link className="btn btn-gold" href={`/wizard?step=${actionable[0].step}`}>
+            {blocking ? 'Continue setup' : 'Finish setup'}
+          </Link>
+        )}
       </div>
 
       <div

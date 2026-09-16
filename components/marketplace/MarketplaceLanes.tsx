@@ -35,9 +35,11 @@ import TaxonomyFilters, {
   type TaxonomyFilterState,
 } from '@/components/filters/TaxonomyFilters';
 import DealShelf from '@/components/marketplace/DealShelf';
+import OfferingsGate from '@/components/OfferingsGate';
 import RadarBoard from '@/components/radar/RadarBoard';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
-import { daysLeft } from '@/lib/format';
+import { daysLeft, EMPTY } from '@/lib/format';
+import type { RelationshipView } from '@/lib/relationship';
 import { ASSET_CLASS_KEYS, INDUSTRY_KEYS, isAssetClass, type AssetClass } from '@/lib/taxonomy';
 import type { RadarCompanyView } from '@/lib/terminal/radar';
 
@@ -52,6 +54,7 @@ export default function MarketplaceLanes({
   fromRadar,
   companies,
   initialView,
+  locked,
 }: {
   deals: DealShelfItem[];
   resumable: SubscriptionView[];
@@ -60,6 +63,12 @@ export default function MarketplaceLanes({
   fromRadar: string[];
   companies: RadarCompanyView[];
   initialView: 'current' | 'radar';
+  /**
+   * Where the member stands when offerings are not open to them yet. Null
+   * once they are. The shelf is empty in that case because the server
+   * sent nothing, and the lane says why instead of showing an empty grid.
+   */
+  locked: RelationshipView | null;
 }) {
   const [filter, setFilter] = useState<TaxonomyFilterState>({
     assetClass: null,
@@ -154,12 +163,15 @@ export default function MarketplaceLanes({
         <div className={s.engineFigures}>
           <button type="button" className={`${s.engineFigure} ${s.engineLive}`} onClick={() => jump('invest')}>
             <span className={s.engineKey}>Open now</span>
-            <span className={s.engineValue}>{deals.length}</span>
-            <span className={s.engineHint}>deals to invest in</span>
+            {/* Before the gate opens the server sends no deals, so a
+                count would read "0 open" when the truth is "not shown to
+                you yet". A dash says the second thing. */}
+            <span className={s.engineValue}>{locked ? EMPTY : deals.length}</span>
+            <span className={s.engineHint}>{locked ? 'once offerings open to you' : 'deals to invest in'}</span>
           </button>
           <button type="button" className={`${s.engineFigure} ${s.engineHot}`} onClick={() => jump('invest')}>
             <span className={s.engineKey}>Closing soon</span>
-            <span className={s.engineValue}>{closingSoon}</span>
+            <span className={s.engineValue}>{locked ? EMPTY : closingSoon}</span>
             <span className={s.engineHint}>inside 14 days</span>
           </button>
           <button type="button" className={s.engineFigure} onClick={() => jump('radar')}>
@@ -185,7 +197,7 @@ export default function MarketplaceLanes({
             data-on={lane === 'invest'}
             onClick={() => jump('invest')}
           >
-            Open now <span className={s.laneCount}>{deals.length}</span>
+            Open now{locked ? null : <span className={s.laneCount}>{deals.length}</span>}
           </button>
           <button
             type="button"
@@ -208,22 +220,28 @@ export default function MarketplaceLanes({
 
       <section className={s.lane} ref={investRef} aria-labelledby="lane-invest">
         <header className={s.laneHead}>
-          <span className="live-pill">
-            <span className="live-dot" aria-hidden="true" />
-            Live now
-          </span>
+          {!locked && (
+            <span className="live-pill">
+              <span className="live-dot" aria-hidden="true" />
+              Live now
+            </span>
+          )}
           <h2 className={s.laneTitle} id="lane-invest">
             Invest.
           </h2>
         </header>
-        <DealShelf
-          deals={deals}
-          resumable={resumable}
-          watched={watched}
-          fromRadar={fromRadar}
-          filter={filter}
-          bridgeHref="#radar"
-        />
+        {locked ? (
+          <OfferingsGate relationship={locked} />
+        ) : (
+          <DealShelf
+            deals={deals}
+            resumable={resumable}
+            watched={watched}
+            fromRadar={fromRadar}
+            filter={filter}
+            bridgeHref="#radar"
+          />
+        )}
       </section>
 
       <section className={s.lane} id="radar" ref={radarRef} aria-labelledby="lane-vote">

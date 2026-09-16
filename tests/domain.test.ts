@@ -4,7 +4,8 @@
  * These are the two rules that decide whether money may move. The state
  * machine is what stops a commitment being funded twice, refunded after it
  * closed, or resurrected after it lapsed. The invest gate is what stops an
- * unverified investor starting a subscription at all. Both are re-checked
+ * investor starting a subscription before the 506(b) relationship gate is
+ * open and their W-9 and identity check are done. Both are re-checked
  * server side, so a regression here is not caught by the UI.
  *
  * The transition table below is written out independently of lib/domain.ts
@@ -18,7 +19,6 @@ import assert from 'node:assert/strict';
 
 import {
   ACCREDITATION_STEP,
-  ACCREDITATION_VALIDITY_DAYS,
   DAY_MS,
   FUNDING_WINDOW_DAYS,
   HELD_STATES,
@@ -31,14 +31,12 @@ import {
   canViewDealDetail,
   evaluateInvestGate,
   firstIncompleteStep,
-  isAccreditationCurrent,
   redactDeal,
-  type AccreditationStatus,
-  type AccreditationView,
   type DealView,
   type SubscriptionState,
   type WizardView,
 } from '@/lib/domain';
+import type { RelationshipStage, RelationshipView } from '@/lib/relationship';
 
 const ALL_STATES = Object.values(SUBSCRIPTION_STATES);
 
@@ -236,8 +234,7 @@ describe('held and resumable state sets', () => {
 });
 
 describe('product constants', () => {
-  test('accreditation is valid five years and the funding window is ten days', () => {
-    assert.equal(ACCREDITATION_VALIDITY_DAYS, 5 * 365);
+  test('the funding window is ten days', () => {
     assert.equal(FUNDING_WINDOW_DAYS, 10);
     assert.equal(DAY_MS, 86_400_000);
   });
@@ -245,18 +242,35 @@ describe('product constants', () => {
 
 // ---------------- the invest gate ----------------
 
-const YEAR_AHEAD = new Date(Date.now() + 365 * DAY_MS).toISOString();
-const YESTERDAY = new Date(Date.now() - DAY_MS).toISOString();
+const ALL_STAGES: readonly RelationshipStage[] = [
+  'questionnaire',
+  'under_review',
+  'declined',
+  'cooling_off',
+  'eligible',
+];
+
+function relationship(stage: RelationshipStage): RelationshipView {
+  const established = new Date(Date.now() - 60 * DAY_MS).toISOString();
+  const dated = stage === 'cooling_off' || stage === 'eligible';
+  return {
+    stage,
+    establishedAt: dated ? established : null,
+    unlocksAt: dated ? established : null,
+  };
+}
 
 /** An investor who satisfies every gate condition. */
 function cleared(): WizardView {
   return {
     accreditation: {
-      status: 'verified',
-      method: 'letter',
-      verifiedAt: new Date().toISOString(),
-      expiresAt: YEAR_AHEAD,
+      status: 'approved',
+      basis: 'net_worth',
+      submittedAt: new Date().toISOString(),
+      decidedAt: new Date().toISOString(),
+      reason: null,
     },
+    relationship: relationship('eligible'),
     info: { complete: true },
     kyc: { idUploaded: true, selfieCaptured: true, complete: true },
     profileDone: true,
@@ -266,47 +280,34 @@ function cleared(): WizardView {
 }
 
 describe('evaluateInvestGate', () => {
-  test('a fully verified investor may start a subscription', () => {
+  test('an eligible, fully onboarded investor may start a subscription', () => {
     const gate = evaluateInvestGate(cleared());
     assert.equal(gate.ok, true);
     assert.deepEqual(gate.missing, []);
   });
 
-  test('accreditation that is not verified closes the gate', () => {
-    for (const status of ['not_started', 'downloaded', 'pending', 'expired'] as const) {
+  test('every stage short of eligible closes the gate at step 1, with its own label', () => {
+    const labels: Record<Exclude<RelationshipStage, 'eligible'>, string> = {
+      questionnaire: 'Investor questionnaire',
+      under_review: 'Questionnaire under review',
+      declined: 'Investor questionnaire',
+      cooling_off: 'Cooling-off period',
+    };
+    for (const [stage, label] of Object.entries(labels)) {
       const wizard = cleared();
-      wizard.accreditation.status = status;
+      wizard.relationship = relationship(stage as RelationshipStage);
       const gate = evaluateInvestGate(wizard);
-      assert.equal(gate.ok, false, `status ${status} left the gate open`);
-      assert.deepEqual(gate.missing, [
-        { step: 1, label: 'Accreditation verification' },
-      ]);
+      assert.equal(gate.ok, false, 'stage ' + stage + ' left the gate open');
+      assert.deepEqual(gate.missing, [{ step: 1, label }]);
     }
   });
 
-  test('accreditation that is verified but past its expiry closes the gate', () => {
-    // The boundary that matters: the status column still says verified,
-    // and only the date says otherwise. Five year old approvals must not
-    // keep letting an investor through.
+  test('an approved questionnaire still inside its cooling-off period does not open the gate', () => {
+    // The boundary that matters under 506(b): the status column says
+    // approved, and only the clock says the member may not invest yet.
     const wizard = cleared();
-    wizard.accreditation.expiresAt = YESTERDAY;
-    const gate = evaluateInvestGate(wizard);
-    assert.equal(gate.ok, false);
-    assert.deepEqual(gate.missing, [
-      { step: 1, label: 'Accreditation re-verification (expired)' },
-    ]);
-  });
-
-  test('accreditation expiring in the future does not close the gate', () => {
-    const wizard = cleared();
-    wizard.accreditation.expiresAt = new Date(Date.now() + 60_000).toISOString();
-    assert.equal(evaluateInvestGate(wizard).ok, true);
-  });
-
-  test('verified accreditation with no recorded expiry is treated as current', () => {
-    const wizard = cleared();
-    wizard.accreditation.expiresAt = null;
-    assert.equal(evaluateInvestGate(wizard).ok, true);
+    wizard.relationship = relationship('cooling_off');
+    assert.equal(evaluateInvestGate(wizard).ok, false);
   });
 
   test('an incomplete W-9 closes the gate on its own', () => {
@@ -327,7 +328,7 @@ describe('evaluateInvestGate', () => {
 
   test('a profile and a bank account are not gate conditions', () => {
     // Both can be supplied later, at checkout and at funding. Requiring
-    // them here would block an investor who is fully verified.
+    // them here would block an investor who is otherwise cleared.
     const wizard = cleared();
     wizard.profileDone = false;
     wizard.bankDone = false;
@@ -336,7 +337,7 @@ describe('evaluateInvestGate', () => {
 
   test('every unmet condition is reported at once, in wizard step order', () => {
     const wizard = cleared();
-    wizard.accreditation.status = 'pending';
+    wizard.relationship = relationship('questionnaire');
     wizard.info.complete = false;
     wizard.kyc.complete = false;
     const gate = evaluateInvestGate(wizard);
@@ -349,102 +350,41 @@ describe('evaluateInvestGate', () => {
       assert.ok(requirement.label.length > 0, 'a requirement was reported unlabelled');
     }
   });
-
-  test('an expired accreditation is reported once, not twice', () => {
-    // The two step-1 branches are an either/or. Reporting both would put
-    // the same requirement in front of the investor twice.
-    const wizard = cleared();
-    wizard.accreditation.status = 'expired';
-    wizard.accreditation.expiresAt = YESTERDAY;
-    const steps = evaluateInvestGate(wizard).missing.map((m) => m.step);
-    assert.deepEqual(steps, [1]);
-  });
 });
 
 // ---------------- the view gate ----------------
 
 /**
- * Rule 506(c) restricts who may be *shown* the offering, which is a
+ * Rule 506(b) restricts who may be *shown* an offering, which is a
  * narrower question than who may invest. These tests pin that
- * difference: the view gate turns on accreditation and nothing else, and
- * the redaction is a whitelist so a new deal column is withheld by
- * default.
+ * difference: the view gate turns on the relationship stage and nothing
+ * else.
  */
-
-function accreditation(
-  status: AccreditationStatus,
-  expiresAt: string | null,
-): AccreditationView {
-  return {
-    status,
-    method: status === 'not_started' ? null : 'professional_letter',
-    verifiedAt: status === 'verified' ? new Date().toISOString() : null,
-    expiresAt,
-  };
-}
-
 describe('canViewDealDetail', () => {
-  test('verified accreditation inside its window opens the deal', () => {
-    assert.equal(canViewDealDetail(accreditation('verified', YEAR_AHEAD)), true);
-  });
-
-  test('verified accreditation past its expiry does not', () => {
-    // The same boundary the invest gate defends. A five year old approval
-    // still reads `verified` in the status column, so a check that only
-    // looked at the status would keep showing the package forever.
-    assert.equal(canViewDealDetail(accreditation('verified', YESTERDAY)), false);
-  });
-
-  test('anything short of verified does not, including a letter under review', () => {
-    for (const status of ['not_started', 'downloaded', 'pending', 'expired'] as const) {
+  test('only an eligible member is shown offerings', () => {
+    for (const stage of ALL_STAGES) {
       assert.equal(
-        canViewDealDetail(accreditation(status, YEAR_AHEAD)),
-        false,
-        `status ${status} was shown the deal`,
+        canViewDealDetail(relationship(stage)),
+        stage === 'eligible',
+        'stage ' + stage + ' got the wrong answer',
       );
     }
   });
 
-  test('verified with no recorded expiry is treated as current, as the invest gate does', () => {
-    assert.equal(canViewDealDetail(accreditation('verified', null)), true);
-  });
-
-  test('the boundary is evaluated against the supplied instant, not only now', () => {
-    const fixed = new Date('2030-01-01T00:00:00.000Z');
-    const record = accreditation('verified', fixed.toISOString());
-    assert.equal(canViewDealDetail(record, fixed.getTime() - 1), true);
-    assert.equal(canViewDealDetail(record, fixed.getTime() + 1), false);
-  });
-
-  test('viewing turns on accreditation alone: an unfinished W-9 or KYC does not close it', () => {
+  test('viewing turns on the relationship alone: an unfinished W-9 or KYC does not close it', () => {
     // Deliberate. The W-9 and the identity check are money-movement
-    // requirements, so they gate investing and not reading.
+    // requirements, so they gate investing and not seeing.
     const wizard = cleared();
     wizard.info.complete = false;
     wizard.kyc.complete = false;
     assert.equal(evaluateInvestGate(wizard).ok, false);
-    assert.equal(canViewDealDetail(wizard.accreditation), true);
+    assert.equal(canViewDealDetail(wizard.relationship), true);
   });
 
-  test('it is exactly isAccreditationCurrent, so the two can never drift', () => {
-    for (const status of [
-      'not_started',
-      'downloaded',
-      'pending',
-      'verified',
-      'expired',
-    ] as const) {
-      for (const expiry of [YEAR_AHEAD, YESTERDAY, null]) {
-        const record = accreditation(status, expiry);
-        assert.equal(canViewDealDetail(record), isAccreditationCurrent(record));
-      }
-    }
-  });
-
-  test('accreditation is wizard step 1, which is where a gated investor is sent', () => {
+  test('the questionnaire is wizard step 1, which is where a gated investor is sent', () => {
     assert.equal(ACCREDITATION_STEP, 1);
     const wizard = cleared();
-    wizard.accreditation.status = 'not_started';
+    wizard.relationship = relationship('questionnaire');
     assert.equal(firstIncompleteStep(wizard), ACCREDITATION_STEP);
   });
 });
@@ -555,10 +495,10 @@ describe('redactDeal', () => {
 describe('firstIncompleteStep', () => {
   test('the investor is sent to the earliest step they have not finished', () => {
     const wizard = cleared();
-    wizard.accreditation.status = 'not_started';
+    wizard.relationship = relationship('questionnaire');
     assert.equal(firstIncompleteStep(wizard), 1);
 
-    wizard.accreditation.status = 'verified';
+    wizard.relationship = relationship('eligible');
     wizard.info.complete = false;
     assert.equal(firstIncompleteStep(wizard), 2);
 
@@ -573,6 +513,21 @@ describe('firstIncompleteStep', () => {
     wizard.profileDone = true;
     wizard.bankDone = false;
     assert.equal(firstIncompleteStep(wizard), 5);
+  });
+
+  test('review and cooling off are waits, not steps: setup carries on past step 1', () => {
+    for (const stage of ['under_review', 'cooling_off'] as const) {
+      const wizard = cleared();
+      wizard.relationship = relationship(stage);
+      wizard.info.complete = false;
+      assert.equal(firstIncompleteStep(wizard), 2, 'stage ' + stage + ' held the member on step 1');
+    }
+  });
+
+  test('a declined questionnaire sends the member back to step 1', () => {
+    const wizard = cleared();
+    wizard.relationship = relationship('declined');
+    assert.equal(firstIncompleteStep(wizard), 1);
   });
 
   test('an earlier incomplete step wins over a later one', () => {

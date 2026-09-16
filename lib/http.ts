@@ -29,6 +29,14 @@ export class NotFoundError extends Error {
   }
 }
 
+/** Authenticated, but not permitted. The message is safe to show. */
+export class ForbiddenError extends Error {
+  constructor(message = 'Not permitted') {
+    super(message);
+    this.name = 'ForbiddenError';
+  }
+}
+
 export function ok<T>(data: T, status = 200): NextResponse {
   return NextResponse.json(data, { status });
 }
@@ -57,6 +65,9 @@ export function route<TArgs extends unknown[]>(
       }
       if (error instanceof NotFoundError) {
         return fail('not_found', error.message, 404);
+      }
+      if (error instanceof ForbiddenError) {
+        return fail('forbidden', error.message, 403);
       }
       if (error instanceof InvalidTransitionError) {
         return fail('invalid_state', error.message, 409);

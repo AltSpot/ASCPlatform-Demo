@@ -96,7 +96,7 @@ export default async function DocsPage() {
 
       <div className="grid c2">
         <div className="card">
-          <h3 style={{ marginBottom: 4 }}>Verification records</h3>
+          <h3 style={{ marginBottom: 4 }}>Compliance records</h3>
           <p className="small" style={{ marginBottom: 14 }}>
             Your standing compliance documents.
           </p>
@@ -105,17 +105,22 @@ export default async function DocsPage() {
             <span
               className="l"
               style={
-                wizard.accreditation.status === 'verified'
+                wizard.relationship.establishedAt
                   ? { color: 'var(--paper)' }
                   : undefined
               }
             >
-              Accreditation certification
+              Investor questionnaire
             </span>
-            {wizard.accreditation.status === 'verified' ? (
+            {wizard.relationship.establishedAt ? (
               <span className="chip good">
                 <span className="dot" />
-                Valid to {dateStr(wizard.accreditation.expiresAt)}
+                Approved {dateStr(wizard.relationship.establishedAt)}
+              </span>
+            ) : wizard.relationship.stage === 'under_review' ? (
+              <span className="chip neutral">
+                <span className="dot" />
+                Under review
               </span>
             ) : (
               <Link className="small" href="/wizard?step=1">

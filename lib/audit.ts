@@ -2,7 +2,7 @@
  * Append-only audit trail.
  *
  * Every transition that would need books-and-records treatment in a real
- * offering is written here: verification outcomes, document execution,
+ * offering is written here: questionnaire outcomes, document execution,
  * funding, cancellations. Writes are best-effort and never block or fail
  * the operation being audited — a dropped log line must not cost an
  * investor their allocation.
@@ -15,8 +15,16 @@ export type AuditAction =
   | 'auth.login'
   | 'auth.logout'
   | 'auth.user_created'
+  /* Retired with the 506(c) letter flow. Kept so historical rows still
+     type-check when read back; nothing writes them now. */
   | 'accreditation.letter_downloaded'
   | 'accreditation.verified'
+  /* The 506(b) questionnaire: the submission, then the platform's
+     evaluation of it as a separate line with actor 'platform'. */
+  | 'accreditation.questionnaire_submitted'
+  | 'accreditation.approved'
+  | 'accreditation.referred_for_review'
+  | 'accreditation.declined'
   | 'vault.saved'
   | 'kyc.submitted'
   | 'kyc.cleared'

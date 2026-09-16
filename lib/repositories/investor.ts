@@ -10,9 +10,10 @@
  */
 import 'server-only';
 
+import { COOLING_OFF_DAYS } from '../config';
 import { prisma } from '../db';
 import { DEMO_PERSONA, personaEmail } from '../demo-persona';
-import { ACCREDITATION_VALIDITY_DAYS, DAY_MS } from '../domain';
+import { DAY_MS } from '../domain';
 import type {
   AccreditationStatus,
   AccreditationView,
@@ -21,6 +22,13 @@ import type {
   VaultView,
   WizardView,
 } from '../domain';
+import {
+  evaluateQuestionnaire,
+  relationshipStage,
+  type Evaluation,
+  type QuestionnaireAnswers,
+  type RelationshipView,
+} from '../relationship';
 
 /**
  * DEMO SEAM — READ THIS ONE. Every new investor is handed a position
@@ -204,10 +212,32 @@ export async function ensureInvestorRecords(userId: string): Promise<void> {
 }
 
 /**
- * DEMO SEAM — mark an account fully verified without any of it having
+ * DEMO SEAM — how long ago a seeded member's relationship was
+ * established. Three years: earlier than the oldest seeded position
+ * (signed 900 days ago) plus its cooling-off period, so the book a
+ * seeded member holds is consistent with the 506(b) gate it had to pass.
+ */
+const SEED_RELATIONSHIP_DAYS_AGO = 3 * 365;
+
+/**
+ * The questionnaire a seeded member is recorded as having given: an
+ * experienced investor, so the evaluation approves it on its merits
+ * rather than the seam writing `approved` by hand.
+ */
+const SEED_ANSWERS: QuestionnaireAnswers = {
+  basis: 'net_worth',
+  privateDeals: 'many',
+  yearsInvesting: 'over_10',
+  evaluates: 'self',
+  acknowledgements: { loss: true, illiquid: true, no_advice: true },
+};
+
+/**
+ * DEMO SEAM — mark an account fully onboarded without any of it having
  * happened.
  *
- * Accreditation is verified with no letter, KYC is cleared with a
+ * The questionnaire is recorded with SEED_ANSWERS and back-dated so the
+ * relationship predates the seeded book, KYC is cleared with a
  * filename, the Vault is filled and a bank is written directly rather
  * than through `linkBank`. Everything the invest gate checks is
  * satisfied, so a seeded member can go straight into a subscription.
@@ -223,7 +253,11 @@ async function completeOnboarding(userId: string, name: string): Promise<void> {
   const [first, ...rest] = name.trim().split(/\s+/);
   const last = rest.join(' ') || DEMO_PERSONA.vault.last;
 
-  await verifyAccreditation(userId);
+  await recordQuestionnaire(
+    userId,
+    SEED_ANSWERS,
+    new Date(now.getTime() - SEED_RELATIONSHIP_DAYS_AGO * DAY_MS),
+  );
   await saveVault(userId, {
     ...DEMO_PERSONA.vault,
     first: first || DEMO_PERSONA.vault.first,
@@ -624,7 +658,11 @@ async function seedPendingCommitment(userId: string, now: number): Promise<void>
 export async function getWizardView(userId: string): Promise<WizardView> {
   await ensureInvestorRecords(userId);
 
-  const [accreditation, kyc, vault, wizard] = await Promise.all([
+  const [user, accreditation, kyc, vault, wizard] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { relationshipEstablishedAt: true },
+    }),
     prisma.accreditation.findUnique({ where: { userId } }),
     prisma.kycRecord.findUnique({ where: { userId } }),
     prisma.vaultInfo.findUnique({ where: { userId } }),
@@ -637,12 +675,11 @@ export async function getWizardView(userId: string): Promise<WizardView> {
   );
 
   return {
-    accreditation: {
-      status: (accreditation?.status ?? 'not_started') as AccreditationStatus,
-      method: accreditation?.method ?? null,
-      verifiedAt: accreditation?.verifiedAt?.toISOString() ?? null,
-      expiresAt: accreditation?.expiresAt?.toISOString() ?? null,
-    },
+    accreditation: toAccreditationView(accreditation),
+    relationship: toRelationshipView(
+      accreditation?.status ?? null,
+      user?.relationshipEstablishedAt ?? null,
+    ),
     info: { complete: infoComplete },
     kyc: {
       idUploaded: kyc?.idUploaded ?? false,
@@ -655,25 +692,58 @@ export async function getWizardView(userId: string): Promise<WizardView> {
   };
 }
 
-/**
- * Just the verification record. The deal repository needs this on every
- * browse read to decide what may go on the wire, and has no use for the
- * rest of the wizard.
- *
- * An investor with no record yet reads as `not_started`, which is the
- * same answer `getWizardView` gives and closes every gate.
- */
-export async function getAccreditationView(
-  userId: string,
-): Promise<AccreditationView> {
-  const row = await prisma.accreditation.findUnique({ where: { userId } });
-
+function toAccreditationView(
+  row: {
+    status: string;
+    basis: string | null;
+    reason: string | null;
+    submittedAt: Date | null;
+    decidedAt: Date | null;
+  } | null,
+): AccreditationView {
   return {
     status: (row?.status ?? 'not_started') as AccreditationStatus,
-    method: row?.method ?? null,
-    verifiedAt: row?.verifiedAt?.toISOString() ?? null,
-    expiresAt: row?.expiresAt?.toISOString() ?? null,
+    basis: row?.basis ?? null,
+    submittedAt: row?.submittedAt?.toISOString() ?? null,
+    decidedAt: row?.decidedAt?.toISOString() ?? null,
+    reason: row?.reason ?? null,
   };
+}
+
+function toRelationshipView(
+  status: string | null,
+  establishedAt: Date | null,
+): RelationshipView {
+  return relationshipStage(
+    {
+      status: status ?? 'not_started',
+      establishedAt: establishedAt?.toISOString() ?? null,
+    },
+    COOLING_OFF_DAYS,
+  );
+}
+
+/**
+ * Just where the member stands on the 506(b) gate. The deal repository
+ * reads this on every browse to decide whether any offering may go on
+ * the wire, and has no use for the rest of the wizard.
+ *
+ * A member with no record reads as the questionnaire stage, which is the
+ * answer getWizardView gives and closes every gate.
+ */
+export async function getRelationshipView(userId: string): Promise<RelationshipView> {
+  const [user, accreditation] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { relationshipEstablishedAt: true },
+    }),
+    prisma.accreditation.findUnique({ where: { userId }, select: { status: true } }),
+  ]);
+
+  return toRelationshipView(
+    accreditation?.status ?? null,
+    user?.relationshipEstablishedAt ?? null,
+  );
 }
 
 export async function markWizardComplete(userId: string): Promise<void> {
@@ -683,51 +753,65 @@ export async function markWizardComplete(userId: string): Promise<void> {
   });
 }
 
-// ---------------- accreditation ----------------
+// ---------------- the investor questionnaire ----------------
 
 /**
- * Verification is performed in-house: the signed letter is read
- * automatically and confirmed by an AltSpot reviewer, so `provider` names
- * us rather than a third-party verification vendor.
+ * Record a questionnaire and the platform's evaluation of it, in one
+ * transaction.
+ *
+ * The answers, the basis, the reason and both timestamps are kept: under
+ * Rule 506(b) this row is the record behind a reasonable belief that the
+ * member is accredited and able to evaluate the offering. An approval
+ * writes the member's relationship date, which starts the cooling-off
+ * period. A referral or a decline writes none.
+ *
+ * `at` is the submission time. It is a parameter so the demo seam can
+ * back-date a seeded member; the route always passes now.
+ *
+ * The relationship date is written once. A member whose relationship is
+ * already established cannot move it by answering again, because every
+ * eligibility decision after that date depends on it. The route refuses
+ * that case before calling this; the guard here makes it structural.
  */
-const ACCREDITATION_PROVIDER = 'AltSpot review';
+export async function recordQuestionnaire(
+  userId: string,
+  answers: QuestionnaireAnswers,
+  at: Date = new Date(),
+): Promise<Evaluation> {
+  const evaluation = evaluateQuestionnaire(answers);
+  const decided = evaluation.outcome !== 'under_review';
 
-export async function recordLetterDownload(userId: string): Promise<void> {
-  await prisma.accreditation.update({
-    where: { userId },
-    data: { status: 'downloaded' },
-  });
-}
+  await prisma.$transaction(async (tx) => {
+    const user = await tx.user.findUnique({
+      where: { id: userId },
+      select: { relationshipEstablishedAt: true },
+    });
+    if (user?.relationshipEstablishedAt) {
+      throw new Error('Relationship already established; questionnaire is closed.');
+    }
 
-/**
- * The investor returned a completed letter. The file itself is never
- * stored; only the fact of the upload, which puts the record in front of
- * a reviewer. The filename lives in the audit trail at the call site.
- */
-export async function recordLetterUpload(userId: string): Promise<void> {
-  await prisma.accreditation.update({
-    where: { userId },
-    data: {
-      status: 'pending',
-      method: 'professional_letter',
-      provider: ACCREDITATION_PROVIDER,
-    },
-  });
-}
+    await tx.accreditation.update({
+      where: { userId },
+      data: {
+        status: evaluation.outcome,
+        method: 'questionnaire',
+        basis: answers.basis,
+        answersJson: JSON.stringify(answers),
+        reason: evaluation.reason,
+        submittedAt: at,
+        decidedAt: decided ? at : null,
+      },
+    });
 
-/** The reviewer's confirmation. Good for five years from this moment. */
-export async function verifyAccreditation(userId: string): Promise<void> {
-  const now = new Date();
-  await prisma.accreditation.update({
-    where: { userId },
-    data: {
-      status: 'verified',
-      method: 'professional_letter',
-      provider: ACCREDITATION_PROVIDER,
-      verifiedAt: now,
-      expiresAt: new Date(now.getTime() + ACCREDITATION_VALIDITY_DAYS * DAY_MS),
-    },
+    if (evaluation.outcome === 'approved') {
+      await tx.user.update({
+        where: { id: userId },
+        data: { relationshipEstablishedAt: at },
+      });
+    }
   });
+
+  return evaluation;
 }
 
 // ---------------- the Vault (W-9) ----------------
@@ -982,17 +1066,17 @@ export async function getBank(userId: string): Promise<BankView | null> {
  * DEMO SEAM — fully onboard a freshly created investor as the demo
  * persona, without any of it having happened.
  *
- * Accreditation is marked verified with no letter, KYC is marked cleared
+ * The questionnaire is recorded and back-dated, KYC is marked cleared
  * with a hardcoded filename, the Vault is filled from DEMO_PERSONA, and a
  * bank account is written directly rather than through `linkBank`. There
  * is no production equivalent: this and its caller,
  * `createDemoPersonaInvestor`, are deleted together with the
  * existing-investor button.
  *
- * Everything the invest gate checks is satisfied here: accreditation
- * verified, W-9 in the Vault, KYC cleared, an investment profile, and a
- * linked bank. The visitor lands on the dashboard able to go straight
- * into a subscription.
+ * Everything the invest gate checks is satisfied here: a relationship
+ * past its cooling-off period, W-9 in the Vault, KYC cleared, an
+ * investment profile, and a linked bank. The visitor lands on the
+ * dashboard able to go straight into a subscription.
  *
  * Called only for accounts minted by the existing-investor button, so a
  * normally created investor still walks the whole setup.

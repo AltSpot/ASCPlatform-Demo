@@ -30,6 +30,11 @@ model User {
   email        String   @unique
   name         String
   passwordHash String
+  /// Rule 506(b): when AltSpot approved this member's questionnaire, which
+  /// is when the pre-existing relationship was established. Offerings open
+  /// after the cooling-off period, and a member may subscribe only to deals
+  /// that opened after this date. Null until approved.
+  relationshipEstablishedAt DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -67,18 +72,25 @@ model Session {
 
 // ---------------- verification / onboarding ----------------
 
-/// Rule 506(c) accredited-investor verification.
-/// status: not_started | downloaded | pending | verified | expired
+/// Rule 506(b) accreditation and sophistication questionnaire: a
+/// self-certification, evaluated by AltSpot. The answers and their
+/// timestamps are the record supporting a reasonable belief.
+/// status: not_started | under_review | approved | declined
 model Accreditation {
-  id         String    @id @default(cuid())
-  userId     String    @unique
-  status     String    @default("not_started")
-  method     String?
-  provider   String?
-  verifiedAt DateTime?
-  expiresAt  DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  status      String    @default("not_started")
+  method      String?
+  /// The accredited-investor standard the member certified (lib/relationship.ts).
+  basis       String?
+  /// The full questionnaire as submitted, JSON.
+  answersJson String?
+  /// The evaluation's plain-language reason, as shown to the member.
+  reason      String?
+  submittedAt DateTime?
+  decidedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

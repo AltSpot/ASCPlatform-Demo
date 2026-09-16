@@ -1,105 +1,57 @@
 /**
- * The deal page for a member who is not a verified accredited investor.
+ * What a deal link shows a member who has not cleared the relationship
+ * gate.
  *
- * Not a 404 and not a redirect: someone who followed a link should land
- * on the deal, see which company it is, and be told plainly what stands
- * between them and the rest. Everything below the gate is a placeholder
- * shape, blurred. There is nothing behind the blur to reveal, because
- * the server sent a teaser and nothing else.
+ * Offerings are made under Rule 506(b), so before a member's
+ * questionnaire is approved and the cooling-off period has passed they
+ * are shown no offering at all: not its terms, and not its name, sector
+ * or artwork either. Someone who followed a link lands here, and the page
+ * says where they stand and what happens next, without confirming which
+ * deal the link pointed at. The server sent nothing about the deal, so
+ * there is nothing on this page to leak.
+ *
+ * The copy is gateCopy in lib/relationship.ts, shared with the
+ * marketplace's components/OfferingsGate.tsx.
  */
 import Link from 'next/link';
-import type { ReactNode } from 'react';
 
-import { ACCREDITATION_STEP, type DealTeaser } from '@/lib/domain';
+import { ACCREDITATION_STEP } from '@/lib/domain';
+import { dateStr } from '@/lib/format';
+import { gateCopy, STAGE_LABEL, type RelationshipView } from '@/lib/relationship';
 
 import s from './Deal.module.css';
 
-export default function DealGate({
-  deal,
-  tools,
-}: {
-  deal: DealTeaser;
-  /** Header controls that stay available while gated, e.g. the watchlist. */
-  tools?: ReactNode;
-}) {
+export default function DealGate({ relationship }: { relationship: RelationshipView }) {
+  const copy = gateCopy(relationship, dateStr, `/wizard?step=${ACCREDITATION_STEP}`);
+
   return (
     <>
-      <header className={s.hero}>
-        <div className={s.heroWash} style={{ background: deal.art }} aria-hidden="true" />
-
-        <div className={s.heroInner}>
-          <div className={s.heroTop}>
-            <div className={s.identity}>
-              {deal.logoUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img className={s.logo} src={deal.logoUrl} alt="" aria-hidden="true" />
-              )}
-              <span className={s.name}>{deal.name}</span>
-              <span className="chip">{deal.tag}</span>
-            </div>
-            {tools}
+      {/* One warm pane, not the hero card with the gate inside it: with
+          no deal to frame there is nothing for an outer pane to hold, and
+          glass on glass reads as fog. */}
+      <section className={s.gate} style={{ marginTop: 0 }} aria-label="Offerings">
+        <div className={s.gateBody}>
+          <div className={`eyebrow signal ${s.gateEyebrow}`}>
+            {STAGE_LABEL[relationship.stage]}
           </div>
-
-          {/* The one line, at reading size. There is no headline to set
-              in display type: that is one of the withheld fields. */}
-          <h1 className={s.heroLede}>{deal.blurb}</h1>
-
-          <p className={s.heroMeta}>
-            <span>{deal.sector}</span>
-          </p>
-
-          <div className={s.gate}>
-            <div className={s.gateBody}>
-              <div className={`eyebrow signal ${s.gateEyebrow}`}>Accreditation required</div>
-              <p className={s.gateText}>
-                This offering is made under Rule 506(c), so the terms, the numbers
-                and the data room are available only to investors who have verified
-                their accredited status.
-              </p>
-            </div>
-            <Link
-              className="btn btn-gold"
-              href={`/wizard?step=${ACCREDITATION_STEP}&then=${deal.id}`}
-            >
-              Finish accreditation
-            </Link>
-          </div>
+          <p className={s.heroLede}>{copy.title}</p>
+          <p className={s.gateText}>{copy.body}</p>
         </div>
-      </header>
-
-      <Veil />
+        {copy.action ? (
+          <Link className="btn btn-gold" href={copy.action.href}>
+            {copy.action.label}
+          </Link>
+        ) : (
+          <Link className="btn btn-ghost" href="/dashboard">
+            Back to dashboard
+          </Link>
+        )}
+      </section>
 
       <p className={s.disclosure}>
-        Prepared by AltSpot Capital from company-provided materials and AltSpot
-        diligence. Not an offer to sell securities. Any offer is made only through
-        definitive documents. Investment is subject to eligibility, documentation,
-        and final acceptance. Private investments involve substantial risk,
-        including loss of the entire amount invested. Demo environment.
+        Not an offer to sell securities. Any offer is made only through definitive
+        documents, to eligible members. Demo environment.
       </p>
     </>
-  );
-}
-
-/**
- * The shape of the page that is waiting: section headings an investor
- * will get, drawn as rules. Deliberately generic, because these bars
- * stand in for content this viewer was never sent.
- */
-function Veil() {
-  const sections = ['Overview', 'Key indicators', 'Terms', 'Risk', 'Data room'];
-
-  return (
-    <div className={s.veil} aria-hidden="true">
-      {sections.map((label) => (
-        <div className={s.veilSection} key={label}>
-          <div className={s.veilLabel}>{label}</div>
-          <div className={s.veilRows}>
-            <span style={{ width: '72%' }} />
-            <span style={{ width: '88%' }} />
-            <span style={{ width: '54%' }} />
-          </div>
-        </div>
-      ))}
-    </div>
   );
 }

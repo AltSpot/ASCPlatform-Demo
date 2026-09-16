@@ -24,8 +24,9 @@ Concretely:
 
 - **Never** scatter `if (demo)` through business logic. Demo behaviour lives
   behind `DEMO_MODE` in `lib/config.ts` and the seams it guards: `authenticate`
-  in `lib/auth.ts`, the simulated third-party calls, and the accreditation
-  upload route that collapses the reviewer step. `components/wizard/
+  in `lib/auth.ts`, the simulated third-party calls, and the seeded onboarding
+  in `lib/repositories/investor.ts` that back-dates a questionnaire approval so
+  a seeded member is past the 506(b) cooling-off period. `components/wizard/
   PlaidDemoModal.tsx` is the one whole-file stand-in — it mimics Plaid Link and
   hands back the same contract the real Link callback provides, so it deletes
   cleanly. Every seam carries a `DEMO SEAM` comment.
@@ -140,12 +141,14 @@ The server survives closing the terminal and restarts itself if Next crashes.
 `node scripts/autostart.mjs install` additionally starts it at login;
 `uninstall` removes it.
 
-Sign in with **any email and any password**. An unknown email mints a verified
-investor holding the seeded book, because an account with funded positions has
-by definition passed the invest gate: a setup banner over a live portfolio
-contradicts itself. **An address containing `+new` mints a genuinely empty,
-un-onboarded account**, which is how the empty states and the wizard are
-reached.
+Sign in with **any email and any password**. An unknown email mints an eligible
+investor holding the seeded book, with an approved questionnaire back-dated
+three years, because an account with funded positions has by definition passed
+the invest gate: a setup banner over a live portfolio contradicts itself. **An
+address containing `+new` mints a genuinely empty, un-onboarded account**, which
+is how the empty states, the questionnaire and the relationship gate are reached.
+A `+new` account that submits the questionnaire waits out the real cooling-off
+period (`ASC_COOLING_OFF_DAYS`, default 30) before any offering appears.
 
 ## Architecture
 
@@ -683,13 +686,23 @@ These are the claims the product makes. Do not let a change quietly break them.
   figure anywhere without asking first
 - Signed documents file themselves into Docs automatically
 - The Vault is captured once and pre-fills every document thereafter
-- Accreditation is valid **five years**; the funding window is **10 days**
-- **Deal detail is for verified accredited investors only.** Everyone else gets
-  the teaser: name, sector, the one line and the artwork. The redaction happens
-  in `lib/repositories/deals.ts`, so the withheld fields are never sent to the
-  browser and `/api/deals` returns exactly what the page shows. `canViewDealDetail`
-  in `lib/domain.ts` is the rule, and it turns on accreditation alone: the W-9
-  and KYC gate investing, not reading
+- The funding window is **10 days**
+- **`docs/structure-decisions-sept-2026.md` is the source of truth for the
+  model** (506(b), fees, carry, escrow, what may be shown). Where an invariant in
+  this file disagrees with it, that document wins and this file is stale.
+- **No offering is shown before the 506(b) relationship gate opens** (Sept 16,
+  2026). A member registers, completes the investor questionnaire
+  (`lib/relationship.ts`: accreditation basis, experience, sophistication),
+  AltSpot evaluates it, and the approval date is stored as
+  `User.relationshipEstablishedAt`. Offerings open after the cooling-off period.
+  Before that, `lib/repositories/deals.ts` sends **no deal at all**, not a
+  teaser: no name, sector, line or artwork, an empty list from `/api/deals`, and
+  the same 403 for every id from `/api/deals/:id` so ids cannot be probed. The
+  Radar stays open but withholds which name became a deal. Accreditation is a
+  self-certification with no letter, no reviewer of documents and no expiry;
+  the answers and timestamps are the record. `canViewDealDetail` in
+  `lib/domain.ts` is the rule, and it turns on the relationship alone: the W-9
+  and KYC gate investing, not seeing
 - SpotBot **explains, never advises** — every answer cites its provenance
 - Secondaries is visible but disabled, pending a BD partner and counsel
 
@@ -750,8 +763,10 @@ and application flow. The product starts at login.
 
 1. `ASC_DEMO_MODE=false` — real credentials required; simulated calls refuse.
 2. Implement real adapters in `lib/integrations/` for the KYC vendor, Plaid,
-   Modern Treasury and Anvil. Accreditation stays in-house: AltSpot reviews the
-   certification letter itself, so there is no verification vendor to wire.
+   Modern Treasury and Anvil. Accreditation stays in-house: under 506(b) it is a
+   self-certification questionnaire AltSpot evaluates, so there is no
+   verification vendor to wire. A questionnaire referred for review
+   (`under_review`) needs a back-office decision screen; none exists yet.
 3. Swap `components/wizard/PlaidDemoModal.tsx` for Plaid Link, then delete it and
    its stylesheet.
 4. Swap the datasource in `prisma/schema.prisma` to `postgresql` and the adapter

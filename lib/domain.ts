@@ -1,4 +1,9 @@
 import type { Backing } from './backers';
+import {
+  canSeeOfferings,
+  questionnaireSubmitted,
+  type RelationshipView,
+} from './relationship';
 /**
  * Domain vocabulary — the types and invariants the whole platform agrees on.
  *
@@ -89,19 +94,20 @@ export const RESUMABLE_STATES: readonly SubscriptionState[] = [
   'docs_signed',
 ];
 
-// ---------------- verification ----------------
+// ---------------- onboarding ----------------
 
+/**
+ * The accreditation questionnaire record: a self-certification under
+ * Rule 506(b). lib/relationship.ts holds the questions, the evaluation
+ * and the stages a member moves through.
+ */
 export type AccreditationStatus =
   | 'not_started'
-  | 'downloaded'
-  | 'pending'
-  | 'verified'
-  | 'expired';
+  | 'under_review'
+  | 'approved'
+  | 'declined';
 
 export type KycStatus = 'not_started' | 'pending' | 'cleared' | 'rejected';
-
-/** Rule 506(c) verification is good for five years. */
-export const ACCREDITATION_VALIDITY_DAYS = 5 * 365;
 
 /** A signed commitment must be funded inside this window or it lapses. */
 export const FUNDING_WINDOW_DAYS = 10;
@@ -323,16 +329,23 @@ export interface SessionUser {
   name: string;
 }
 
-/** An investor's 506(c) verification record, as the UI reads it. */
+/**
+ * An investor's questionnaire record, as the UI reads it. The answers
+ * themselves stay server-side; the member sees the basis they chose, the
+ * evaluation's reason and where they stand.
+ */
 export interface AccreditationView {
   status: AccreditationStatus;
-  method: string | null;
-  verifiedAt: string | null;
-  expiresAt: string | null;
+  basis: string | null;
+  submittedAt: string | null;
+  decidedAt: string | null;
+  reason: string | null;
 }
 
 export interface WizardView {
   accreditation: AccreditationView;
+  /** Where the member stands on the 506(b) relationship gate. */
+  relationship: RelationshipView;
   info: { complete: boolean };
   kyc: { idUploaded: boolean; selfieCaptured: boolean; complete: boolean };
   profileDone: boolean;
@@ -411,54 +424,21 @@ export interface DocumentView {
 
 // ---------------- gating ----------------
 
-/** The wizard step that carries accreditation. */
+/** The wizard step that carries the investor questionnaire. */
 export const ACCREDITATION_STEP = 1;
 
 /**
- * Verified once, but past the five year window. The boundary that
- * matters: the status column still says verified and only the date says
- * otherwise. One expression, so the invest gate and the view gate can
- * never disagree about when an approval goes stale.
- */
-function accreditationExpired(
-  accreditation: AccreditationView,
-  now: number,
-): boolean {
-  return Boolean(
-    accreditation.expiresAt &&
-      new Date(accreditation.expiresAt).getTime() < now,
-  );
-}
-
-/** Verified, and still inside its window. */
-export function isAccreditationCurrent(
-  accreditation: AccreditationView,
-  now: number = Date.now(),
-): boolean {
-  return (
-    accreditation.status === 'verified' &&
-    !accreditationExpired(accreditation, now)
-  );
-}
-
-/**
- * May this investor be shown a deal's substantive package?
+ * May this investor be shown offerings?
  *
- * Accreditation alone, deliberately. Rule 506(c) restricts who may be
- * shown the offering, and that turns on accredited status; the W-9 and
- * the identity check are money-movement requirements, so they gate
- * investing rather than reading. An investor part-way through setup can
- * therefore still read a deal once accreditation clears.
- *
- * Pure, and the only definition of the rule. `lib/repositories/deals.ts`
- * calls it before deciding what to put on the wire, so a UI that forgot
- * to check would have nothing to leak.
+ * The 506(b) relationship gate and nothing else: questionnaire approved
+ * and the cooling-off period over. The W-9 and the identity check are
+ * money-movement requirements, so they gate investing rather than
+ * seeing. The rule is canSeeOfferings in lib/relationship.ts; this is the
+ * name the deal repository calls before deciding what goes on the wire,
+ * so a page that forgot to check has nothing to leak.
  */
-export function canViewDealDetail(
-  accreditation: AccreditationView,
-  now: number = Date.now(),
-): boolean {
-  return isAccreditationCurrent(accreditation, now);
+export function canViewDealDetail(relationship: RelationshipView): boolean {
+  return canSeeOfferings(relationship);
 }
 
 /**
@@ -482,21 +462,30 @@ export function redactDeal(deal: DealView): DealTeaser {
   };
 }
 
+/** The gate label for each relationship stage short of eligible. */
+const RELATIONSHIP_REQUIREMENT: Record<
+  Exclude<RelationshipView['stage'], 'eligible'>,
+  string
+> = {
+  questionnaire: 'Investor questionnaire',
+  under_review: 'Questionnaire under review',
+  declined: 'Investor questionnaire',
+  cooling_off: 'Cooling-off period',
+};
+
 /**
- * Required before a subscription may be started: accreditation, W-9 and
- * KYC. An investment profile can be created at checkout and a bank linked
- * at funding, so neither gates the flow.
+ * Required before a subscription may be started: a relationship past its
+ * cooling-off period, the W-9 and KYC. An investment profile can be
+ * created at checkout and a bank linked later, so neither gates the
+ * flow. Whether a specific deal may be subscribed to at all (it must have
+ * opened after the relationship) is a per-deal rule on top of this one.
  */
 export function evaluateInvestGate(wizard: WizardView): InvestGate {
   const missing: GateRequirement[] = [];
 
-  if (wizard.accreditation.status !== 'verified') {
-    missing.push({ step: ACCREDITATION_STEP, label: 'Accreditation verification' });
-  } else if (accreditationExpired(wizard.accreditation, Date.now())) {
-    missing.push({
-      step: ACCREDITATION_STEP,
-      label: 'Accreditation re-verification (expired)',
-    });
+  const { stage } = wizard.relationship;
+  if (stage !== 'eligible') {
+    missing.push({ step: ACCREDITATION_STEP, label: RELATIONSHIP_REQUIREMENT[stage] });
   }
 
   if (!wizard.info.complete) {
@@ -511,7 +500,8 @@ export function evaluateInvestGate(wizard: WizardView): InvestGate {
 
 /** First wizard step the investor still has to complete. */
 export function firstIncompleteStep(wizard: WizardView): number {
-  if (wizard.accreditation.status !== 'verified') return 1;
+  // Review and cooling off run on their own clock; setup carries on.
+  if (!questionnaireSubmitted(wizard.relationship)) return 1;
   if (!wizard.info.complete) return 2;
   if (!wizard.kyc.complete) return 3;
   if (!wizard.profileDone) return 4;

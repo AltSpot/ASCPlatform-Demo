@@ -15,6 +15,8 @@ import MarketplaceLanes from '@/components/marketplace/MarketplaceLanes';
 import { requireUser } from '@/lib/auth';
 import { RESUMABLE_STATES } from '@/lib/domain';
 import { listDealsForViewer } from '@/lib/repositories/deals';
+import { getRelationshipView } from '@/lib/repositories/investor';
+import { canSeeOfferings } from '@/lib/relationship';
 import { getRadarBoard } from '@/lib/repositories/radar';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
@@ -28,12 +30,13 @@ export default async function MarketplacePage({
 }) {
   const user = await requireUser();
 
-  const [{ view }, deals, subscriptions, radar, watchlist] = await Promise.all([
+  const [{ view }, deals, subscriptions, radar, watchlist, relationship] = await Promise.all([
     searchParams,
     listDealsForViewer(user.id),
     listSubscriptions(user.id),
     getRadarBoard(user.id),
     listWatchlist(user.id),
+    getRelationshipView(user.id),
   ]);
 
   /* Plain arrays rather than a Map and a Set: the shelf is a client
@@ -55,6 +58,7 @@ export default async function MarketplacePage({
       watched={watchlist}
       fromRadar={fromRadar}
       companies={radar}
+      locked={canSeeOfferings(relationship) ? null : relationship}
       initialView={view === 'radar' ? 'radar' : 'current'}
     />
   );

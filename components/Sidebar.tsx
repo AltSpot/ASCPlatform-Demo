@@ -53,7 +53,7 @@ import type { SessionUser } from '@/lib/domain';
 import s from './Sidebar.module.css';
 
 /** What the account chip may truthfully claim. */
-export type SidebarStatus = 'approved' | 'verified' | 'setup';
+export type SidebarStatus = 'approved' | 'eligible' | 'cooling_off' | 'setup';
 
 interface NavEntry {
   id: string;
@@ -234,7 +234,7 @@ function Slot({ entry }: { entry: NavEntry }) {
 }
 
 /**
- * Verification status, in one word.
+ * Where the member stands, in a word or two.
  *
  * This said "Approved" for every account regardless of state, so a
  * member who had not verified anything was told they were approved by
@@ -244,7 +244,8 @@ function Slot({ entry }: { entry: NavEntry }) {
  */
 const STATUS_LABEL: Record<SidebarStatus, string> = {
   approved: 'Approved',
-  verified: 'Verified',
+  eligible: 'Eligible',
+  cooling_off: 'Cooling off',
   setup: 'Setup incomplete',
 };
 

@@ -1,9 +1,9 @@
 /**
  * GET /api/deals — the curated shelf.
  *
- * Redacted per viewer. A member who is not a verified accredited
- * investor receives the teaser only, so reading the JSON directly shows
- * exactly what the marketplace shows and nothing more.
+ * Gated per viewer. A member who has not cleared the 506(b) relationship
+ * gate receives an empty list, so reading the JSON directly shows exactly
+ * what the marketplace shows and nothing more.
  */
 import { requireUser } from '@/lib/auth';
 import { ok, route } from '@/lib/http';

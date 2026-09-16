@@ -16,11 +16,13 @@
 import 'server-only';
 
 import { prisma } from '../db';
+import { canSeeOfferings } from '../relationship';
 import {
   listRadarCompanies,
   type RadarCompany,
   type RadarCompanyView,
 } from '../terminal/radar';
+import { getRelationshipView } from './investor';
 
 export type { RadarCompanyView };
 
@@ -66,24 +68,35 @@ function merge(
   };
 }
 
-/** The Radar board as one investor sees it. */
+/**
+ * The Radar board as one investor sees it.
+ *
+ * The Radar is sourcing intelligence, not an offering, so it is open to
+ * every signed-in member. The one thing on it that is about an offering
+ * is `dealId`: which Radar name became an open deal. That is withheld
+ * until the member clears the 506(b) relationship gate, for the same
+ * reason the deal itself is.
+ */
 export async function getRadarBoard(userId: string): Promise<RadarCompanyView[]> {
-  const [companies, counts, mine] = await Promise.all([
+  const [companies, counts, mine, relationship] = await Promise.all([
     listRadarCompanies(),
     tallies(),
     prisma.radarInterest.findMany({
       where: { userId },
       select: { companySlug: true, amount: true, rank: true },
     }),
+    getRelationshipView(userId),
   ]);
+  const offeringsVisible = canSeeOfferings(relationship);
 
   const yours = new Map(
     mine.map((row) => [row.companySlug, { amount: row.amount, rank: row.rank }]),
   );
 
-  return companies.map((company) =>
-    merge(company, counts.get(company.slug), yours.get(company.slug)),
-  );
+  return companies.map((company) => {
+    const view = merge(company, counts.get(company.slug), yours.get(company.slug));
+    return offeringsVisible ? view : { ...view, dealId: undefined };
+  });
 }
 
 /**

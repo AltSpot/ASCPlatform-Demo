@@ -10,6 +10,7 @@
 import type {
   BankView,
   DealShelfItem,
+  DealView,
   DocumentView,
   ProfileView,
   SessionUser,
@@ -22,6 +23,7 @@ import type {
   ExternalPositionInput,
   ExternalPositionView,
 } from '../repositories/external';
+import type { QuestionnaireAnswers } from '../relationship';
 import type { RadarCompanyView } from '../terminal/radar';
 
 export class ApiError extends Error {
@@ -117,11 +119,9 @@ export const api = {
   wizard: () => request<WizardView>('/wizard'),
   completeWizard: () => post<WizardView>('/wizard/complete'),
 
-  accreditationDownloaded: () => post<WizardView>('/accreditation/letter'),
-  /** The file never leaves the browser; only its name is sent. */
-  uploadAccreditationLetter: (fileName: string) =>
-    post<WizardView>('/accreditation/upload', { fileName }),
-  verifyAccreditation: () => post<WizardView>('/accreditation/verify'),
+  /** The investor questionnaire. Evaluated server-side; see lib/relationship.ts. */
+  submitQuestionnaire: (answers: QuestionnaireAnswers) =>
+    post<WizardView>('/accreditation/questionnaire', answers),
 
   vault: () => request<VaultView>('/vault'),
   saveVault: (input: Record<string, string>) => put<VaultView>('/vault', input),
@@ -143,12 +143,11 @@ export const api = {
 
   // ---- marketplace ----
   /**
-   * Redacted per viewer: a member who is not a verified accredited
-   * investor gets `DealTeaser` entries, with `redacted: true` as the
-   * discriminant. Narrow before reading any figure.
+   * Gated per viewer by the 506(b) relationship gate: before it opens the
+   * list is empty and a single deal answers 403.
    */
   deals: () => request<DealShelfItem[]>('/deals'),
-  deal: (id: string) => request<DealShelfItem>(`/deals/${id}`),
+  deal: (id: string) => request<DealView>(`/deals/${id}`),
 
   // ---- subscriptions ----
   subscriptions: () => request<SubscriptionView[]>('/subscriptions'),

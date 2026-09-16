@@ -24,16 +24,21 @@ export default async function PortalLayout({
   if (!user) redirect('/');
 
   /* The account chip states a regulatory fact, so it is read from
-     the same gate the invest flow is. Approved means every step is
-     done; verified means accreditation alone, which is what opens
-     deal detail; anything else is still in setup. */
+     the same gates the invest flow and the deal repository are.
+     Approved means every step is done; eligible means the 506(b)
+     relationship gate is open, which is what shows offerings; cooling
+     off means the questionnaire is approved and the wait is running;
+     anything else is still in setup. */
   const wizard = await getWizardView(user.id);
   const gate = evaluateInvestGate(wizard);
+  const { stage } = wizard.relationship;
   const status = gate.ok
     ? 'approved'
-    : wizard.accreditation.status === 'verified'
-      ? 'verified'
-      : 'setup';
+    : stage === 'eligible'
+      ? 'eligible'
+      : stage === 'cooling_off'
+        ? 'cooling_off'
+        : 'setup';
 
   return (
     <div className="layout">

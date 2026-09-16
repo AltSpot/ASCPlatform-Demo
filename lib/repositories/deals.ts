@@ -3,24 +3,26 @@
  * content in JSON-encoded columns. Everything above this layer works
  * with the fully-typed `DealView`.
  *
- * It is also where the accreditation gate is applied. Rule 506(c) says
- * the offering may only be shown to verified accredited investors, so
- * for anyone else the substantive package is not hidden further up: it
- * is never read out of this module. `getDealForViewer` and
- * `listDealsForViewer` are the reads every browse surface uses, and they
- * return a `DealTeaser` when the viewer is not accredited. A blur in the
- * UI over real values would not be a control; this is.
+ * It is also where the 506(b) relationship gate is applied. Offerings are
+ * shown only to members whose questionnaire is approved and whose
+ * cooling-off period is over, so for anyone else no offering is hidden
+ * further up: none is read out of this module. The `…ForViewer` reads
+ * and `getDealAccess` are what every browse surface uses. Before the gate
+ * opens they return no deals at all, not a teaser: under 506(b) a deal's
+ * name is as much the offering as its terms. A blur in the UI over real
+ * values would not be a control; this is.
  *
- * The unredacted reads are named `…Record` and are for the paths that
- * have already cleared the invest gate, which subsumes accreditation:
- * checkout, funding, and document generation.
+ * The ungated reads are named `…Record` and are for the paths that have
+ * already cleared the invest gate: checkout, funding, and document
+ * generation.
  */
 import 'server-only';
 
 import { prisma } from '../db';
 import { ISOLATED_ALLOCATION } from '../config';
 import { parseBacking } from '../backers';
-import { canViewDealDetail, redactDeal } from '../domain';
+import { canViewDealDetail } from '../domain';
+import type { RelationshipView } from '../relationship';
 import type {
   DealFees,
   DealChart,
@@ -36,7 +38,7 @@ import type {
   SpotbotEntry,
 } from '../domain';
 import type { Deal } from '../generated/prisma/client';
-import { getAccreditationView } from './investor';
+import { getRelationshipView } from './investor';
 
 /**
  * Parse a JSON column with a typed fallback. A malformed blob degrades
@@ -179,7 +181,7 @@ export async function listDealRecords(userId?: string): Promise<DealView[]> {
 /**
  * One deal, unredacted. Same warning as `listDealRecords`: this is for
  * checkout, funding and document generation, all of which sit behind the
- * invest gate. Browse surfaces want `getDealForViewer`.
+ * invest gate. Browse surfaces want `getDealAccess`.
  */
 export async function getDealRecord(
   id: string,
@@ -195,56 +197,61 @@ export async function getDealRecord(
   return applyReserved(deal, reserved.get(id) ?? 0);
 }
 
-/** Does this deal exist at all? Public knowledge, so it is not gated. */
-export async function dealExists(id: string): Promise<boolean> {
-  const row = await prisma.deal.findUnique({ where: { id }, select: { id: true } });
-  return row !== null;
-}
+/**
+ * What a member may see of one deal.
+ *
+ * `open` carries the full package. `locked` carries nothing about the
+ * deal, only where the member stands, so a page that followed a link can
+ * say what stands between them and offerings without naming the one
+ * they followed.
+ */
+export type DealAccess =
+  | { access: 'open'; deal: DealView }
+  | { access: 'locked'; relationship: RelationshipView };
 
 /**
- * DEMO SEAM — the gate below is real, and trivially satisfied.
+ * DEMO SEAM — the gate below is real, and the seeded accounts clear it.
  *
- * Accreditation self-approves the moment a letter is uploaded (see
- * app/api/accreditation/upload/route.ts), so any visitor can clear this
- * in about ten seconds. What is simulated is the reviewer, not the
- * restriction: the redaction runs off the same `verified` + unexpired
- * record production will use, and nothing here changes when a human
- * starts approving letters.
+ * Every seeded member is written an approved questionnaire back-dated
+ * past its cooling-off period (see completeOnboarding in
+ * lib/repositories/investor.ts). A `+new` account walks the questionnaire
+ * and then waits out the cooling-off period like anyone would. What is
+ * simulated is the seeded history, not the restriction.
  */
-function forViewer(deal: DealView, accredited: boolean): DealShelfItem {
-  return accredited ? deal : redactDeal(deal);
-}
 
-/** The shelf as this member is entitled to see it. */
+/** The shelf as this member is entitled to see it: all of it, or none. */
 export async function listDealsForViewer(
   userId: string,
 ): Promise<DealShelfItem[]> {
-  const [deals, accreditation] = await Promise.all([
-    listDealRecords(userId),
-    getAccreditationView(userId),
-  ]);
+  const relationship = await getRelationshipView(userId);
+  if (!canViewDealDetail(relationship)) return [];
 
-  const accredited = canViewDealDetail(accreditation);
-  return deals.map((deal) => forViewer(deal, accredited));
+  return listDealRecords(userId);
 }
 
-/** One deal as this member is entitled to see it. */
-export async function getDealForViewer(
+/**
+ * One deal as this member is entitled to see it.
+ *
+ * The gate is checked before the deal is looked up. A locked member gets
+ * the same answer for a real id and a made-up one, so probing ids cannot
+ * reveal which offerings exist. Null means an eligible member asked for a
+ * deal that does not exist.
+ */
+export async function getDealAccess(
   id: string,
   userId: string,
-): Promise<DealShelfItem | null> {
-  const [deal, accreditation] = await Promise.all([
-    getDealRecord(id, userId),
-    getAccreditationView(userId),
-  ]);
-  if (!deal) return null;
+): Promise<DealAccess | null> {
+  const relationship = await getRelationshipView(userId);
+  if (!canViewDealDetail(relationship)) return { access: 'locked', relationship };
 
-  return forViewer(deal, canViewDealDetail(accreditation));
+  const deal = await getDealRecord(id, userId);
+  return deal ? { access: 'open', deal } : null;
 }
 
 /**
  * A named set of deals as this member is entitled to see them, in the
- * order the ids were given. Unknown ids are dropped rather than faked.
+ * order the ids were given. Unknown ids are dropped rather than faked,
+ * and before the gate opens every id is.
  */
 export async function getDealsForViewer(
   ids: string[],
@@ -252,18 +259,15 @@ export async function getDealsForViewer(
 ): Promise<DealShelfItem[]> {
   if (ids.length === 0) return [];
 
-  const [rows, accreditation] = await Promise.all([
-    prisma.deal.findMany({ where: { id: { in: ids } } }),
-    getAccreditationView(userId),
-  ]);
+  const relationship = await getRelationshipView(userId);
+  if (!canViewDealDetail(relationship)) return [];
 
-  const accredited = canViewDealDetail(accreditation);
+  const rows = await prisma.deal.findMany({ where: { id: { in: ids } } });
   const byId = new Map(rows.map((row) => [row.id, toDealView(row)]));
 
   return ids
     .map((id) => byId.get(id))
-    .filter((deal): deal is DealView => deal !== undefined)
-    .map((deal) => forViewer(deal, accredited));
+    .filter((deal): deal is DealView => deal !== undefined);
 }
 
 /**
