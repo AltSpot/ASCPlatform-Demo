@@ -203,8 +203,13 @@ API is complete and inspectable on its own.
 
 ```
 started -> docs_signed -> funded -> accepted -> closed
-exits:   expired (10-day funding window lapsed) | refunded | cut_back
+exits:   expired (not in escrow by the admission cut-off) | refunded | cut_back
 ```
+
+**`funded` is the code's word for IN ESCROW.** Copy never says funded: a
+member sends a subscription to escrow, the deal closes when its minimum is
+met, and escrow refunds if it is not. Same rule as vote and interest: copy
+says escrow, code keeps `funded`.
 
 Enforced by `assertTransition` in `lib/domain.ts`, called from
 `lib/repositories/subscriptions.ts`. Illegal transitions return HTTP 409.
@@ -216,6 +221,17 @@ Two behaviours that are easy to get wrong:
 - **Expiry is swept on read**, not by a scheduler. Any authenticated read of a
   user's subscriptions lapses overdue commitments first. In production, move this
   to a job and keep the read-side sweep as a backstop.
+- **The deadline is the admission cut-off** (`lib/funding.ts`,
+  `ADMISSION_CUTOFF_HOURS`, 24 before the wire on the closing date). Signing
+  sets `fundingDeadline` to it. From then admissions are closed: start, sign
+  and escrow all refuse with a 409, and the member register locks with its
+  percentages frozen.
+- **SPV admissions rules** live in `lib/spv-rules.ts` and are enforced in the
+  subscribe, sign and escrow routes, and explained on the page with the same
+  functions: the investor cap (`Deal.investorCap`, 100 default, 250 max; a
+  new member past it gets the waitlist, `SpvWaitlistEntry`), and retirement
+  money (warn at 20% of the SPV, refuse at 25%). The internal register is
+  `/ops/register/<dealId>`, a DEMO SEAM reachable while DEMO_MODE is on.
 
 ### The deal page
 
@@ -734,7 +750,12 @@ These are the claims the product makes. Do not let a change quietly break them.
   figure anywhere without asking first
 - Signed documents file themselves into Docs automatically
 - The Vault is captured once and pre-fills every document thereafter
-- The funding window is **10 days**
+- **Every deal raises into escrow and closes when its minimum is met.** The
+  funding bar measures raised against `Deal.minimumToClose`, never against the
+  allocation (`components/FundingProgress.tsx`); every deal header shows
+  RAISED SO FAR, MINIMUM TO CLOSE, CLOSING DATE and ESCROW STATUS, the deal
+  type (`Deal.leadType`, AltSpot-led or Partner-led), and "Organized and
+  advised by AltSpot"
 - **`docs/structure-decisions-sept-2026.md` is the source of truth for the
   model** (506(b), fees, carry, escrow, what may be shown). Where an invariant in
   this file disagrees with it, that document wins and this file is stale.
