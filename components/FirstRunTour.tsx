@@ -216,19 +216,28 @@ export default function FirstRunTour({ offered }: { offered: boolean }) {
       : { left: ring.left + ring.width + 22, top: Math.max(24, Math.min(ring.top - 18, window.innerHeight - 380)) }
     : { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' };
 
+  const advance = () => setAt((i) => Math.min(STEPS.length - 1, i + 1));
+
   return (
     <div className={s.layer} role="dialog" aria-modal="true" aria-label="Walkthrough">
-      <div className={s.scrim} onClick={close} />
-
+      {/* The ring is the spotlight: its shadow is the scrim, so the thing
+          described is the one lit part of the page. With nothing to ring,
+          a plain scrim. */}
       {ring ? (
         <div
           className={s.ring}
           style={{ top: ring.top - 6, left: ring.left - 6, width: ring.width + 12, height: ring.height + 12 }}
+          onClick={close}
           aria-hidden="true"
         />
-      ) : null}
+      ) : (
+        <div className={s.scrim} onClick={close} />
+      )}
 
       <section className={s.card} style={cardStyle} key={step.id} data-centered={!ring}>
+        <div className={s.progress} aria-hidden="true">
+          <span style={{ width: `${((at + 1) / STEPS.length) * 100}%` }} />
+        </div>
         <button type="button" className={s.close} onClick={close} aria-label="Skip the walkthrough">
           <X size={16} strokeWidth={1.6} aria-hidden="true" />
         </button>
@@ -241,6 +250,17 @@ export default function FirstRunTour({ offered }: { offered: boolean }) {
         </p>
         <h2 className={s.title}>{step.title}</h2>
         <p className={s.body}>{step.body}</p>
+
+        {at === 0 ? (
+          <ul className={s.agenda} aria-label="What the walkthrough covers">
+            {STEPS.slice(1).map((x) => (
+              <li key={x.id}>
+                <x.icon size={13} strokeWidth={1.7} aria-hidden="true" />
+                {x.title.replace(/\.$/, '')}
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
         <div className={s.actions}>
           {step.spot ? (
@@ -255,8 +275,11 @@ export default function FirstRunTour({ offered }: { offered: boolean }) {
               Try it
             </button>
           ) : null}
+          {/* Going there keeps the tour running: the shell does not remount
+              on a client navigation, so the next card is waiting on the
+              next page. */}
           {step.go ? (
-            <Link className="btn btn-ghost btn-sm" href={step.go.href} onClick={close}>
+            <Link className="btn btn-ghost btn-sm" href={step.go.href} onClick={advance}>
               {step.go.label}
             </Link>
           ) : null}
@@ -271,18 +294,16 @@ export default function FirstRunTour({ offered }: { offered: boolean }) {
               Done
             </button>
           ) : (
-            <button type="button" className="btn btn-gold btn-sm" onClick={() => setAt(at + 1)}>
-              Next
+            <button type="button" className="btn btn-gold btn-sm" onClick={advance}>
+              {at === 0 ? 'Show me' : 'Next'}
               <ArrowRight size={14} strokeWidth={1.8} aria-hidden="true" />
             </button>
           )}
         </div>
 
-        <ol className={s.dots} aria-hidden="true">
-          {STEPS.map((x, i) => (
-            <li key={x.id} data-on={i === at} data-done={i < at} />
-          ))}
-        </ol>
+        <p className={s.hint}>
+          <kbd>→</kbd> next <kbd>←</kbd> back <kbd>Esc</kbd> skip
+        </p>
       </section>
     </div>
   );

@@ -14,6 +14,8 @@
   animation: tour-fade 0.4s ease both;
 }
 
+/* The spotlight. The ring's outermost shadow is the scrim, so the thing
+   described is the one part of the page left lit. */
 .ring {
   position: absolute;
   z-index: 1;
@@ -21,8 +23,9 @@
   box-shadow:
     0 0 0 2px var(--as-gold),
     0 0 0 6px rgba(199, 154, 75, 0.22),
-    0 0 40px rgba(243, 152, 7, 0.35);
-  pointer-events: none;
+    0 0 40px rgba(243, 152, 7, 0.35),
+    0 0 0 9999px var(--scrim-modal);
+  animation: tour-fade 0.4s ease both;
   transition:
     top 0.45s var(--ease-fluid),
     left 0.45s var(--ease-fluid),
@@ -30,11 +33,73 @@
     height 0.45s var(--ease-fluid);
 }
 
+.progress {
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--track);
+  overflow: hidden;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--as-cta-gradient);
+  transition: width 0.45s var(--ease-fluid);
+}
+
+.agenda {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 14px;
+  margin: 16px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--hair-soft);
+  list-style: none;
+  font-size: 13px;
+  color: var(--as-text-muted);
+}
+.agenda li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.agenda svg {
+  flex: none;
+  stroke: var(--as-gold);
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.hint kbd {
+  padding: 1px 6px;
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--as-text);
+}
+.hint kbd + kbd {
+  margin-left: 6px;
+}
+
 .card {
   position: absolute;
   z-index: 2;
   width: min(420px, calc(100vw - 48px));
-  padding: 24px 26px 20px;
+  padding: 26px 26px 20px;
+  overflow: hidden;
   border-radius: var(--r-2xl);
   background: var(--glass-solid);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
@@ -117,29 +182,6 @@
 }
 .spacer {
   flex: 1;
-}
-
-.dots {
-  display: flex;
-  gap: 6px;
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.dots li {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--surface-3);
-  transition: background 0.3s ease, width 0.3s var(--ease-fluid);
-}
-.dots li[data-done='true'] {
-  background: var(--as-gold);
-}
-.dots li[data-on='true'] {
-  width: 18px;
-  border-radius: var(--r-pill);
-  background: var(--as-cta-gradient);
 }
 
 @keyframes tour-in {
