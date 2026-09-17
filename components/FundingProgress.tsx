@@ -25,7 +25,10 @@ export default function FundingProgress({
   deal,
   compact = false,
   showAdmissions = false,
+  layout = 'grid',
 }: {
+  /** 'row' puts the four fields in one line (a full-width strip). */
+  layout?: 'grid' | 'row';
   deal: FundingInput;
   compact?: boolean;
   /** Add the ADMISSIONS CLOSE line (the deal page and checkout). */
@@ -70,7 +73,7 @@ export default function FundingProgress({
   }
 
   return (
-    <div className={s.full}>
+    <div className={s.full} data-layout={layout}>
       <dl className={s.fields}>
         <div className={s.field}>
           <dt>Raised so far</dt>

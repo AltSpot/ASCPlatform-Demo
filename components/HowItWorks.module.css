@@ -1,0 +1,94 @@
+/* The Radar's How it works: a quiet trigger, and the steps inside the
+   shared side panel (components/SidePanel). */
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--as-text);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+}
+.trigger svg {
+  stroke: var(--as-gold);
+}
+.trigger:hover {
+  background: var(--surface-3);
+}
+.trigger:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.title {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 16px;
+  padding: 13px 0;
+}
+.step + .step {
+  border-top: 1px solid var(--hair-neutral);
+}
+
+.glyph {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+}
+.glyph svg {
+  stroke: var(--as-gold);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepTitle {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 17px;
+  color: var(--as-text);
+}
+
+.stepBody {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
+.note {
+  margin: 10px 0 0;
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  background: var(--surface-well);
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}

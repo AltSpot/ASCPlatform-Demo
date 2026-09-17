@@ -264,59 +264,6 @@
   color: var(--accent);
 }
 
-/* A deal that came off the member's own Radar: one gold glyph seated on
-   the artwork, bottom left, on the same scrim the tag chip wears. */
-.fromRadar {
-  position: absolute;
-  z-index: 1;
-  left: 12px;
-  bottom: 12px;
-  display: inline-grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-pill);
-  background: var(--scrim-media-strong);
-  backdrop-filter: blur(4px);
-}
-
-.fromRadar svg {
-  stroke: var(--as-champagne);
-}
-
-/* View only, bottom right on the art, the same seat and scrim. */
-.viewOnlyMark {
-  position: absolute;
-  z-index: 1;
-  right: 12px;
-  bottom: 12px;
-  display: inline-grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-pill);
-  background: var(--scrim-media-strong);
-  backdrop-filter: blur(4px);
-}
-
-.viewOnlyMark svg {
-  stroke: var(--on-media);
-}
-
-@media (max-width: 900px) {
-  .switcher {
-    width: 100%;
-  }
-  /* Two words fit on any phone; they only need the room shared evenly. */
-  .tab {
-    flex: 1;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-}
-
 /* ------------------------------------------------------------------
    Watchlist star, top right of a card's artwork. Glass so it seats on
    any deal art, light or dark, the same way the tag chip does.
@@ -357,20 +304,6 @@
 .starOn svg {
   stroke: var(--as-gold);
   fill: var(--as-gold);
-}
-
-/* ------------------------------------------------------------------
-   Yours. A deal the member saved, or voted for before it opened,
-   wears a gold rim on the shelf, the same rim a voted Radar card
-   wears, so "mine" reads at a glance across both lanes.
-   ------------------------------------------------------------------ */
-.mine,
-.mine:hover {
-  box-shadow: var(--card-lift), inset 0 0 0 1.5px var(--as-gold);
-}
-html[data-theme='light'] .mine,
-html[data-theme='light'] .mine:hover {
-  box-shadow: var(--card-lift), inset 0 0 0 1.5px var(--as-gold);
 }
 
 .yours {
@@ -422,31 +355,6 @@ html[data-theme='light'] .mine:hover {
   color: var(--as-text-muted);
 }
 
-/* Where an investor left off, said on the card instead of only in the
-   button label, so the shelf is scannable. */
-/* The member's own state, seated on the artwork the same way the tag
-   chip is: glass over whatever the deal's banner happens to be, light
-   or dark. Ember, because it is the one chip on the shelf that means
-   something is waiting on the reader. */
-.resumeChip {
-  position: absolute;
-  z-index: 1;
-  right: 14px;
-  bottom: 14px;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--accent-soft);
-  border: 1px solid var(--hair-ember);
-  border-radius: var(--r-pill);
-  padding: 4px 10px;
-  background: var(--scrim-media-strong);
-  backdrop-filter: blur(4px);
-  white-space: nowrap;
-}
-
 /* ==================================================================
    The shelf card.
 
@@ -467,17 +375,6 @@ html[data-theme='light'] .mine:hover {
   gap: 3px;
   min-width: 0;
 }
-.sector {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 /* Two lines, clamped, at a fixed height so every card in the row
    starts its figures at the same y. */
@@ -491,69 +388,6 @@ html[data-theme='light'] .mine:hover {
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 40px;
-}
-
-/* ---------- allocation: one bar, one figure ---------- */
-
-.alloc {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-top: 12px;
-  border-top: 1px solid var(--hair-neutral);
-}
-
-.allocBar {
-  flex: 1;
-  height: 4px;
-  border-radius: var(--r-pill);
-  background: var(--track);
-  overflow: hidden;
-}
-
-.allocFill {
-  height: 100%;
-  border-radius: var(--r-pill);
-  background: var(--as-cta-gradient);
-  box-shadow: 0 0 10px rgba(243, 152, 7, 0.35);
-  transition: width var(--dur-2) var(--ease-out);
-}
-
-.allocPct {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: var(--w-medium);
-  letter-spacing: 0;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-  min-width: 3ch;
-  text-align: right;
-}
-
-/* The locked figures on a teaser: quiet rules where numbers would be. */
-.locked {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-top: 10px;
-  border-top: 1px solid var(--hair-neutral);
-}
-.lockedRows {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.lockedRows span {
-  display: block;
-  height: 6px;
-  border-radius: var(--r-pill);
-  background: var(--track);
-}
-.lockedNote {
-  margin: 0;
-  font-size: var(--fs-label);
-  line-height: 1.4;
-  color: var(--as-text-muted);
 }
 
 /* ---------- the disclosure ---------- */
@@ -597,13 +431,110 @@ html[data-theme='light'] .mine:hover {
   margin: 10px 0 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .allocFill {
-    transition: none;
-  }
-}
-
 /* The claim Radar is making, set apart from the explanation above it.
    A member who reads the lede learns the mechanism; this is the line
    that says the mechanism belongs to them. */
 
+/* ==================================================================
+   The card's art band: the company's mark on its own colour, and the
+   member's own state in words.
+   ================================================================== */
+
+.art {
+  height: 118px;
+}
+
+.cardMark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 54px;
+  height: 54px;
+  margin: auto;
+  border-radius: 15px;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+:global(.deal-card):hover .cardMark {
+  transform: scale(1.06);
+}
+
+.states {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-width: calc(100% - 110px);
+}
+
+.state,
+.viewOnlyMark {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Saved: the gold pill, star filled. The loudest thing on the art,
+   because it is the member's own. */
+.stateSaved {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+}
+.stateSaved svg {
+  stroke: var(--fg-on-gold);
+  fill: var(--fg-on-gold);
+}
+
+/* Voted on the Radar before it opened: dark glass, a gold ring. */
+.stateVoted {
+  background: var(--scrim-media-strong);
+  box-shadow: inset 0 0 0 1px var(--as-gold);
+  color: var(--on-media);
+  backdrop-filter: blur(4px);
+}
+.stateVoted svg {
+  stroke: var(--as-gold);
+}
+
+.stateProgress {
+  background: var(--scrim-media-strong);
+  color: var(--on-media);
+  backdrop-filter: blur(4px);
+}
+
+.viewOnlyMark {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  background: var(--scrim-media-strong);
+  color: var(--on-media);
+  backdrop-filter: blur(4px);
+}
+.viewOnlyMark svg {
+  stroke: var(--on-media);
+}
+
+.cardActions > * {
+  flex: 1;
+  justify-content: center;
+}
+.peekButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.peekButton svg {
+  stroke: var(--as-gold);
+}

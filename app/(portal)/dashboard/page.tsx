@@ -57,6 +57,7 @@ import { getMarks } from '@/lib/repositories/marks';
 import { getRadarBoard } from '@/lib/repositories/radar';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { countWatchers, listWatchlist } from '@/lib/repositories/watchlist';
+import { brandArt } from '@/lib/brand';
 import { fundingView } from '@/lib/funding';
 import { getMarketNews } from '@/lib/terminal/news';
 
@@ -317,7 +318,7 @@ export default async function DashboardPage() {
       kind: 'radar',
       id: c.slug,
       name: c.name,
-      art: `linear-gradient(135deg, var(--surface-sunk), ${ASSET_CLASSES[c.assetClass].tint})`,
+      art: brandArt(c.slug) ?? `linear-gradient(135deg, var(--surface-sunk), ${ASSET_CLASSES[c.assetClass].tint})`,
       logoUrl: c.logoUrl ?? null,
       figure: `${compact(c.interestDollars)} voted`,
       line: `${c.interestInvestors.toLocaleString('en-US')} members`,

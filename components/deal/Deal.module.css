@@ -2005,17 +2005,27 @@
 /* ---------- the funding picture and AltSpot's role (screen 5) ---------- */
 
 .heroFunding {
-  width: 100%;
-  margin-top: auto;
-  padding-top: 18px;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px 36px;
+  align-items: end;
+  margin-top: 24px;
+  padding-top: 22px;
   border-top: 1px solid var(--hair);
+}
+@media (max-width: 1100px) {
+  .heroFunding {
+    grid-template-columns: 1fr;
+  }
 }
 
 .heroRole {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .organized,

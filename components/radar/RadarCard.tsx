@@ -14,37 +14,31 @@
  *
  * WHAT THE MEMBER READS IS A VOTE. The code keeps the `indicate`
  * identifiers, `/api/radar/interest` and `RadarInterest`, the same way
- * Spot keeps its `SpotBot*` names: renaming the API surface buys
- * nothing a member can see. Copy says vote. Code says interest.
+ * Spot keeps its `SpotBot*` names. Copy says vote. Code says interest.
  *
- * THE FACE IS THE VOTE. A board of twenty is scanned, not read, so the
- * card carries only what a member needs in order to vote: who it is,
- * what class of deal it would be, how loud the demand already is, and
- * the button. Everything else, the description, the three prices, who
- * led the last round, the two cases and the news, lives in the detail
- * dialog, which opens over the page and never moves it.
+ * THE FACE IS THE VOTE. A board of twenty is scanned, so the card
+ * carries who it is (the company's own mark, and a faint wash of its
+ * colour so no two neighbours look alike), how loud the demand is, and
+ * the vote. A voted card says so in words, with the amount, on a gold
+ * band across its foot: a member scanning the board for their own names
+ * finds them without reading a figure.
  *
- * The dialog is portalled to <body>. Inside the card it sat under the
- * card's own overflow clip and hover transform, and opening it scrolled
- * the page to the top. In the top layer from <body> it does neither.
+ * DETAILS is a labelled button, not a bare info glyph, and it opens the
+ * right-hand panel (components/SidePanel, components/radar/RadarDetail)
+ * where the vote is also on hand.
  */
-import { ArrowUpRight, CircleCheck, Info, Pencil, Users, Vote, X } from 'lucide-react';
-import { useRef, useState, useSyncExternalStore } from 'react';
-import { createPortal } from 'react-dom';
+import { CircleCheck, PanelRightOpen, Pencil, Users, Vote } from 'lucide-react';
+import { useState } from 'react';
 
 import AssetClassIcon from '@/components/AssetClassIcon';
-import BackerMark from '@/components/BackerMark';
+import SidePanel from '@/components/SidePanel';
 import { useToast } from '@/components/Toast';
+import { brandOf } from '@/lib/brand';
 import { api, ApiError } from '@/lib/client/api';
-import { EMPTY, compact, money } from '@/lib/format';
-import {
-  ASSET_CLASSES,
-  INDUSTRIES,
-  priceFromCents,
-  valuationShort,
-  type RadarCompanyView,
-} from '@/lib/terminal/radar';
+import { compact, money } from '@/lib/format';
+import type { RadarCompanyView } from '@/lib/terminal/radar';
 
+import RadarDetail, { RadarDetailHeader } from './RadarDetail';
 import VoteScale from './VoteScale';
 import s from './Radar.module.css';
 
@@ -61,12 +55,17 @@ function monogram(name: string): string {
 
 export default function RadarCard({
   company,
-  /** This company's share of the loudest demand on the board, 0 to 1. */
   demandShare,
+  rank,
+  total,
   onVoted,
 }: {
   company: RadarCompanyView;
+  /** This company's share of the loudest demand on the board, 0 to 1. */
   demandShare: number;
+  /** Place on the board by dollars voted, 1-indexed. */
+  rank: number;
+  total: number;
   /** Lets the page count this vote in Yours without a reload. */
   onVoted?: (slug: string) => void;
 }) {
@@ -77,21 +76,13 @@ export default function RadarCard({
   /* The scale is behind a button. Twenty open scales on one board is a
      wall of sliders; one press opens the one you mean to move. */
   const [voting, setVoting] = useState(false);
+  const [panel, setPanel] = useState(false);
+  const [panelVoting, setPanelVoting] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  /* True once on the client, false in the server render, so the portal
-     target exists before it is used. */
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
 
-  const dialog = useRef<HTMLDialogElement>(null);
-
-  const voted = view.yourAmount !== null && !editing;
-  const research = view.research;
-  const hasNews = research.news.length > 0;
+  const voted = view.yourAmount !== null;
+  const brand = brandOf(view.slug);
 
   async function vote(amount: number) {
     if (busy) return;
@@ -105,6 +96,7 @@ export default function RadarCard({
       onVoted?.(next.slug);
       setEditing(false);
       setVoting(false);
+      setPanelVoting(false);
       toast(
         <>
           Vote counted. <b>{view.name}</b> moves on the board.
@@ -128,168 +120,66 @@ export default function RadarCard({
     </span>
   );
 
-  const openDetail = () => {
-    const el = dialog.current;
-    if (!el || el.open) return;
-    el.showModal();
+  const cancel = () => {
+    setEditing(false);
+    setVoting(false);
+    setPanelVoting(false);
+    setError(null);
   };
 
-  const detail = (
-    <dialog
-      ref={dialog}
-      className={s.researchDialog}
-      aria-label={`${view.name}: the detail`}
-      onClick={(e) => {
-        if (e.target === dialog.current) dialog.current?.close();
-      }}
+  const panelVote = panelVoting ? (
+    <VoteScale
+      company={view.name}
+      current={view.yourAmount}
+      busy={busy}
+      error={error}
+      onVote={vote}
+      onCancel={cancel}
+    />
+  ) : voted ? (
+    <div className={s.votedBand}>
+      <CircleCheck size={16} strokeWidth={1.8} aria-hidden="true" />
+      <span className={s.votedText}>
+        You voted <b>{money(view.yourAmount ?? 0)}</b>
+      </span>
+      <button type="button" className={s.votedEdit} onClick={() => setPanelVoting(true)}>
+        Change
+      </button>
+    </div>
+  ) : (
+    <button
+      type="button"
+      className={`btn btn-gold btn-sm btn-block ${s.voteButton}`}
+      onClick={() => setPanelVoting(true)}
     >
-      <div className={s.researchFrame}>
-        <header className={s.researchHead}>
-          <div className={s.plateLg}>{plate}</div>
-          <div className={s.researchIdentity}>
-            <h3 className={s.researchName}>{view.name}</h3>
-            <div className={s.researchTaxo}>
-              <span className={s.sector}>{ASSET_CLASSES[view.assetClass].label}</span>
-              <span className={s.industry}>{INDUSTRIES[view.industry]}</span>
-            </div>
-            {view.backing ? <BackerMark backing={view.backing} className={s.researchBacking} /> : null}
-          </div>
-          <button
-            type="button"
-            className={s.researchClose}
-            onClick={() => dialog.current?.close()}
-            aria-label="Close"
-          >
-            <X size={16} strokeWidth={1.5} aria-hidden="true" />
-          </button>
-        </header>
-
-        <div className={s.researchBody}>
-          <p className={s.researchLede}>{view.description}</p>
-
-          {/* The three reference prices as tiles. The one that is
-              AltSpot's rather than the market's is marked by colour. */}
-          <div className={s.figures}>
-            <div className={s.figure}>
-              <span className={s.figureKey}>Market average</span>
-              <span className={s.figureValue}>{priceFromCents(view.marketAverageCents)}</span>
-              <span className={s.figureNote}>{view.marketAverageAsOf}</span>
-            </div>
-            <div className={s.figure}>
-              <span className={s.figureKey}>Last round</span>
-              <span className={s.figureValue}>{valuationShort(view.lastRoundValuation)}</span>
-              <span className={s.figureNote}>{view.lastRoundLabel}</span>
-            </div>
-            <div className={`${s.figure} ${s.figureOurs}`}>
-              <span className={s.figureKey}>Our target</span>
-              <span className={s.figureValue}>
-                {priceFromCents(view.targetLowCents)} – {priceFromCents(view.targetHighCents)}
-              </span>
-              <span className={s.figureNote}>Per share, if we source it</span>
-            </div>
-          </div>
-
-          <section className={s.block}>
-            <div className={s.blockKey}>What it does</div>
-            <p className={s.prose}>{research.business}</p>
-          </section>
-
-          <div className={s.cases}>
-            <section className={`${s.block} ${s.case}`}>
-              <div className={s.blockKey}>The bull case</div>
-              <ul className={`${s.points} ${s.bull}`}>
-                {research.bull.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </section>
-
-            <section className={`${s.block} ${s.case}`}>
-              <div className={s.blockKey}>The bear case</div>
-              <ul className={`${s.points} ${s.bear}`}>
-                {research.bear.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </section>
-          </div>
-
-          <section className={s.block}>
-            <div className={s.blockKey}>Why we are tracking it</div>
-            <p className={s.prose}>{research.watching}</p>
-          </section>
-
-          {hasNews ? (
-            <section className={s.block}>
-              <div className={s.blockKey}>Latest news</div>
-              <ul className={s.news}>
-                {research.news.map((item) => (
-                  <li key={item.url}>
-                    <a
-                      className={s.newsLink}
-                      href={item.url}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      <span className={s.newsTitle}>{item.title}</span>
-                      <span className={s.newsMeta}>
-                        {item.publisher} · {item.date || EMPTY}
-                        <ArrowUpRight
-                          className={s.out}
-                          size={10}
-                          strokeWidth={1.6}
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              {research.newsroomUrl ? (
-                <a
-                  className={s.newsroom}
-                  href={research.newsroomUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  All news from {view.name}
-                </a>
-              ) : null}
-            </section>
-          ) : null}
-
-          <p className={s.caveat}>
-            AltSpot holds no position in {view.name} and is not offering it. Every figure
-            here is illustrative. The two cases are our plain-language reading of public
-            information, not research and not a recommendation.
-          </p>
-        </div>
-      </div>
-    </dialog>
+      <Vote size={15} strokeWidth={1.6} aria-hidden="true" />
+      Vote on {view.name}
+    </button>
   );
 
   return (
-    <article className={s.card} data-indicated={view.yourAmount !== null}>
-      {/* One masked texture per card, per the V18 card spec. Decorative
-          and behind everything. */}
+    <article
+      className={s.card}
+      data-indicated={voted}
+      style={brand ? { ['--brand' as string]: brand.hue } : undefined}
+    >
+      {/* One masked texture per card, per the V18 card spec, and the
+          company's own colour as a faint wash. Decorative. */}
       <span className={s.texture} aria-hidden="true" />
+      <span className={s.wash} aria-hidden="true" />
 
-      {/* The detail is an icon in the corner and the class is a glyph
-          beside the voter count: the face carries the name and the vote. */}
       <header className={s.head}>
         <div className={s.plate}>{plate}</div>
         <div className={s.identity}>
           <h3 className={s.name}>{view.name}</h3>
-        </div>
-        <div className={s.corner}>
           <button
             type="button"
-            className={s.infoButton}
-            onClick={openDetail}
+            className={s.detailsButton}
+            onClick={() => setPanel(true)}
             aria-label={`Details on ${view.name}`}
-            title="Details"
           >
-            <Info size={15} strokeWidth={1.6} aria-hidden="true" />
+            <PanelRightOpen size={13} strokeWidth={1.7} aria-hidden="true" />
+            Details
           </button>
         </div>
       </header>
@@ -300,15 +190,15 @@ export default function RadarCard({
         <div className={s.demandTop}>
           <span className={s.demandValue}>{compact(view.interestDollars)}</span>
           <span className={s.demandMeta}>
-          <AssetClassIcon assetClass={view.assetClass} size={12} />
-          <span
-            className={s.demandWho}
-            title={`${view.interestInvestors.toLocaleString('en-US')} members voted`}
-          >
-            <Users size={13} strokeWidth={1.6} aria-hidden="true" />
-            {view.interestInvestors.toLocaleString('en-US')}
-            <span className="sr-only"> members voted</span>
-          </span>
+            <AssetClassIcon assetClass={view.assetClass} size={12} />
+            <span
+              className={s.demandWho}
+              title={`${view.interestInvestors.toLocaleString('en-US')} members voted`}
+            >
+              <Users size={13} strokeWidth={1.6} aria-hidden="true" />
+              {view.interestInvestors.toLocaleString('en-US')}
+              <span className="sr-only"> members voted</span>
+            </span>
           </span>
         </div>
         <div className={s.demandBar}>
@@ -319,21 +209,20 @@ export default function RadarCard({
         </div>
       </div>
 
-      {voted ? (
-        <div className={s.done}>
-          <CircleCheck className={s.doneMark} size={16} strokeWidth={1.7} aria-hidden="true" />
-          <span className={s.doneText}>
-            <span className="sr-only">You voted </span>
-            <b>{money(view.yourAmount ?? 0)}</b>
+      {voted && !editing ? (
+        <div className={s.votedBand}>
+          <CircleCheck size={16} strokeWidth={1.8} aria-hidden="true" />
+          <span className={s.votedText}>
+            You voted <b>{compact(view.yourAmount ?? 0)}</b>
           </span>
           <button
             type="button"
-            className={s.change}
+            className={s.votedEdit}
             onClick={() => setEditing(true)}
             aria-label="Change your vote"
             title="Change your vote"
           >
-            <Pencil size={14} strokeWidth={1.6} aria-hidden="true" />
+            <Pencil size={13} strokeWidth={1.7} aria-hidden="true" />
           </button>
         </div>
       ) : voting || editing ? (
@@ -343,11 +232,7 @@ export default function RadarCard({
           busy={busy}
           error={error}
           onVote={vote}
-          onCancel={() => {
-            setEditing(false);
-            setVoting(false);
-            setError(null);
-          }}
+          onCancel={cancel}
         />
       ) : (
         <button
@@ -360,7 +245,23 @@ export default function RadarCard({
         </button>
       )}
 
-      {mounted ? createPortal(detail, document.body) : null}
+      <SidePanel
+        open={panel}
+        onClose={() => {
+          setPanel(false);
+          setPanelVoting(false);
+        }}
+        label={`${view.name}: details`}
+        header={<RadarDetailHeader company={view} plate={plate} vote={panelVote} />}
+      >
+        <RadarDetail
+          company={view}
+          rank={rank}
+          total={total}
+          demandShare={demandShare}
+          dealHref={view.dealId ? `/deals/${view.dealId}` : undefined}
+        />
+      </SidePanel>
     </article>
   );
 }

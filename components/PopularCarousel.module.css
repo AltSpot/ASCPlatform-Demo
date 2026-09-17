@@ -97,8 +97,9 @@
 .mark {
   position: relative;
   z-index: 1;
-  height: 30px;
-  width: min(60%, 120px);
+  height: 38px;
+  width: 38px;
+  border-radius: 11px;
   object-fit: contain;
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
 }

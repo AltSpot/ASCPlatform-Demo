@@ -122,6 +122,8 @@ export default function RadarBoard({
             key={company.slug}
             company={company}
             demandShare={company.interestDollars / loudest}
+            rank={ranked.indexOf(company) + 1}
+            total={ranked.length}
             onVoted={onVoted}
           />
         ))}

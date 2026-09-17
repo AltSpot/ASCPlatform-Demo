@@ -87,10 +87,8 @@
    glance, without shouting. */
 /* The pane keeps its fill: the shorthand dropped it and left a flat
    gold wash. A faint gold tint layered as an image is enough. */
-.card[data-indicated='true'],
-.card[data-indicated='true']:hover {
+.card[data-indicated='true'] {
   background-image: var(--glass-tint-gold), var(--card-sheen);
-  box-shadow: var(--card-lift), inset 0 0 0 1.5px var(--as-gold);
 }
 
 /* The one masked texture the V18 card spec allows. Decorative, behind
@@ -107,7 +105,18 @@
   -webkit-mask-image: radial-gradient(58% 46% at 88% 6%, #000 0%, transparent 72%);
 }
 
-.card > *:not(.texture) {
+/* The company's own colour, as a faint wash from the corner its mark
+   sits in. Enough to tell two neighbours apart, never enough to compete
+   with the platform's gold. */
+.wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(90% 70% at 0% 0%, color-mix(in srgb, var(--brand) 24%, transparent) 0%, transparent 62%);
+}
+
+.card > *:not(.texture):not(.wash) {
   position: relative;
   z-index: 1;
 }
@@ -152,35 +161,6 @@
   color: var(--as-cream-ink);
 }
 
-/* The detail button, top right. */
-.corner {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex: none;
-}
-
-.infoButton {
-  display: inline-grid;
-  place-items: center;
-  width: 29px;
-  height: 29px;
-  border-radius: var(--r-pill);
-  border: none;
-  background: var(--surface-2);
-  color: var(--as-text-muted);
-  cursor: pointer;
-  transition: color var(--dur-1) ease, background var(--dur-1) ease;
-}
-
-.infoButton:hover,
-.infoButton:focus-visible {
-  color: var(--as-text);
-  background: var(--surface-3);
-  outline: none;
-}
-
 .identity {
   min-width: 0;
   align-self: center;
@@ -205,46 +185,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   max-width: 100%;
-}
-
-/* Sector chip. The tint is the V18 category set, which is taxonomy and
-   the documented exception to "no blue, green or purple". */
-.sector {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-  border: none;
-  background: transparent;
-  padding: 0;
-  white-space: nowrap;
-}
-
-/* Rank on the board. The board is sorted by demand, so this is real
-   information, not decoration. */
-
-/* Two lines, clamped, at a fixed height. It was three, and three was
-   still a paragraph: the shelf next door says what a deal is in one
-   line and the board should not need more. The rest of what a company
-   does is in the research fold, written properly, for someone who has
-   decided to read it. */
-.about {
-  margin: -2px 0 0;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--as-text-muted);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  /* Two lines whether or not the copy fills them, so every vote block
-     on the row starts at the same height. */
-  min-height: 39px;
 }
 
 /* ---------- demand, the headline ---------- */
@@ -326,484 +266,6 @@
   stroke: var(--good-paint);
 }
 
-.demandKey {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--accent-quiet);
-}
-
-/* ---------- reference figures ---------- */
-
-/* Two columns rather than three stacked rows. The old layout hung a
-   9.5px caption under every value and there was no way to read it. */
-.figures {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
-  gap: 14px;
-  padding-bottom: 6px;
-}
-
-.figure {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.figureKey {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--accent-quiet);
-}
-
-.figureValue {
-  font-family: var(--font-display);
-  font-weight: var(--w-medium);
-  font-size: 22px;
-  line-height: 1;
-  letter-spacing: -0.015em;
-  color: var(--as-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.figureNote {
-  font-size: var(--fs-label);
-  line-height: 1.4;
-  color: var(--as-text-muted);
-}
-
-/* ---------- the glance strip ----------
-
-   Three numbers, one line, no panels. The version of this that had a
-   surface and a caption under each figure took a third of the card and
-   read as three competing claims; the same three as a strip read as
-   one row of reference, which is what they are. */
-
-.strip {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  padding: 10px 0;
-  border-top: 1px solid var(--hair-neutral);
-  border-bottom: 1px solid var(--hair-neutral);
-}
-
-.stripCell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.stripCell + .stripCell {
-  padding-left: 10px;
-  border-left: 1px solid var(--hair-neutral);
-}
-
-.stripKey {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-  white-space: nowrap;
-}
-
-.stripValue {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: -0.01em;
-  color: var(--as-text);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-/* The one figure in the row that is AltSpot's rather than the market's,
-   marked by color rather than by a third caption. */
-.stripOurs {
-  color: var(--accent-quiet);
-}
-
-/* ---------- AltSpot's own range ---------- */
-
-/* One line, not a panel. This is the only price on the face of the
-   card now: the market average and the last round moved inside the
-   fold, because four numbers competing with the vote is what made the
-   board tiring to read. */
-.targetLine {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 4px 10px;
-  margin: 0;
-  padding-top: 12px;
-  border-top: 1px solid var(--hair-neutral);
-}
-
-.targetKey {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--accent-quiet);
-}
-
-.targetValue {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--as-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.targetNote {
-  font-size: var(--fs-label);
-  line-height: 1.4;
-  color: var(--as-text-muted);
-}
-
-/* ---------- the research fold ----------
-
-   Folded by default, because the board is meant to be scanned
-   before it is read. Open, it is one column of quiet sections:
-   what the company does, the two cases, why we are tracking it,
-   then the links to go and read the news first hand. */
-
-
-.disclose {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 0 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--soft);
-  text-align: left;
-}
-
-.disclose:hover {
-  color: var(--accent-hot);
-}
-
-.disclose:focus-visible {
-  outline: none;
-  color: var(--accent-hot);
-  box-shadow: 0 0 0 3px rgba(243, 152, 7, 0.14);
-  border-radius: var(--r-sm);
-}
-
-.discloseLabel {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-}
-
-.chev {
-  flex: none;
-  transition: transform 0.28s ease;
-}
-
-.disclose[aria-expanded='true'] .chev {
-  transform: rotate(180deg);
-}
-
-/* The research dialog. A floating surface over the board, so the
-   thick edition of glass, at reading width. The head repeats the
-   card's own plate and name so the reader knows which company they
-   opened without looking back at the board. */
-.researchDialog {
-  width: min(720px, calc(100vw - 32px));
-  max-width: none;
-  max-height: calc(100vh - 48px);
-  margin: auto;
-  padding: 0;
-  border: none;
-  border-radius: var(--r-2xl);
-  background: transparent;
-  overflow: visible;
-}
-.researchDialog::backdrop {
-  background: var(--scrim-modal);
-  backdrop-filter: blur(12px);
-}
-.researchFrame {
-  display: flex;
-  flex-direction: column;
-  max-height: calc(100vh - 48px);
-  overflow: hidden;
-  border-radius: var(--r-2xl);
-  background: var(--glass-solid);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
-  box-shadow: var(--card-lift), var(--shadow-lg);
-  color: var(--as-text-body);
-}
-.researchHead {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 26px 26px 20px;
-  border-bottom: 1px solid var(--hair);
-  background-image: var(--glass-tint-gold);
-}
-.plateLg {
-  width: 56px;
-  height: 56px;
-  flex: none;
-  border-radius: var(--r-md);
-  display: grid;
-  place-items: center;
-  padding: 10px;
-  background: var(--as-cream);
-  border: 1px solid var(--hair-cream);
-}
-.plateLg .monogram {
-  font-size: 20px;
-}
-.researchIdentity {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.researchName {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: var(--w-medium);
-  font-size: 26px;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--as-text);
-}
-.researchTaxo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.researchBacking {
-  color: var(--accent);
-}
-.researchLede {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--as-text-body);
-}
-.figures {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.figure {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  padding: 14px 16px;
-  border-radius: var(--r-lg);
-  background: var(--surface-1);
-  box-shadow: inset 0 1px 0 var(--edge-top);
-}
-.figureOurs {
-  background: var(--tint-gold);
-}
-.figureOurs .figureValue {
-  color: var(--accent);
-}
-.case {
-  padding: 14px 16px;
-  border-radius: var(--r-lg);
-  background: var(--surface-1);
-}
-.researchClose {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border: none;
-  border-radius: var(--r-pill);
-  background: var(--surface-2);
-  color: var(--as-text-muted);
-  cursor: pointer;
-}
-.researchClose:hover {
-  color: var(--as-text);
-}
-.researchClose:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
-}
-.researchBody {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 24px 26px 28px;
-  overflow: auto;
-}
-.cases {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-}
-@media (max-width: 640px) {
-  .cases {
-    grid-template-columns: 1fr;
-  }
-}
-
-.block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.blockKey {
-  font-family: var(--fm);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-}
-
-.prose {
-  font-size: 13.3px;
-  line-height: 1.65;
-  color: var(--ink-2);
-}
-
-.points {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.points li {
-  position: relative;
-  padding-left: 15px;
-  font-size: 13.3px;
-  line-height: 1.6;
-  color: var(--ink-2);
-}
-
-.points li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 5px;
-  height: 5px;
-  border-radius: var(--r-pill);
-}
-
-.bull li::before {
-  background: var(--good-paint);
-}
-
-.bear li::before {
-  background: var(--bad);
-}
-
-/* ---------- the news links ---------- */
-
-.news {
-  list-style: none;
-  border-top: 1px solid var(--hair);
-}
-
-.news li {
-  border-bottom: 1px solid var(--hair);
-}
-
-.newsLink {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 11px 0;
-  text-decoration: none;
-}
-
-.newsLink:hover .newsTitle {
-  color: var(--accent-hot);
-}
-
-.newsLink:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(243, 152, 7, 0.14);
-  border-radius: var(--r-sm);
-}
-
-.newsTitle {
-  font-size: 13.2px;
-  line-height: 1.45;
-  color: var(--ink);
-  transition: color 0.15s ease;
-}
-
-.newsMeta {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--fm);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-}
-
-.out {
-  flex: none;
-}
-
-.newsroom {
-  align-self: flex-start;
-  margin-top: 2px;
-  font-family: var(--fm);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--soft);
-  text-decoration: none;
-}
-
-.newsroom:hover {
-  color: var(--accent-hot);
-}
-
-.caveat {
-  border-top: 1px solid var(--hair);
-  padding-top: 13px;
-  font-size: var(--fs-meta);
-  line-height: 1.6;
-  color: var(--as-text-muted);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .panel {
-    transition: none;
-  }
-
-  .chev {
-    transition: none;
-  }
-}
-
 /* Only ever an error now. The line that used to live here on every
    card, saying a vote commits nothing, is said once under the board
    instead of four times down it. */
@@ -817,27 +279,6 @@
   color: var(--accent-soft);
 }
 
-/* The confirmed state. It has to land instantly and read as done. */
-/* Same surface as the panel it replaces, with a champagne edge on the
-   left to mark it as answered. A filled gold block for a state that
-   needs no action was the loudest thing on a settled card. */
-.done {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid var(--hair-neutral);
-  background: var(--surface-1);
-  border-radius: var(--r-pill);
-  padding: 7px 8px 7px 14px;
-  animation: settle 0.28s ease;
-}
-
-/* The mark says done. Gold paint, not an accent used as type. */
-.doneMark {
-  flex: none;
-  stroke: var(--as-gold);
-}
-
 @keyframes settle {
   from {
     opacity: 0;
@@ -847,54 +288,6 @@
     opacity: 1;
     transform: none;
   }
-}
-
-.doneText {
-  font-size: 13px;
-  color: var(--ink-2);
-  min-width: 0;
-}
-
-/* The member's own number in page ink. It was the burnt-orange accent,
-   which is retired as type platform wide (Tyler, 2026-09-17); the gold
-   check beside it is what marks it as theirs. */
-.doneText b {
-  color: var(--as-text);
-  font-family: var(--fm);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-
-.change {
-  margin-left: auto;
-  flex: none;
-  display: inline-grid;
-  place-items: center;
-  width: 29px;
-  height: 29px;
-  border-radius: var(--r-pill);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--as-text-muted);
-}
-
-.change:hover,
-.change:focus-visible {
-  color: var(--as-text);
-  background: var(--surface-2);
-  outline: none;
-}
-
-/* ---------- section framing ---------- */
-
-.intro {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 22px;
-  flex-wrap: wrap;
-  margin-bottom: 22px;
 }
 
 .disclosure {
@@ -962,51 +355,6 @@
   .board {
     grid-template-columns: 1fr;
   }
-}
-
-/* ------------------------------------------------------------------
-   Filters. Two axes: asset class carries its tint and mark, industry
-   stays a plain pill. Two coloured axes on one control reads as
-   decoration, and asset class is what an investor screens on first.
-   ------------------------------------------------------------------ */
-/* Card identity: class chip, then industry as the quiet second line. */
-/* Column, not wrap. Wrapping put the industry beside the class chip on
-   a short label and below it on a long one, so no two cards agreed. */
-/* Column, not wrap. Inline reads better when it fits, but it only
-   fits for the short industry labels, so cards in the same row started
-   their vote blocks at different heights depending on the length of a
-   word. A fixed two lines is worth more than a saved one. */
-.taxo {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 3px;
-  min-width: 0;
-  max-width: 100%;
-}
-.taxo > * {
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Who led the last round. One quiet mono line under the description. */
-.backingLine {
-  color: var(--as-text-muted);
-  margin-top: -4px;
-}
-.backingLine:empty {
-  display: none;
-}
-
-.industry {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
 }
 
 /* ------------------------------------------------------------------
@@ -1233,31 +581,12 @@
     gap: 12px;
   }
 
-  /* The chips scroll sideways rather than stacking into four rows of
-     chrome above the first company. */
-  .filterRow {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-    margin: 0 -18px;
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-  .filterRow::-webkit-scrollbar {
-    display: none;
-  }
+  
+  
 
-  .menu,
-  .menuButton {
-    width: 100%;
-    justify-content: space-between;
-  }
+  
 
-  .menuList {
-    width: 100%;
-    min-width: 0;
-  }
+  
 
   .voteActions :global(.btn) {
     flex: 1 1 auto;
@@ -1295,4 +624,82 @@
 }
 .plate:has(.logo) .logo {
   border-radius: var(--r-md);
+}
+
+/* ---------- Details, and the member's own vote ---------- */
+
+/* Labelled, so what it does is not a guess. */
+.detailsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--as-text);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  transition: background var(--dur-1) ease;
+}
+.detailsButton svg {
+  stroke: var(--as-gold);
+}
+.detailsButton:hover {
+  background: var(--surface-3);
+}
+.detailsButton:focus-visible,
+.votedEdit:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Voted, said in words with the amount on a gold band, so a member
+   scanning the board finds their own names without reading figures. */
+.votedBand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 36px;
+  padding: 5px 6px 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  animation: settle 0.28s ease;
+}
+.votedBand svg {
+  flex: none;
+  stroke: var(--fg-on-gold);
+}
+.votedText {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: var(--w-medium);
+}
+.votedText b {
+  font-family: var(--font-mono);
+  font-weight: var(--w-semi);
+  font-variant-numeric: tabular-nums;
+}
+.votedEdit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 26px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--fg-on-gold) 14%, transparent);
+  color: var(--fg-on-gold);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: var(--w-medium);
+}
+.votedEdit:hover {
+  background: color-mix(in srgb, var(--fg-on-gold) 24%, transparent);
 }

@@ -62,6 +62,6 @@ describe('dealChip', () => {
   test('leads with the deal type and keeps the round', () => {
     assert.equal(dealChip({ leadType: 'altspot', tag: 'AltSpot-led · Series A' }), 'AltSpot-led · Series A');
     assert.equal(dealChip({ leadType: 'partner', tag: 'Co-invest · Series C' }), 'Partner-led · Series C');
-    assert.equal(dealChip({ leadType: 'altspot', tag: 'Late-stage secondary' }), 'AltSpot-led · Late-stage secondary');
+    assert.equal(dealChip({ leadType: 'altspot', tag: 'Late-stage secondary' }), 'AltSpot-led · Secondary');
   });
 });

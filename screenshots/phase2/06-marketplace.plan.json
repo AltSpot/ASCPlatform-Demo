@@ -1,0 +1,66 @@
+{
+  "out": "screenshots/phase2/06-marketplace",
+  "shots": [
+    {
+      "name": "01-shelf",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "wait": 600 },
+        { "eval": "(() => { const imgs = [...document.querySelectorAll('.deal-card img')]; if (imgs.length < 8) throw new Error('marks on ' + imgs.length + ' cards'); const broken = imgs.filter(i => !i.complete || i.naturalWidth === 0); if (broken.length) throw new Error(broken.length + ' broken marks'); })()" },
+        { "scroll": "#lane-invest" }
+      ]
+    },
+    {
+      "name": "02-quick-look",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === 'Quick look'); if (!b) throw new Error('no Quick look'); b.click(); })()" },
+        { "wait": 500 },
+        { "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d) throw new Error('panel closed'); const t = d.innerText.toLowerCase(); for (const w of ['raised so far', 'minimum to close', 'closing date', 'escrow status', 'organized and advised by altspot']) if (!t.includes(w)) throw new Error('missing ' + w); if (/carr(y|ied)/i.test(t) || /[0-9]+% ?(management|fee)/i.test(t)) throw new Error('fee or carry figure in quick look'); })()" }
+      ]
+    },
+    {
+      "name": "03-radar",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace?view=radar" },
+        { "wait": 700 },
+        { "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('you voted')) throw new Error('no voted band'); const imgs = [...document.querySelectorAll('article img')]; if (imgs.length < 18) throw new Error('radar marks ' + imgs.length); if (imgs.some(i => i.naturalWidth === 0)) throw new Error('broken radar mark'); })()" }
+      ]
+    },
+    {
+      "name": "04-radar-details",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace?view=radar" },
+        { "wait": 700 },
+        { "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === 'Details'); if (!b) throw new Error('no Details'); b.click(); })()" },
+        { "wait": 500 },
+        { "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d) throw new Error('panel closed'); const t = d.innerText.toLowerCase(); for (const w of ['voted', 'price per share', 'for', 'against']) if (!t.includes(w)) throw new Error('missing ' + w); })()" }
+      ]
+    },
+    {
+      "name": "05-invest-how-it-works",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === 'How it works'); b.click(); })()" },
+        { "wait": 500 },
+        { "eval": "(() => { const t = document.querySelector('dialog[open]').innerText.toLowerCase(); if (!t.includes('send to escrow')) throw new Error('invest edition missing'); })()" }
+      ]
+    },
+    {
+      "name": "06-locked-radar-marks",
+      "steps": [
+        { "go": "/reshoot?as=new&to=/marketplace?view=radar" },
+        { "wait": 700 },
+        { "eval": "fetch('/api/marks/aurelia.svg').then(r => { if (r.status !== 404) throw new Error('deal mark served to a locked member: ' + r.status); return fetch('/api/marks/radar-aurelia.svg'); }).then(r => { if (r.status !== 200) throw new Error('radar mark ' + r.status); return fetch('/api/marks/radar-cinder.svg'); }).then(r => { if (r.status !== 200) throw new Error('radar mark cinder ' + r.status); })" }
+      ]
+    },
+    {
+      "name": "07-deal-header",
+      "steps": [
+        { "go": "/reshoot?to=/deals/kestrel" },
+        { "wait": 500 },
+        { "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['raised so far', 'minimum to close', 'closing date', 'escrow status', 'held in escrow', 'partner-led', 'organized and advised by altspot', 'sponsors invest alongside members', 'admissions close']) if (!t.includes(w)) throw new Error('missing ' + w); if (t.includes('% subscribed')) throw new Error('old subscribed bar'); })()" }
+      ]
+    }
+  ]
+}

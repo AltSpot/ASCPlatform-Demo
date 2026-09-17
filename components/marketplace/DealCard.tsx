@@ -1,41 +1,39 @@
+'use client';
+
 /**
  * One deal, as a card.
  *
- * The same card wherever a deal is offered: the marketplace shelf and
- * the dashboard's Most popular. A member who learns to read it once
- * has read it everywhere.
- *
  * WHAT A CARD SAYS. It is read in a grid of ten by someone deciding
- * which one to open, and the grid has to show two rows without a
- * scroll, so the card is short and every line on it does one job:
+ * which one to open, so every line does one job:
  *
- *   the art band     the mark, the tag, and a Radar glyph when it applies
+ *   the art band     the company's own mark on its own colour, the deal
+ *                    type chip, the star, and the member's own state
  *   the name
  *   the one line     the headline, two lines at most
- *   the bar          how much is spoken for
- *   the button
+ *   the bar          raised against the minimum to close
+ *   two buttons      Quick look (the side panel) and View deal
  *
- * Minimum, closing date, what is left and who else is on the round are
- * on the deal page, not here (Tyler, 2026-09-17): the card is for
- * choosing which deal to open, and a row of figures on each of ten
- * cards was more reading than choosing.
+ * COHESIVE, BUT NOT ALIKE. Every card has the same shape, type and
+ * controls, and the platform's gold is the only accent in the body. The
+ * art band is the one place a company is itself: its drawn mark on a
+ * ground lit by its hue (lib/brand.ts), so ten cards read as ten
+ * companies, not ten navy gradients.
  *
- * The fee and the carry are not here: 5% and 10% on every deal AltSpot
- * has ever done, stated once above the grid and in full on the deal
- * page. The blurb is not here: it is the deal page's paragraph.
+ * YOURS, IN WORDS. A saved deal says "Saved" and a deal the member voted
+ * for on the Radar says "You voted", as labelled chips on the art. The
+ * unexplained gold rim that used to mean either is gone. A deal the
+ * member is mid-way through says where they are instead.
  *
- * A card for a member who is not yet a verified accredited investor
- * carries no figures at all. Not blurred figures: the server never sent
- * them (see lib/repositories/deals.ts). What is left is the company, the
- * sector and the one line, which is enough to know the deal exists.
- *
- * No 'use client': nothing here holds state, so a server page can
- * render it directly. The star inside it is its own client island.
+ * Minimum, closing date and who else is on the round are in the quick
+ * look and on the deal page, not on the card (Tyler, 2026-09-17). No
+ * fee or carry figure anywhere on it.
  */
-import { Eye, Radar } from 'lucide-react';
+import { Eye, PanelRightOpen, Radar, Star } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import FundingProgress from '@/components/FundingProgress';
+import DealPeek from '@/components/marketplace/DealPeek';
 import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
@@ -50,46 +48,63 @@ export default function DealCard({
   fromRadar = false,
   onWatchChange,
 }: {
-  /** Lets a shelf that tracks saves hear about them. */
-  onWatchChange?: (watched: boolean) => void;
   deal: DealShelfItem;
   /** This member's live subscription into the deal, if there is one. */
   resume?: SubscriptionView;
   watched: boolean;
-  /**
-   * The member voted for this company on the Radar and AltSpot went and
-   * got it. The one line on the card that proves the mechanic: shown,
-   * on the deal it applies to, rather than claimed in a slogan.
-   */
+  /** The member voted for this company on the Radar before it opened. */
   fromRadar?: boolean;
+  /** Lets a shelf that tracks saves hear about them. */
+  onWatchChange?: (watched: boolean) => void;
 }) {
-  const primary = deal.redacted ? (
-    <Link
-      className="btn btn-ghost btn-sm btn-block"
-      href={`/wizard?step=${ACCREDITATION_STEP}&then=${deal.id}`}
-    >
-      Get verified
-    </Link>
-  ) : resume ? (
+  const [peek, setPeek] = useState(false);
+
+  if (deal.redacted) {
+    return (
+      <div className="card deal-card">
+        <div className="thumb" style={{ background: deal.art }}>
+          <span className="chip">{deal.tag}</span>
+        </div>
+        <div className="deal-body">
+          <div className={s.title}>
+            <h3>{deal.name}</h3>
+          </div>
+          <p className={s.headline}>{deal.blurb}</p>
+          <div className="deal-actions">
+            <Link
+              className="btn btn-ghost btn-sm btn-block"
+              href={`/wizard?step=${ACCREDITATION_STEP}&then=${deal.id}`}
+            >
+              Finish your questionnaire
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const primary = resume ? (
     resume.state === 'docs_signed' ? (
-      <Link className="btn btn-gold btn-sm btn-block" href={`/payment/${resume.id}`}>
-        Fund commitment
+      <Link className="btn btn-gold btn-sm" href={`/payment/${resume.id}`}>
+        Send to escrow
       </Link>
     ) : (
-      <Link className="btn btn-gold btn-sm btn-block" href={`/invest/${deal.id}`}>
-        Resume investment
+      <Link className="btn btn-gold btn-sm" href={`/invest/${deal.id}`}>
+        Resume
       </Link>
     )
   ) : (
-    <Link className="btn btn-gold btn-sm btn-block" href={`/deals/${deal.id}`}>
+    <Link className="btn btn-gold btn-sm" href={`/deals/${deal.id}`}>
       View deal
     </Link>
   );
 
+  const viewOnly = !deal.subscribable && !resume;
+
   return (
-    <div className={watched || fromRadar ? `card deal-card ${s.mine}` : 'card deal-card'}>
-      <div className="thumb" style={{ background: deal.art }}>
-        <span className="chip">{deal.redacted ? deal.tag : dealChip(deal)}</span>
+    <div className="card deal-card">
+      <div className={`thumb ${s.art}`} style={{ background: deal.art }}>
+        <span className="chip">{dealChip(deal)}</span>
         <WatchStar
           dealId={deal.id}
           dealName={deal.name}
@@ -98,39 +113,35 @@ export default function DealCard({
         />
         {deal.logoUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="deal-logo-hero" src={deal.logoUrl} alt="" aria-hidden="true" />
+          <img className={s.cardMark} src={deal.logoUrl} alt="" aria-hidden="true" />
         )}
 
-        {/* The member's own state, on the artwork. */}
-        {resume ? (
-          <span className={s.resumeChip}>
-            {resume.state === 'docs_signed' ? 'Awaiting funding' : 'In progress'}
-          </span>
-        ) : null}
+        {/* The member's own state, in words, bottom left. */}
+        <span className={s.states}>
+          {resume ? (
+            <span className={`${s.state} ${s.stateProgress}`}>
+              {resume.state === 'docs_signed' ? 'Signed · send to escrow' : 'In progress'}
+            </span>
+          ) : null}
+          {watched ? (
+            <span className={`${s.state} ${s.stateSaved}`}>
+              <Star size={11} strokeWidth={2} aria-hidden="true" />
+              Saved
+            </span>
+          ) : null}
+          {fromRadar ? (
+            <span className={`${s.state} ${s.stateVoted}`}>
+              <Radar size={11} strokeWidth={2} aria-hidden="true" />
+              You voted
+            </span>
+          ) : null}
+        </span>
 
-        {/* View-only under Rule 506(b): the deal opened before this
-            member joined. One glyph on the art; the deal page says why. */}
-        {!deal.redacted && !deal.subscribable && !resume ? (
-          <span
-            className={s.viewOnlyMark}
-            role="img"
-            aria-label="View only: opened before you joined"
-            title="View only: opened before you joined"
-          >
-            <Eye size={14} strokeWidth={1.7} aria-hidden="true" />
-          </span>
-        ) : null}
-
-        {/* A deal the member voted for before it opened, as one gold
-            glyph on the art rather than a line of copy under the name. */}
-        {fromRadar ? (
-          <span
-            className={s.fromRadar}
-            role="img"
-            aria-label="From your Radar"
-            title="From your Radar"
-          >
-            <Radar size={14} strokeWidth={1.7} aria-hidden="true" />
+        {/* View-only under Rule 506(b): opened before this member joined. */}
+        {viewOnly ? (
+          <span className={s.viewOnlyMark} title="Opened before you joined">
+            <Eye size={12} strokeWidth={1.8} aria-hidden="true" />
+            View only
           </span>
         ) : null}
       </div>
@@ -140,35 +151,25 @@ export default function DealCard({
           <h3>{deal.name}</h3>
         </div>
 
-        <p className={s.headline}>{deal.redacted ? deal.blurb : deal.headline}</p>
+        <p className={s.headline}>{deal.headline}</p>
 
-        {deal.redacted ? (
-          <LockedFigures />
-        ) : (
-          <FundingProgress deal={deal} compact />
-        )}
+        <FundingProgress deal={deal} compact />
 
-        <div className="deal-actions">{primary}</div>
+        <div className={`deal-actions ${s.cardActions}`}>
+          <button
+            type="button"
+            className={`btn btn-ghost btn-sm ${s.peekButton}`}
+            onClick={() => setPeek(true)}
+            aria-label={`Quick look at ${deal.name}`}
+          >
+            <PanelRightOpen size={14} strokeWidth={1.7} aria-hidden="true" />
+            Quick look
+          </button>
+          {primary}
+        </div>
       </div>
+
+      <DealPeek deal={deal} resume={resume} open={peek} onClose={() => setPeek(false)} />
     </div>
   );
 }
-
-/**
- * Where the facts and the allocation bar sit on an open card. Quiet
- * rules rather than fake numbers: there is no value here to
- * approximate, because none was sent.
- */
-function LockedFigures() {
-  return (
-    <div className={s.locked}>
-      <div className={s.lockedRows} aria-hidden="true">
-        <span style={{ width: '58%' }} />
-        <span style={{ width: '76%' }} />
-      </div>
-      <p className={s.lockedNote}>Terms open once you are verified.</p>
-    </div>
-  );
-}
-
-

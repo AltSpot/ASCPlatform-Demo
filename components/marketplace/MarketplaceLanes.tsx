@@ -42,7 +42,7 @@ import TaxonomyFilters, {
 import DealShelf from '@/components/marketplace/DealShelf';
 import OfferingsGate from '@/components/OfferingsGate';
 import RadarBoard from '@/components/radar/RadarBoard';
-import RadarHowItWorks from '@/components/radar/RadarHowItWorks';
+import HowItWorks from '@/components/HowItWorks';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { daysLeft, EMPTY } from '@/lib/format';
 import type { RelationshipView } from '@/lib/relationship';
@@ -259,6 +259,7 @@ export default function MarketplaceLanes({
           <h2 className={s.laneTitle} id="lane-invest">
             Invest.
           </h2>
+          {locked ? null : <HowItWorks edition="invest" />}
         </header>
         {locked ? (
           <OfferingsGate relationship={locked} />
@@ -284,7 +285,7 @@ export default function MarketplaceLanes({
           <h2 className={s.laneTitle} id="lane-vote">
             On the Radar.
           </h2>
-          <RadarHowItWorks />
+          <HowItWorks edition="radar" />
           <p className={s.laneLede}>A vote reserves nothing and moves no money.</p>
         </header>
         <RadarBoard

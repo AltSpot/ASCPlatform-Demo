@@ -120,6 +120,9 @@ const LEAD_PREFIX = /^(AltSpot-led|Partner-led|Co-invest|AltSpot fund)\s*·\s*/i
  */
 export function dealChip(deal: { leadType: string; tag: string }): string {
   const lead = isLeadType(deal.leadType) ? LEAD_LABEL[deal.leadType] : LEAD_LABEL.altspot;
-  const round = deal.tag.replace(LEAD_PREFIX, '').trim();
+  const round = deal.tag
+    .replace(LEAD_PREFIX, '')
+    .replace(/^late-stage secondary$/i, 'Secondary')
+    .trim();
   return round ? `${lead} · ${round}` : lead;
 }

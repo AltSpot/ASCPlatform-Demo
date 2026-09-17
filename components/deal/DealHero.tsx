@@ -99,22 +99,23 @@ export default function DealHero({
 
           <div className={s.actions}>{cta}</div>
 
-          <div className={s.heroFunding}>
-            <FundingProgress deal={deal} showAdmissions />
-          </div>
+        </div>
+      </div>
 
-          <div className={s.heroRole}>
-            <span className={s.organized}>
-              <ShieldCheck size={13} strokeWidth={1.7} aria-hidden="true" />
-              Organized and advised by AltSpot
+      {/* The funding picture, across the full width of the cover. */}
+      <div className={s.heroFunding}>
+        <FundingProgress deal={deal} showAdmissions layout="row" />
+        <div className={s.heroRole}>
+          <span className={s.organized}>
+            <ShieldCheck size={13} strokeWidth={1.7} aria-hidden="true" />
+            Organized and advised by AltSpot
+          </span>
+          {SHOW_SPONSOR_ALIGNMENT ? (
+            <span className={s.alignment}>
+              <Users size={13} strokeWidth={1.7} aria-hidden="true" />
+              Sponsors invest alongside members
             </span>
-            {SHOW_SPONSOR_ALIGNMENT ? (
-              <span className={s.alignment}>
-                <Users size={13} strokeWidth={1.7} aria-hidden="true" />
-                Sponsors invest alongside members
-              </span>
-            ) : null}
-          </div>
+          ) : null}
         </div>
       </div>
     </header>
