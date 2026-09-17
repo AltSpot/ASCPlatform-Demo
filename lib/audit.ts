@@ -48,6 +48,9 @@ export type AuditAction =
   | 'external_position.added'
   | 'external_position.updated'
   | 'external_position.removed'
+  /* Which link a new member arrived through. Reporting only. */
+  | 'referral.attributed'
+  | 'referral.link_created'
   | 'demo.reset';
 
 interface AuditInput {

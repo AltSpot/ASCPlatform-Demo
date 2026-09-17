@@ -24,6 +24,7 @@
     "setup": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts",
     "serve": "node scripts/dev-server.mjs start",
     "serve:demo": "node scripts/dev-server.mjs demo",
+    "serve:built": "node scripts/dev-server.mjs built",
     "serve:stop": "node scripts/dev-server.mjs stop",
     "serve:restart": "node scripts/dev-server.mjs restart",
     "serve:status": "node scripts/dev-server.mjs status",

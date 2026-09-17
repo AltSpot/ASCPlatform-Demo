@@ -35,6 +35,13 @@ model User {
   /// after the cooling-off period, and a member may subscribe only to deals
   /// that opened after this date. Null until approved.
   relationshipEstablishedAt DateTime?
+  /// The referral link this member signed up through, if any: a code from
+  /// ReferralCode, kept as text so it survives the code being retired.
+  /// REPORTING ONLY. Nothing in fee, carry or eligibility logic may read it;
+  /// tests/referral.test.ts fails if one does.
+  referralCode String?
+  /// partner | member, copied at sign-up for the same reporting.
+  referralKind String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -51,6 +58,7 @@ model User {
   auditLogs     AuditLog[]
   radarInterest RadarInterest[]
   watchlist     WatchlistItem[]
+  inviteCode    ReferralCode?
 
   @@map("users")
 }
@@ -530,4 +538,26 @@ model RadarInterest {
   @@unique([userId, companySlug])
   @@index([companySlug])
   @@map("radar_interests")
+}
+
+// ---------------- referrals ----------------
+
+/// A referral link: /r/<code>. Partner codes are issued to syndicate
+/// partners; a member code is created the first time a member opens their
+/// invite link. Every link lands on the same sign-up and the same 506(b)
+/// relationship gate, never on a deal.
+/// kind: partner | member
+model ReferralCode {
+  code        String   @id
+  kind        String
+  /// Who the link belongs to, shown only in reporting. For a partner, the
+  /// firm name; for a member, their name at the time the code was made.
+  label       String
+  ownerUserId String?  @unique
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  owner User? @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+
+  @@map("referral_codes")
 }

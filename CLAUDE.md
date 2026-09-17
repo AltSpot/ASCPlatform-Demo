@@ -98,6 +98,7 @@ Concretely:
 ```bash
 npm run serve          # start in dev on http://localhost:4000 (detached, auto-restarts)
 npm run serve:demo     # build, then serve that build. USE THIS TO RECORD.
+npm run serve:built    # serve the existing build, no rebuild (low memory: stop, next build, then this)
 npm run serve:restart  # restart, in whichever mode is running
 npm run serve:stop     # stop
 npm run serve:status   # is it up, and in which mode?
@@ -721,6 +722,17 @@ These are the claims the product makes. Do not let a change quietly break them.
   defaults to false and only the viewer-aware reads in `lib/repositories/deals.ts`
   set it. `POST /api/subscriptions` refuses with a 403 and the invest page
   redirects to the deal, so the UI is the explanation, not the control
+- **Referral links are a way to the gate, never past it** (work order screen 3).
+  A partner or member shares `/r/<code>` (`app/r/[code]/route.ts`). It sets a
+  short-lived cookie and lands on Create account, whatever else is on the URL;
+  a signed-in member goes to their dashboard. The code is written to
+  `User.referralCode` / `referralKind` when the account is created, for
+  reporting only. **Nothing in fee, carry or eligibility logic may read it**, and
+  `tests/referral.test.ts` reads those modules as text and fails if one does.
+  Partner codes are seeded (`northlight`, `ashgrove`, both invented); a member's
+  own link is created the first time they open Settings. Counsel's per-investor
+  relationship certification by a lead is part of the partner flow and is not
+  built yet
 - SpotBot **explains, never advises** — every answer cites its provenance
 - Secondaries is visible but disabled, pending a BD partner and counsel
 

@@ -5,8 +5,9 @@
  * allocation their signed commitments were holding, so a walkthrough can
  * be run again from a clean slate.
  */
+import { Copy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
@@ -24,9 +25,34 @@ const NOTIFICATIONS: { label: string; required?: boolean }[] = [
   { label: 'Tax document delivery', required: true },
 ];
 
-export default function SettingsPanel({ email }: { email: string }) {
+export default function SettingsPanel({
+  email,
+  invitePath,
+}: {
+  email: string;
+  /** This member's own referral link path, e.g. /r/m-1a2b3c4d5e. */
+  invitePath: string;
+}) {
   const router = useRouter();
   const toast = useToast();
+
+  /* The origin is only known in the browser. The server render shows the
+     path, and the client fills in the full link. */
+  const origin = useSyncExternalStore(
+    () => () => {},
+    () => window.location.origin,
+    () => '',
+  );
+  const inviteUrl = origin + invitePath;
+
+  async function copyInvite() {
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      toast('Invite link copied.');
+    } catch {
+      toast('Could not copy. Select the link and copy it instead.');
+    }
+  }
 
   const [currentEmail, setCurrentEmail] = useState(email);
   const [confirmingReset, setConfirmingReset] = useState(false);
@@ -80,6 +106,35 @@ export default function SettingsPanel({ email }: { email: string }) {
             >
               Save changes
             </button>
+          </div>
+
+          {/* The invite link. Everyone who follows it lands on sign-up and
+              the same investor questionnaire; nothing about the link opens
+              a deal, and nobody is paid for an introduction. */}
+          <div className="card">
+            <h3 style={{ marginBottom: 4 }}>Invite someone you know</h3>
+            <p className="small" style={{ marginBottom: 14 }}>
+              They join through the same investor questionnaire as every member.
+              Nobody is paid for an introduction.
+            </p>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <input
+                className="input"
+                readOnly
+                value={inviteUrl}
+                aria-label="Your invite link"
+                onFocus={(e) => e.currentTarget.select()}
+              />
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={copyInvite}
+                aria-label="Copy invite link"
+                title="Copy invite link"
+              >
+                <Copy size={15} strokeWidth={1.6} aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
           <div className="card">

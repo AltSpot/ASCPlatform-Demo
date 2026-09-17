@@ -40,11 +40,11 @@ const MODES: { key: Mode; label: string }[] = [
   { key: 'create', label: 'Create account' },
 ];
 
-export default function LoginForm() {
+export default function LoginForm({ initialMode = 'signin' }: { initialMode?: Mode }) {
   const router = useRouter();
   const toast = useToast();
 
-  const [mode, setMode] = useState<Mode>('signin');
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

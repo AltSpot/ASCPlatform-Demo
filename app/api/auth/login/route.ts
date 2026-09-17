@@ -4,7 +4,7 @@
  * Demo mode accepts any email + password and mints the investor on first
  * sight. See lib/auth.ts — this route contains no demo logic of its own.
  */
-import { authenticate, createSession } from '@/lib/auth';
+import { authenticate, consumeReferral, createSession } from '@/lib/auth';
 import { audit } from '@/lib/audit';
 import { ok, readJson, requireString, route } from '@/lib/http';
 import { sweepStaleDemoAccounts } from '@/lib/repositories/demo';
@@ -30,6 +30,16 @@ export const POST = route(async (request: Request) => {
 
   if (created) {
     await audit({ userId: user.id, action: 'auth.user_created', entity: 'user', entityId: user.id });
+    const referral = await consumeReferral(user.id);
+    if (referral) {
+      await audit({
+        userId: user.id,
+        action: 'referral.attributed',
+        entity: 'user',
+        entityId: user.id,
+        metadata: { code: referral },
+      });
+    }
   }
   await audit({ userId: user.id, action: 'auth.login', entity: 'user', entityId: user.id });
 

@@ -1,0 +1,41 @@
+{
+  "out": "screenshots/phase2/03-referral-links",
+  "shots": [
+    {
+      "name": "01-partner-link-lands-on-signup",
+      "steps": [
+        { "go": "/r/northlight?to=/deals/calder" },
+        { "eval": "(() => { if (location.pathname !== '/' || !location.search.includes('join=1')) throw new Error('landed on ' + location.pathname + location.search); if (!document.body.innerText.includes('Full legal name')) throw new Error('did not open on create account'); if (document.body.innerText.includes('Calder')) throw new Error('deal named on sign-up'); })()" }
+      ]
+    },
+    {
+      "name": "02-logged-out-deal-link",
+      "steps": [
+        { "go": "/deals/calder" },
+        { "eval": "(() => { if (location.pathname.startsWith('/deals')) throw new Error('logged-out visitor reached a deal page'); if (document.body.innerText.includes('Calder')) throw new Error('deal named logged out'); })()" }
+      ],
+      "capture": false
+    },
+    {
+      "name": "03-registered-through-partner-link",
+      "steps": [
+        { "go": "/r/northlight" },
+        { "eval": "fetch('/api/auth/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Referred Member', email: 'referred+new+' + Math.random().toString(36).slice(2, 8) + '@altspot.demo', password: 'x' }) }).then(r => { if (r.status !== 201) throw new Error('register returned ' + r.status); })" },
+        { "go": "/marketplace" },
+        { "eval": "(() => { if (document.body.innerText.includes('Calder')) throw new Error('referred member sees a deal before the gate'); })()" }
+      ]
+    },
+    {
+      "name": "04-settings-invite-link",
+      "steps": [{ "go": "/reshoot?as=recent&to=/settings" }]
+    },
+    {
+      "name": "05-unknown-code-still-lands-on-signup",
+      "steps": [
+        { "go": "/r/not-a-real-code" },
+        { "eval": "(() => { if (location.pathname !== '/') throw new Error('unknown code went to ' + location.pathname); })()" }
+      ],
+      "capture": false
+    }
+  ]
+}

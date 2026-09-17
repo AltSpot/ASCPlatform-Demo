@@ -4,6 +4,7 @@
  *
  *   npm run serve            start in dev (detached, survives this terminal)
  *   npm run serve:demo       build, then start in production mode
+ *   npm run serve:built      start the existing build in production mode, no build
  *   npm run serve:restart    restart, in whichever mode is running
  *   npm run serve:stop       stop
  *   npm run serve:status     is it up, and in which mode?
@@ -316,6 +317,14 @@ switch (command) {
     await stop({ silent: true });
     await start({ mode: 'prod', prebuilt: true });
     break;
+  case 'built':
+    /* Serve the build already in .next, in production mode, without
+     * building. For a machine too short on memory to build while the
+     * server and a browser are running: stop, run next build on its own,
+     * then this. */
+    await stop({ silent: true });
+    await start({ mode: 'prod', prebuilt: true });
+    break;
   case 'stop':
     await stop();
     break;
@@ -335,7 +344,7 @@ switch (command) {
     break;
   default:
     console.error(
-      `Unknown command "${command}". Use start|demo|stop|restart|status|logs.`,
+      `Unknown command "${command}". Use start|demo|built|stop|restart|status|logs.`,
     );
     process.exit(1);
 }

@@ -30,9 +30,16 @@ import { getSessionUser } from '@/lib/auth';
 
 import s from './Login.module.css';
 
-export default async function LoginPage() {
+/* `?join=1` is where a referral link lands (app/r/[code]): the card opens
+   on Create account, because the person following it has no account. */
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ join?: string }>;
+}) {
   const user = await getSessionUser();
   if (user) redirect('/dashboard');
+  const { join } = await searchParams;
 
   return (
     <div className={s.page}>
@@ -58,7 +65,7 @@ export default async function LoginPage() {
         </header>
 
         <section className={s.card}>
-          <LoginForm />
+          <LoginForm initialMode={join === '1' ? 'create' : 'signin'} />
         </section>
       </main>
 

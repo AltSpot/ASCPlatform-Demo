@@ -21,6 +21,8 @@ import { DEMO_MODE, SESSION_COOKIE, SESSION_TTL_DAYS } from './config';
 import { DAY_MS, type SessionUser } from './domain';
 import { nameFromEmail } from './format';
 import { ValidationError } from './http';
+import { REFERRAL_COOKIE, normalizeReferralCode } from './referral';
+import { attributeReferral } from './repositories/referrals';
 
 const scrypt = promisify(scryptCb) as (
   password: string,
@@ -211,4 +213,21 @@ export async function authenticate(
     user: { id: created.id, email: created.email, name: created.name },
     created: true,
   };
+}
+
+// ---------------- referral attribution ----------------
+
+/**
+ * Record the referral link a brand-new member arrived through, then clear
+ * it. Called from the two routes that create an account. Reporting only:
+ * see lib/referral.ts.
+ */
+export async function consumeReferral(userId: string): Promise<string | null> {
+  const jar = await cookies();
+  const code = normalizeReferralCode(jar.get(REFERRAL_COOKIE)?.value);
+  jar.delete(REFERRAL_COOKIE);
+  if (!code) return null;
+
+  const recorded = await attributeReferral(userId, code);
+  return recorded ? recorded.code : null;
 }

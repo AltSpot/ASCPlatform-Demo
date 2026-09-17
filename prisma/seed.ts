@@ -1252,6 +1252,11 @@ function closesIn(days: number): string {
   });
 }
 
+const PARTNER_CODES = [
+  { code: 'northlight', label: 'Northlight Partners' },
+  { code: 'ashgrove', label: 'Ashgrove Capital' },
+];
+
 async function main() {
   for (const deal of DEALS) {
     const payload = {
@@ -1307,6 +1312,19 @@ async function main() {
   }
 
   console.log(`Seeded ${DEALS.length} deals (Calder Grid leading).`);
+
+  /* Partner referral links for the demo. Both firms are invented (see
+     lib/backers.ts). A link is /r/<code>; following one lands on sign-up,
+     never on a deal, and the code is kept on the new member for reporting
+     only. */
+  for (const partner of PARTNER_CODES) {
+    await prisma.referralCode.upsert({
+      where: { code: partner.code },
+      create: { ...partner, kind: 'partner' },
+      update: { label: partner.label, kind: 'partner', active: true },
+    });
+  }
+  console.log(`Seeded ${PARTNER_CODES.length} partner referral codes.`);
 }
 
 main()

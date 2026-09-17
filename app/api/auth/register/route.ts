@@ -10,7 +10,7 @@
  * registerInvestor in lib/auth.ts.
  */
 import { audit } from '@/lib/audit';
-import { createSession, registerInvestor } from '@/lib/auth';
+import { consumeReferral, createSession, registerInvestor } from '@/lib/auth';
 import { ok, readJson, requireString, route } from '@/lib/http';
 import { sweepStaleDemoAccounts } from '@/lib/repositories/demo';
 import { ensureInvestorRecords, getWizardView } from '@/lib/repositories/investor';
@@ -33,6 +33,7 @@ export const POST = route(async (request: Request) => {
 
   const user = await registerInvestor(name, email, password);
   await createSession(user.id);
+  const referral = await consumeReferral(user.id);
   await ensureInvestorRecords(user.id);
 
   await audit({
@@ -41,6 +42,15 @@ export const POST = route(async (request: Request) => {
     entity: 'user',
     entityId: user.id,
   });
+  if (referral) {
+    await audit({
+      userId: user.id,
+      action: 'referral.attributed',
+      entity: 'user',
+      entityId: user.id,
+      metadata: { code: referral },
+    });
+  }
   await audit({ userId: user.id, action: 'auth.login', entity: 'user', entityId: user.id });
 
   const wizard = await getWizardView(user.id);
