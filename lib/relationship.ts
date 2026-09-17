@@ -11,9 +11,12 @@
  *   2. They complete an accreditation and sophistication questionnaire.
  *   3. The platform substantively evaluates it. The date it is approved
  *      is the date the relationship is established.
- *   4. A cooling-off period runs.
- *   5. Only then do they see offerings, and they may subscribe only to
- *      deals that opened after the relationship was established.
+ *   4. Offerings open at once (counsel, 2026-09-17: no waiting period is
+ *      legally mandated; the relationship's quality and its sequence
+ *      before the offer are what matter, not its duration), and the
+ *      member may subscribe only to deals that opened after the
+ *      relationship was established. COOLING_OFF_DAYS is kept at zero so
+ *      a seasoning period is a setting, not a rewrite.
  *
  * Accreditation is a self-certification. There is no letter, no
  * reviewer of documents and no verification vendor: the answers and the
@@ -336,7 +339,7 @@ export function gateCopy(
     case 'cooling_off':
       return {
         title: `Offerings open to you on ${formatDate(view.unlocksAt)}.`,
-        body: 'Your investor questionnaire is approved. Offerings open once a short cooling-off period has passed, and you can finish the rest of your setup in the meantime.',
+        body: 'Your investor questionnaire is approved. Offerings open after a short seasoning period, and you can finish the rest of your setup in the meantime.',
         action: null,
       };
     case 'under_review':

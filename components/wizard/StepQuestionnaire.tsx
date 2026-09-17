@@ -110,8 +110,9 @@ export default function StepQuestionnaire({
       <p className="sub" style={{ marginBottom: 24 }}>
         Offerings on AltSpot are private placements under SEC Rule 506(b). Before you
         see one, we get to know you: how you meet the accredited investor standard,
-        your experience, and how you evaluate a private deal. Offerings open once
-        your answers are approved and a short cooling-off period has passed.
+        your experience, and how you evaluate a private deal. Offerings open the
+        moment your answers are approved, and you may join deals that open after
+        that date.
       </p>
 
       {!answering && (

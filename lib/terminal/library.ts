@@ -446,7 +446,7 @@ const LIBRARY: LibraryItem[] = [
       { at: '00:00', label: 'Two exemptions, and the one we use' },
       { at: '05:30', label: 'Why a relationship comes before any deal' },
       { at: '12:10', label: 'Income, net worth, and the professional pathways' },
-      { at: '18:00', label: 'The questionnaire, and the cooling-off period' },
+      { at: '18:00', label: 'The questionnaire, and the relationship date' },
       { at: '21:40', label: 'What we keep and what we never keep' },
     ],
     body: [
@@ -472,7 +472,7 @@ const LIBRARY: LibraryItem[] = [
       { type: 'h', text: 'Why there is a wait' },
       {
         type: 'p',
-        text: 'Offerings open after a short cooling-off period once your questionnaire is approved, and you may join deals that open after the date the relationship began. A deal that opened before you joined is shown to you, but only to read. That is what keeps a relationship from being formed around a particular deal.',
+        text: 'Offerings open the moment your questionnaire is approved, and you may join deals that open after the date the relationship began. A deal that opened before you joined is shown to you, but only to read. That is what keeps a relationship from being formed around a particular deal.',
       },
       {
         type: 'note',

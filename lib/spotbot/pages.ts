@@ -173,7 +173,7 @@ const WIZARD: PageContext = {
   key: 'wizard',
   label: 'Account setup',
   brief:
-    'Five one-time steps: the investor questionnaire, your information, identity, investment profile, link bank. Offerings open after a short cooling-off period once the questionnaire is approved; your information and identity gate investing.',
+    'Five one-time steps: the investor questionnaire, your information, identity, investment profile, link bank. Offerings open the moment the questionnaire is approved; your information and identity gate investing.',
   suggested: questionsFor(['wizard-steps', 'accreditation', 'kyc']),
   topics: ['wizard-steps', 'accreditation', 'relationship-506b', 'kyc', 'vault', 'profile-types'],
 };

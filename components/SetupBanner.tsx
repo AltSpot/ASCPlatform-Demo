@@ -71,7 +71,7 @@ export default function SetupBanner({
                   ? `Offerings open to you on ${dateStr(unlocksAt)}. `
                   : stage === 'under_review'
                     ? 'Your questionnaire is under review. '
-                    : 'Offerings open once your investor questionnaire is approved and a short cooling-off period has passed. '}
+                    : 'Offerings open the moment your investor questionnaire is approved. '}
                 <b style={{ color: 'var(--gold-bright)' }}>
                   Investing unlocks once these are complete.
                 </b>
