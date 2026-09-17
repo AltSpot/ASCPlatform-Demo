@@ -7,10 +7,11 @@
  *
  * Calder Grid, the lead deal, is FICTIONAL: it mirrors the shape of a real
  * AltSpot deal package (structure, terms, checkout flow), but the company,
- * its numbers and its story are invented and mirror no real transaction. The AltSpot Growth Fund is our own vehicle. OpenAI and Databricks
- * are real companies, and every deal term shown for them here (price,
- * discount, allocation, AltSpot's position) is ILLUSTRATIVE demo data, not an
- * actual offering or an actual position.
+ * its numbers and its story are invented and mirror no real transaction. Every other company on the shelf is
+ * invented too, with invented terms. No real company is named on a deal
+ * page, no investor is named, no deal page carries a return projection,
+ * and no deal carries a figure for any AltSpot or sponsor position
+ * (work order screen 18).
  *
  * Idempotent: re-running upserts deals and leaves investor data alone.
  * Use `npm run db:reset` to wipe everything and start clean.
@@ -193,23 +194,10 @@ const DEALS: SeedDeal[] = [
       { k: 'Board rights', v: 'Observer seat held by AltSpot' },
       { k: 'Reporting', v: 'Monthly financials to investors' },
     ],
-    outcomes: {
-      intro:
-        'Critical-infrastructure software trades at a premium and consolidates aggressively. The grid software incumbents have made dozens of acquisitions between them, and none of them owns an AI-native study engine.',
-      scenarios: [
-        { k: '$10M ARR', v: '3 to 4x', note: 'at 10 to 14x revenue' },
-        { k: '$25M ARR', v: '7 to 10x', note: 'at 10 to 14x revenue' },
-        { k: '$50M ARR', v: '14 to 19x', note: 'at 10 to 14x revenue' },
-      ],
-      comparables: [
-        { company: 'Aspen Technology', context: 'Industrial process software, acquired by Emerson', valuation: '$16B', multiple: '~13x rev' },
-        { company: 'Bentley Systems', context: 'Infrastructure engineering software', valuation: '$16B+', multiple: '~11x rev' },
-        { company: 'Grid software incumbent', context: 'Decades of acquisitions in T&D tooling', valuation: '$10B+', multiple: '~9x rev' },
-        { company: 'Vertical SaaS median', context: 'Public vertical software basket', valuation: 'n/a', multiple: '8 to 13x rev' },
-      ],
-      note:
-        'Illustrative only, based on a $30M entry. Outcomes depend on exit timing, dilution and valuation, and no return is promised.',
-    },
+    /* No return scenarios and no public comparables on a deal page
+       (work order screen 18): a multiple beside an ARR figure reads as a
+       projection whatever the caveat under it says. */
+    outcomes: {},
     risks:
       'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: utility sales cycles are long and budget-driven, and slippage of a few procurements materially changes the growth picture; regulators must continue accepting model-based studies, and a policy reversal would slow adoption; incumbent vendors and large consultancies are well capitalized and could bundle competing tools; and the position is illiquid with no public market and no promised exit timeline.',
     minInvestment: 10000,
@@ -217,9 +205,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 640000,
     closesInDays: 19,
     launchedDaysAgo: 26,
-    altspotCommitted: 600000,
-    committedNote:
-      '',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 0,
     media: {
       type: 'metric',
@@ -395,8 +382,8 @@ const DEALS: SeedDeal[] = [
         kicker: 'Exit',
         title: 'Critical infrastructure software trades at a premium.',
         body: [
-          'Aspen Technology went to Emerson at roughly 13x revenue. Bentley trades near 11x. The grid software incumbents have made dozens of acquisitions and none owns an AI-native study engine.',
-          'At a $30M entry, $10M ARR implies 3 to 4x and $25M ARR implies 7 to 10x. Illustrative only; returns depend on exit timing, dilution and valuation.',
+          'Critical-infrastructure software has consolidated steadily, and none of the grid software incumbents owns an AI-native study engine.',
+          'Any outcome depends on exit timing, dilution and valuation. Nothing here is a projection.',
         ],
         stats: [
           { k: '$10M ARR', v: '3–4x' },
@@ -408,9 +395,8 @@ const DEALS: SeedDeal[] = [
   },
 
   // ------------------------------------------------------------------
-  //  The shelf behind the lead: AltSpot's own multi-deal fund, then two
-  //  late-stage secondaries in real companies. The OpenAI and Databricks
-  //  terms, prices, discounts and allocations are ILLUSTRATIVE.
+  //  The shelf behind the lead: the AltSpot Growth Fund, then invented
+  //  late-stage secondaries kept as a picture of the roadmap.
   // ------------------------------------------------------------------
   {
     id: 'growth-fund',
@@ -523,7 +509,7 @@ const DEALS: SeedDeal[] = [
     blurb:
       'A secondary interest in Aurelia Labs, the lab behind the Aurelia assistant and the models it sells to consumers, developers and enterprises.',
     summary:
-      'Aurelia Labs trains frontier models and sells them three ways: a consumer assistant with several hundred million weekly users, an API developers build on, and enterprise agreements. AltSpot acquired this block from an early employee with issuer approval and full transfer documentation, at an implied $180B, a 10% discount to the spring employee tender.',
+      'Aurelia Labs trains frontier models and sells them three ways: a consumer assistant with several hundred million weekly users, an API developers build on, and enterprise agreements. The SPV is buying this block from an early employee with issuer approval and full transfer documentation, at an implied $180B, a 10% discount to the spring employee tender.',
     thesis: [
       'Distribution at this scale is the hardest thing in software to replicate. The assistant is the default, and defaults are sticky.',
       'One body of research sold three ways. Research cost amortises across consumer, developer and enterprise revenue.',
@@ -550,7 +536,6 @@ const DEALS: SeedDeal[] = [
       { k: 'Security', v: 'Common stock (secondary)' },
       { k: 'Implied valuation', v: '$180,000,000,000' },
       { k: 'Transfer', v: 'Issuer-approved under ROFR' },
-      { k: 'AltSpot role', v: 'Principal acquirer' },
     ],
     whatWeLike: [
       'The consumer default for AI, with a developer platform behind it.',
@@ -565,8 +550,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 480000,
     closesInDays: 12,
     launchedDaysAgo: 44,
-    altspotCommitted: 300000,
-    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 1,
     media: { type: 'metric', label: 'Entry vs. last tender', series: [90, 100], caption: 'AltSpot entry indexed against the April 2026 employee tender (100).' },
     docs: ['Investment Memo: Aurelia Labs Secondary (AltSpot)', 'Subscription Agreement: ASC Aurelia SPV', 'Transfer & Issuer Approval Summary', 'Risk Factors & Disclosures'],
@@ -591,7 +576,7 @@ const DEALS: SeedDeal[] = [
     blurb:
       'A secondary interest in Tessellate, the unified data and AI platform that large enterprises run analytics and models on.',
     summary:
-      'Tessellate sells the platform enterprises use to store, govern and run AI on their own data. Annualized revenue is about $3.2B, growing over 50% a year, with net revenue retention above 140%. AltSpot acquired this block from an early investor with issuer approval at an implied $54B, a 12% discount to the last primary round.',
+      'Tessellate sells the platform enterprises use to store, govern and run AI on their own data. Annualized revenue is about $3.2B, growing over 50% a year, with net revenue retention above 140%. The SPV is buying this block from an early investor with issuer approval at an implied $54B, a 12% discount to the last primary round.',
     thesis: [
       'Every enterprise AI project starts with the data, and the data is already on Tessellate.',
       'Consumption pricing on a growing workload. Retention above 140% means the base grows without a new sale.',
@@ -618,7 +603,6 @@ const DEALS: SeedDeal[] = [
       { k: 'Security', v: 'Common stock (secondary)' },
       { k: 'Implied valuation', v: '$54,000,000,000' },
       { k: 'Transfer', v: 'Issuer-approved under ROFR' },
-      { k: 'AltSpot role', v: 'Principal acquirer' },
     ],
     whatWeLike: [
       'Consumption revenue on the workload every enterprise is adding.',
@@ -633,8 +617,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 900000,
     closesInDays: 26,
     launchedDaysAgo: 30,
-    altspotCommitted: 250000,
-    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 8,
     media: { type: 'metric', label: 'Entry vs. last round', series: [88, 100], caption: 'AltSpot entry indexed against the Series K (100).' },
     docs: ['Investment Memo: Tessellate Secondary (AltSpot)', 'Subscription Agreement: ASC Tessellate SPV', 'Transfer & Issuer Approval Summary', 'Risk Factors & Disclosures'],
@@ -712,7 +696,7 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 1650000,
     closesInDays: 27,
     launchedDaysAgo: 21,
-    altspotCommitted: 500000,
+    altspotCommitted: 0,
     committedNote: '',
     sortOrder: 2,
     media: { type: 'metric', label: 'Annualized revenue', series: [900, 1400, 2100, 3500, 4600, 6200, 7800, 9100], caption: 'Annualized fleet revenue by quarter, $K. Source: monthly management accounts.' },
@@ -787,8 +771,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 1120000,
     closesInDays: 33,
     launchedDaysAgo: 22,
-    altspotCommitted: 300000,
-    committedNote: 'AltSpot is leading this round.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 3,
     media: { type: 'metric', label: 'Contracted revenue', series: [300, 520, 800, 1240, 1700, 2300, 2950, 3600], caption: 'Contracted annual revenue by quarter, $K.' },
     backing: [{ firm: 'bellwether', role: 'co-invest' }],
@@ -857,8 +841,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 410000,
     closesInDays: 41,
     launchedDaysAgo: 15,
-    altspotCommitted: 150000,
-    committedNote: 'AltSpot is leading this round.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 5,
     media: { type: 'metric', label: 'Tonnes produced', series: [0, 0, 40, 180, 420, 760, 1100, 1500], caption: 'Binder produced per quarter, tonnes.' },
     backing: [{ firm: 'cobaltpeak', role: 'co-invest' }],
@@ -911,7 +895,6 @@ const DEALS: SeedDeal[] = [
       { k: 'Security', v: 'Series C Preferred Stock' },
       { k: 'Pre-money valuation', v: '$520,000,000' },
       { k: 'Round size', v: '$90,000,000' },
-      { k: 'AltSpot role', v: 'Co-investor, negotiated allocation' },
     ],
     preferredTerms: [
       { k: 'Liquidation preference', v: '1x non-participating' },
@@ -930,8 +913,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 2300000,
     closesInDays: 16,
     launchedDaysAgo: 42,
-    altspotCommitted: 400000,
-    committedNote: 'AltSpot is co-investing alongside the round lead.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 4,
     media: { type: 'metric', label: 'Backlog', series: [40, 55, 70, 95, 120, 150, 180, 210], caption: 'Contracted backlog by quarter, $M.' },
     backing: [{ firm: 'ashgrove', role: 'led' }],
@@ -956,7 +939,7 @@ const DEALS: SeedDeal[] = [
     blurb:
       'A secondary interest in Northstar, a GPU cloud that rents training and inference capacity to AI labs under multi-year contracts.',
     summary:
-      'Northstar operates GPU clusters and rents them to AI labs and enterprises under contracts of one to four years. Contracted revenue is $1.9B and the company was last valued at $14B. AltSpot acquired this block from an early investor at an implied $12.2B, a 13% discount to that round, with issuer approval and full transfer documentation.',
+      'Northstar operates GPU clusters and rents them to AI labs and enterprises under contracts of one to four years. Contracted revenue is $1.9B and the company was last valued at $14B. The SPV is buying this block from an early investor at an implied $12.2B, a 13% discount to that round, with issuer approval and full transfer documentation.',
     thesis: [
       'Compute is sold out and contracted years ahead. Northstar’s revenue is visible in a way almost no private company’s is.',
       'A 13% discount to the last round for the same shares, because the seller needed liquidity on a timetable and AltSpot could close in three weeks.',
@@ -983,7 +966,6 @@ const DEALS: SeedDeal[] = [
       { k: 'Security', v: 'Common stock (secondary)' },
       { k: 'Implied valuation', v: '$12,200,000,000' },
       { k: 'Transfer', v: 'Issuer-approved under ROFR' },
-      { k: 'AltSpot role', v: 'Principal acquirer' },
     ],
     whatWeLike: [
       'Contracted revenue that is already signed, for the next several years.',
@@ -998,8 +980,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 3100000,
     closesInDays: 22,
     launchedDaysAgo: 36,
-    altspotCommitted: 500000,
-    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 6,
     media: { type: 'metric', label: 'Entry vs. last round', series: [87, 100], caption: 'AltSpot entry indexed against the Series D (100).' },
     backing: [{ firm: 'sableridge', role: 'prior' }],
@@ -1072,8 +1054,8 @@ const DEALS: SeedDeal[] = [
     allocationRemaining: 900000,
     closesInDays: 9,
     launchedDaysAgo: 48,
-    altspotCommitted: 700000,
-    committedNote: 'AltSpot is leading this round and takes a board seat.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 7,
     media: { type: 'metric', label: 'Revenue', series: [21, 29, 38, 52, 64, 74, 84, 96], caption: 'Trailing twelve-month revenue by quarter, $M.' },
     backing: [{ firm: 'halcyon', role: 'co-invest' }],
@@ -1114,8 +1096,8 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 4000000,
     allocationRemaining: 0,
     targetClose: 'Jun 12, 2025',
-    altspotCommitted: 800000,
-    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 90,
     status: 'closed',
     media: { type: 'metric', label: '', series: [], caption: '' },
@@ -1154,8 +1136,8 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 3000000,
     allocationRemaining: 0,
     targetClose: 'Nov 20, 2025',
-    altspotCommitted: 400000,
-    committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 91,
     status: 'closed',
     media: { type: 'metric', label: '', series: [], caption: '' },
@@ -1194,8 +1176,8 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 1500000,
     allocationRemaining: 0,
     targetClose: 'Feb 28, 2025',
-    altspotCommitted: 300000,
-    committedNote: 'Acquired as principal; AltSpot held to exit alongside investors.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 92,
     status: 'closed',
     media: { type: 'metric', label: '', series: [], caption: '' },

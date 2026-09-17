@@ -176,7 +176,7 @@ export default function DealShelf({
           the entire amount invested.
         </summary>
         <p>
-          These deals are available only to verified accredited investors.
+          These deals are open only to eligible members, under Rule 506(b).
           Participation is subject to eligibility, documentation, and final
           acceptance. Demo environment. Deal terms, prices and allocations are
           illustrative and do not represent actual offerings.
