@@ -21,6 +21,8 @@ import TaxonomyFilters, {
   type TaxonomyFilterState,
 } from '@/components/filters/TaxonomyFilters';
 import DealCard from '@/components/marketplace/DealCard';
+import { stageBucket, type StageBucket } from '@/lib/explore';
+import type { LeadType } from '@/lib/funding';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import {
   ASSET_CLASS_KEYS,
@@ -41,7 +43,12 @@ export default function DealShelf({
   mineOnly = false,
   onWatchChange,
   radarSourced = [],
+  lead = null,
+  stage = null,
 }: {
+  /** Shelf-only quick filters (lib/explore.ts). */
+  lead?: LeadType | null;
+  stage?: StageBucket | null;
   /** Open deals that came off the Radar. */
   radarSourced?: string[];
   /** Show only what the member saved or voted for. */
@@ -114,9 +121,11 @@ export default function DealShelf({
         (deal) =>
           (filters.assetClass === null || deal.assetClass === filters.assetClass) &&
           (filters.industry === null || deal.industry === filters.industry) &&
-          (!mineOnly || saved.has(deal.id) || voted.has(deal.id)),
+          (!mineOnly || saved.has(deal.id) || voted.has(deal.id)) &&
+          (lead === null || (!deal.redacted && deal.leadType === lead)) &&
+          (stage === null || (!deal.redacted && stageBucket(deal) === stage)),
       ),
-    [deals, filters, mineOnly, saved, voted],
+    [deals, filters, mineOnly, saved, voted, lead, stage],
   );
 
   return (

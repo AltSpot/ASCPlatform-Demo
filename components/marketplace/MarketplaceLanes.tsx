@@ -33,7 +33,7 @@
  * dashboard links there and Spot reads the query to know which room
  * it is in.
  */
-import { Clock, Radar, Star, Store, Users } from 'lucide-react';
+import { Clock, Radar, Star, Store, Users, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import TaxonomyFilters, {
@@ -44,6 +44,12 @@ import OfferingsGate from '@/components/OfferingsGate';
 import RadarBoard from '@/components/radar/RadarBoard';
 import HowItWorks from '@/components/HowItWorks';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
+import {
+  LEAD_FILTER_LABEL,
+  NO_QUICK_FILTER,
+  STAGE_LABEL,
+  type QuickFilter,
+} from '@/lib/explore';
 import { daysLeft, EMPTY } from '@/lib/format';
 import type { RelationshipView } from '@/lib/relationship';
 import { ASSET_CLASS_KEYS, INDUSTRY_KEYS, isAssetClass, type AssetClass } from '@/lib/taxonomy';
@@ -61,6 +67,7 @@ export default function MarketplaceLanes({
   companies,
   radarSourced = [],
   initialView,
+  initialFilter = NO_QUICK_FILTER,
   locked,
 }: {
   deals: DealShelfItem[];
@@ -72,6 +79,8 @@ export default function MarketplaceLanes({
   /** Open deals that came off the Radar. Shown as just opened, from the Radar. */
   radarSourced?: string[];
   initialView: 'current' | 'radar';
+  /** Where the dashboard's Explore tiles send a member: already filtered. */
+  initialFilter?: QuickFilter;
   /**
    * Where the member stands when offerings are not open to them yet. Null
    * once they are. The shelf is empty in that case because the server
@@ -80,8 +89,14 @@ export default function MarketplaceLanes({
   locked: RelationshipView | null;
 }) {
   const [filter, setFilter] = useState<TaxonomyFilterState>({
-    assetClass: null,
-    industry: null,
+    assetClass: initialFilter.assetClass,
+    industry: initialFilter.industry,
+  });
+  /* Who leads and the stage apply to the shelf only, and show as pills a
+     member can clear, beside the class and industry row. */
+  const [shelfOnly, setShelfOnly] = useState({
+    lead: initialFilter.lead,
+    stage: initialFilter.stage,
   });
   const [lane, setLane] = useState<Lane>(initialView === 'radar' ? 'radar' : 'invest');
   const [mineOnly, setMineOnly] = useState(false);
@@ -146,9 +161,15 @@ export default function MarketplaceLanes({
   );
 
   useEffect(() => {
-    if (initialView !== 'radar') return;
-    document.getElementById('radar')?.scrollIntoView({ block: 'start' });
-  }, [initialView]);
+    if (initialView === 'radar') {
+      document.getElementById('radar')?.scrollIntoView({ block: 'start' });
+      return;
+    }
+    const f = initialFilter;
+    if (f.assetClass || f.industry || f.lead || f.stage) {
+      document.getElementById('open-now')?.scrollIntoView({ block: 'start' });
+    }
+  }, [initialView, initialFilter]);
 
   /* Light the pill for whichever lane is under the bar. */
   useEffect(() => {
@@ -259,9 +280,35 @@ export default function MarketplaceLanes({
           badges={dealCounts}
           inline
         />
+        {shelfOnly.lead || shelfOnly.stage ? (
+          <div className={s.quickPills}>
+            {shelfOnly.lead ? (
+              <button
+                type="button"
+                className={s.quickPill}
+                onClick={() => setShelfOnly((f) => ({ ...f, lead: null }))}
+                aria-label={`Clear ${LEAD_FILTER_LABEL[shelfOnly.lead]}`}
+              >
+                {LEAD_FILTER_LABEL[shelfOnly.lead]}
+                <X size={12} strokeWidth={1.8} aria-hidden="true" />
+              </button>
+            ) : null}
+            {shelfOnly.stage ? (
+              <button
+                type="button"
+                className={s.quickPill}
+                onClick={() => setShelfOnly((f) => ({ ...f, stage: null }))}
+                aria-label={`Clear ${STAGE_LABEL[shelfOnly.stage]}`}
+              >
+                {STAGE_LABEL[shelfOnly.stage]}
+                <X size={12} strokeWidth={1.8} aria-hidden="true" />
+              </button>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
-      <section className={s.lane} ref={investRef} aria-labelledby="lane-invest">
+      <section className={s.lane} id="open-now" ref={investRef} aria-labelledby="lane-invest">
         <header className={s.laneHead}>
           {!locked && (
             <span className="live-pill">
@@ -285,6 +332,8 @@ export default function MarketplaceLanes({
             filter={filter}
             bridgeHref="#radar"
             radarSourced={radarSourced}
+            lead={shelfOnly.lead}
+            stage={shelfOnly.stage}
             mineOnly={mineOnly}
             onWatchChange={(id, on) =>
               setSavedIds((ids) => (on ? [...ids.filter((x) => x !== id), id] : ids.filter((x) => x !== id)))

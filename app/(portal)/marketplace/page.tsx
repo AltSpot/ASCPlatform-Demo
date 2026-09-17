@@ -20,17 +20,18 @@ import { canSeeOfferings } from '@/lib/relationship';
 import { getRadarBoard } from '@/lib/repositories/radar';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
+import { parseQuickFilter } from '@/lib/explore';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MarketplacePage({
   searchParams,
 }: {
-  searchParams: Promise<{ view?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const user = await requireUser();
 
-  const [{ view }, deals, subscriptions, radar, watchlist, relationship] = await Promise.all([
+  const [params, deals, subscriptions, radar, watchlist, relationship] = await Promise.all([
     searchParams,
     listDealsForViewer(user.id),
     listSubscriptions(user.id),
@@ -72,7 +73,8 @@ export default async function MarketplacePage({
       companies={stillVoting}
       radarSourced={radarSourced}
       locked={canSeeOfferings(relationship) ? null : relationship}
-      initialView={view === 'radar' ? 'radar' : 'current'}
+      initialView={params.view === 'radar' ? 'radar' : 'current'}
+      initialFilter={parseQuickFilter(params)}
     />
   );
 }

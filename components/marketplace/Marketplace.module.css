@@ -547,3 +547,28 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* Quick filters that came from Explore: lead and stage, one pill each,
+   pressed to clear. Lit like a chosen class chip. */
+.quickPills {
+  display: flex;
+  gap: 6px;
+}
+.quickPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+}
+.quickPill svg {
+  stroke: var(--fg-on-gold);
+}

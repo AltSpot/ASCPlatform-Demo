@@ -36,6 +36,8 @@ import PositionsTable, { type PositionRow } from '@/components/PositionsTable';
 import RadarRows, { type RadarRow } from '@/components/RadarRows';
 import SetupBanner from '@/components/SetupBanner';
 import WatchlistBlock from '@/components/WatchlistBlock';
+import ExploreTiles from '@/components/ExploreTiles';
+import { exploreGroups } from '@/lib/explore';
 import PopularCarousel, { type PopularItem } from '@/components/PopularCarousel';
 import NewsDigest from '@/components/terminal/NewsDigest';
 import { requireUser } from '@/lib/auth';
@@ -195,6 +197,7 @@ export default async function DashboardPage() {
    * a slug that happens to match.
    */
   const shelfById = new Map(shelf.map((deal) => [deal.id, deal]));
+  const exploreSlices = exploreGroups(shelf.filter((deal) => !deal.redacted));
   const subscribedDeals = new Set(subscriptions.map((s) => s.dealId));
 
 
@@ -418,6 +421,23 @@ export default async function DashboardPage() {
         <RadarRows rows={radarRows} />
       </CollapsibleSection>
       </div>
+
+      {/* Explore: every slice of the shelf as a tile, one press into the
+          marketplace already filtered (lib/explore.ts). Only slices with
+          something open, and nothing at all before offerings open. */}
+      {exploreSlices.length > 0 ? (
+        <CollapsibleSection
+          id="explore"
+          title="Explore"
+          action={
+            <Link className={d.sectionLinkInline} href="/marketplace">
+              All deals →
+            </Link>
+          }
+        >
+          <ExploreTiles groups={exploreSlices} />
+        </CollapsibleSection>
+      ) : null}
 
       {/* Your investments: one figure, one sentence, the curve, two quiet
           figures, and the positions that make them up, all on one card.

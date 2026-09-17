@@ -1,0 +1,79 @@
+/* Explore: rows of small glass tiles, each a way into the shelf. */
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.groupTitle {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 108px;
+  padding: 16px;
+  border: 1px solid var(--card-edge);
+  border-radius: var(--r-lg);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift);
+  color: var(--as-text);
+  text-decoration: none;
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) ease;
+}
+.tile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  color: var(--as-text);
+}
+.tile:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+}
+.glyph svg {
+  stroke: var(--as-gold);
+}
+
+.label {
+  margin-top: auto;
+  font-size: 14.5px;
+  font-weight: var(--w-medium);
+  line-height: 1.25;
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
