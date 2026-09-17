@@ -1,0 +1,134 @@
+{
+  "out": "screenshots/phase2/13-counsel-confirmed",
+  "shots": [
+    {
+      "name": "01-dashboard-ember-panes",
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1000 }
+      ]
+    },
+    {
+      "name": "02-marketplace-ember-calmer",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1000 },
+        { "eval": "(() => { const t = document.body.innerText; for (const m of ['$5,000', '$10,000', '$25,000']) { /* minimums show in the quick look, not the card face: open one */ } const quiet = document.querySelectorAll('.deal-card .btn-quiet').length; if (quiet < 5) throw new Error('Quick look is not the quiet pill'); })()" },
+        { "scroll": "#open-now" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "03-minimums-span",
+      "capture": false,
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "wait": 800 },
+        { "eval": "fetch('/api/deals').then(r => r.json()).then(d => { const list = Array.isArray(d) ? d : (d.deals ?? d.items ?? []); const mins = new Set(list.map(x => x.minInvestment)); for (const m of [5000, 10000, 25000]) if (!mins.has(m)) throw new Error('shelf lacks a ' + m + ' minimum: ' + [...mins].join(',')); })" }
+      ]
+    },
+    {
+      "name": "04-checkout-fee-table",
+      "steps": [
+        { "go": "/reshoot?to=/invest/calder" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1400 },
+        { "eval": "(() => { const t = document.body.innerText; if (!/formation and administration fee/i.test(t)) throw new Error('no flat fee row'); if (!/pro rata/i.test(t)) throw new Error('no pro rata line'); if (!/ends early/.test(t) || !/runs longer/.test(t)) throw new Error('both halves missing'); if (!/pass through at cost/i.test(t)) throw new Error('no pass-through line'); if (!/escrow belongs to investors/i.test(t)) throw new Error('no escrow interest line'); [...document.querySelectorAll('h3')].find(h => /Amount/.test(h.textContent))?.scrollIntoView({ block: 'start' }); })()" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "05-deal-terms-fees",
+      "steps": [
+        { "go": "/reshoot?to=/deals/calder" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1200 },
+        { "eval": "(() => { const t = document.body.innerText; if (!/\\$10,000 per SPV/.test(t)) throw new Error('flat fee figure not shown'); if (!/1% per year/.test(t)) throw new Error('management fee figure not shown'); })()" },
+        { "scroll": "#terms" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "06-scenarios-simplified",
+      "steps": [
+        { "go": "/reshoot?to=/deals/ferrule" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1200 },
+        { "eval": "(() => { const sec = document.querySelector('#scenarios'); if (!sec) throw new Error('no scenarios on Ferrule'); const t = sec.innerText; if (!/Nothing recovered/.test(t)) throw new Error('no total loss'); if (!/Net multiple/i.test(t)) throw new Error('no net column'); if (!/Illustrative only/.test(t)) throw new Error('disclaimer missing'); const ths = sec.querySelectorAll('table')[0].querySelectorAll('th').length; if (ths !== 4) throw new Error('main table has ' + ths + ' columns'); })()" },
+        { "scroll": "#scenarios" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "07-spot-daylight",
+      "steps": [
+        { "go": "/reshoot?to=/deals/calder" },
+        { "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'" },
+        { "wait": 1200 },
+        { "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: { question: 'Is there a limit on how many members an SPV can have?' } }))" },
+        { "wait": 1800 },
+        { "eval": "(() => { const p = document.getElementById('spotbot-panel'); if (!p) throw new Error('no panel'); const paras = p.querySelectorAll('p').length; if (paras < 3) throw new Error('answer is one paragraph'); if (!/warns/.test(p.innerText)) throw new Error('no limits meter'); })()" }
+      ]
+    },
+    {
+      "name": "08-spot-expanded-head-visible",
+      "capture": false,
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "wait": 900 },
+        { "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: {} }))" },
+        { "wait": 600 },
+        { "eval": "document.querySelector('#spotbot-panel button[aria-label=\"Expand the conversation\"]').click()" },
+        { "wait": 500 },
+        { "eval": "(() => { const r = document.getElementById('spotbot-panel').getBoundingClientRect(); if (r.top < 0) throw new Error('expanded panel head is off screen: top ' + r.top); })()" }
+      ]
+    },
+    {
+      "name": "09-ask-spot-closes-panel",
+      "capture": false,
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "wait": 1000 },
+        { "eval": "[...document.querySelectorAll('button')].find(b => /how it works/i.test(b.textContent)).click()" },
+        { "wait": 600 },
+        { "eval": "[...document.querySelectorAll('dialog[open] button')].find(b => /Ask Spot/.test(b.textContent)).click()" },
+        { "wait": 900 },
+        { "eval": "(() => { if (document.querySelector('dialog[open]')) throw new Error('side panel still open after Ask Spot'); if (!document.getElementById('spotbot-panel')) throw new Error('Spot did not open'); })()" }
+      ]
+    },
+    {
+      "name": "10-tour-spotlight",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=%2Fdashboard%3Ftour%3D1" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1200 },
+        { "eval": "(() => { const d = document.querySelector('[aria-label=\"Walkthrough\"]'); if (!d) throw new Error('no tour'); if (d.querySelectorAll('li').length < 8) throw new Error('no agenda on the first card'); [...d.querySelectorAll('button')].find(b => /Show me/.test(b.textContent)).click(); })()" },
+        { "wait": 700 },
+        { "eval": "(() => { const d = document.querySelector('[aria-label=\"Walkthrough\"]'); if (!/Your dashboard/.test(d.innerText)) throw new Error('second card not reached'); })()" }
+      ]
+    },
+    {
+      "name": "11-preferences-chosen-chip",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/preferences" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1000 },
+        { "eval": "[...document.querySelectorAll('button')].find(b => /Tune what I see/.test(b.textContent)).click()" },
+        { "wait": 500 },
+        { "eval": "(() => { const chip = [...document.querySelectorAll('button[aria-pressed]')].find(b => /Venture/.test(b.textContent)); chip.click(); const disc = chip.querySelector('span'); const bg = getComputedStyle(disc).backgroundImage; if (/gradient/.test(bg)) throw new Error('chosen glyph disc is still a gradient'); })()" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "12-no-wait-after-approval",
+      "capture": false,
+      "steps": [
+        { "go": "/reshoot?as=new&to=/wizard" },
+        { "wait": 1200 },
+        { "eval": "(() => { const t = document.body.innerText; if (/cooling-off|cooling off/i.test(t)) throw new Error('wizard still mentions a cooling-off period'); if (!/the moment your answers are approved/i.test(t)) throw new Error('wizard does not say offerings open on approval'); })()" }
+      ]
+    }
+  ]
+}

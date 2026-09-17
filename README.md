@@ -119,7 +119,8 @@ macOS login. `uninstall` removes it.
 1. **Login**, then first-time setup.
 2. **Setup**, Rule 506(b): the investor questionnaire (accreditation
    basis, experience, sophistication; AltSpot evaluates it, and approval
-   starts the relationship and a cooling-off period), W-9 into the Vault,
+   establishes the relationship and opens offerings at once, for deals
+   that open after that date), W-9 into the Vault,
    KYC (ID upload plus a live camera capture), investment profile, bank
    link through a stand-in for Plaid Link. Once approved, a card asks for
    deal preferences.
@@ -359,7 +360,9 @@ credential.
 | `ASC_DEMO_MODE` | `lib/config.ts` | `true` (anything but the string `"false"` is on) |
 | `ASC_EPHEMERAL` | `lib/config.ts` | `true`. Sweeps demo accounts and isolates allocation per visitor |
 | `ASC_DEMO_TTL_HOURS` | `lib/config.ts` | `6`. How long a demo account survives |
-| `ASC_SHOW_FEE_TERMS`, `ASC_SHOW_CARRY_TERMS` | `lib/config.ts`, inlined at build | `false`. Fee and carry figures stay behind them until counsel confirms |
+| `ASC_SHOW_FEE_TERMS` | `lib/config.ts`, inlined at build | `true` since counsel confirmed the fee (2026-09-17) |
+| `ASC_SHOW_CARRY_TERMS` | `lib/config.ts`, inlined at build | `false`. The carry figure stays behind it |
+| `ASC_COOLING_OFF_DAYS` | `lib/config.ts` | `0`. Offerings open on approval; a seasoning period is one setting away |
 | `ASC_SHOW_RETURN_SCENARIOS` | `lib/config.ts`, inlined at build | `false`. Illustrative scenarios on a deal page (`lib/scenarios.ts`); counsel approves before it goes on. The demo film's build sets it |
 | `PORT` | the serve scripts, `npm start` | `4000` |
 | `RENDER_API_KEY` | `scripts/render.mjs` only | unset. A real secret; needed only to deploy |

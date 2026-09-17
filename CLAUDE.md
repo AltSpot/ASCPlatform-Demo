@@ -801,7 +801,10 @@ These are the claims the product makes. Do not let a change quietly break them.
   `lib/minimums.ts`: $10,000 standard, a $5,000 floor on vehicles under
   $250,000, $25,000 on vehicles over $1,000,000, set per offering (the
   seed's `FUNDING[id].minInvestment` overrides it, as a lead would). The
-  platform's headline is **"from $5,000"**, never less. The subscription
+  platform's headline is **"from $5,000"**, never less. The shelf's
+  allocations span the bands (Basalt at $240K is $5,000; Loomline and
+  Meridel under $1M are $10,000; the rest $25,000; Halyard overridden to
+  $10,000 by its lead). The subscription
   routes enforce `Deal.minInvestment`; the deal page, checkout, the quick
   look and Spot explain it with `explainMinimum`.
 - **Portfolio construction is taught, never prescribed** (`lib/portfolio-plan.ts`):
@@ -817,12 +820,25 @@ These are the claims the product makes. Do not let a change quietly break them.
   the platform describes the structure and leaves the member's number to
   the member and their advisor. The ACA portfolio findings appear once, in
   the Terminal piece, attributed and with a source note; Ben to confirm.
-- **Fee and carry numbers render only behind `SHOW_FEE_TERMS` and
-  `SHOW_CARRY_TERMS`**, both off by default and inlined at build through
-  `next.config.ts`. Every word about fees comes from `lib/fees.ts`
-  (`dealFeeRows`, `feeSentence`, `NO_CAPITAL_CALLS`), so a flag cannot
-  show a figure on one surface and hide it on another; `tests/fees.test.ts`
-  asserts no figure appears with the flags off. **No capital calls, ever.**
+- **The fee, as counsel confirmed it (2026-09-17, items 5 and 8).** The
+  management fee is 1% per year of committed capital, five years funded at
+  closing; **if the vehicle ends early the unused balance is returned, and
+  if it runs longer the fee continues to accrue and is paid from
+  distributions before carried interest** (both halves, always, or the
+  disclosure is one-sided). The flat $10,000 is a formation and
+  administration fee per SPV for enumerated services: the SPV pays it
+  once and each member bears a **pro rata share by capital committed,
+  settled at close**; checkout shows that share as the range it can land
+  in between the minimum and the allocation (`flatFeeShareRange`). Blue
+  sky, tax, K-1 and other SPV expenses pass through at cost. Escrow
+  interest belongs to investors; float applies only to pass-throughs.
+  Nothing is priced as a percentage of capital raised or per investor.
+- **Fee figures now show by default** (`SHOW_FEE_TERMS` on since counsel
+  confirmed); carry stays behind `SHOW_CARRY_TERMS`, off. Both are inlined
+  at build through `next.config.ts`. Every word about fees comes from
+  `lib/fees.ts` (`dealFeeRows`, `feeSentence`, the `*_LINE` constants), so
+  a flag cannot show a figure on one surface and hide it on another.
+  **No capital calls, ever.**
 - **Illustrative return scenarios render only behind `SHOW_RETURN_SCENARIOS`**
   (off by default, inlined at build) and only for a deal whose
   `scenariosJson` passes every check in `lib/scenarios.ts`: three or more
@@ -837,7 +853,10 @@ These are the claims the product makes. Do not let a change quietly break them.
   first showing is audited (`scenarios.shown`). Never fed by the internal
   diligence score, never compared to AltSpot's past deals, never after tax.
   Counsel (Ben) approves before the switch goes on; the demo build for the
-  film runs with it on, over Calder's invented and labelled set
+  film runs with it on. Every open deal with an entry valuation in its
+  terms carries a set built by `scenariosFor` in the seed (invented,
+  labelled); Calder writes its own. The component shows net alone in the
+  table, which the spec allows, with gross beside net under Methodology
 - **AltSpot's own committed capital is stored on every deal but not shown.**
   `altspotCommitted` stays in the schema, the seed and `DealSummary`; no card,
   hero, stat band or Spot answer prints it. Removed from every surface by
@@ -858,8 +877,14 @@ These are the claims the product makes. Do not let a change quietly break them.
   2026). A member registers, completes the investor questionnaire
   (`lib/relationship.ts`: accreditation basis, experience, sophistication),
   AltSpot evaluates it, and the approval date is stored as
-  `User.relationshipEstablishedAt`. Offerings open after the cooling-off period.
-  Before that, `lib/repositories/deals.ts` sends **no deal at all**, not a
+  `User.relationshipEstablishedAt`. **Offerings open the moment the
+  evaluation approves a member** (counsel, 2026-09-17, item 11: no waiting
+  period is legally mandated; under the Citizen VC letter the relationship's
+  quality and its sequence before the offer are what matter). `COOLING_OFF_DAYS`
+  is kept, at zero, so a seasoning period is a setting. The LLC's existing
+  investor relationships carry over (item 12), and every member goes through
+  the questionnaire regardless.
+  Before approval, `lib/repositories/deals.ts` sends **no deal at all**, not a
   teaser: no name, sector, line or artwork, an empty list from `/api/deals`, and
   the same 403 for every id from `/api/deals/:id` so ids cannot be probed. The
   Radar stays open but withholds which name became a deal. Accreditation is a
