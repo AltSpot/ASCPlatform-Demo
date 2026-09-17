@@ -158,12 +158,12 @@ export default async function DealPage({
       />
     ) : resume ? (
       resume.state === 'docs_signed' ? (
-        <Link className={className} href={`/payment/${resume.id}`}>
-          Send to escrow
+        <Link className={`${className} btn-action`} href={`/payment/${resume.id}`}>
+          Complete investment
         </Link>
       ) : (
-        <Link className={className} href={`/invest/${deal.id}`}>
-          Resume your investment
+        <Link className={`${className} btn-action`} href={`/invest/${deal.id}`}>
+          Finish signing
         </Link>
       )
     ) : (

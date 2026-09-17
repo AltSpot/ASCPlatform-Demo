@@ -55,12 +55,12 @@ export default function DealPeek({
 
   const invest = resume ? (
     resume.state === 'docs_signed' ? (
-      <Link className="btn btn-gold" href={`/payment/${resume.id}`}>
-        Send to escrow
+      <Link className="btn btn-action" href={`/payment/${resume.id}`}>
+        Complete investment
       </Link>
     ) : (
-      <Link className="btn btn-gold" href={`/invest/${deal.id}`}>
-        Resume
+      <Link className="btn btn-action" href={`/invest/${deal.id}`}>
+        Finish signing
       </Link>
     )
   ) : deal.subscribable && deal.members > 0 && deal.members >= deal.investorCap ? (

@@ -8,8 +8,8 @@
  * kind of thing:
  *
  *   art, top left       ONE status, the most important that applies:
- *                       Just opened (with the Radar glyph if it came off
- *                       the Radar), SPV full, or View only
+ *                       your own unfinished investment first, then View
+ *                       only, SPV full, or Just opened
  *   art, top right      the star
  *   art, bottom left    the member's own marks: Saved, You voted
  *   body                the name, then the deal type and round as one
@@ -19,8 +19,8 @@
  * The deal type used to be a chip on the art, fighting the status for the
  * same corner; it reads better as the line under the name, where the
  * deal page's hero puts it too. Where a member is mid-way through a deal,
- * the main button already says so (Resume, Send to escrow), so there is
- * no chip for it.
+ * the main button says so (Finish signing, Complete investment) in the
+ * .btn-action style, and the status seat says why.
  *
  * COHESIVE, BUT NOT ALIKE. The art band is the one place a company is
  * itself: its drawn mark on a ground lit by its hue (lib/brand.ts).
@@ -28,7 +28,7 @@
  *
  * No fee or carry figure anywhere on it.
  */
-import { Eye, PanelRightOpen, Radar, Sparkles, Star, Users } from 'lucide-react';
+import { CircleAlert, Eye, PanelRightOpen, Radar, Sparkles, Star, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -84,14 +84,16 @@ export default function DealCard({
     );
   }
 
+  /* A deal the member started asks them to finish, in the one button
+     style that out-ranks every View deal on the shelf. */
   const primary = resume ? (
     resume.state === 'docs_signed' ? (
-      <Link className="btn btn-gold btn-sm" href={`/payment/${resume.id}`}>
-        Send to escrow
+      <Link className="btn btn-action btn-sm" href={`/payment/${resume.id}`}>
+        Complete investment
       </Link>
     ) : (
-      <Link className="btn btn-gold btn-sm" href={`/invest/${deal.id}`}>
-        Resume
+      <Link className="btn btn-action btn-sm" href={`/invest/${deal.id}`}>
+        Finish signing
       </Link>
     )
   ) : (
@@ -105,7 +107,16 @@ export default function DealCard({
   const justOpened = isJustOpened(deal.launchedAt);
 
   /* One status, in order of what a member most needs to know. */
-  const status = viewOnly
+  const status = resume
+    ? {
+        tone: 'action',
+        icon: CircleAlert,
+        label: resume.state === 'docs_signed' ? 'Signed · complete it' : 'Started',
+        title: resume.state === 'docs_signed'
+          ? 'You signed. Send your subscription to escrow before admissions close.'
+          : 'You started this investment. Finish signing to reserve your spot.',
+      }
+    : viewOnly
     ? { tone: 'quiet', icon: Eye, label: 'View only', title: 'Opened before you joined' }
     : full
       ? { tone: 'quiet', icon: Users, label: 'SPV full', title: 'At its member limit. Join the waitlist on the deal.' }

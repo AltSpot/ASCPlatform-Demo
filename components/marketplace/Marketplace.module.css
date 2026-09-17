@@ -572,3 +572,12 @@
 .quickPill svg {
   stroke: var(--fg-on-gold);
 }
+
+/* Your own unfinished investment: the status that outranks the rest. */
+.status[data-tone='action'] {
+  background: var(--action-fill);
+  color: var(--fg-on-action);
+}
+.status[data-tone='action'] svg {
+  stroke: var(--fg-on-action);
+}
