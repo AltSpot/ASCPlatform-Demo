@@ -137,9 +137,9 @@ const SEED_BOOK = [
  * The dashboard shows each open position's timeline: what has happened,
  * what has to happen next, and by when. A demo account that holds only
  * a closed position never renders any of it, so the surface that
- * matters most, a funding window running out, was the one nobody could
- * see. This writes one signed-but-unfunded commitment with three days
- * left on its ten day window.
+ * matters most, an escrow deadline coming up, was the one nobody could
+ * see. This writes one signed subscription waiting to go to escrow, due
+ * by the deal's admission cut-off.
  *
  * Three rather than eight: the window is most of the way through, so
  * the bar is visibly spent and the row sits inside the threshold where
@@ -643,7 +643,7 @@ async function seedBook(userId: string, now: number): Promise<void> {
 
 /**
  * DEMO SEAM — fabricates the in-flight commitment described on
- * SEED_PENDING, so the dashboard has a live funding window to draw.
+ * SEED_PENDING, so the dashboard has a live escrow deadline to draw.
  *
  * Written straight to the table rather than through
  * lib/repositories/subscriptions.ts on purpose: the state machine is

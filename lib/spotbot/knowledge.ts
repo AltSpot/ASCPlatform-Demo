@@ -88,10 +88,10 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
     answer:
       'Accredited investor is an SEC definition in Rule 501(a) of Regulation D. The common paths are income over 200,000 dollars individually or 300,000 dollars with a spouse in each of the last two years with the same expected this year, or a net worth over 1,000,000 dollars excluding your primary residence. Certain license holders and entities qualify too. AltSpot offerings are open only to accredited investors. You certify which standard you meet in the investor questionnaire, AltSpot evaluates it, and the answers and the date are kept as the record.',
     source: 'Regulation D, Rule 501(a) and Rule 506(b)',
-    related: ['verification-506c', 'kyc', 'wizard-steps'],
+    related: ['relationship-506b', 'kyc', 'wizard-steps'],
   },
   {
-    id: 'verification-506c',
+    id: 'relationship-506b',
     question: 'Why is there a questionnaire and a wait before I see deals?',
     keywords: [
       '506b',

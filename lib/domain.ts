@@ -32,7 +32,7 @@ export type SubscriptionState =
  * `assertTransition`, so an invalid state can never reach the database.
  *
  *   started -> docs_signed -> funded -> accepted -> closed
- *   exits:  expired (funding window lapsed) | refunded | cut_back
+ *   exits:  expired (not in escrow by the admission cut-off) | refunded | cut_back
  */
 const TRANSITIONS: Record<SubscriptionState, readonly SubscriptionState[]> = {
   started: ['docs_signed'],

@@ -117,19 +117,24 @@ macOS login. `uninstall` removes it.
 ### The walkthrough
 
 1. **Login**, then first-time setup.
-2. **Setup**, five steps: accreditation letter (downloaded, signed,
-   uploaded, reviewed in-house, valid five years), W-9 into the Vault,
+2. **Setup**, Rule 506(b): the investor questionnaire (accreditation
+   basis, experience, sophistication; AltSpot evaluates it, and approval
+   starts the relationship and a cooling-off period), W-9 into the Vault,
    KYC (ID upload plus a live camera capture), investment profile, bank
-   link through a stand-in for Plaid Link. The last two are skippable.
-3. **Dashboard**: portfolio value, positions, pending-funding countdowns.
-4. **Marketplace**: four deals, allocation bars, AltSpot's own committed
-   capital on every card.
-5. **Deal**: one scrollable page. Committed capital, the numbers, the
-   story, the thesis, the trend, risk, terms, fees, data room.
+   link through a stand-in for Plaid Link. Once approved, a card asks for
+   deal preferences.
+3. **Dashboard**: what needs you, most popular, watchlist and votes,
+   Explore, your investments.
+4. **Marketplace**: open deals with the funding picture (raised against
+   the minimum to close), Quick look, and the Radar.
+5. **Deal**: one scrollable page. The funding picture, the numbers, the
+   story, risk, terms and what it costs, data room.
 6. **Invest**: profile and amount, then a split-screen subscription
    agreement that fills itself in as you confirm each section. One typed
    signature executes everything.
-7. **Payment**: fund by ACH now, or hold the spot for ten days.
+7. **Escrow**: send the subscription to escrow by ACH, before admissions
+   close (24 hours before the wire). The deal closes when its minimum is
+   met; if it is not, escrow returns the money.
 8. **Docs / Profiles / Settings**: filed agreements, the Vault, demo
    reset.
 
@@ -202,18 +207,20 @@ auth and session routes calls `requireUser()` first. Errors come back as
 | `auth/demo-login` | POST | Demo only. Mints a pre-onboarded persona |
 | `session` | GET | Current user, setup status, invest gate |
 | `wizard`, `wizard/complete` | GET, POST | Setup progress |
-| `accreditation/letter`, `/upload`, `/verify` | POST | Certification letter, upload, reviewer confirmation |
+| `accreditation/questionnaire` | POST | The Rule 506(b) investor questionnaire, evaluated on submission |
 | `kyc/id`, `kyc/selfie`, `kyc/submit` | POST | Identity capture and submission |
 | `vault` | GET, PUT | Taxpayer info, captured once, reused everywhere |
 | `profiles`, `profiles/[id]/default` | GET, POST | Investing entities |
 | `bank` | GET, POST | Linked funding accounts |
-| `deals`, `deals/[id]` | GET | The shelf and a single deal, redacted to a teaser unless the caller is a verified accredited investor |
+| `deals`, `deals/[id]` | GET | The shelf and a single deal, only for a member past the 506(b) relationship gate; the same 403 for any id otherwise |
+| `deals/[id]/waitlist` | POST | Wait for a spot in an SPV at its investor cap |
+| `preferences` | GET, PUT | Deal preferences, for matchmaking |
 | `subscriptions` | GET, POST | List, and start a commitment (invest gate enforced here) |
 | `subscriptions/resumable` | GET | Unfinished commitment for a deal |
 | `subscriptions/[id]` | GET, PATCH, DELETE | Read, change amount, cancel |
 | `subscriptions/[id]/confirm` | POST | Confirm one section of the agreement |
-| `subscriptions/[id]/sign` | POST | Execute. Decrements allocation |
-| `subscriptions/[id]/fund` | POST | Funding instruction |
+| `subscriptions/[id]/sign` | POST | Execute. Re-checks admissions, sets the deadline to the cut-off |
+| `subscriptions/[id]/fund` | POST | Send to escrow (the code keeps the word funded) |
 | `documents`, `documents/[id]/download` | GET | Filed documents |
 | `radar` | GET | The AltSpot Radar board, with this member's own indications |
 | `radar/interest` | POST | Indicate interest in a Radar name. Demand signal, not a commitment |
@@ -239,7 +246,7 @@ client directly.
 
 ```
 started -> docs_signed -> funded -> accepted -> closed
-exits:   expired (10-day funding window lapsed) | refunded | cut_back
+exits:   expired (not in escrow by the admission cut-off) | refunded | cut_back
 ```
 
 `assertTransition` enforces it, called from
@@ -259,13 +266,13 @@ investor must satisfy before a subscription can be started. The UI
 version of that gate is a courtesy; the route handler re-checks it.
 
 It holds one more gate, on reading rather than on investing.
-`canViewDealDetail` decides whether a member may be shown a deal's
-substantive package, and turns on accreditation alone: Rule 506(c)
-restricts who may be shown an offering, while the W-9 and the identity
+`canViewDealDetail` decides whether a member may be shown offerings at
+all, and turns on the Rule 506(b) relationship alone: an approved
+questionnaire and a completed cooling-off period. The W-9 and the identity
 check are money-movement requirements. `lib/repositories/deals.ts`
-applies it, so an unverified member's browser is never sent the
-figures, the terms, the narrative or the data room. The blur on the
-gated deal page sits over placeholder shapes, not over withheld values.
+applies it, so before the gate opens a member's browser is sent no deal
+at all, not even a name. A member may join only deals that opened after
+their relationship date; earlier deals are shown view-only.
 
 ### `lib/fees.ts` is the only place fee math lives
 
@@ -275,11 +282,11 @@ The deal page, the checkout summary, the subscription agreement and the
 funding page therefore cannot disagree. Money is **integer dollars**
 everywhere, including in the database. No floats.
 
-The economics the product commits to:
-
-- **One 5% management fee, charged once at closing.** Not annual.
-- **10% carried interest on profits at exit**, on every deal.
-- Nothing else. No annual fees, no capital calls, no admin reserve.
+The economics (docs/structure-decisions-sept-2026.md section 15): a flat
+fee per SPV, plus an annualized management fee funded once at closing as a
+reserve and drawn down as earned, and carried interest on profits at exit.
+No capital calls. Figures render only behind `SHOW_FEE_TERMS` and
+`SHOW_CARRY_TERMS`, both off until counsel confirms.
 
 ### The subscription document
 
@@ -370,7 +377,7 @@ run on every save.
 | File | What it defends |
 | --- | --- |
 | `tests/domain.test.ts` | The subscription state machine, checked over every ordered pair of states; the invest gate including the verified-but-expired boundary; and the deal view gate, with the redaction proved to be a whitelist |
-| `tests/fees.test.ts` | The fee model: 5% once at closing, 10% carry at exit, and the shape assertions that make a third fee impossible to add quietly |
+| `tests/fees.test.ts` | The fee model (flat fee per SPV plus a reserve funded at close, carry at exit), the shape assertions, and that no figure shows with the switches off |
 | `tests/format.test.ts` | Taxpayer ID masking, the UTC pinning that prevents hydration mismatches, and the `EMPTY` placeholder |
 | `tests/subscription-sections.test.ts` | That the agreement is internally coherent, that confirmation codes and answer keys stay stable, and that the document states the same fee model `lib/fees.ts` computes |
 | `tests/spotbot-gate.test.ts` | That advice-seeking questions are refused with the right reason, that mechanics questions are not, and that the gate runs before the answer engine |

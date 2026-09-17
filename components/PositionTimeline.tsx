@@ -63,7 +63,7 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
   const funded = state === 'funded';
   const urgent = state === 'docs_signed' && position.daysRemaining <= URGENT_DAYS;
 
-  /* How much of the ten days is gone. The bar reads as the window
+  /* How much of the last ten days before admissions close is gone. The bar reads as the window
      closing rather than as progress toward something good. */
   const spent = Math.min(
     100,

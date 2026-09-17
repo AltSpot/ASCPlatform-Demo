@@ -18,7 +18,7 @@
  *     `funded` is driven by the provider's settlement webhook, which
  *     calls `fundSubscription` with the provider's transfer reference in
  *     place of `method`, and a failed or returned transfer leaves the
- *     10-day funding window running.
+ *     subscription waiting for escrow until admissions close.
  *   Replacement: add the transfer adapter under lib/integrations/, call
  *     it here, and add a webhook route that owns the `fundSubscription`
  *     call. Nothing downstream of the state machine changes.
