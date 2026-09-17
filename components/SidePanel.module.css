@@ -105,3 +105,41 @@
     animation: none;
   }
 }
+
+/* Out as smoothly as in: slide and fade, and the scrim fades with it. */
+.sheet[open] {
+  animation: sheet-in 0.42s cubic-bezier(0.22, 0.8, 0.26, 1);
+}
+.sheet[open]::backdrop {
+  animation: scrim-in 0.42s ease both;
+}
+.sheet[data-closing='true'] {
+  animation: sheet-out 0.26s cubic-bezier(0.4, 0, 0.8, 0.4) forwards;
+}
+.sheet[data-closing='true']::backdrop {
+  animation: scrim-out 0.26s ease forwards;
+}
+@keyframes sheet-out {
+  to {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+}
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes scrim-out {
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet[open],
+  .sheet[data-closing='true'],
+  .sheet[data-closing='true']::backdrop,
+  .sheet[open]::backdrop {
+    animation: none;
+  }
+}

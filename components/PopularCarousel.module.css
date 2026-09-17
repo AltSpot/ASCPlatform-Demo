@@ -78,15 +78,17 @@
 /* More float (Tyler, 2026-09-17): a longer rise with a soft settle and a
    hair of tilt, staggered so the row moves like a swell, not in step. */
 @keyframes drift {
+  /* No rotation: a rotated layer re-samples its text, which is what made
+     the names on these tiles look soft. */
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translate3d(0, 0, 0);
   }
   35% {
-    transform: translateY(-7px) rotate(-0.25deg);
+    transform: translate3d(0, -7px, 0);
   }
   65% {
-    transform: translateY(-4px) rotate(0.15deg);
+    transform: translate3d(0, -4px, 0);
   }
 }
 @media (prefers-reduced-motion: reduce) {

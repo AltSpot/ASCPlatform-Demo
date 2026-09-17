@@ -17,7 +17,7 @@
  * owns the data (a card) decides when it opens.
  */
 import { X } from 'lucide-react';
-import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 import s from './SidePanel.module.css';
@@ -49,11 +49,23 @@ export default function SidePanel({
     () => false,
   );
 
+  /* Closing plays the slide out before the dialog leaves the top layer. */
+  const [closing, setClosing] = useState(false);
   useEffect(() => {
     const el = dialog.current;
     if (!el) return;
-    if (open && !el.open) el.showModal();
-    if (!open && el.open) el.close();
+    if (open && !el.open) {
+      setClosing(false);
+      el.showModal();
+    }
+    if (!open && el.open) {
+      setClosing(true);
+      const done = window.setTimeout(() => {
+        el.close();
+        setClosing(false);
+      }, 260);
+      return () => window.clearTimeout(done);
+    }
   }, [open, mounted]);
 
   if (!mounted) return null;
@@ -63,9 +75,12 @@ export default function SidePanel({
       ref={dialog}
       className={s.sheet}
       data-width={width}
+      data-closing={closing}
       aria-label={label}
-      onClose={onClose}
-      onCancel={onClose}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
       onClick={(event) => {
         if (event.target === dialog.current) onClose();
       }}

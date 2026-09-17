@@ -71,8 +71,16 @@ function subscribe(onChange: () => void): () => void {
 }
 
 export function setTheme(next: Theme): void {
-  if (next === 'light' || next === 'ice') document.documentElement.dataset.theme = next;
-  else delete document.documentElement.dataset.theme;
+  const apply = () => {
+    if (next === 'light' || next === 'ice') document.documentElement.dataset.theme = next;
+    else delete document.documentElement.dataset.theme;
+  };
+  /* A crossfade where the browser has view transitions, a plain switch
+     where it does not. */
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (doc.startViewTransition && !reduce) doc.startViewTransition(apply);
+  else apply();
 
   try {
     window.localStorage.setItem(STORE, next);

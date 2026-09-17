@@ -278,3 +278,19 @@
   color: inherit;
   opacity: 0.7;
 }
+
+.menuList {
+  transform-origin: top left;
+  animation: menu-in 0.24s cubic-bezier(0.22, 0.8, 0.26, 1);
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menuList {
+    animation: none;
+  }
+}
