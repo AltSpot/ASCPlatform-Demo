@@ -107,7 +107,7 @@ export const POST = route(
         dealId: deal.id,
         subscriptionId: id,
         type: 'agreement',
-        note: 'Signed · awaiting funding',
+        note: 'Signed · awaiting escrow',
         bodyHtml: rendered.html,
         // Pinned server-side. The browser must not get to assert which
         // version of the documents an investor signed against.

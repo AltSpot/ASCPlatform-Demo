@@ -674,7 +674,7 @@ async function seedPendingCommitment(userId: string, now: number): Promise<void>
       subscriptionId: subscription.id,
       name: `Subscription Agreement: ${deal.entity}`,
       type: 'agreement',
-      note: 'Signed · awaiting funding',
+      note: 'Signed · awaiting escrow',
       savedAt: signedAt,
     },
   });
@@ -742,7 +742,7 @@ async function seedRecentBook(userId: string, now: number): Promise<void> {
           subscriptionId: subscription.id,
           name: `Subscription Agreement: ${deal.entity}`,
           type: 'agreement',
-          note: funded ? 'Signed · funded, awaiting countersign' : 'Signed · awaiting funding',
+          note: funded ? 'Signed · in escrow, awaiting close' : 'Signed · awaiting escrow',
           savedAt: at,
         },
       });

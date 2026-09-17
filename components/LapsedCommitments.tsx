@@ -67,7 +67,7 @@ export default function PendingCommitments({
             <span className="small">
               {p.daysRemaining === 1 ? 'day' : 'days'} left
               <br />
-              to fund
+              to send
             </span>
           </div>
 
@@ -80,15 +80,15 @@ export default function PendingCommitments({
               {p.dealName} · {money(p.amount)}
             </h3>
             <p className="small" style={{ marginTop: 4 }}>
-              Documents signed {dateStr(p.signedAt)}. Fund by{' '}
-              {dateStr(p.fundingDeadline)} to secure your allocation. After that, your
-              spot is released. Reminders go out every other day.
+              Documents signed {dateStr(p.signedAt)}. Send to escrow by{' '}
+              {dateStr(p.fundingDeadline)}, when admissions close, to be admitted at close.
+              After that, your spot is released.
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <Link className="btn btn-gold" href={`/payment/${p.id}`}>
-              Fund now
+              Send to escrow
             </Link>
             <button
               className="btn btn-quiet btn-sm"
@@ -121,7 +121,7 @@ export default function PendingCommitments({
             <p className="small">
               Your commitment to{' '}
               <b style={{ color: 'var(--paper)' }}>{e.dealName}</b> ({money(e.amount)})
-              lapsed unfunded and the allocation was released.
+              was not in escrow by the admission cut-off, and the allocation was released.
             </p>
           </div>
           <Link className="btn btn-ghost btn-sm" href={`/deals/${e.dealId}`}>

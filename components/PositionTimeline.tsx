@@ -50,7 +50,7 @@ export interface OpenPosition {
 /** Inside this many days the window stops being background information. */
 const URGENT_DAYS = 3;
 
-/** The funding window, stated in one place on this surface. */
+/** The bar's scale: the last this many days before admissions close. */
 const WINDOW_DAYS = 10;
 
 export default function PositionTimeline({ position }: { position: OpenPosition }) {
@@ -96,10 +96,10 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
         <Step
           done={funded}
           current={state === 'docs_signed'}
-          label="Funds received"
+          label="In escrow"
           detail={funded ? dateStr(position.fundedAt) : ''}
         />
-        <Step done={false} current={funded} label="Countersigned" detail="" />
+        <Step done={false} current={funded} label="Deal closes" detail="" />
       </ol>
 
       <div className={s.now}>
@@ -114,12 +114,12 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
                   ? 'Due today'
                   : `${position.daysRemaining} day${position.daysRemaining === 1 ? '' : 's'} left`}
               </b>
-              {money(position.amount)} by {dateStr(position.fundingDeadline)}, or
-              the allocation goes back to the deal.
+              {money(position.amount)} to escrow by {dateStr(position.fundingDeadline)},
+              when admissions close.
             </p>
             <div className={s.actions}>
               <Link className="btn btn-gold btn-sm" href={`/payment/${position.id}`}>
-                Fund now
+                Send to escrow
               </Link>
               <button
                 type="button"

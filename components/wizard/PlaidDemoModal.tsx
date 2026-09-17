@@ -256,7 +256,7 @@ export default function PlaidDemoModal({
               Select accounts
             </h3>
             <p className="small">
-              Choose the {institution} accounts you want to fund investments from. You
+              Choose the {institution} accounts you want to send to escrow from. You
               can link more than one.
             </p>
 

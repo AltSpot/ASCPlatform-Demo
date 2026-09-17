@@ -82,7 +82,7 @@ function lineOf(item: NeedsYouItem) {
     case 'fund':
       return (
         <>
-          <b>{item.dealName}</b> needs {money(item.amount)} by {dateStr(item.deadline)}
+          Send {money(item.amount)} to escrow for <b>{item.dealName}</b> by {dateStr(item.deadline)}
           {item.daysLeft > 0 ? (
             <>
               , <span className={s.clock}>{daysCopy(item.daysLeft)}</span>.
@@ -109,8 +109,8 @@ function lineOf(item: NeedsYouItem) {
     case 'lapsed':
       return (
         <>
-          Your {money(item.amount)} commitment to <b>{item.dealName}</b> lapsed unfunded and the
-          spot was released.
+          Your {money(item.amount)} commitment to <b>{item.dealName}</b> was not in escrow by the
+          admission cut-off, and the spot was released.
         </>
       );
   }
@@ -121,7 +121,7 @@ function actionOf(item: NeedsYouItem) {
     case 'fund':
       return (
         <Link className="btn btn-gold btn-sm" href={`/payment/${item.id}`}>
-          Fund now
+          Send to escrow
         </Link>
       );
     case 'sign':

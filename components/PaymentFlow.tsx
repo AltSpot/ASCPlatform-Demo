@@ -1,21 +1,36 @@
 'use client';
 
 /**
- * Funding. Either transfer now from the linked account, or let the
- * 10-day hold run — unfunded commitments release automatically, with no
- * penalty and no obligation.
+ * Escrow: the last step. Work order screen 9.
+ *
+ * The member's money moves to ESCROW here, never to a deal and never to
+ * AltSpot. The deal closes when its minimum is met by the closing date,
+ * and if it is not, escrow returns the money. So nothing on this page
+ * says "funded": the member sends to escrow, and the confirmation says
+ * where the money is and what has to happen next.
+ *
+ * The clock is the admission cut-off (lib/funding.ts): admissions close
+ * a set number of hours before the wire, and a signed subscription not
+ * in escrow by then lapses with no penalty.
+ *
+ * With SHOW_FEE_TERMS off the transfer states the subscription and says
+ * the fee reserve is set out in the memorandum; with it on, it states
+ * subscription plus reserve. lib/fees.ts is the one source of both.
  */
+import { Landmark, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import FeeTable from '@/components/invest/FeeTable';
+import StationRail from '@/components/invest/StationRail';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
-import { PARTNERS } from '@/lib/config';
+import { PARTNERS, SHOW_FEE_TERMS } from '@/lib/config';
 import type { BankView, DealView, SubscriptionView } from '@/lib/domain';
 import { feeBreakdown } from '@/lib/fees';
 import { dateStr, money } from '@/lib/format';
+import { admissionCutoff } from '@/lib/funding';
 
 export default function PaymentFlow({
   subscription,
@@ -26,7 +41,7 @@ export default function PaymentFlow({
   subscription: SubscriptionView;
   deal: DealView;
   bank: BankView | null;
-  /** Computed on the server so this component stays pure. */
+  /** Days until admissions close. Computed on the server. */
   daysRemaining: number;
 }) {
   const router = useRouter();
@@ -36,8 +51,11 @@ export default function PaymentFlow({
   const [busy, setBusy] = useState(false);
 
   const fees = feeBreakdown(subscription.amount);
+  /* What the button says moves. The money is the same either way. */
+  const transfer = SHOW_FEE_TERMS ? fees.allIn : fees.amount;
+  const cutoff = subscription.fundingDeadline ?? admissionCutoff(deal.targetClose);
 
-  async function fund() {
+  async function send() {
     if (busy) return;
     setBusy(true);
     try {
@@ -48,12 +66,12 @@ export default function PaymentFlow({
       setState(next.state);
       toast(
         <>
-          <b>Funding confirmed.</b> Status: funded · awaiting countersign.
+          <b>Sent to escrow.</b> The deal closes when the minimum is met.
         </>,
       );
       router.refresh();
     } catch (error) {
-      toast(error instanceof Error ? error.message : 'Could not initiate the transfer.');
+      toast(error instanceof Error ? error.message : 'Could not start the transfer.');
     } finally {
       setBusy(false);
     }
@@ -61,22 +79,23 @@ export default function PaymentFlow({
 
   if (state === 'funded') {
     return (
-      <div style={{ maxWidth: 640, margin: '60px auto', textAlign: 'center' }}>
-        <div className="orb" style={{ width: 84, height: 84, margin: '0 auto 30px' }} />
+      <div style={{ maxWidth: 640, margin: '40px auto', textAlign: 'center' }}>
+        <StationRail at="escrow" done />
+        <div className="orb" style={{ width: 84, height: 84, margin: '34px auto 30px' }} />
         <div className="eyebrow" style={{ marginBottom: 12 }}>
-          Transfer initiated
+          In escrow
         </div>
-        <h1 className="display" style={{ fontSize: 36, marginBottom: 14 }}>
-          You&rsquo;re in, pending countersign.
+        <h1 className="display" style={{ fontSize: 34, marginBottom: 14 }}>
+          Your subscription is in escrow.
         </h1>
         <p className="sub" style={{ margin: '0 auto 10px' }}>
-          {money(fees.allIn)} is on its way to the {deal.name}{' '}
-          account. AltSpot countersigns at close. You&rsquo;ll get confirmation,
-          and the position will appear in your portfolio.
+          The deal closes when the minimum is met. Your money waits in escrow for{' '}
+          {deal.name} until then, and comes back to you if the minimum is not met by the
+          closing date.
         </p>
         <p className="small" style={{ marginBottom: 34 }}>
-          Signed documents live in your <Link href="/docs">Docs</Link>. Deal updates
-          begin after close. Reporting after the wire is the whole point.
+          Signed documents are in your <Link href="/docs">Docs</Link>. Updates begin
+          after close.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link className="btn btn-gold" href="/dashboard">
@@ -95,19 +114,18 @@ export default function PaymentFlow({
       <div className="crumbs">
         <Link href="/dashboard">Dashboard</Link>
         <span className="sep">/</span>
-        <span className="here">Fund your investment</span>
+        <span className="here">Send to escrow</span>
       </div>
+
+      <StationRail at="escrow" />
 
       <div className="page-head">
         <div className="titles">
           <div className="eyebrow">Final step</div>
           <h1 className="display">Your allocation is reserved.</h1>
           <p className="sub">
-            Documents are signed and a copy is in your Docs. Fund by{' '}
-            <b style={{ color: 'var(--gold-bright)' }}>
-              {dateStr(subscription.fundingDeadline)}
-            </b>{' '}
-            to secure your spot in {deal.name}.
+            Documents are signed and a copy is in your Docs. Send to escrow by{' '}
+            <b>{dateStr(cutoff)}</b> to be admitted when {deal.name} closes.
           </p>
         </div>
       </div>
@@ -119,15 +137,16 @@ export default function PaymentFlow({
               className="qhead"
               style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}
             >
-              <h3>Fund now with Same-Day ACH</h3>
+              <h3>Send to escrow with Same-Day ACH</h3>
               <span className="chip">Recommended</span>
             </div>
 
             {bank ? (
               <>
                 <p className="small" style={{ marginBottom: 16 }}>
-                  Transfer from your linked account. In production this settles through{' '}
-                  {PARTNERS.payments} to a per-deal virtual account at {PARTNERS.custody}.
+                  From your linked account to the SPV&rsquo;s escrow account. In production
+                  this settles through {PARTNERS.payments} to an escrow account in the
+                  SPV&rsquo;s name at {PARTNERS.custody}, never through an AltSpot account.
                 </p>
                 <div className="choice sel" style={{ marginBottom: 16 }}>
                   <b>
@@ -137,25 +156,21 @@ export default function PaymentFlow({
                     Linked {dateStr(bank.linkedAt)} · verified via {PARTNERS.banking}
                   </span>
                 </div>
-                <button
-                  className="btn btn-gold btn-block"
-                  onClick={fund}
-                  disabled={busy}
-                >
-                  {busy ? 'Transferring…' : `Transfer ${money(fees.allIn)} now`}
+                <button className="btn btn-gold btn-block" onClick={send} disabled={busy}>
+                  {busy ? 'Sending…' : `Send ${money(transfer)} to escrow`}
                 </button>
               </>
             ) : (
               <>
                 <p className="small" style={{ marginBottom: 16 }}>
-                  Link your bank once and fund in one click, now and on every future
-                  deal.
+                  Link your bank once and send to escrow in one click, now and on every
+                  future deal.
                 </p>
                 <Link
                   className="btn btn-gold btn-block"
                   href={`/wizard?step=5&then=${deal.id}`}
                 >
-                  Link bank &amp; fund
+                  Link bank &amp; send
                 </Link>
 
                 <div className="hr" />
@@ -176,15 +191,16 @@ export default function PaymentFlow({
                 <div className="demo-note" style={{ marginBottom: 14 }}>
                   Demo environment. Never enter real bank details here.
                 </div>
-                <button
-                  className="btn btn-ghost btn-block"
-                  onClick={fund}
-                  disabled={busy}
-                >
-                  Transfer {money(fees.allIn)}
+                <button className="btn btn-ghost btn-block" onClick={send} disabled={busy}>
+                  Send {money(transfer)} to escrow
                 </button>
               </>
             )}
+            {!SHOW_FEE_TERMS ? (
+              <p className="tiny" style={{ marginTop: 10 }}>
+                Plus the management fee reserve set out in the memorandum.
+              </p>
+            ) : null}
           </div>
 
           <div className="card">
@@ -194,40 +210,38 @@ export default function PaymentFlow({
                 <span className="small">
                   {daysRemaining === 1 ? 'day' : 'days'}
                   <br />
-                  remaining
+                  to go
                 </span>
               </div>
               <div style={{ flex: 1, minWidth: 220 }}>
-                <h3>Or fund within 10 days</h3>
+                <h3>Admissions close {dateStr(cutoff)}</h3>
                 <p className="small" style={{ marginTop: 4 }}>
-                  Your spot stays reserved until {dateStr(subscription.fundingDeadline)}.
-                  We&rsquo;ll remind you every other day. Unfunded commitments release
-                  automatically. No penalty, no obligation.
+                  Your allocation stays reserved until then. We&rsquo;ll remind you ahead of
+                  the cut-off. A subscription not in escrow by then lapses, with no
+                  penalty and no obligation.
                 </p>
               </div>
               <Link className="btn btn-quiet" href="/dashboard">
-                I&rsquo;ll fund later
+                I&rsquo;ll send later
               </Link>
             </div>
           </div>
         </div>
 
         <div className="card">
-          {/* The deal name belongs in the heading, not in a row above
-              the fee table. As its own line it printed the subscription
-              amount immediately above the fee table's "Investment" row,
-              which prints the same number: one figure, twice, under two
-              different labels, in the summary a member checks before
-              moving money. */}
-          <h3 style={{ marginBottom: 4 }}>Transfer summary</h3>
+          <h3 style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Landmark size={17} strokeWidth={1.6} aria-hidden="true" />
+            Escrow summary
+          </h3>
           <p className="small" style={{ marginBottom: 12 }}>
             {deal.name} · {deal.entity}
           </p>
           <FeeTable amount={subscription.amount} targetClose={deal.targetClose} />
           <div className="hr" />
-          <p className="tiny">
-            Funds are held in the deal&rsquo;s segregated account through the hold period
-            and returned in full if the deal does not close.
+          <p className="tiny" style={{ display: 'flex', gap: 6 }}>
+            <Lock size={12} strokeWidth={1.8} aria-hidden="true" style={{ flex: 'none', marginTop: 3 }} />
+            Held in escrow until close. Returned in full if the minimum is not met by the
+            closing date.
           </p>
         </div>
       </div>

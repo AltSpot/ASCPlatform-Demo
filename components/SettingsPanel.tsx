@@ -20,7 +20,7 @@ import { PARTNERS } from '@/lib/config';
  */
 const NOTIFICATIONS: { label: string; required?: boolean }[] = [
   { label: 'New deals matching my interests' },
-  { label: 'Funding reminders (every other day until funded)' },
+  { label: 'Escrow reminders ahead of the admission cut-off' },
   { label: 'Deal updates & valuation marks' },
   { label: 'Tax document delivery', required: true },
 ];

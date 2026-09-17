@@ -448,8 +448,8 @@ export default async function DashboardPage() {
           <span className={d.emptyValue}>Nothing invested yet</span>
           <p className={d.emptyLine}>
             {gate.ok
-              ? 'Your first investment will appear here the moment it funds.'
-              : 'Finish setup, then your first investment will appear here the moment it funds.'}
+              ? 'Your first investment will appear here the moment it lands in escrow.'
+              : 'Finish setup, then your first investment will appear here the moment it lands in escrow.'}
           </p>
         </section>
       )}

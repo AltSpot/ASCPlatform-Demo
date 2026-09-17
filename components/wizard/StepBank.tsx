@@ -87,8 +87,8 @@ export default function StepBank({
         Link your bank
       </h2>
       <p className="sub" style={{ marginBottom: 24 }}>
-        Connect the account you&rsquo;ll fund investments from. Saved once, reused on
-        every deal, so funding a commitment later takes one click. This runs through{' '}
+        Connect the account you&rsquo;ll send to escrow from. Saved once, reused on
+        every deal, so sending a subscription to escrow later takes one click. This runs through{' '}
         <b style={{ color: 'var(--orange-b)' }}>{PARTNERS.banking}</b>; credentials never
         touch AltSpot.
       </p>
@@ -158,7 +158,7 @@ export default function StepBank({
           Finish setup
         </button>
         <button className="skip" onClick={onSkip}>
-          Link at first funding instead
+          Link when you first subscribe instead
         </button>
       </div>
 

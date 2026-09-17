@@ -170,7 +170,7 @@ export default function PositionsTable({
           <b style={{ color: 'var(--paper)' }}>No positions yet</b>
           <br />
           <span className="tiny">
-            Your first investment will appear here the moment it funds.
+            Your first investment will appear here the moment it lands in escrow.
           </span>
           <br />
           <br />
@@ -265,7 +265,7 @@ export default function PositionsTable({
                 <>
                   <th>Vehicle</th>
                   <th className={s.num}>Signed</th>
-                  <th className={s.num}>Funded</th>
+                  <th className={s.num}>In escrow</th>
                 </>
               )}
               <th>Status</th>
@@ -499,7 +499,7 @@ function Status({ state }: { state: PositionRow['state'] }) {
     return (
       <span className={`chip ${s.action_}`}>
         <Clock size={12} strokeWidth={1.6} aria-hidden="true" />
-        Fund by ACH
+        Send to escrow
       </span>
     );
   }
@@ -507,7 +507,7 @@ function Status({ state }: { state: PositionRow['state'] }) {
     return (
       <span className={`chip ${s.progress}`}>
         <Hourglass size={12} strokeWidth={1.6} aria-hidden="true" />
-        Awaiting countersign
+        In escrow · awaiting close
       </span>
     );
   }

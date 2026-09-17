@@ -43,7 +43,7 @@ export const POST = route(
     await noteSubscriptionAgreement(
       user.id,
       id,
-      'Signed · funded, awaiting countersign',
+      'Signed · in escrow, awaiting close',
     );
 
     return ok(funded);

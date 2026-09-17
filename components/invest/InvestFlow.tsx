@@ -20,6 +20,7 @@ import { useRef, useState } from 'react';
 
 import ConfirmPanel from '@/components/invest/ConfirmPanel';
 import FeeTable from '@/components/invest/FeeTable';
+import StationRail from '@/components/invest/StationRail';
 import LegalDocument from '@/components/invest/LegalDocument';
 
 import styles from './InvestFlow.module.css';
@@ -315,7 +316,7 @@ export default function InvestFlow({
 
       toast(
         <>
-          <b>Signed.</b> A copy is in your Docs. Continuing to funding…
+          <b>Signed.</b> A copy is in your Docs. Continuing to escrow…
         </>,
       );
       setTimeout(() => router.push(`/payment/${next.id}`), 1500);
@@ -359,6 +360,8 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
         <span className="sep">/</span>
         <span className="here">Invest</span>
       </div>
+
+      <StationRail at={phase === 'amount' ? 'amount' : onSignStep ? 'sign' : 'read'} />
 
       {phase === 'amount' ? (
         <section>
@@ -651,7 +654,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                     onClick={signAll}
                     disabled={busy || signed}
                   >
-                    {signed ? 'Signed' : 'Sign all & continue to funding'}
+                    {signed ? 'Signed' : 'Sign all & continue to escrow'}
                   </button>
                   <p className="tiny" style={{ marginTop: 12 }}>
                     A copy saves to your Docs automatically. Production signing runs

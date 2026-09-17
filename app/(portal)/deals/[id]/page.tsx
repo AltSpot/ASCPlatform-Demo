@@ -141,7 +141,7 @@ export default async function DealPage({
     resume ? (
       resume.state === 'docs_signed' ? (
         <Link className={className} href={`/payment/${resume.id}`}>
-          Fund your commitment
+          Send to escrow
         </Link>
       ) : (
         <Link className={className} href={`/invest/${deal.id}`}>

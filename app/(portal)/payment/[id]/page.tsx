@@ -1,4 +1,4 @@
-/** Funding — the last step: ACH now, or hold the spot for 10 days. */
+/** Escrow: the last step. Send to escrow now, or before admissions close. */
 import { notFound } from 'next/navigation';
 
 import PaymentFlow from '@/components/PaymentFlow';
@@ -10,7 +10,7 @@ import { getSubscription } from '@/lib/repositories/subscriptions';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Funding · AltSpot Capital' };
+export const metadata = { title: 'Escrow · AltSpot Capital' };
 
 export default async function PaymentPage({
   params,

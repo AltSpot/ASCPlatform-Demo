@@ -1,0 +1,69 @@
+/* AMOUNT · READ · SIGN · ESCROW. */
+
+.rail {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0 0 26px;
+  padding: 0;
+  list-style: none;
+}
+
+.station {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.station:last-child {
+  flex: none;
+}
+.station:not(:last-child)::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  margin: 0 12px;
+  background: var(--hair-strong);
+}
+.station[data-state='done']:not(:last-child)::after {
+  background: var(--as-gold);
+}
+
+.dot {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--as-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.station[data-state='now'] .dot {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+}
+.station[data-state='done'] .dot {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+}
+.station[data-state='done'] .dot svg {
+  stroke: var(--fg-on-gold);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  white-space: nowrap;
+}
+.station[data-state='now'] .label {
+  color: var(--as-text);
+}
