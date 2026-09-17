@@ -29,12 +29,19 @@ export default function WatchStar({
   dealId,
   dealName,
   initialWatched,
+  onChange,
 }: {
   dealId: string;
   dealName: string;
   initialWatched: boolean;
+  /** Told the new state, and told again if a failed write reverts it. */
+  onChange?: (watched: boolean) => void;
 }) {
-  const [watched, setWatched] = useState(initialWatched);
+  const [watched, setWatchedState] = useState(initialWatched);
+  const setWatched = (next: boolean) => {
+    setWatchedState(next);
+    onChange?.(next);
+  };
   const [busy, setBusy] = useState(false);
   const toast = useToast();
 

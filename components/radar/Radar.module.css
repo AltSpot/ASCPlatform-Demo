@@ -87,9 +87,10 @@
    glance, without shouting. */
 /* The pane keeps its fill: the shorthand dropped it and left a flat
    gold wash. A faint gold tint layered as an image is enough. */
-.card[data-indicated='true'] {
-  border-color: var(--hair-champagne);
+.card[data-indicated='true'],
+.card[data-indicated='true']:hover {
   background-image: var(--glass-tint-gold), var(--card-sheen);
+  box-shadow: var(--card-lift), inset 0 0 0 1.5px var(--as-gold);
 }
 
 /* The one masked texture the V18 card spec allows. Decorative, behind
@@ -1276,4 +1277,11 @@
   .demandFill {
     transition: none;
   }
+}
+
+/* Yours, with nothing voted yet. */
+.mineEmpty {
+  margin: 0 0 8px;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
 }

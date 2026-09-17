@@ -38,7 +38,13 @@ export default function DealShelf({
   fromRadar = [],
   filter,
   bridgeHref,
+  mineOnly = false,
+  onWatchChange,
 }: {
+  /** Show only what the member saved or voted for. */
+  mineOnly?: boolean;
+  /** When the page tracks saves (the Yours count), it hears each one. */
+  onWatchChange?: (dealId: string, watched: boolean) => void;
   deals: DealShelfItem[];
   /** Live subscriptions, so a card can offer the way back in. */
   resumable: SubscriptionView[];
@@ -65,7 +71,9 @@ export default function DealShelf({
     () => new Map(resumable.map((sub) => [sub.dealId, sub])),
     [resumable],
   );
-  const saved = useMemo(() => new Set(watched), [watched]);
+  /* Held here so a star pressed on a card lights the card's rim at once. */
+  const [savedIds, setSavedIds] = useState(watched);
+  const saved = useMemo(() => new Set(savedIds), [savedIds]);
   const voted = useMemo(() => new Set(fromRadar), [fromRadar]);
 
   /* Counts cover the whole class taxonomy, including the classes with
@@ -102,9 +110,10 @@ export default function DealShelf({
       deals.filter(
         (deal) =>
           (filters.assetClass === null || deal.assetClass === filters.assetClass) &&
-          (filters.industry === null || deal.industry === filters.industry),
+          (filters.industry === null || deal.industry === filters.industry) &&
+          (!mineOnly || saved.has(deal.id) || voted.has(deal.id)),
       ),
-    [deals, filters],
+    [deals, filters, mineOnly, saved, voted],
   );
 
   return (
@@ -119,6 +128,12 @@ export default function DealShelf({
         />
       )}
 
+      {mineOnly && shown.length === 0 ? (
+        <p className={s.mineEmpty}>
+          Nothing saved here yet. Press the star on any deal to keep it.
+        </p>
+      ) : null}
+
       <div className="deal-grid">
         {shown.map((deal) => (
           <DealCard
@@ -127,6 +142,12 @@ export default function DealShelf({
             resume={byDeal.get(deal.id)}
             watched={saved.has(deal.id)}
             fromRadar={voted.has(deal.id)}
+            onWatchChange={(next) => {
+              setSavedIds((ids) =>
+                next ? [...ids.filter((id) => id !== deal.id), deal.id] : ids.filter((id) => id !== deal.id),
+              );
+              onWatchChange?.(deal.id, next);
+            }}
           />
         ))}
 
@@ -134,7 +155,7 @@ export default function DealShelf({
             the last card on the shelf is where a member who did not
             find what they wanted is standing. It says what the next
             lane is for in the one sentence that matters. */}
-        {bridgeHref ? (
+        {bridgeHref && !mineOnly ? (
           <Link className={s.bridge} href={bridgeHref}>
             <span className={s.bridgeTitle}>Vote for what you want next.</span>
             <span className={s.bridgeArrow} aria-hidden="true">

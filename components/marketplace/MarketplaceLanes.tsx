@@ -25,11 +25,15 @@
  * same control on one page is chrome the platform is trying to lose.
  * The class chips are the union of what either lane holds.
  *
+ * YOURS. One more pill on the bar filters both lanes to what the member
+ * saved or voted for, and those cards wear a gold rim whether or not the
+ * filter is on. Its count moves the moment a star or a vote does.
+ *
  * `?view=radar` still lands on the Radar by scrolling to it: the
  * dashboard links there and Spot reads the query to know which room
  * it is in.
  */
-import { Clock, Radar, Store, Users } from 'lucide-react';
+import { Clock, Radar, Star, Store, Users } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import TaxonomyFilters, {
@@ -38,6 +42,7 @@ import TaxonomyFilters, {
 import DealShelf from '@/components/marketplace/DealShelf';
 import OfferingsGate from '@/components/OfferingsGate';
 import RadarBoard from '@/components/radar/RadarBoard';
+import RadarHowItWorks from '@/components/radar/RadarHowItWorks';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { daysLeft, EMPTY } from '@/lib/format';
 import type { RelationshipView } from '@/lib/relationship';
@@ -76,6 +81,15 @@ export default function MarketplaceLanes({
     industry: null,
   });
   const [lane, setLane] = useState<Lane>(initialView === 'radar' ? 'radar' : 'invest');
+  const [mineOnly, setMineOnly] = useState(false);
+  const [savedIds, setSavedIds] = useState(watched);
+  const [votedSlugs, setVotedSlugs] = useState(() =>
+    companies.filter((c) => c.yourAmount !== null).map((c) => c.slug),
+  );
+  const fromRadarSet = useMemo(() => new Set(fromRadar), [fromRadar]);
+  const yoursCount =
+    deals.filter((d) => savedIds.includes(d.id) || fromRadarSet.has(d.id)).length +
+    votedSlugs.length;
   const investRef = useRef<HTMLElement>(null);
   const radarRef = useRef<HTMLElement>(null);
 
@@ -194,6 +208,7 @@ export default function MarketplaceLanes({
       {/* The bar. Two jump pills and the one filter row, sticky, so the
           Radar is one press away from anywhere on the page. */}
       <div className={s.bar}>
+        <div className={s.barStart}>
         <div className={s.lanes} role="group" aria-label="Jump to">
           <button
             type="button"
@@ -211,6 +226,17 @@ export default function MarketplaceLanes({
           >
             Radar <span className={s.laneCount}>{companies.length}</span>
           </button>
+        </div>
+        <button
+          type="button"
+          className={s.yours}
+          aria-pressed={mineOnly}
+          onClick={() => setMineOnly((on) => !on)}
+          title="Only what you saved or voted for"
+        >
+          <Star size={13} strokeWidth={1.7} aria-hidden="true" />
+          Yours <span className={s.laneCount}>{yoursCount}</span>
+        </button>
         </div>
         <TaxonomyFilters
           counts={counts}
@@ -244,6 +270,10 @@ export default function MarketplaceLanes({
             fromRadar={fromRadar}
             filter={filter}
             bridgeHref="#radar"
+            mineOnly={mineOnly}
+            onWatchChange={(id, on) =>
+              setSavedIds((ids) => (on ? [...ids.filter((x) => x !== id), id] : ids.filter((x) => x !== id)))
+            }
           />
         )}
       </section>
@@ -254,9 +284,18 @@ export default function MarketplaceLanes({
           <h2 className={s.laneTitle} id="lane-vote">
             On the Radar.
           </h2>
+          <RadarHowItWorks />
           <p className={s.laneLede}>A vote reserves nothing and moves no money.</p>
         </header>
-        <RadarBoard companies={companies} filter={filter} />
+        <RadarBoard
+          companies={companies}
+          filter={filter}
+          mineOnly={mineOnly}
+          voted={votedSlugs}
+          onVoted={(slug) =>
+            setVotedSlugs((slugs) => (slugs.includes(slug) ? slugs : [...slugs, slug]))
+          }
+        />
       </section>
     </>
   );

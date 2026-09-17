@@ -83,11 +83,14 @@ export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
 
   if (rows.length === 0) {
     return (
-      <div className="card">
-        <p className="tiny">
-          Nothing saved yet. Use Add to watchlist on any deal page and it shows
-          up here.
+      <div className={`card ${w.empty}`}>
+        <p className={w.emptyLead}>Nothing on your watchlist yet.</p>
+        <p className={w.emptyNote}>
+          Save the deals you are weighing and they collect here.
         </p>
+        <Link className="btn btn-gold btn-sm" href="/marketplace">
+          Explore investments →
+        </Link>
       </div>
     );
   }

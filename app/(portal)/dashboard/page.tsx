@@ -398,7 +398,15 @@ export default async function DashboardPage() {
       {/* Saved and voted, side by side: the two lists a member reads
           together when deciding where to act. */}
       <div className={d.pair}>
-      <CollapsibleSection id="watchlist" title="Watchlist">
+      <CollapsibleSection
+        id="watchlist"
+        title="Watchlist"
+        action={
+          <Link className={d.sectionLink} href="/watchlist">
+            Open watchlist →
+          </Link>
+        }
+      >
         <WatchlistBlock deals={watched} />
       </CollapsibleSection>
 

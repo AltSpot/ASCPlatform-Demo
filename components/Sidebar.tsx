@@ -10,9 +10,10 @@
  * rather than the product. Nobody goes looking for their tax forms in
  * the same breath as a deal, so they sit under their own label.
  *
- * ORDER. Marketplace comes before Terminal. The shelf is what the
- * product is for; the terminal is what you read around it, and a rail
- * should be ordered by what people came to do.
+ * ORDER. Dashboard, Marketplace, Watchlist, Portfolio, then Terminal
+ * (Tyler, 2026-09-17). The shelf, what the member is following and what
+ * they hold come first; the terminal is what you read around them, and
+ * a rail should be ordered by what people came to do.
  *
  * MARKS, NOT GLYPHS, for those two. Marketplace and Terminal are
  * AltSpot product lines with logos of their own, so they carry them.
@@ -39,6 +40,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
+  Star,
   TrendingUp,
   UserRound,
   type LucideIcon,
@@ -95,11 +97,11 @@ const GROUPS: NavGroup[] = [
         match: ['/marketplace', '/deals', '/invest'],
       },
       {
-        id: 'terminal',
-        label: 'Terminal',
-        href: '/terminal',
-        mark: '/brand/altspot-terminal-avatar.svg',
-        match: ['/terminal'],
+        id: 'watchlist',
+        label: 'Watchlist',
+        href: '/watchlist',
+        icon: Star,
+        match: ['/watchlist'],
       },
       {
         id: 'portfolio',
@@ -107,6 +109,13 @@ const GROUPS: NavGroup[] = [
         href: '/portfolio',
         icon: ChartPie,
         match: ['/portfolio'],
+      },
+      {
+        id: 'terminal',
+        label: 'Terminal',
+        href: '/terminal',
+        mark: '/brand/altspot-terminal-avatar.svg',
+        match: ['/terminal'],
       },
     ],
   },

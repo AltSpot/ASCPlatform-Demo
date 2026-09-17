@@ -46,7 +46,10 @@ export default function DealCard({
   resume,
   watched,
   fromRadar = false,
+  onWatchChange,
 }: {
+  /** Lets a shelf that tracks saves hear about them. */
+  onWatchChange?: (watched: boolean) => void;
   deal: DealShelfItem;
   /** This member's live subscription into the deal, if there is one. */
   resume?: SubscriptionView;
@@ -82,10 +85,15 @@ export default function DealCard({
   );
 
   return (
-    <div className="card deal-card">
+    <div className={watched || fromRadar ? `card deal-card ${s.mine}` : 'card deal-card'}>
       <div className="thumb" style={{ background: deal.art }}>
         <span className="chip">{deal.tag}</span>
-        <WatchStar dealId={deal.id} dealName={deal.name} initialWatched={watched} />
+        <WatchStar
+          dealId={deal.id}
+          dealName={deal.name}
+          initialWatched={watched}
+          onChange={onWatchChange}
+        />
         {deal.logoUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img className="deal-logo-hero" src={deal.logoUrl} alt="" aria-hidden="true" />

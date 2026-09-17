@@ -33,8 +33,16 @@ const INDUSTRY_ORDER = Object.keys(INDUSTRIES) as Industry[];
 export default function RadarBoard({
   companies,
   filter,
+  mineOnly = false,
+  voted,
+  onVoted,
 }: {
   companies: RadarCompanyView[];
+  /** Show only the names the member voted for. */
+  mineOnly?: boolean;
+  /** Slugs the member has voted for, kept live by the page. */
+  voted?: string[];
+  onVoted?: (slug: string) => void;
   /** See DealShelf: the marketplace owns one row for both lanes. */
   filter?: TaxonomyFilterState;
 }) {
@@ -82,9 +90,10 @@ export default function RadarBoard({
       ranked.filter(
         (c) =>
           (filters.assetClass === null || c.assetClass === filters.assetClass) &&
-          (filters.industry === null || c.industry === filters.industry),
+          (filters.industry === null || c.industry === filters.industry) &&
+          (!mineOnly || (voted ? voted.includes(c.slug) : c.yourAmount !== null)),
       ),
-    [ranked, filters],
+    [ranked, filters, mineOnly, voted],
   );
 
   if (companies.length === 0) return null;
@@ -103,12 +112,17 @@ export default function RadarBoard({
         />
       )}
 
+      {mineOnly && shown.length === 0 ? (
+        <p className={s.mineEmpty}>No votes yet. Vote on any name to follow it.</p>
+      ) : null}
+
       <div className={s.board}>
         {shown.map((company) => (
           <RadarCard
             key={company.slug}
             company={company}
             demandShare={company.interestDollars / loudest}
+            onVoted={onVoted}
           />
         ))}
       </div>

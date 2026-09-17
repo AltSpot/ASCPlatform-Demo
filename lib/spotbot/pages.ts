@@ -124,6 +124,15 @@ const PORTFOLIO: PageContext = {
   ],
 };
 
+const WATCHLIST: PageContext = {
+  key: 'watchlist',
+  label: 'Watchlist',
+  brief:
+    'The deals you saved and the companies you voted for, private to you. Saving a deal reserves nothing and tells the issuer nothing. A vote reserves nothing and moves no money; it tells AltSpot what to go and source.',
+  suggested: questionsFor(['radar', 'radar-vote', 'sourcing']),
+  topics: ['radar', 'radar-vote', 'sourcing', 'spotbot-scope'],
+};
+
 const TERMINAL: PageContext = {
   key: 'terminal',
   label: 'Terminal',
@@ -193,6 +202,7 @@ const MATCHERS: readonly Matcher[] = [
   { test: /^\/deals\//, context: DEAL },
   { test: /^\/invest\//, context: INVEST },
   { test: /^\/payment\//, context: PAYMENT },
+  { test: /^\/watchlist/, context: WATCHLIST },
   { test: /^\/portfolio/, context: PORTFOLIO },
   { test: /^\/terminal/, context: TERMINAL },
   { test: /^\/docs/, context: DOCS },

@@ -63,9 +63,12 @@ export default function RadarCard({
   company,
   /** This company's share of the loudest demand on the board, 0 to 1. */
   demandShare,
+  onVoted,
 }: {
   company: RadarCompanyView;
   demandShare: number;
+  /** Lets the page count this vote in Yours without a reload. */
+  onVoted?: (slug: string) => void;
 }) {
   const toast = useToast();
 
@@ -99,6 +102,7 @@ export default function RadarCard({
     try {
       const next = await api.indicateRadarInterest(view.slug, amount);
       setView(next);
+      onVoted?.(next.slug);
       setEditing(false);
       setVoting(false);
       toast(

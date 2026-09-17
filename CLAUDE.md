@@ -436,7 +436,7 @@ dust), and the amber-browns that replaced it (`#9F510A`, `#9A5A1A`,
 `#A8540C`, `#B4470C`) read as burnt orange beside the gold CTAs. Daylight's
 small accents are antique bronze (`--accent #7A5B1E` and its family, all
 above 4.5:1 on dust); Ember's `--accent-soft` is a warm gold rather than
-`--as-ember-soft`. Large figures (24px and up) still wear `--figure-hot`.
+`--as-ember-soft`. Large figures (24px and up) still wear `--figure-hot`. Ember's `--warn` (work owed: setup chips, the rail's Setup incomplete) is warm gold `#E6C77A`, not `#E5661A`; the dot beside it carries the heat as paint.
 A member's own number (a vote, an amount) is page ink with a gold glyph
 beside it, not an accent colour.
 
@@ -671,6 +671,19 @@ the shelf and on the dashboard's Open now, because that is the mechanic proven
 rather than sloganed. `?view=radar` scrolls to the board so old links and
 Spot's page context keep working. The dashboard's rows are titled **Your
 votes** so the verb is the same at both zoom levels.
+
+**Yours, and the Watchlist page** (Tyler, 2026-09-17). A deal the member
+saved or voted for before it opened, and a Radar card they voted on, wear a
+gold inset rim on the marketplace, and a **Yours** pill on the sticky bar
+filters both lanes to them, its count live as stars and votes change. The
+Radar lane's **How it works** button opens a right-hand panel
+(`components/radar/RadarHowItWorks.tsx`): four steps, one sentence each, and
+the vote disclosure. `/watchlist` (rail order: Dashboard, Marketplace,
+Watchlist, Portfolio, Terminal) is **not a second marketplace**: one search
+box that saves a deal or casts a vote with three quick amounts, then two
+row lists, Saved deals and Your votes, and an empty state that sends the
+member to Explore investments. No cards, filters or demand figures there.
+Every write is the marketplace's own API call.
 
 ### Voice
 

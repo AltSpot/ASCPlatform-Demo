@@ -348,12 +348,78 @@
   border-color: var(--hair-gold-active);
   transform: translateY(-1px);
 }
+/* Saved: a solid gold star on a darker seat, so it reads on any art in
+   either theme. Paint, so stroke and fill rather than colour. */
 .starOn {
-  color: var(--accent);
   border-color: var(--hair-gold-active);
+  background: var(--scrim-media-strong);
 }
-.starOn:hover {
-  color: var(--accent-hot);
+.starOn svg {
+  stroke: var(--as-gold);
+  fill: var(--as-gold);
+}
+
+/* ------------------------------------------------------------------
+   Yours. A deal the member saved, or voted for before it opened,
+   wears a gold rim on the shelf, the same rim a voted Radar card
+   wears, so "mine" reads at a glance across both lanes.
+   ------------------------------------------------------------------ */
+.mine,
+.mine:hover {
+  box-shadow: var(--card-lift), inset 0 0 0 1.5px var(--as-gold);
+}
+html[data-theme='light'] .mine,
+html[data-theme='light'] .mine:hover {
+  box-shadow: var(--card-lift), inset 0 0 0 1.5px var(--as-gold);
+}
+
+.yours {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-well);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+}
+.yours svg {
+  stroke: var(--as-gold);
+}
+.yours:hover {
+  color: var(--as-text);
+}
+.yours[aria-pressed='true'] {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  box-shadow: var(--shadow-cta);
+}
+.yours[aria-pressed='true'] svg {
+  stroke: var(--fg-on-gold);
+  fill: var(--fg-on-gold);
+}
+.yours:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.barStart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mineEmpty {
+  margin: 0 0 8px;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
 }
 
 /* Where an investor left off, said on the card instead of only in the

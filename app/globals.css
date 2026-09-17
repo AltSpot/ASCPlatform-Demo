@@ -435,7 +435,7 @@
   --good-paint:#3DEB8A;                /* paint: dots, bars, fills. Never type */
   --good-line:rgba(61,235,138,.5);
   --good-fill:rgba(61,235,138,.14);
-  --warn:#E5661A;
+  --warn:#E6C77A;
   /* Was #B85C5C, exactly the 4.5:1 AA floor, and losses are set at the
      smallest sizes on the page. This clears 7:1 and stays ember-adjacent
      rather than trading-app red. */
