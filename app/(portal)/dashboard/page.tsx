@@ -26,7 +26,8 @@
 import Link from 'next/link';
 
 import CollapsibleSection from '@/components/CollapsibleSection';
-import NeedsYou, { type NeedsYouItem } from '@/components/NeedsYou';
+import NeedsYou from '@/components/NeedsYou';
+import { buildNeedsYou, shortDate } from '@/lib/needs-you';
 import PortfolioChart, {
   type PortfolioPoint,
   type PortfolioRange,
@@ -129,7 +130,6 @@ export default async function DashboardPage() {
 
   const pending = subscriptions.filter((s) => s.state === 'docs_signed');
   const drafts = subscriptions.filter((s) => s.state === 'started');
-  const expired = subscriptions.filter((s) => s.state === 'expired');
   const pendingAmount = pending.reduce((sum, s) => sum + s.amount, 0);
 
   /**
@@ -232,46 +232,26 @@ export default async function DashboardPage() {
     });
 
   /**
-   * What needs the member, in the order they would want to hear it: a
-   * commitment with a clock on it, a document to sign, a Radar name
-   * that arrived, a commitment that lapsed.
+   * What needs the member (lib/needs-you.ts), the same list the bell on
+   * the rail carries to every other page.
    */
-  const needsYou: NeedsYouItem[] = [
-    ...pending.map<NeedsYouItem>((s) => ({
-      kind: 'fund',
-      id: s.id,
-      dealName: deals.get(s.dealId)?.name ?? s.dealId,
-      amount: s.amount,
-      deadline: s.fundingDeadline,
-      daysLeft: daysLeft(s.fundingDeadline),
-    })),
-    ...drafts.map<NeedsYouItem>((s) => ({
-      kind: 'sign',
-      dealId: s.dealId,
-      dealName: deals.get(s.dealId)?.name ?? s.dealId,
-      amount: s.amount,
-    })),
-    ...radarRows.flatMap<NeedsYouItem>((row) =>
-      row.live && !row.live.subscribed
+  const needsYou = buildNeedsYou(
+    subscriptions,
+    (id) => deals.get(id)?.name ?? id,
+    radarRows.flatMap((row) =>
+      row.live
         ? [
             {
-              kind: 'live',
               dealId: row.live.dealId,
-              dealName: row.name,
+              name: row.name,
               voted: row.voted,
               closes: row.live.closes,
+              subscribed: row.live.subscribed,
             },
           ]
         : [],
     ),
-    ...expired.map<NeedsYouItem>((s) => ({
-      kind: 'lapsed',
-      id: s.id,
-      dealId: s.dealId,
-      dealName: deals.get(s.dealId)?.name ?? s.dealId,
-      amount: s.amount,
-    })),
-  ];
+  );
 
   /**
    * Most popular: the open deals the membership is paying attention to,
@@ -397,7 +377,17 @@ export default async function DashboardPage() {
 
       <SetupBanner gate={gate} wizard={wizard} />
 
-      <NeedsYou items={needsYou} />
+      {/* Folds like every other section (Tyler, 2026-09-17), and the bell
+          on the rail carries the same rows to every page. */}
+      {needsYou.length > 0 ? (
+        <CollapsibleSection
+          id="needs"
+          title="Needs you"
+          note={`${needsYou.length} waiting`}
+        >
+          <NeedsYou items={needsYou} />
+        </CollapsibleSection>
+      ) : null}
 
       {popularItems.length > 0 ? (
         <CollapsibleSection
@@ -504,11 +494,6 @@ export default async function DashboardPage() {
       )}
     </>
   );
-}
-
-/** "Sep 18, 2026" becomes "Sep 18". The year is on the deal page. */
-function shortDate(value: string): string {
-  return value.split(',')[0].trim();
 }
 
 /** Days to close, or last for a teaser, which carries no date. */

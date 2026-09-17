@@ -3,7 +3,6 @@
 .strip {
   display: flex;
   flex-direction: column;
-  margin-bottom: 32px;
   border: 1px solid var(--card-edge);
   box-shadow: var(--card-lift);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));

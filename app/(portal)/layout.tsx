@@ -16,6 +16,7 @@ import SpotBotDock from '@/components/spotbot/SpotBotDock';
 import { getSessionUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
 import { getWizardView } from '@/lib/repositories/investor';
+import { listNeedsYou } from '@/lib/repositories/needs-you';
 
 export default async function PortalLayout({
   children,
@@ -29,7 +30,8 @@ export default async function PortalLayout({
      relationship gate is open, which is what shows offerings; cooling
      off means the questionnaire is approved and the wait is running;
      anything else is still in setup. */
-  const wizard = await getWizardView(user.id);
+  /* The bell on the rail reads the same list as the dashboard strip. */
+  const [wizard, needs] = await Promise.all([getWizardView(user.id), listNeedsYou(user.id)]);
   const gate = evaluateInvestGate(wizard);
   const { stage } = wizard.relationship;
   const status = gate.ok
@@ -42,7 +44,7 @@ export default async function PortalLayout({
 
   return (
     <div className="layout">
-      <Sidebar user={user} status={status} />
+      <Sidebar user={user} status={status} needs={needs} />
       <main className="main">{children}</main>
       {/* The guide follows the investor: mounted once, so it persists
           across navigation and is present on every signed-in page. */}

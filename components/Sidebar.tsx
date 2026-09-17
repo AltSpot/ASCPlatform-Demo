@@ -47,10 +47,12 @@ import {
 } from 'lucide-react';
 import { useSyncExternalStore } from 'react';
 
+import NotificationBell from '@/components/NotificationBell';
 import ThemeToggle from '@/components/ThemeToggle';
 import { api } from '@/lib/client/api';
 import { initials } from '@/lib/format';
 import type { SessionUser } from '@/lib/domain';
+import type { NeedsYouItem } from '@/lib/needs-you';
 
 import s from './Sidebar.module.css';
 
@@ -261,9 +263,12 @@ const STATUS_LABEL: Record<SidebarStatus, string> = {
 export default function Sidebar({
   user,
   status,
+  needs = [],
 }: {
   user: SessionUser;
   status: SidebarStatus;
+  /** What needs the member, for the bell. lib/needs-you.ts. */
+  needs?: NeedsYouItem[];
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -281,6 +286,10 @@ export default function Sidebar({
       <div className={s.brandRow}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="brand-logo" src="/brand/altspot-wordmark.svg" alt="AltSpot" />
+
+        <span className={s.brandTools}>
+          {/* What needs the member, from any page (Tyler, 2026-09-17). */}
+          <NotificationBell items={needs} />
 
         {/* Always present, in both states, because a control that
             disappears when you use it is a trap. */}
@@ -300,6 +309,7 @@ export default function Sidebar({
             <PanelLeftClose size={16} strokeWidth={1.6} aria-hidden="true" />
           )}
         </button>
+        </span>
       </div>
 
       <nav className={s.nav} aria-label="Investor portal">

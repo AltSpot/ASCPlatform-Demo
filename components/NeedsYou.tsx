@@ -9,39 +9,23 @@
  * which for most members on most days is the case, and that absence is
  * itself the message.
  *
- * Four things can appear here, in the order a member would want to hear
- * them: a commitment to fund (it has a clock), a document to sign, a
- * Radar name that has gone live (the loop closing: they said what they
- * wanted and it arrived), and a commitment that lapsed (nothing to do
- * but decide whether to start again). Each row is one sentence and one
- * button. The page below carries the detail.
+ * The list itself is built in lib/needs-you.ts, which the bell on the
+ * rail (components/NotificationBell) reads too, so the strip and the
+ * bell always agree. Each row is one sentence and one button; the page
+ * below carries the detail. `lineOf` and `actionOf` are exported so the
+ * bell's panel says exactly what the strip says.
  *
  * Server component. The rows are derived on the server from the same
- * subscriptions and Radar board the rest of the page reads, so this
- * cannot disagree with the table under it.
+ * subscriptions and Radar board the rest of the page reads.
  */
 import Link from 'next/link';
 
 import { dateStr, money } from '@/lib/format';
+import { keyOf, toneOf, type NeedsYouItem } from '@/lib/needs-you';
 
 import s from './NeedsYou.module.css';
 
-export type NeedsYouItem =
-  | {
-      kind: 'fund';
-      id: string;
-      dealName: string;
-      amount: number;
-      /** Null only if the signature never set a window. Read as due today. */
-      deadline: string | null;
-      daysLeft: number;
-    }
-  | { kind: 'sign'; dealId: string; dealName: string; amount: number }
-  | { kind: 'live'; dealId: string; dealName: string; voted: number; closes: string }
-  | { kind: 'lapsed'; id: string; dealId: string; dealName: string; amount: number };
-
-/** Inside this many days a funding deadline stops being background. */
-const URGENT_DAYS = 3;
+export type { NeedsYouItem } from '@/lib/needs-you';
 
 export default function NeedsYou({ items }: { items: NeedsYouItem[] }) {
   if (items.length === 0) return null;
@@ -59,25 +43,7 @@ export default function NeedsYou({ items }: { items: NeedsYouItem[] }) {
   );
 }
 
-function keyOf(item: NeedsYouItem): string {
-  switch (item.kind) {
-    case 'fund':
-    case 'lapsed':
-      return `${item.kind}:${item.id}`;
-    case 'sign':
-    case 'live':
-      return `${item.kind}:${item.dealId}`;
-  }
-}
-
-function toneOf(item: NeedsYouItem): 'urgent' | 'quiet' | 'live' {
-  if (item.kind === 'fund') return item.daysLeft <= URGENT_DAYS ? 'urgent' : 'quiet';
-  if (item.kind === 'lapsed') return 'urgent';
-  if (item.kind === 'live') return 'live';
-  return 'quiet';
-}
-
-function lineOf(item: NeedsYouItem) {
+export function lineOf(item: NeedsYouItem) {
   switch (item.kind) {
     case 'fund':
       return (
@@ -116,17 +82,17 @@ function lineOf(item: NeedsYouItem) {
   }
 }
 
-function actionOf(item: NeedsYouItem) {
+export function actionOf(item: NeedsYouItem) {
   switch (item.kind) {
     case 'fund':
       return (
-        <Link className="btn btn-gold btn-sm" href={`/payment/${item.id}`}>
-          Send to escrow
+        <Link className="btn btn-action btn-sm" href={`/payment/${item.id}`}>
+          Complete investment
         </Link>
       );
     case 'sign':
       return (
-        <Link className="btn btn-gold btn-sm" href={`/invest/${item.dealId}`}>
+        <Link className="btn btn-action btn-sm" href={`/invest/${item.dealId}`}>
           Finish signing
         </Link>
       );

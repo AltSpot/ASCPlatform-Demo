@@ -41,6 +41,18 @@
   border-bottom: 1px solid var(--hair-neutral);
 }
 
+/* The bell and the toggle, side by side; stacked once the rail is narrow. */
+.brandTools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+:global(html[data-rail='mini']) .brandTools {
+  flex-direction: column;
+  gap: 6px;
+}
+
 .railToggle {
   display: grid;
   place-items: center;
