@@ -55,9 +55,10 @@ export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
   const { inputs } = set;
   const post = inputs.entryPreMoney + inputs.roundSize;
 
+  const sentence = feeSentence();
   const netOf =
     SHOW_FEE_TERMS || SHOW_CARRY_TERMS
-      ? feeSentence()
+      ? `${sentence.charAt(0).toLowerCase()}${sentence.slice(1)}`
       : 'the platform fee, the management fee reserve and carried interest, each as described in the offering documents.';
 
   const tiles: { k: string; v: string; note?: string }[] = [
