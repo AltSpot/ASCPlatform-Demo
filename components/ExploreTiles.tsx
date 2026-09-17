@@ -14,58 +14,16 @@
  * with how many deals are open in it. A slice with nothing open is not
  * shown. Definitions: lib/explore.ts, which the marketplace reads back.
  */
-import {
-  ArrowUpRight,
-  Boxes,
-  Building2,
-  Cpu,
-  CreditCard,
-  Database,
-  Factory,
-  Handshake,
-  HeartPulse,
-  Landmark,
-  Layers,
-  Mountain,
-  Plane,
-  Shield,
-  ShieldCheck,
-  ShoppingBag,
-  Sprout,
-  TrendingUp,
-  Truck,
-  Users,
-  Zap,
-  type LucideIcon,
-} from 'lucide-react';
+import { ArrowUpRight, Factory, Layers, TrendingUp, Users, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import AssetClassIcon from '@/components/AssetClassIcon';
+import SliceIcon from '@/components/SliceIcon';
 import type { ExploreGroup, ExploreTile } from '@/lib/explore';
 
 import s from './ExploreTiles.module.css';
 
-const GLYPH: Record<string, LucideIcon> = {
-  altspot: ShieldCheck,
-  partner: Handshake,
-  seed: Sprout,
-  early: TrendingUp,
-  growth: Mountain,
-  late: Landmark,
-  'artificial-intelligence': Cpu,
-  'enterprise-software': Boxes,
-  'data-infrastructure': Database,
-  cybersecurity: Shield,
-  fintech: CreditCard,
-  healthcare: HeartPulse,
-  'aerospace-defense': Plane,
-  'energy-climate': Zap,
-  industrials: Factory,
-  'consumer-marketplaces': ShoppingBag,
-  'logistics-supply-chain': Truck,
-  'real-estate': Building2,
-};
 
 const GROUP_GLYPH: Record<string, LucideIcon> = {
   'Asset class': Layers,
@@ -76,10 +34,9 @@ const GROUP_GLYPH: Record<string, LucideIcon> = {
 
 function Glyph({ tile }: { tile: ExploreTile }) {
   if (tile.axis === 'class') return <AssetClassIcon assetClass={tile.key} size={16} />;
-  const Icon = GLYPH[tile.key] ?? Boxes;
   return (
     <span className={s.glyph}>
-      <Icon size={16} strokeWidth={1.6} aria-hidden="true" />
+      <SliceIcon slice={tile.key} size={16} />
     </span>
   );
 }
