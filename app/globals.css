@@ -155,7 +155,12 @@
   --hair-cream:rgba(184,146,74,.28);   /* hairlines on the paper surface */
 
   /* ============ FILLS ============ */
-  --fill-card:rgba(255,255,255,.03);
+  /* THE PANE IS SMOKED, NOT LIT (Tyler, 2026-09-17: "a touch more black,
+     keep the glass"). A dark translucent fill rather than a white one:
+     the ground still shows through it, but what comes through is held
+     back, so a card reads as a darker pane over the warm bloom instead of
+     a lighter one, and type sits on something calmer. */
+  --fill-card:rgba(8,6,4,.32);
   --fill-input:rgba(255,255,255,.05);
   --fill-gold-tint:rgba(243,152,7,.05);
   --glass:rgba(10,8,6,.50);
@@ -206,6 +211,15 @@
      lower lip, both of which live in --card-lift. A border is kept on
      the rule (rather than removed) so no card changes size. */
   --card-edge:transparent;
+  /* THE RIM OF A SURFACE INSIDE A PANE (2026-09-17): a chip, an Explore
+     tile, a menu item lit on a card. On ember it is a breath of light, so
+     a tile is told from the card by depth as much as by line; on the
+     clear Daylight glass a fill a few percent whiter than the card it sits
+     on is invisible, so there the rim is a bright line of light and a
+     soft cast under it, which is what makes a pill read as a pill and not
+     as text laid on the card (Tyler). */
+  --inset-edge:rgba(255,255,255,.07);
+  --inset-lift:0 1px 1px rgba(0,0,0,.18);
 
   /* Glass. The blur and the saturation lift are tokens because the two
      themes want genuinely different amounts: the ember canvas is nearly
@@ -218,7 +232,7 @@
   /* Frost. Brightness is part of the material, not the tint: a pane
      that lifts what is behind it reads as ice, a pane that paints white
      over it reads as milk. Neutral on ember. */
-  --glass-bright:1.06;
+  --glass-bright:.98;
   /* The grain of frosted glass: a fine white speckle, tiled, well under
      the threshold of reading as texture. None on ember, where the page
      already carries its own grain. */
@@ -422,10 +436,25 @@
   --font-mono:var(--font-data);
   /* Large figures: the same tabular face as every other number. */
   --font-figure:var(--font-data);
-  /* The action button inverts the page on purpose: page ink as fill,
-     page ground as type, in every theme. */
-  --action-fill:var(--as-text);
-  --fg-on-action:var(--as-ink);
+  /* THE ACTION BUTTON (revised 2026-09-17). It used to invert the page,
+     ink on light, and beside the gold shelf it read as a white pill
+     (Tyler). It now wears the brand's heat: hot amber into ember, the one
+     ramp reserved for a moment that is already under way, with dark ink
+     on it in every theme (6.8:1 on the midpoint). The gold CTA is a first
+     step; the heat is a step half taken. */
+  --action-fill:linear-gradient(135deg,#FFAE45 0%,#F07A1E 58%,#E5661A 100%);
+  --action-line:rgba(229,102,26,.55);
+  --action-dot:rgba(255,248,236,.95);
+  --fg-on-action:#1A0E04;
+  --shadow-action:0 8px 24px rgba(229,102,26,.32);
+  --shadow-action-hover:0 12px 32px rgba(229,102,26,.46);
+  /* The rim and the light on a secondary pill: a filled pill with a lit
+     top edge and a faint gold rim reads as glass; a flat single-colour
+     pill reads as a sticker (Tyler, 2026-09-17). */
+  --btn-rim:rgba(243,152,7,.22);
+  --btn-rim-quiet:rgba(255,255,255,.10);
+  --btn-sheen:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0) 58%);
+  --cta-sheen:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.04) 52%,rgba(0,0,0,.04) 100%);
   --w-light:300; --w-regular:400; --w-medium:500; --w-semi:600;
 
   /* ============ STATUS ============ */
@@ -544,14 +573,20 @@ body{
    the page a smoked-glass card sits over flat black, and quiet enough
    (toned down 2026-09-16) that it never competes with a card. Every
    text ratio measured against #0A0806 holds. */
+/* Warmer toward orange and gold (Tyler, 2026-09-17): the heat top right
+   is signal orange with amber in it rather than ember, a gold pool sits
+   top of centre, the sweep is orange-brown, and the ember pool bottom
+   right stays, held a step back, so the red is still in the room. */
 body::before{
   content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(62% 56% at 96% -4%,rgba(243,152,7,.13),rgba(229,102,26,.045) 46%,transparent 74%),
-    radial-gradient(52% 52% at 104% 92%,rgba(229,102,26,.08),transparent 70%),
-    radial-gradient(56% 52% at -4% 104%,rgba(199,154,75,.11),transparent 68%),
-    radial-gradient(44% 40% at 42% 38%,rgba(199,154,75,.035),transparent 70%),
-    linear-gradient(135deg,rgba(40,26,12,0) 20%,rgba(64,34,10,.22) 100%),
+    radial-gradient(62% 56% at 96% -4%,rgba(243,152,7,.17),rgba(255,158,44,.05) 46%,transparent 74%),
+    radial-gradient(46% 40% at 30% -8%,rgba(214,172,98,.09),transparent 70%),
+    radial-gradient(52% 52% at 104% 92%,rgba(229,102,26,.075),transparent 70%),
+    radial-gradient(56% 52% at -4% 104%,rgba(199,154,75,.15),transparent 68%),
+    radial-gradient(48% 36% at 50% 108%,rgba(230,199,122,.06),transparent 70%),
+    radial-gradient(44% 40% at 42% 38%,rgba(214,172,98,.045),transparent 70%),
+    linear-gradient(135deg,rgba(40,26,12,0) 20%,rgba(84,46,10,.22) 100%),
     radial-gradient(120% 120% at 50% 50%,transparent 60%,rgba(0,0,0,.42));
 }
 body::after{
@@ -730,40 +765,50 @@ html[data-rail='mini']{--rail:74px}
   text-decoration:none!important;font-family:var(--fb);
 }
 .btn:active{transform:translateY(1px)}
-/* Primary CTA rides the canonical gold to orange ramp. */
+/* THE BUTTONS (final pass, 2026-09-17). Every pill is built the same
+   way: a fill, a sheen falling from the top edge, a lit top lip, and a
+   rim of light or gold, so a control reads as a small pane and not as a
+   flat sticker. The primary rides the canonical gold to orange ramp and
+   is the loudest thing on any screen; the heat ramp is reserved for a
+   step already under way; the secondaries are tinted glass. */
 .btn-gold{
   position:relative;overflow:hidden;
-  background:var(--as-cta-gradient);
-  color:var(--fg-on-gold);box-shadow:var(--shadow-cta);
+  background:var(--as-gold);
+  background-image:var(--cta-sheen),var(--as-cta-gradient);
+  color:var(--fg-on-gold);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1px 0 rgba(0,0,0,.14),var(--shadow-cta);
 }
 .btn-gold:hover{
-  transform:translateY(-2px);box-shadow:var(--shadow-cta-hover);
+  transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -1px 0 rgba(0,0,0,.14),var(--shadow-cta-hover);
   color:var(--fg-on-gold);
+  filter:saturate(1.08) brightness(1.04);
 }
 /* ACTION NEEDED (2026-09-17). The one button that means "you started
    this and it is waiting on you": finish signing, or complete the
-   investment. It must out-rank every gold "View deal" on the shelf, so it
-   is the inverse of the page (ink on light in Ember and Ice, light on ink
-   in Daylight) with a live dot. Never used for a first step. */
+   investment. It must out-rank every gold "View deal" on the shelf, so
+   it wears the heat ramp, hot amber into ember, with a light pulsing dot.
+   Never used for a first step. */
 .btn-action{
   position:relative;
-  background:var(--action-fill);
+  background:var(--as-ember);
+  background-image:var(--cta-sheen),var(--action-fill);
   color:var(--fg-on-action);
-  box-shadow:0 0 0 1px var(--action-fill),0 8px 22px rgba(0,0,0,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),inset 0 -1px 0 rgba(0,0,0,.16),0 0 0 1px var(--action-line),var(--shadow-action);
 }
 .btn-action::before{
   content:'';width:7px;height:7px;border-radius:50%;flex:none;
-  background:var(--good-paint);
-  box-shadow:0 0 0 0 var(--good-line);
+  background:var(--action-dot);
+  box-shadow:0 0 0 0 rgba(255,248,236,.6);
   animation:action-pulse 2s ease-out infinite;
 }
 .btn-action:hover{
   transform:translateY(-2px);
   color:var(--fg-on-action);
-  box-shadow:0 0 0 1px var(--action-fill),0 12px 28px rgba(0,0,0,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(0,0,0,.16),0 0 0 1px var(--action-line),var(--shadow-action-hover);
 }
 @keyframes action-pulse{
-  0%{box-shadow:0 0 0 0 var(--good-line)}
+  0%{box-shadow:0 0 0 0 rgba(255,248,236,.6)}
   70%{box-shadow:0 0 0 6px transparent}
   100%{box-shadow:0 0 0 0 transparent}
 }
@@ -780,9 +825,21 @@ html[data-rail='mini']{--rail:74px}
    Ghost is the warm second action beside a gold primary; quiet is the
    neutral one on a row. Neither draws a line: on glass an outlined
    pill reads as a hole. */
-.btn-ghost{background:var(--btn-fill);border-color:transparent;color:var(--ink)}
-.btn-ghost:hover{background:var(--btn-fill-hover);border-color:transparent;color:var(--accent-hot)}
-.btn-quiet{background:var(--surface-3);border-color:transparent;color:var(--as-text)}
+.btn-ghost{
+  background-color:var(--btn-fill);background-image:var(--btn-sheen);
+  border-color:transparent;color:var(--ink);
+  box-shadow:inset 0 0 0 1px var(--btn-rim),inset 0 1px 0 rgba(255,255,255,.10),var(--inset-lift);
+}
+.btn-ghost:hover{
+  background-color:var(--btn-fill-hover);border-color:transparent;color:var(--accent-hot);
+  transform:translateY(-1px);
+  box-shadow:inset 0 0 0 1px var(--btn-rim),inset 0 1px 0 rgba(255,255,255,.14),var(--inset-lift),0 8px 20px -10px rgba(243,152,7,.35);
+}
+.btn-quiet{
+  background-color:var(--surface-3);background-image:var(--btn-sheen);
+  border-color:transparent;color:var(--as-text);
+  box-shadow:inset 0 0 0 1px var(--btn-rim-quiet),inset 0 1px 0 rgba(255,255,255,.08),var(--inset-lift);
+}
 /* The vote. Green, because on this platform green is demand growing,
    and a vote is demand the member is adding. Never used for money. */
 .btn-vote{
@@ -790,7 +847,7 @@ html[data-rail='mini']{--rail:74px}
   border-color:transparent;box-shadow:var(--shadow-vote);
 }
 .btn-vote:hover{transform:translateY(-2px);box-shadow:var(--shadow-vote-hover);color:var(--fg-on-vote)}
-.btn-quiet:hover{background:var(--btn-fill);color:var(--accent-hot)}
+.btn-quiet:hover{background-color:var(--btn-fill);color:var(--accent-hot);transform:translateY(-1px)}
 /* Disabled is a colour, not an opacity: the label still has to be read. */
 .btn[disabled]{background:var(--panel-2);color:var(--as-text-muted);border-color:var(--hair);cursor:not-allowed;box-shadow:none}
 .btn-block{width:100%}
@@ -842,6 +899,9 @@ label.field>span{
   font-weight: var(--w-medium);letter-spacing: var(--ls-label);text-transform:uppercase;
   border:1px solid transparent;color:var(--accent-quiet);
   padding:4px 11px;border-radius:var(--r-pill);background:var(--tint-gold);
+  /* A rim of light, not a drawn line: what makes a pill a pill on clear
+     glass (Tyler, 2026-09-17). A breath on ember. */
+  box-shadow:inset 0 0 0 1px var(--inset-edge),var(--inset-lift);
 }
 .chip.neutral{border-color:transparent;color:var(--as-text-muted);background:var(--surface-2)}
 .chip.good{border-color:transparent;color:var(--good);background:var(--good-fill)}
@@ -1305,12 +1365,18 @@ html[data-theme='light']{
      Raised means adding white; recessed means adding warm shadow. The
      wells are brown rather than black: black on cream goes grey and
      drags the whole page toward newsprint. */
-  --fill-card:rgba(255,255,255,.16);   /* THE glass pane. Nearly clear (Tyler, 2026-09-17): the light edge and the blur make it a pane, not the white */
-  --fill-input:rgba(255,255,255,.30);
-  --panel-2:rgba(255,255,255,.26);
-  --surface-1:rgba(255,255,255,.14);   /* quiet fill inside a card */
-  --surface-2:rgba(255,255,255,.28);   /* raised: hover rows, chips */
-  --surface-3:rgba(255,255,255,.55);   /* present: thumbs, filled tracks, quiet pills */
+  --fill-card:rgba(255,255,255,.20);   /* THE glass pane. Nearly clear (Tyler, 2026-09-17): the light edge and the blur make it a pane, not the white */
+  --fill-input:rgba(255,255,255,.34);
+  --panel-2:rgba(255,255,255,.30);
+  /* The steps inside a pane are far enough apart to be seen on clear
+     glass (2026-09-17): a chip or a tile on a card was a few percent
+     whiter than the card and read as text on it. Each step is now white
+     enough to be a shape, and --inset-edge draws its rim in light. */
+  --surface-1:rgba(255,255,255,.34);   /* quiet fill inside a card */
+  --surface-2:rgba(255,255,255,.58);   /* raised: hover rows, chips */
+  --surface-3:rgba(255,255,255,.78);   /* present: thumbs, filled tracks, quiet pills */
+  --inset-edge:rgba(255,255,255,.95);
+  --inset-lift:0 1px 2px rgba(110,62,18,.07),0 4px 10px -4px rgba(130,72,20,.10);
   --surface-well:rgba(110,70,28,.07);  /* recessed: inputs, inset panels */
   --track:rgba(110,70,28,.20);
   --track-faint:rgba(110,70,28,.10);         /* the unfilled half of a meter */
@@ -1374,8 +1440,9 @@ html[data-theme='light']{
      pulled in under it. */
   --card-lift:
     inset 0 1px 0 rgba(255,255,255,.95),
-    0 1px 2px rgba(110,62,18,.05),
-    0 16px 36px -20px rgba(130,72,20,.20);
+    inset 0 0 0 1px rgba(255,255,255,.35),
+    0 1px 2px rgba(110,62,18,.06),
+    0 22px 44px -18px rgba(130,72,20,.26);
 
   /* ---- accent washes, lifted ----
      7% orange is a warm glow on the ember canvas and literally nothing
@@ -1386,6 +1453,11 @@ html[data-theme='light']{
   /* A real gold pill, not a beige one. */
   --btn-fill:rgba(243,152,7,.30);
   --btn-fill-hover:rgba(243,152,7,.44);
+  --btn-rim:rgba(255,255,255,.85);
+  --btn-rim-quiet:rgba(255,255,255,.90);
+  --btn-sheen:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.06) 60%);
+  --shadow-action:0 8px 22px rgba(229,102,26,.30);
+  --shadow-action-hover:0 12px 30px rgba(229,102,26,.42);
   --tint-gold-faint:rgba(199,154,75,.07);
   --tint-ember:rgba(229,102,26,.11);
   --tint-ember-line:rgba(229,102,26,.38);
@@ -1471,33 +1543,58 @@ html[data-theme='light']{
    shadow, the look of clear glass over a dark room. Only the glass layer
    is restated; type, accents, paint and every other token are Ember's,
    so nothing here needs its own contrast pass. */
+/* CLEARER (Tyler, 2026-09-17: "less grey, more see-through"). The grey was
+   the fill: a cool white at 15% over a dark ground averages to slate. The
+   fill is now nearly nothing and the pane is made of light instead: a
+   stronger brightness lift on what is behind it, a rim of cold light all
+   round, a specular top edge, and a cool cast that falls a little way
+   into the glass from the top. The ground under Ice carries two cold
+   pools (below) so the frost has something cold to refract; the ember
+   bloom is otherwise unchanged. */
 html[data-theme='ice']{
-  --fill-card:rgba(214,232,252,.15);
-  --card-edge:rgba(226,240,255,.34);
-  --edge-top:rgba(244,250,255,.36);
-  --glass-blur:30px;
-  --glass-sat:120%;
-  --glass-bright:1.22;
-  --card-sheen:linear-gradient(180deg,rgba(240,248,255,.20) 0%,rgba(236,246,255,.07) 50%,rgba(210,230,250,.04) 100%);
+  --fill-card:rgba(205,226,250,.065);
+  --card-edge:rgba(228,241,255,.30);
+  --edge-top:rgba(244,250,255,.44);
+  --glass-blur:28px;
+  --glass-sat:140%;
+  --glass-bright:1.36;
+  --card-sheen:linear-gradient(172deg,rgba(240,248,255,.15) 0%,rgba(236,246,255,.045) 38%,rgba(210,230,250,.015) 100%);
   --card-lift:
-    inset 0 1px 0 rgba(240,248,255,.30),
+    inset 0 1px 0 rgba(244,250,255,.40),
+    inset 1px 0 0 rgba(240,248,255,.10),
+    inset 0 18px 32px -22px rgba(214,234,255,.16),
+    inset 0 -1px 0 rgba(0,0,0,.20),
     0 1px 1px rgba(0,0,0,.35),
-    0 24px 56px -26px rgba(0,0,0,.80);
+    0 26px 58px -26px rgba(0,0,0,.82);
   --shadow-card-hover:
-    inset 0 1px 0 rgba(240,248,255,.42),
+    inset 0 1px 0 rgba(244,250,255,.52),
+    inset 0 18px 32px -22px rgba(214,234,255,.22),
     0 2px 3px rgba(0,0,0,.35),
-    0 30px 64px -24px rgba(0,0,0,.82),
-    0 0 42px rgba(200,225,255,.07);
-  --surface-1:rgba(225,238,255,.07);
-  --surface-2:rgba(225,238,255,.12);
-  --surface-3:rgba(225,238,255,.19);
-  --track:rgba(225,238,255,.12);
-  --track-faint:rgba(225,238,255,.05);
+    0 32px 66px -24px rgba(0,0,0,.84),
+    0 0 48px rgba(200,225,255,.09);
+  --surface-1:rgba(225,238,255,.06);
+  --surface-2:rgba(225,238,255,.11);
+  --surface-3:rgba(225,238,255,.18);
+  --track:rgba(225,238,255,.11);
+  --track-faint:rgba(225,238,255,.045);
   --hair-neutral:rgba(220,236,255,.14);
   --hair-soft:rgba(220,236,255,.07);
-  --panel-2:rgba(225,238,255,.07);
-  --glass:rgba(22,26,32,.52);
-  --glass-solid:rgba(20,24,30,.78);
+  --panel-2:rgba(225,238,255,.06);
+  --inset-edge:rgba(228,241,255,.16);
+  --inset-lift:0 1px 1px rgba(0,0,0,.22);
+  --glass:rgba(18,22,30,.46);
+  --glass-solid:rgba(16,20,28,.74);
+  --glass-tint-gold:linear-gradient(180deg,rgba(243,152,7,.09),rgba(243,152,7,.015));
+}
+html[data-theme='ice'] body::before{
+  background:
+    radial-gradient(62% 56% at 96% -4%,rgba(243,152,7,.15),rgba(255,158,44,.04) 46%,transparent 74%),
+    radial-gradient(40% 36% at 22% 18%,rgba(196,222,250,.07),transparent 70%),
+    radial-gradient(44% 40% at 70% 64%,rgba(190,216,246,.06),transparent 72%),
+    radial-gradient(52% 52% at 104% 92%,rgba(229,102,26,.065),transparent 70%),
+    radial-gradient(56% 52% at -4% 104%,rgba(199,154,75,.13),transparent 68%),
+    linear-gradient(135deg,rgba(40,26,12,0) 20%,rgba(84,46,10,.18) 100%),
+    radial-gradient(120% 120% at 50% 50%,transparent 60%,rgba(0,0,0,.42));
 }
 
 html[data-theme='light'] body::before{
@@ -1507,22 +1604,24 @@ html[data-theme='light'] body::before{
     /* ice: two cool pools, faint, so the frost has something cold in it */
     radial-gradient(34% 30% at 34% 40%,rgba(214,232,250,.36),transparent 72%),
     radial-gradient(30% 28% at 82% 70%,rgba(206,228,248,.28),transparent 72%),
-    /* gold, entering top of centre */
-    radial-gradient(54% 46% at 44% -10%,rgba(214,172,98,.19),transparent 72%),
+    /* gold, entering top of centre. Richer (2026-09-17): the page has to
+       carry as much light and shade as Ember does, or clear glass has
+       nothing to be glass over and the theme reads as pale boxes. */
+    radial-gradient(54% 46% at 44% -10%,rgba(214,172,98,.28),transparent 72%),
     /* orange, top right, wider */
-    radial-gradient(56% 54% at 100% 0%,rgba(243,152,7,.11),rgba(229,102,26,.03) 50%,transparent 76%),
+    radial-gradient(56% 54% at 100% 0%,rgba(243,152,7,.17),rgba(229,102,26,.05) 50%,transparent 76%),
     /* apricot, left of middle */
-    radial-gradient(44% 40% at 10% 56%,rgba(238,172,104,.13),transparent 72%),
+    radial-gradient(44% 40% at 10% 56%,rgba(238,172,104,.19),transparent 72%),
     /* apricot, right of middle */
-    radial-gradient(48% 44% at 74% 46%,rgba(240,164,92,.11),transparent 72%),
+    radial-gradient(48% 44% at 74% 46%,rgba(240,164,92,.16),transparent 72%),
     /* ember, bottom right */
-    radial-gradient(50% 52% at 100% 100%,rgba(229,102,26,.07),transparent 70%),
+    radial-gradient(50% 52% at 100% 100%,rgba(229,102,26,.11),transparent 70%),
     /* gold, bottom left */
-    radial-gradient(54% 52% at -2% 100%,rgba(214,172,98,.20),transparent 70%),
+    radial-gradient(54% 52% at -2% 100%,rgba(214,172,98,.30),transparent 70%),
     /* champagne, bottom centre */
-    radial-gradient(48% 36% at 50% 106%,rgba(228,192,124,.16),transparent 70%),
-    /* the sweep: a touch warmer at its far end (2026-09-17) */
-    linear-gradient(125deg,#FEFDFB 0%,#FBF7F0 34%,#F8F1E5 68%,#F5EAD8 100%);
+    radial-gradient(48% 36% at 50% 106%,rgba(228,192,124,.22),transparent 70%),
+    /* the sweep: warmer at its far end */
+    linear-gradient(125deg,#FEFDFB 0%,#FBF6EE 34%,#F7EEDF 68%,#F3E5CE 100%);
 }
 html[data-theme='light'] body::after{opacity:.012}
 

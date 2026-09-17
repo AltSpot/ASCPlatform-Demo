@@ -575,8 +575,10 @@
 
 /* Your own unfinished investment: the status that outranks the rest. */
 .status[data-tone='action'] {
-  background: var(--action-fill);
+  background: var(--as-ember);
+  background-image: var(--action-fill);
   color: var(--fg-on-action);
+  box-shadow: 0 4px 14px rgba(229, 102, 26, 0.32);
 }
 .status[data-tone='action'] svg {
   stroke: var(--fg-on-action);
