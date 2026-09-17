@@ -88,9 +88,9 @@ const FIXTURES: NewsFixture[] = [
     lead: true,
   },
   {
-    id: 'wire-506c-guidance',
-    headline: 'SEC staff guidance clears a lighter path for 506(c) verification',
-    dek: 'A no-action letter published in March lets issuers rely on high minimum investment amounts plus written representations. Sponsors are updating subscription packets to match.',
+    id: 'wire-reg-d-filings',
+    headline: 'Form D filings for single-asset SPVs rose again in the second quarter',
+    dek: 'Private placements under Regulation D kept growing, led by deal-by-deal vehicles. More sponsors now file a notice in every state where an investor sits.',
     source: 'Regulatory Desk',
     category: 'Regulation',
     minutesAgo: 96,

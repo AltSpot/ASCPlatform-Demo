@@ -171,7 +171,7 @@ const REFUSALS: Record<RefusalReason, { body: string; followUps: string[] }> = {
   },
   position_sizing: {
     body:
-      'How much to commit is a question about your finances, not about the platform, so I will leave it with you and your advisor. What I can give you is the mechanics: the minimum on the deal terms, the all-in cost itemized before you sign, and the 10 day window to fund once you have signed.',
+      'How much to commit is a question about your finances, not about the platform, so I will leave it with you and your advisor. What I can give you is the mechanics: the minimum on the deal terms, the cost shown before you sign, and when admissions close.',
     followUps: ['allocation', 'fees', 'funding-window'],
   },
   tax_or_legal_advice: {

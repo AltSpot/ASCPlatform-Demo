@@ -327,7 +327,7 @@ export default function Sidebar({
             })}
 
             {group.label === 'Investing' ? (
-              <div className={`${s.item} ${s.soon}`} title="Secondary liquidity, in design">
+              <div className={`${s.item} ${s.soon}`} title="Phase 2. Select positions may become eligible for an organized annual liquidity window; participation and execution are not guaranteed.">
                 <span className={s.slot}>
                   <Icon glyph={TrendingUp} />
                 </span>

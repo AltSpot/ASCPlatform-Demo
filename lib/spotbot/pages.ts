@@ -32,7 +32,7 @@ const DASHBOARD: PageContext = {
   key: 'dashboard',
   label: 'Dashboard',
   brief:
-    'This is your position summary: what you have funded, what it is currently marked at, and anything still in flight. Work top down, because anything needing action from you is pinned above the table with its deadline.',
+    'This is your position summary: what you have invested, what it is currently marked at, and anything still in flight. Work top down, because anything needing action from you is pinned above the table with its deadline.',
   suggested: questionsFor(['dashboard-numbers', 'position-value', 'signing']),
   topics: ['dashboard-numbers', 'position-value', 'signing', 'funding-window', 'wizard-steps'],
 };
@@ -41,7 +41,7 @@ const MARKETPLACE: PageContext = {
   key: 'marketplace',
   label: 'Marketplace',
   brief:
-    'Deals AltSpot sourced and underwrote, open to subscribe today. Each card shows the sector, the minimum, when it closes and how much of the round is still open. Further down the same page, the Radar is the opposite: companies AltSpot does not own and is asking members to vote on.',
+    'Deals AltSpot sourced and diligenced, each organized and advised by AltSpot and open to subscribe today. Each card shows who leads it and how close it is to its minimum; Quick look opens the rest. Further down the same page, the Radar is the opposite: companies AltSpot does not own and is asking members to vote on.',
   suggested: questionsFor(['sourcing', 'allocation', 'radar']),
   topics: ['sourcing', 'allocation', 'deal-page', 'spv', 'radar'],
 };
@@ -75,7 +75,7 @@ const DEAL: PageContext = {
   key: 'deal',
   label: 'Deal',
   brief:
-    'The whole pitch on one page, in the same order for every deal: the numbers, the story, the thesis, the risks, the terms, the two fees, then the data room. The offering documents govern, so read them before you sign.',
+    'The whole pitch on one page, in the same order for every deal: the funding picture, the numbers, the story, the risks, the terms and what it costs, then the data room. The offering documents govern, so read them before you sign.',
   suggested: questionsFor(['deal-page', 'fees', 'spv']),
   topics: ['deal-page', 'fees', 'spv', 'data-room', 'allocation'],
 };
@@ -84,7 +84,7 @@ const INVEST: PageContext = {
   key: 'invest',
   label: 'Subscription',
   brief:
-    'The document on the left fills in as you complete the three confirmations on the right. Each confirmation completes one section of representations. When all three are done you sign, your allocation is reserved, and the 10 day funding window opens.',
+    'The document on the left fills in as you complete the three confirmations on the right. Each confirmation completes one section of representations. When all three are done you sign, your spot is reserved, and you have until admissions close to send to escrow.',
   suggested: questionsFor(['confirmations', 'subscription-agreement', 'fees']),
   topics: [
     'confirmations',
@@ -99,9 +99,9 @@ const INVEST: PageContext = {
 
 const PAYMENT: PageContext = {
   key: 'payment',
-  label: 'Funding',
+  label: 'Escrow',
   brief:
-    'You have signed, so the allocation is held for you and the 10 day clock is running. Fund by ACH from your linked account, or wire against the instructions here. Nothing else is outstanding.',
+    'You have signed, so your spot is held until admissions close. Send to escrow by ACH from your linked account, or by wire. The money waits in escrow until the deal closes, and comes back if it does not reach its minimum.',
   suggested: questionsFor(['funding-window', 'funding-methods', 'after-funding']),
   topics: ['funding-window', 'funding-methods', 'after-funding', 'expiry', 'cancel'],
 };
@@ -173,7 +173,7 @@ const WIZARD: PageContext = {
   key: 'wizard',
   label: 'Account setup',
   brief:
-    'Five one-time steps: accreditation, your information, identity, investment profile, link bank. Accreditation and identity are the two that gate investing. Finish those and the marketplace opens.',
+    'Five one-time steps: the investor questionnaire, your information, identity, investment profile, link bank. Offerings open after a short cooling-off period once the questionnaire is approved; your information and identity gate investing.',
   suggested: questionsFor(['wizard-steps', 'accreditation', 'kyc']),
   topics: ['wizard-steps', 'accreditation', 'verification-506c', 'kyc', 'vault', 'profile-types'],
 };

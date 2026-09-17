@@ -95,7 +95,7 @@ const INDICATORS: MarketIndicator[] = [
     delta: '6 days',
     direction: 'up',
     period: 'Median, trailing year',
-    note: 'Diligence is taking longer. Budget for it when a funding window is short.',
+    note: 'Diligence is taking longer. Budget for it when a closing window is short.',
     series: [33, 34, 36, 38, 41, 43, 44, 47],
   },
   {

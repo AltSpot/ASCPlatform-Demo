@@ -86,7 +86,7 @@ const MECHANICS: readonly string[] = [
   'What is carried interest?',
   'What is the carried interest percentage?',
   'How does the funding window work?',
-  'What happens if I do not fund in 10 days?',
+  'What happens if I miss the admission cut-off?',
   'What is an accredited investor?',
   'How do I link a bank account?',
   'What is the minimum investment?',
@@ -99,7 +99,7 @@ const MECHANICS: readonly string[] = [
   'How do I cancel a commitment?',
   'What documents will I need to sign?',
   'Why are these securities illiquid?',
-  "What is AltSpot's committed capital on this deal?",
+  'What is the minimum to close on this deal?',
   'How does allocation work?',
   'What are the risks listed in the deal?',
 ];

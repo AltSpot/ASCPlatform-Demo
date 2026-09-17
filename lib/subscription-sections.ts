@@ -172,7 +172,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
     ],
     points: [
       {
-        text: 'The offering runs under Rule 506(c), so AltSpot must take reasonable steps to verify your status. You upload a signed certification letter and AltSpot reviews it directly, or you hand us a letter dated within the last three months from your broker-dealer, registered investment adviser, attorney or CPA. If your status cannot be verified, the Manager can decline your subscription.',
+        text: 'The offering runs under Rule 506(b), without general solicitation, to members AltSpot already knows through its investor questionnaire. You certify which accredited-investor standard you meet, and the Manager may ask reasonable follow-up questions. If it cannot form a reasonable belief that you are accredited, it can decline your subscription.',
       },
       {
         text: 'You have the legal capacity to sign, and if you are investing through an entity you have the authority to bind it. Signing violates no law, no organizational document and no other agreement you are party to. Once signed, this agreement is enforceable against you.',

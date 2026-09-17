@@ -388,32 +388,28 @@ const LIBRARY: LibraryItem[] = [
     kind: 'podcast',
     title: 'Accreditation, explained properly',
     standfirst:
-      'Twenty five minutes on what Rule 506(c) actually requires, why the letter has to come from a third party, and why it is good for five years.',
+      'Twenty five minutes on Rule 506(b): why no deal is ever named in public, why you answer a questionnaire first, and why there is a short wait before offerings open.',
     topic: 'Regulation',
     author: 'AltSpot Capital',
-    publishedAt: '2026-08-04T13:00:00.000Z',
+    publishedAt: '2026-09-17T13:00:00.000Z',
     minutes: 25,
     art: 'linear-gradient(135deg,#0B0A08 0%,#2A2418 55%,#B8924A 118%)',
     chapters: [
-      { at: '00:00', label: 'Two exemptions, and why the difference matters' },
-      { at: '05:30', label: 'What "reasonable steps to verify" means in practice' },
+      { at: '00:00', label: 'Two exemptions, and the one we use' },
+      { at: '05:30', label: 'Why a relationship comes before any deal' },
       { at: '12:10', label: 'Income, net worth, and the professional pathways' },
-      { at: '18:00', label: 'Why five years, and what restarts the clock' },
+      { at: '18:00', label: 'The questionnaire, and the cooling-off period' },
       { at: '21:40', label: 'What we keep and what we never keep' },
     ],
     body: [
       {
         type: 'p',
-        text: 'A private offering has to fit inside an exemption from registration. Two of them matter here. Rule 506(b) permits no general solicitation and allows an issuer to rely on an investor’s own statement that they are accredited. Rule 506(c) permits general solicitation and, in exchange, requires the issuer to take reasonable steps to verify that every investor actually is.',
+        text: 'A private offering has to fit inside an exemption from registration. Two of them matter here. Rule 506(c) permits general solicitation and, in exchange, requires the issuer to verify that every investor is accredited. Rule 506(b) permits no general solicitation at all, and lets an issuer rely on a reasonable belief that its investors are accredited. Every deal on AltSpot is offered under 506(b).',
       },
-      { type: 'h', text: 'Why you are asked for a letter' },
+      { type: 'h', text: 'Why a relationship comes first' },
       {
         type: 'p',
-        text: 'Under 506(c) a checkbox is not enough. The issuer has to take steps, and the safe harbours in the rule are specific: tax documents and a written representation, a review of assets and liabilities, or a written confirmation from a licensed attorney, a CPA, a registered broker-dealer or a registered investment adviser.',
-      },
-      {
-        type: 'p',
-        text: 'The last of those requires nobody to send us their tax returns, which is why it is the path AltSpot uses. Your accountant or attorney confirms the status. We keep the confirmation. We never see the underlying figures.',
+        text: 'No general solicitation means no deal is ever named in public: not in an ad, not on social, not on the logged-out site. Offerings go only to people the platform already has a substantive relationship with. That relationship starts with the investor questionnaire, which asks how you qualify and how you evaluate private investments, and AltSpot reviews it before anything opens.',
       },
       { type: 'h', text: 'The pathways' },
       {
@@ -425,14 +421,14 @@ const LIBRARY: LibraryItem[] = [
           'Entities: several routes, most commonly five million dollars in assets.',
         ],
       },
-      { type: 'h', text: 'Why five years' },
+      { type: 'h', text: 'Why there is a wait' },
       {
         type: 'p',
-        text: 'The rule permits an issuer to rely on a prior verification for up to five years, provided the investor confirms in writing that they still qualify. That is why the portal asks you to reconfirm rather than to start again, and why the expiry date is shown on your profile rather than buried.',
+        text: 'Offerings open after a short cooling-off period once your questionnaire is approved, and you may join deals that open after the date the relationship began. A deal that opened before you joined is shown to you, but only to read. That is what keeps a relationship from being formed around a particular deal.',
       },
       {
         type: 'note',
-        text: 'Verification gates what you can read. The W-9 and identity verification gate what you can invest in. They are separate steps on purpose.',
+        text: 'The questionnaire gates what you can see. The W-9 and identity check gate what you can invest in. They are separate steps on purpose.',
       },
     ],
     sourceNote:

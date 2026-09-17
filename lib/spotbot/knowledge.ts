@@ -68,7 +68,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'roth',
     ],
     answer:
-      'A self-directed IRA invests through a custodian. You create an IRA profile with the custodian name and the account number, and the subscription agreement is issued in the account\'s name rather than yours. The custodian countersigns and sends the funds, so plan for their turnaround inside the 10 day funding window. Distributions return to the IRA, not to you. Whether a retirement account should hold a private position at all is a question for your CPA, not for me.',
+      'A self-directed IRA invests through a custodian. You create an IRA profile with the custodian name and the account number, and the subscription agreement is issued in the account\'s name rather than yours. The custodian countersigns and sends the funds, so plan for their turnaround before admissions close, 24 hours before the deal\'s wire. Retirement money is limited to under 25 percent of each SPV, so an IRA subscription can be refused when that share is reached. Distributions return to the IRA, not to you. Whether a retirement account should hold a private position at all is a question for your CPA, not for me.',
     source: 'AltSpot platform guide, Profiles',
     related: ['profile-types', 'funding-window', 'documents'],
   },
@@ -86,30 +86,30 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       '501',
     ],
     answer:
-      'Accredited investor is an SEC definition in Rule 501(a) of Regulation D. The common paths are income over 200,000 dollars individually or 300,000 dollars with a spouse in each of the last two years with the same expected this year, or a net worth over 1,000,000 dollars excluding your primary residence. Certain license holders and entities qualify too. AltSpot offerings are open only to accredited investors. Your certification here is good for five years, and the portal shows the date it was verified.',
-    source: 'Regulation D, Rule 501(a) and Rule 506(c)',
+      'Accredited investor is an SEC definition in Rule 501(a) of Regulation D. The common paths are income over 200,000 dollars individually or 300,000 dollars with a spouse in each of the last two years with the same expected this year, or a net worth over 1,000,000 dollars excluding your primary residence. Certain license holders and entities qualify too. AltSpot offerings are open only to accredited investors. You certify which standard you meet in the investor questionnaire, AltSpot evaluates it, and the answers and the date are kept as the record.',
+    source: 'Regulation D, Rule 501(a) and Rule 506(b)',
     related: ['verification-506c', 'kyc', 'wizard-steps'],
   },
   {
     id: 'verification-506c',
-    question: 'Why do I have to verify accreditation instead of just checking a box?',
+    question: 'Why is there a questionnaire and a wait before I see deals?',
     keywords: [
-      '506c',
-      '506(c)',
-      'verify',
-      'verify accreditation',
-      'verify my accreditation',
-      'why verify',
-      'verification',
+      '506b',
+      '506(b)',
+      'questionnaire',
+      'cooling off',
+      'cooling-off',
+      'why wait',
+      'why cant i see deals',
+      'relationship',
       'self certify',
-      'parallel markets',
-      'letter',
-      'cpa letter',
+      'verify',
+      'verification',
       'proof',
     ],
     answer:
-      'These deals are offered under Rule 506(c), which allows an issuer to speak about an offering publicly. The trade is that the issuer must take reasonable steps to verify that every investor really is accredited. Ticking a box is not enough. So you either upload a letter from a CPA, attorney or registered adviser, or you verify through our third-party provider. AltSpot keeps the verification result and the date, not your underlying financial statements. The verification lasts five years, then you renew it.',
-    source: 'Regulation D, Rule 506(c)',
+      'Every deal is offered under Rule 506(b), which means no deal is ever advertised or named publicly. AltSpot first has to know you. You answer an investor questionnaire on your accreditation, your experience and how you evaluate private investments, AltSpot reviews it, and the date it approves you is when the relationship begins. Offerings open after a short cooling-off period, and you may join deals that open after that date. There is no letter to collect and no third-party verification: your answers and their dates are the record.',
+    source: 'Regulation D, Rule 506(b)',
     related: ['accreditation', 'kyc', 'wizard-steps'],
   },
   {
@@ -224,7 +224,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'unfunded',
     ],
     answer:
-      'No. There are no capital calls on this platform, ever. You commit an amount, you fund it once, and that is the end of your obligation. A traditional fund calls capital in tranches, so your real exposure is unknown for years. AltSpot deals are single assets funded in full at closing, so the number you fund is the number at risk. If a later round happens, it is offered as a separate deal you can decline.',
+      'No. There are no capital calls on this platform, ever. You send your subscription to escrow once, and that is the end of your obligation. A traditional fund calls capital in tranches, so your real exposure is unknown for years. AltSpot deals are single SPVs funded in full at closing, so what you send is what is at risk. If a later round happens, it is offered as a separate deal you can decline.',
     source: 'AltSpot subscription agreement, no capital calls',
     related: ['fees', 'funding-window', 'illiquidity'],
   },
@@ -265,7 +265,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'resell',
     ],
     answer:
-      'Secondaries is visible because it is real on the roadmap and disabled because it is not built yet. A working secondary market needs a broker-dealer partner and a counsel sign-off on transfer mechanics, and until both are in place turning it on would be a compliance problem, not a feature. It stays in the navigation so nobody has to guess whether it is planned. Until it opens, treat every position as held to exit.',
+      'Secondaries is on the roadmap and is not part of the platform today, which is why it is marked Soon. Select positions may become eligible for an organized annual liquidity window; participation and execution are not guaranteed. Until then, treat every position as held to exit.',
     source: 'AltSpot platform guide, roadmap',
     related: ['illiquidity', 'position-value'],
   },
@@ -410,7 +410,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'what does this confirm',
     ],
     answer:
-      'The document has three blocks of representations, and each card confirms one of them. Who you are completes Section II: you are a verified accredited investor, your profile information is true, and you are investing for your own account after reviewing the materials. Where the money comes from completes Section III, the anti-money-laundering statements about lawful source of funds and sanctions screening. Risk and your all-in cost completes Section IV: the investment is speculative and illiquid and can go to zero, and the fee table above the button is every dollar you will ever pay. Each confirmation fills its section of the document and saves as you go.',
+      'The document has three blocks of representations, and each card confirms one of them. Who you are completes Section II: you certify that you are an accredited investor, your profile information is true, and you are investing for your own account after reviewing the materials. Where the money comes from completes Section III, the anti-money-laundering statements about lawful source of funds and sanctions screening. Risk and your all-in cost completes Section IV: the investment is speculative and illiquid and can go to zero, and the cost table above the button shows what goes to escrow and how the fee works. Each confirmation fills its section of the document and saves as you go.',
     source: 'AltSpot subscription agreement, Sections II to IV',
     related: ['subscription-agreement', 'fees', 'signing'],
   },
@@ -428,17 +428,20 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'reserve',
     ],
     answer:
-      'Three things at once. Your allocation is reserved, so that amount comes out of the remaining round. Your executed copy is filed into Docs. And the 10 day funding window opens. The commitment moves to signed and waiting for funds, and it shows on your dashboard with the deadline on it. Funding is the only step left after this.',
+      'Three things at once. Your spot in the SPV is reserved. Your executed copy is filed into Docs. And the clock to send to escrow starts, running to the admission cut-off 24 hours before the wire. The subscription shows on your dashboard with that date on it. Sending to escrow is the only step left after this.',
     source: 'AltSpot platform guide, subscription lifecycle',
     related: ['funding-window', 'documents', 'allocation'],
   },
   {
     id: 'funding-window',
-    question: 'What is the 10 day funding window?',
+    question: 'When do admissions close?',
     keywords: [
-      '10 day',
-      'ten day',
+      'admissions close',
+      'admission cut-off',
+      'cut off',
+      'cutoff',
       'funding window',
+      '10 day',
       'deadline',
       'how long do i have',
       'countdown',
@@ -447,8 +450,8 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'late',
     ],
     answer:
-      'Once you sign, you have 10 days to fund. That window exists because your signature took the allocation off the board, and a spot cannot sit reserved indefinitely while a round is closing. Fund by ACH from a linked bank in a click, or wire against the instructions on the funding page. The countdown is on the funding page and on your dashboard. If the window lapses, the commitment expires and the allocation returns to the deal. You can start again if the round is still open.',
-    source: 'AltSpot platform guide, funding window',
+      'Admissions close 24 hours before the deal\'s scheduled wire, and the date is on the deal page. Once you sign, send your subscription to escrow before then: by ACH from a linked bank in a click, or by wire. At the cut-off the member register locks and every member\'s share is frozen, which is what the SPV invests on. A signed subscription that is not in escrow by then lapses, with nothing charged.',
+    source: 'AltSpot platform guide, admissions and escrow',
     related: ['funding-methods', 'expiry', 'signing'],
   },
   {
@@ -469,14 +472,15 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'escrow',
     ],
     answer:
-      'Two ways. ACH pulls from the bank account you linked during setup, which is one click and settles in a couple of business days. Or wire, using the instructions on the funding page, which is faster to arrive and needs your bank to initiate it. Funds go to the SPV\'s account, not to AltSpot\'s operating account. The linked bank account is also where distributions are sent later.',
-    source: 'AltSpot platform guide, funding',
+      'Two ways. ACH pulls from the bank account you linked during setup, which is one click and settles in a couple of business days. Or wire, using the instructions on the escrow page, which is faster to arrive and needs your bank to initiate it. Money goes to an escrow account in the SPV\'s name, never to an AltSpot account, and comes back if the deal does not reach its minimum. The linked bank account is also where distributions are sent later.',
+    source: 'AltSpot platform guide, escrow',
     related: ['funding-window', 'after-funding', 'wizard-steps'],
   },
   {
     id: 'after-funding',
-    question: 'What happens after I fund?',
+    question: 'What happens after I send to escrow?',
     keywords: [
+      'after escrow',
       'after funding',
       'after i fund',
       'what next',
@@ -495,7 +499,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
   },
   {
     id: 'expiry',
-    question: 'What if I miss the funding deadline?',
+    question: 'What if I miss the admission cut-off, or the deal misses its minimum?',
     keywords: [
       'expired',
       'missed',
@@ -509,8 +513,8 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'what happens if i dont fund',
     ],
     answer:
-      'The commitment expires and the allocation goes back to the deal for someone else. Nothing is charged and nothing is owed. The expired commitment stays visible on your dashboard as a record of what happened. If the round is still open you can start again from the deal page, at whatever allocation remains. If you know a wire will be late, contact AltSpot before the window closes rather than after.',
-    source: 'AltSpot platform guide, funding window',
+      'If your subscription is not in escrow by the cut-off, it lapses and the spot goes back to the deal. Nothing is charged and nothing is owed, and the lapsed subscription stays on your dashboard as a record. If the deal does not reach its minimum by the closing date, it does not close, and escrow returns your money. If you know a wire will be late, contact AltSpot before admissions close rather than after.',
+    source: 'AltSpot platform guide, admissions and escrow',
     related: ['funding-window', 'cancel', 'allocation'],
   },
   {
@@ -527,7 +531,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'refund',
     ],
     answer:
-      'Before you sign, yes, and cleanly. An investment you started but have not signed can be abandoned or the amount changed, and nothing has been reserved. After you sign, you have entered a binding agreement, so contact AltSpot directly rather than letting the window lapse. After the round closes, the position is committed and the illiquidity terms apply.',
+      'Before you sign, yes, and cleanly. An investment you started but have not signed can be abandoned or the amount changed, and nothing has been reserved. After you sign, you have entered a binding agreement, so contact AltSpot directly rather than letting the cut-off pass. After the round closes, the position is committed and the illiquidity terms apply.',
     source: 'AltSpot platform guide, subscription lifecycle',
     related: ['expiry', 'illiquidity', 'signing'],
   },
@@ -567,7 +571,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'home page',
     ],
     answer:
-      'Total invested is the capital you have actually funded. Portfolio value is that capital carried at the most recent reported mark for each position. The change between them is unrealized and moves only when a mark is updated. The positions table lists funded deals plus anything still in flight, which is a started or signed commitment carrying no value yet. Anything needing action, a signed commitment waiting on funds or an unfinished setup step, sits at the top with the deadline on it. Start there.',
+      'Total invested is the capital in positions that have closed. Portfolio value is that capital carried at the most recent reported mark for each position. The change between them is unrealized and moves only when a mark is updated. The positions table lists funded deals plus anything still in flight, which is a started or signed commitment carrying no value yet. Anything needing action, a signed subscription waiting to go to escrow or an unfinished setup step, sits at the top with the deadline on it. Start there.',
     source: 'AltSpot platform guide, dashboard',
     related: ['position-value', 'signing', 'wizard-steps'],
   },
@@ -589,7 +593,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'agreements',
     ],
     answer:
-      'Everything you execute or that gets issued to you. Signed subscription agreements file themselves the moment you sign, one per deal per profile. Your accreditation verification and identity clearance are recorded there too. Each tax season the K-1 for every SPV you hold arrives in the Tax Center, filed by profile and by deal, so an entity and a personal position stay separate. Everything is downloadable, and nothing is deleted.',
+      'Everything you execute or that gets issued to you. Signed subscription agreements file themselves the moment you sign, one per deal per profile. Your investor questionnaire record and identity clearance are there too. Each tax season the K-1 for every SPV you hold arrives in the Tax Center, filed by profile and by deal, so an entity and a personal position stay separate. Everything is downloadable, and nothing is deleted.',
     source: 'AltSpot platform guide, Docs and the Tax Center',
     related: ['subscription-agreement', 'profile-types', 'after-funding'],
   },
@@ -608,7 +612,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'five steps',
     ],
     answer:
-      'Five, and they are one-time. Accreditation certifies you are eligible and is good for five years. Your information is the Vault, the standard details that fill every document afterwards. Identity is the ID photo and live capture for the anti-money-laundering check. Investment profile decides who holds the position: personal, an entity or an IRA. Link bank sets up one-click funding and the account distributions return to. Accreditation and identity are the two that gate investing. The rest you can finish later, though the invest page will ask for them.',
+      'Five, and they are one-time. The investor questionnaire is where you certify you are accredited and tell AltSpot about your experience; offerings open after a short cooling-off period once it is approved. Your information is the Vault, the standard details that fill every document afterwards. Identity is the ID photo and live capture for the anti-money-laundering check. Investment profile decides who holds the position: personal, an entity or an IRA. Link bank sets up one-click escrow transfers and the account distributions return to. The questionnaire gates seeing deals; your information and identity gate investing. The rest you can finish later, though the invest page will ask for them.',
     source: 'AltSpot onboarding requirements',
     related: ['accreditation', 'kyc', 'profile-types'],
   },
@@ -721,7 +725,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'does it reserve',
     ],
     answer:
-      'A vote is a demand signal and nothing else. You pick a name and indicate the allocation you would want, and that amount is what ranks the board. It reserves no allocation, moves no money, creates no obligation, and is not an order. What it does is decide where sourcing goes: demand on the board is what AltSpot takes to a broker when it goes looking for supply, so the votes are the membership deciding what gets pursued. You can change or withdraw a vote at any time. Every figure on a Radar card, including the market average, the last-round reference and the AltSpot target range, is illustrative rather than market data.',
+      'A vote is a demand signal and nothing else. You pick a name and indicate the allocation you would want, and that amount is what ranks the board. It reserves no allocation, moves no money, creates no obligation, and is not an order. What it does is decide where sourcing goes: demand on the board decides which companies AltSpot approaches about a round, so the votes are the membership deciding what gets pursued. The board mixes early-stage companies, from pre-seed to Series C, with late-stage names AltSpot is watching for the future. You can change or withdraw a vote at any time. Every figure on a Radar card, including the market average, the last-round reference and the AltSpot target range, is illustrative rather than market data.',
     source: 'AltSpot Radar, board disclosure',
     related: ['radar', 'sourcing', 'allocation'],
   },
