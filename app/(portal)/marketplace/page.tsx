@@ -51,13 +51,26 @@ export default async function MarketplacePage({
     .filter((company) => company.dealId && company.yourAmount !== null)
     .map((company) => company.dealId as string);
 
+  /* A Radar name that is now an open deal on this member's shelf is no
+     longer voted on: it leaves the board and shows on the shelf as just
+     opened, from the Radar. Before the gate opens dealId is withheld and
+     the shelf is empty, so nothing here can reveal a deal. */
+  const onShelf = new Set(deals.map((deal) => deal.id));
+  const radarSourced = radar
+    .filter((company) => company.dealId && onShelf.has(company.dealId))
+    .map((company) => company.dealId as string);
+  const stillVoting = radar.filter(
+    (company) => !(company.dealId && onShelf.has(company.dealId)),
+  );
+
   return (
     <MarketplaceLanes
       deals={deals}
       resumable={resumable}
       watched={watchlist}
       fromRadar={fromRadar}
-      companies={radar}
+      companies={stillVoting}
+      radarSourced={radarSourced}
       locked={canSeeOfferings(relationship) ? null : relationship}
       initialView={view === 'radar' ? 'radar' : 'current'}
     />

@@ -279,11 +279,11 @@
   width: 30px;
   height: 30px;
   padding: 0;
-  border: 1px solid var(--hair-neutral);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--r-pill);
-  background: var(--scrim-media);
+  background: var(--scrim-media-strong);
   backdrop-filter: blur(4px);
-  color: var(--as-text-body);
+  color: var(--on-media);
   cursor: pointer;
   transition:
     color var(--dur-micro) ease,
@@ -459,73 +459,6 @@
   transform: scale(1.06);
 }
 
-.states {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  max-width: calc(100% - 110px);
-}
-
-.state,
-.viewOnlyMark {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 9px;
-  border-radius: var(--r-pill);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-/* Saved: the gold pill, star filled. The loudest thing on the art,
-   because it is the member's own. */
-.stateSaved {
-  background: var(--as-cta-gradient);
-  color: var(--fg-on-gold);
-}
-.stateSaved svg {
-  stroke: var(--fg-on-gold);
-  fill: var(--fg-on-gold);
-}
-
-/* Voted on the Radar before it opened: dark glass, a gold ring. */
-.stateVoted {
-  background: var(--scrim-media-strong);
-  box-shadow: inset 0 0 0 1px var(--as-gold);
-  color: var(--on-media);
-  backdrop-filter: blur(4px);
-}
-.stateVoted svg {
-  stroke: var(--as-gold);
-}
-
-.stateProgress {
-  background: var(--scrim-media-strong);
-  color: var(--on-media);
-  backdrop-filter: blur(4px);
-}
-
-.viewOnlyMark {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  z-index: 2;
-  background: var(--scrim-media-strong);
-  color: var(--on-media);
-  backdrop-filter: blur(4px);
-}
-.viewOnlyMark svg {
-  stroke: var(--on-media);
-}
-
 .cardActions > * {
   flex: 1;
   justify-content: center;
@@ -537,4 +470,80 @@
 }
 .peekButton svg {
   stroke: var(--as-gold);
+}
+
+/* ------------------------------------------------------------------
+   The card's seats (2026-09-17). One status top left, the star top
+   right, the member's own marks bottom left, the deal type under the
+   name. Every pill on the art is the same height, face and radius.
+   ------------------------------------------------------------------ */
+
+.status,
+.mineChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--w-semi);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+}
+
+.status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  background: var(--scrim-media-strong);
+  color: var(--on-media);
+}
+.status svg {
+  stroke: var(--on-media);
+}
+/* New is the one status that is good news, so it is the one in gold. */
+.status[data-tone='new'] {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  box-shadow: 0 4px 14px rgba(243, 152, 7, 0.28);
+}
+.status[data-tone='new'] svg {
+  stroke: var(--fg-on-gold);
+}
+
+.mine {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+}
+.mineChip {
+  background: var(--scrim-media-strong);
+  color: var(--on-media);
+  box-shadow: inset 0 0 0 1px rgba(199, 154, 75, 0.55);
+}
+.mineChip svg {
+  stroke: var(--as-gold);
+}
+.mineChip[data-kind='saved'] svg {
+  fill: var(--as-gold);
+}
+
+/* The deal type and round, under the name: one quiet line. */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

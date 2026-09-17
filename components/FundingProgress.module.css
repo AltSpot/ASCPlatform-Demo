@@ -61,7 +61,7 @@
   position: relative;
   height: 6px;
   border-radius: var(--r-pill);
-  background: var(--surface-1);
+  background: var(--track-faint);
   overflow: hidden;
 }
 .toMinimum {

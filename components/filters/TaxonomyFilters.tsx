@@ -45,7 +45,10 @@ export default function TaxonomyFilters({
   value,
   onChange,
   inline = false,
+  badges,
 }: {
+  /** A quiet count beside each class, e.g. open deals. Omitted where zero. */
+  badges?: Partial<Record<AssetClass, number>>;
   /** Set inside another bar, so no margin of its own. */
   inline?: boolean;
   /** How many names sit in each class. Zero is a legitimate answer. */
@@ -73,6 +76,7 @@ export default function TaxonomyFilters({
               onClick={() => onChange({ ...value, assetClass: on ? null : key })}
             >
               {ASSET_CLASSES[key].label}
+              {badges?.[key] ? <span className={s.filterCount}>{badges[key]}</span> : null}
             </button>
           );
         })}

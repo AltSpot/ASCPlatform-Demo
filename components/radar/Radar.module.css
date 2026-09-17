@@ -19,7 +19,9 @@
   display: grid;
   /* Four across, the same as the shelf, so twenty names read in five
      rows. Falls to three, two, one. */
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* Three across from 2026-09-17, so each card has room for the line
+     that says what the company does. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
   /* Cards keep their own height. One card opening its research must
      not stretch its neighbour into a column of empty space. */
@@ -702,4 +704,18 @@
 }
 .votedEdit:hover {
   background: color-mix(in srgb, var(--fg-on-gold) 24%, transparent);
+}
+
+/* What the company does, in its own words from the board: two lines at
+   most, at a fixed height so every card's figures start level. */
+.about {
+  margin: -4px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--as-text-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
 }

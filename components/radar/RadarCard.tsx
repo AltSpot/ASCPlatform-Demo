@@ -184,6 +184,8 @@ export default function RadarCard({
         </div>
       </header>
 
+      <p className={s.about}>{view.description}</p>
+
       {/* Demand is the headline. It is the whole reason the board
           exists, and it is ranked on it. */}
       <div className={s.demand}>

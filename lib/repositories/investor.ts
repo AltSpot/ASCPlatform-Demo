@@ -695,7 +695,7 @@ async function seedPendingCommitment(userId: string, now: number): Promise<void>
  * Production contract: there is none. Delete this with the other seams.
  */
 const RECENT_BOOK = [
-  { dealId: 'ferrule', amount: 25_000, state: 'funded', signedDaysAgo: 18 },
+  { dealId: 'ferrule', amount: 25_000, state: 'funded', signedDaysAgo: 7 },
   { dealId: 'loomline', amount: 15_000, state: 'funded', signedDaysAgo: 12 },
   { dealId: 'northstar', amount: 25_000, state: 'docs_signed', signedDaysAgo: 4 },
   { dealId: 'basalt', amount: 10_000, state: 'started', signedDaysAgo: 2 },

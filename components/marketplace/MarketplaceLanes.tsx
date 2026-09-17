@@ -59,6 +59,7 @@ export default function MarketplaceLanes({
   watched,
   fromRadar,
   companies,
+  radarSourced = [],
   initialView,
   locked,
 }: {
@@ -68,6 +69,8 @@ export default function MarketplaceLanes({
   /** Deal ids the member voted for on the Radar before they opened. */
   fromRadar: string[];
   companies: RadarCompanyView[];
+  /** Open deals that came off the Radar. Shown as just opened, from the Radar. */
+  radarSourced?: string[];
   initialView: 'current' | 'radar';
   /**
    * Where the member stands when offerings are not open to them yet. Null
@@ -103,6 +106,15 @@ export default function MarketplaceLanes({
     for (const company of companies) tally[company.assetClass] += 1;
     return tally;
   }, [deals, companies]);
+
+  /* Open deals per class, for the quiet count on each chip. */
+  const dealCounts = useMemo(() => {
+    const tally: Partial<Record<AssetClass, number>> = {};
+    for (const deal of deals) {
+      if (isAssetClass(deal.assetClass)) tally[deal.assetClass] = (tally[deal.assetClass] ?? 0) + 1;
+    }
+    return tally;
+  }, [deals]);
 
   const industryCounts = useMemo(() => {
     const tally: Record<string, number> = {};
@@ -244,6 +256,7 @@ export default function MarketplaceLanes({
           industryCounts={industryCounts}
           value={filter}
           onChange={setFilter}
+          badges={dealCounts}
           inline
         />
       </div>
@@ -271,6 +284,7 @@ export default function MarketplaceLanes({
             fromRadar={fromRadar}
             filter={filter}
             bridgeHref="#radar"
+            radarSourced={radarSourced}
             mineOnly={mineOnly}
             onWatchChange={(id, on) =>
               setSavedIds((ids) => (on ? [...ids.filter((x) => x !== id), id] : ids.filter((x) => x !== id)))

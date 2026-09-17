@@ -695,7 +695,7 @@ const DEALS: SeedDeal[] = [
     allocationTotal: 2500000,
     allocationRemaining: 1650000,
     closesInDays: 27,
-    launchedDaysAgo: 21,
+    launchedDaysAgo: 9,
     altspotCommitted: 0,
     committedNote: '',
     sortOrder: 2,

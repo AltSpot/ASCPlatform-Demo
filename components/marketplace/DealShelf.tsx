@@ -40,7 +40,10 @@ export default function DealShelf({
   bridgeHref,
   mineOnly = false,
   onWatchChange,
+  radarSourced = [],
 }: {
+  /** Open deals that came off the Radar. */
+  radarSourced?: string[];
   /** Show only what the member saved or voted for. */
   mineOnly?: boolean;
   /** When the page tracks saves (the Yours count), it hears each one. */
@@ -142,6 +145,7 @@ export default function DealShelf({
             resume={byDeal.get(deal.id)}
             watched={saved.has(deal.id)}
             fromRadar={voted.has(deal.id)}
+            radarSourced={radarSourced.includes(deal.id)}
             onWatchChange={(next) => {
               setSavedIds((ids) =>
                 next ? [...ids.filter((id) => id !== deal.id), deal.id] : ids.filter((id) => id !== deal.id),

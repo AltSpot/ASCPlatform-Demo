@@ -192,6 +192,8 @@
      holding it, which is a groove lit from inside. Every unfilled
      portion of every meter on the platform reads from here. */
   --track:rgba(255,255,255,.07);
+  /* The faint far end of a bar: past the minimum, up to the allocation. */
+  --track-faint:rgba(255,255,255,.035);
 
   /* The lit top edge that makes a raised surface read as a surface and
      not a rectangle of slightly different paint. On dark it is a sliver
@@ -1236,7 +1238,8 @@ html[data-theme='light']{
   --surface-2:rgba(255,255,255,.28);   /* raised: hover rows, chips */
   --surface-3:rgba(255,255,255,.55);   /* present: thumbs, filled tracks, quiet pills */
   --surface-well:rgba(110,70,28,.07);  /* recessed: inputs, inset panels */
-  --track:rgba(110,70,28,.20);         /* the unfilled half of a meter */
+  --track:rgba(110,70,28,.20);
+  --track-faint:rgba(110,70,28,.10);         /* the unfilled half of a meter */
   --surface-sunk:rgba(110,70,28,.11);  /* deepest: the rail foot */
   --edge-top:rgba(255,255,255,.72);    /* the lit lip, softened into the pane */
   --card-edge:rgba(255,255,255,.78);  /* the clear-glass rim: a thin, even line of light all round */             /* no drawn rim. See :root */
@@ -1415,6 +1418,7 @@ html[data-theme='ice']{
   --surface-2:rgba(225,238,255,.09);
   --surface-3:rgba(225,238,255,.15);
   --track:rgba(225,238,255,.12);
+  --track-faint:rgba(225,238,255,.05);
   --hair-neutral:rgba(220,236,255,.14);
   --hair-soft:rgba(220,236,255,.07);
   --panel-2:rgba(225,238,255,.07);

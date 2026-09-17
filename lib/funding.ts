@@ -99,6 +99,18 @@ export function fundingView(deal: FundingInput, now: number = Date.now()): Fundi
   };
 }
 
+/**
+ * A deal is "just opened" for this many days after it launched. Long
+ * enough to be seen by a member who checks weekly, short enough that the
+ * word still means something on a shelf of ten.
+ */
+export const JUST_OPENED_DAYS = 21;
+
+export function isJustOpened(launchedAt: string, now: number = Date.now()): boolean {
+  const at = Date.parse(launchedAt);
+  return Number.isFinite(at) && now - at >= 0 && now - at < JUST_OPENED_DAYS * 86_400_000;
+}
+
 /** The deal type chip. */
 export const LEAD_LABEL: Record<LeadType, string> = {
   altspot: 'AltSpot-led',

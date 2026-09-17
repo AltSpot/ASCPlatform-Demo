@@ -3,32 +3,32 @@
 /**
  * One deal, as a card.
  *
- * WHAT A CARD SAYS. It is read in a grid of ten by someone deciding
- * which one to open, so every line does one job:
+ * STRUCTURE (Tyler, 2026-09-17: the pills were crowding each other). Every
+ * mark on the card has one fixed seat, and no seat holds more than one
+ * kind of thing:
  *
- *   the art band     the company's own mark on its own colour, the deal
- *                    type chip, the star, and the member's own state
- *   the name
- *   the one line     the headline, two lines at most
- *   the bar          raised against the minimum to close
- *   two buttons      Quick look (the side panel) and View deal
+ *   art, top left       ONE status, the most important that applies:
+ *                       Just opened (with the Radar glyph if it came off
+ *                       the Radar), SPV full, or View only
+ *   art, top right      the star
+ *   art, bottom left    the member's own marks: Saved, You voted
+ *   body                the name, then the deal type and round as one
+ *                       quiet line, the headline, the funding bar, and
+ *                       Quick look beside the main button
  *
- * COHESIVE, BUT NOT ALIKE. Every card has the same shape, type and
- * controls, and the platform's gold is the only accent in the body. The
- * art band is the one place a company is itself: its drawn mark on a
- * ground lit by its hue (lib/brand.ts), so ten cards read as ten
- * companies, not ten navy gradients.
+ * The deal type used to be a chip on the art, fighting the status for the
+ * same corner; it reads better as the line under the name, where the
+ * deal page's hero puts it too. Where a member is mid-way through a deal,
+ * the main button already says so (Resume, Send to escrow), so there is
+ * no chip for it.
  *
- * YOURS, IN WORDS. A saved deal says "Saved" and a deal the member voted
- * for on the Radar says "You voted", as labelled chips on the art. The
- * unexplained gold rim that used to mean either is gone. A deal the
- * member is mid-way through says where they are instead.
+ * COHESIVE, BUT NOT ALIKE. The art band is the one place a company is
+ * itself: its drawn mark on a ground lit by its hue (lib/brand.ts).
+ * Everything else is the platform's.
  *
- * Minimum, closing date and who else is on the round are in the quick
- * look and on the deal page, not on the card (Tyler, 2026-09-17). No
- * fee or carry figure anywhere on it.
+ * No fee or carry figure anywhere on it.
  */
-import { Eye, PanelRightOpen, Radar, Star } from 'lucide-react';
+import { Eye, PanelRightOpen, Radar, Sparkles, Star, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -37,7 +37,7 @@ import DealPeek from '@/components/marketplace/DealPeek';
 import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
-import { dealChip } from '@/lib/funding';
+import { dealChip, isJustOpened } from '@/lib/funding';
 
 import s from './Marketplace.module.css';
 
@@ -46,6 +46,7 @@ export default function DealCard({
   resume,
   watched,
   fromRadar = false,
+  radarSourced = false,
   onWatchChange,
 }: {
   deal: DealShelfItem;
@@ -54,6 +55,8 @@ export default function DealCard({
   watched: boolean;
   /** The member voted for this company on the Radar before it opened. */
   fromRadar?: boolean;
+  /** The deal came off the Radar (whoever voted). */
+  radarSourced?: boolean;
   /** Lets a shelf that tracks saves hear about them. */
   onWatchChange?: (watched: boolean) => void;
 }) {
@@ -62,9 +65,7 @@ export default function DealCard({
   if (deal.redacted) {
     return (
       <div className="card deal-card">
-        <div className="thumb" style={{ background: deal.art }}>
-          <span className="chip">{deal.tag}</span>
-        </div>
+        <div className="thumb" style={{ background: deal.art }} />
         <div className="deal-body">
           <div className={s.title}>
             <h3>{deal.name}</h3>
@@ -101,49 +102,58 @@ export default function DealCard({
 
   const viewOnly = !deal.subscribable && !resume;
   const full = !resume && deal.members > 0 && deal.members >= deal.investorCap;
+  const justOpened = isJustOpened(deal.launchedAt);
+
+  /* One status, in order of what a member most needs to know. */
+  const status = viewOnly
+    ? { tone: 'quiet', icon: Eye, label: 'View only', title: 'Opened before you joined' }
+    : full
+      ? { tone: 'quiet', icon: Users, label: 'SPV full', title: 'At its member limit. Join the waitlist on the deal.' }
+      : justOpened
+        ? radarSourced
+          ? { tone: 'new', icon: Radar, label: 'Just opened', title: 'Just opened, from the Radar' }
+          : { tone: 'new', icon: Sparkles, label: 'Just opened', title: 'Opened in the last three weeks' }
+        : null;
 
   return (
     <div className="card deal-card">
       <div className={`thumb ${s.art}`} style={{ background: deal.art }}>
-        <span className="chip">{dealChip(deal)}</span>
+        {status ? (
+          <span className={s.status} data-tone={status.tone} title={status.title}>
+            <status.icon size={11} strokeWidth={2} aria-hidden="true" />
+            {status.label}
+            {status.tone === 'new' && radarSourced ? (
+              <span className="sr-only">, from the Radar</span>
+            ) : null}
+          </span>
+        ) : null}
+
         <WatchStar
           dealId={deal.id}
           dealName={deal.name}
           initialWatched={watched}
           onChange={onWatchChange}
         />
+
         {deal.logoUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img className={s.cardMark} src={deal.logoUrl} alt="" aria-hidden="true" />
         )}
 
-        {/* The member's own state, in words, bottom left. */}
-        <span className={s.states}>
-          {resume ? (
-            <span className={`${s.state} ${s.stateProgress}`}>
-              {resume.state === 'docs_signed' ? 'Signed · send to escrow' : 'In progress'}
-            </span>
-          ) : null}
-          {full ? <span className={`${s.state} ${s.stateProgress}`}>SPV full</span> : null}
-          {watched ? (
-            <span className={`${s.state} ${s.stateSaved}`}>
-              <Star size={11} strokeWidth={2} aria-hidden="true" />
-              Saved
-            </span>
-          ) : null}
-          {fromRadar ? (
-            <span className={`${s.state} ${s.stateVoted}`}>
-              <Radar size={11} strokeWidth={2} aria-hidden="true" />
-              You voted
-            </span>
-          ) : null}
-        </span>
-
-        {/* View-only under Rule 506(b): opened before this member joined. */}
-        {viewOnly ? (
-          <span className={s.viewOnlyMark} title="Opened before you joined">
-            <Eye size={12} strokeWidth={1.8} aria-hidden="true" />
-            View only
+        {watched || fromRadar ? (
+          <span className={s.mine}>
+            {watched ? (
+              <span className={s.mineChip} data-kind="saved">
+                <Star size={10} strokeWidth={2.2} aria-hidden="true" />
+                Saved
+              </span>
+            ) : null}
+            {fromRadar ? (
+              <span className={s.mineChip} data-kind="voted">
+                <Radar size={10} strokeWidth={2.2} aria-hidden="true" />
+                You voted
+              </span>
+            ) : null}
           </span>
         ) : null}
       </div>
@@ -151,6 +161,7 @@ export default function DealCard({
       <div className="deal-body">
         <div className={s.title}>
           <h3>{deal.name}</h3>
+          <span className={s.meta}>{dealChip(deal)}</span>
         </div>
 
         <p className={s.headline}>{deal.headline}</p>
