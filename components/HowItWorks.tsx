@@ -76,7 +76,7 @@ const EDITIONS: Record<'radar' | 'invest', Edition> = {
       {
         icon: FileSignature,
         title: 'Read and sign',
-        body: 'Choose your amount, read the documents and sign, all in one flow.',
+        body: 'Choose your amount (minimums from $5,000, set per offering), read the documents and sign, all in one flow.',
       },
       {
         icon: Landmark,

@@ -1,0 +1,130 @@
+/* Building the sleeve: twenty cells, three rules, one line of footing. */
+
+.wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 22px;
+  padding: 26px;
+  border: 1px solid var(--card-edge);
+  border-radius: var(--r-lg);
+  background-color: var(--fill-card);
+  background-image: var(--card-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift);
+}
+@media (max-width: 960px) {
+  .wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.figure {
+  font-family: var(--font-figure);
+  font-size: 26px;
+  font-weight: var(--w-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--as-text);
+}
+.figure small {
+  font-size: 13px;
+  color: var(--as-text-muted);
+}
+
+/* Twenty cells, one per position, so the count is read as a shape. */
+.track {
+  display: grid;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  gap: 4px;
+}
+.cell {
+  height: 14px;
+  border-radius: 3px;
+  background: var(--track);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+}
+.cell[data-on='true'] {
+  background: var(--as-cta-gradient);
+  box-shadow: none;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0 0 0 22px;
+  list-style: none;
+  border-left: 1px solid var(--hair-neutral);
+}
+@media (max-width: 960px) {
+  .rules {
+    padding: 16px 0 0;
+    border-left: none;
+    border-top: 1px solid var(--hair-neutral);
+  }
+}
+.rules li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  font-size: var(--fs-meta);
+  line-height: 1.45;
+  color: var(--as-text-muted);
+}
+.rules li b {
+  font-weight: var(--w-medium);
+  font-size: 14px;
+  color: var(--as-text);
+}
+.rules li span:last-child {
+  grid-column: 2;
+}
+.glyph {
+  grid-row: 1 / span 2;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+}
+.glyph svg {
+  stroke: var(--as-gold);
+}
+
+.foot {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair-soft);
+  font-size: var(--fs-label);
+  line-height: 1.5;
+  color: var(--as-text-muted);
+}

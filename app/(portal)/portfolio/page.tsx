@@ -27,6 +27,7 @@ import AllocationTabs, {
   type AllocationAxis,
 } from '@/components/portfolio/AllocationTabs';
 import Holdings, { type Holding } from '@/components/portfolio/Holdings';
+import SleeveProgress from '@/components/portfolio/SleeveProgress';
 import CollapsibleSection from '@/components/CollapsibleSection';
 import CashFlow from '@/components/portfolio/CashFlow';
 import ExternalHoldings from '@/components/portfolio/ExternalHoldings';
@@ -480,6 +481,18 @@ export default async function PortfolioPage() {
         note="Weighted by invested capital"
       >
         <AllocationTabs axes={axes} total={liveCost} />
+      </CollapsibleSection>
+
+      {/* The construction the platform teaches (lib/portfolio-plan.ts):
+          the count against twenty, the weight of the largest position, and
+          the three rules. Measures the book; advises nothing. */}
+      <CollapsibleSection
+        scope="portfolio"
+        id="sleeve"
+        title="Building the sleeve"
+        note="Twenty positions, equal weight, over three years"
+      >
+        <SleeveProgress invested={live.map((sub) => sub.amount)} />
       </CollapsibleSection>
 
       <CollapsibleSection

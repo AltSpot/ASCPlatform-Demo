@@ -797,6 +797,26 @@ These are the claims the product makes. Do not let a change quietly break them.
   The reserve is additive: escrow receives subscription plus reserve.
   **Never a percentage of capital raised** (counsel: broker-dealer line).
 - **Carry** is `CARRY_PERCENT` (20%) of profits at exit. No 10% anywhere.
+- **The minimum investment** (Tyler, 2026-09-17, after the deck) is
+  `lib/minimums.ts`: $10,000 standard, a $5,000 floor on vehicles under
+  $250,000, $25,000 on vehicles over $1,000,000, set per offering (the
+  seed's `FUNDING[id].minInvestment` overrides it, as a lead would). The
+  platform's headline is **"from $5,000"**, never less. The subscription
+  routes enforce `Deal.minInvestment`; the deal page, checkout, the quick
+  look and Spot explain it with `explainMinimum`.
+- **Portfolio construction is taught, never prescribed** (`lib/portfolio-plan.ts`):
+  a sleeve of 5% to 10% of investable assets, deployed over about three
+  years, into about twenty positions at equal weight, with 20% to 30%
+  kept back for follow-ons; and the arithmetic for twenty (at a 1-in-20
+  chance of a very large outcome, 20 positions give a 64% chance of
+  holding one, 10 give 40%, 5 give 23%). The Portfolio page's **Building
+  the sleeve** counts positions against twenty and shows the largest
+  position against equal weight; Spot's `portfolio-construction` topic
+  and the Terminal's "Twenty positions, equal weight" say the same thing
+  from the same module. Spot's gate still refuses "how much should I":
+  the platform describes the structure and leaves the member's number to
+  the member and their advisor. The ACA portfolio findings appear once, in
+  the Terminal piece, attributed and with a source note; Ben to confirm.
 - **Fee and carry numbers render only behind `SHOW_FEE_TERMS` and
   `SHOW_CARRY_TERMS`**, both off by default and inlined at build through
   `next.config.ts`. Every word about fees comes from `lib/fees.ts`

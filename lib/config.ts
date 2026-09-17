@@ -154,6 +154,19 @@ export const MINIMUM_TO_CLOSE_SHARE = 0.5;
 export const MINIMUM_TO_CLOSE_FLOOR = 250_000;
 
 /**
+ * The minimum investment on an offering (Tyler, 2026-09-17, after the
+ * deck): $10,000 as the standard, a $5,000 floor on vehicles under
+ * $250,000, and $25,000 on vehicles over $1,000,000. Set per offering by
+ * the lead; the rule in lib/minimums.ts fills it in otherwise. The
+ * platform's headline is "from $5,000", the floor.
+ */
+export const MIN_INVESTMENT_STANDARD = 10_000;
+export const MIN_INVESTMENT_FLOOR = 5_000;
+export const MIN_INVESTMENT_LARGE = 25_000;
+export const MIN_INVESTMENT_SMALL_VEHICLE = 250_000;
+export const MIN_INVESTMENT_LARGE_VEHICLE = 1_000_000;
+
+/**
  * Retirement money (IRA and similar) as a share of one SPV's raise, in
  * percent. Warn at the first, refuse a subscription that would reach the
  * second.

@@ -19,6 +19,11 @@ import {
   FEE_TERMS,
   INVESTOR_CAP_DEFAULT,
   INVESTOR_CAP_MAX,
+  MIN_INVESTMENT_FLOOR,
+  MIN_INVESTMENT_LARGE,
+  MIN_INVESTMENT_LARGE_VEHICLE,
+  MIN_INVESTMENT_SMALL_VEHICLE,
+  MIN_INVESTMENT_STANDARD,
   RETIREMENT_BLOCK_PERCENT,
   RETIREMENT_WARN_PERCENT,
   SHOW_CARRY_TERMS,
@@ -26,6 +31,7 @@ import {
 } from '../config';
 import { feeBreakdown, reservePercent } from '../fees';
 import { money } from '../format';
+import { chanceOfAtLeastOne, SLEEVE } from '../portfolio-plan';
 import type { SpotVisual } from './types';
 
 /** The worked example every fee picture is drawn on. Illustrative. */
@@ -179,7 +185,45 @@ function noCallsPath(): SpotVisual {
   };
 }
 
+function minimumsSum(): SpotVisual {
+  return {
+    kind: 'sum',
+    title: 'The minimum, by vehicle size',
+    rows: [
+      { label: `Vehicles under ${money(MIN_INVESTMENT_SMALL_VEHICLE)}`, value: money(MIN_INVESTMENT_FLOOR), note: 'The platform floor.' },
+      {
+        label: `${money(MIN_INVESTMENT_SMALL_VEHICLE)} to ${money(MIN_INVESTMENT_LARGE_VEHICLE)}`,
+        value: money(MIN_INVESTMENT_STANDARD),
+        note: 'The standard.',
+      },
+      { label: `Vehicles over ${money(MIN_INVESTMENT_LARGE_VEHICLE)}`, value: money(MIN_INVESTMENT_LARGE) },
+    ],
+    total: { label: 'Set per offering by the lead', value: `From ${money(MIN_INVESTMENT_FLOOR)}` },
+    caption: 'Every deal page states its own minimum, and checkout holds you to it.',
+  };
+}
+
+function sleevePath(): SpotVisual {
+  const pct = (bets: number) => Math.round(chanceOfAtLeastOne(bets) * 100);
+  return {
+    kind: 'path',
+    title: 'How a diversified sleeve is built',
+    steps: [
+      { label: `${SLEEVE.minPercent}% to ${SLEEVE.maxPercent}% of investable assets`, note: 'The sleeve. The rest of a portfolio stays where it is.' },
+      { label: `Deployed over about ${SLEEVE.deployYears} years`, note: 'Six or seven positions a year, not all at once.' },
+      { label: `About ${SLEEVE.targetPositions} positions, equal weight`, note: `Around ${Math.round(100 / SLEEVE.targetPositions)}% of the sleeve each.`, tone: 'gold' },
+      { label: `${SLEEVE.reserveMinPercent}% to ${SLEEVE.reserveMaxPercent}% kept back`, note: 'For follow-ons in the ones that break out.' },
+    ],
+    otherwise: {
+      label: 'Why twenty',
+      note: `At a one-in-twenty chance of a very large outcome per deal, 20 positions give a ${pct(20)}% chance of holding one; 10 give ${pct(10)}%; 5 give ${pct(5)}%. Illustrative arithmetic, not a forecast.`,
+    },
+  };
+}
+
 const BY_TOPIC: Record<string, () => SpotVisual> = {
+  'minimum-investment': minimumsSum,
+  'portfolio-construction': sleevePath,
   fees: feesSum,
   'carry-mechanics': carrySplit,
   'no-capital-calls': noCallsPath,

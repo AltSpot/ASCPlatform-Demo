@@ -244,7 +244,11 @@ export default async function DealPage({
         {viewOnly ? (
           <ViewOnly relationship={wizard.relationship} size="closing" />
         ) : (
-          <ClosingCta minInvestment={deal.minInvestment} cta={cta} />
+          <ClosingCta
+            minInvestment={deal.minInvestment}
+            allocationTotal={deal.allocationTotal}
+            cta={cta}
+          />
         )}
 
         <p className={s.disclosure}>

@@ -22,6 +22,8 @@ import ConfirmPanel from '@/components/invest/ConfirmPanel';
 import FeeTable from '@/components/invest/FeeTable';
 import StationRail from '@/components/invest/StationRail';
 import LegalDocument from '@/components/invest/LegalDocument';
+import Term from '@/components/Term';
+import { explainMinimum } from '@/lib/minimums';
 
 import styles from './InvestFlow.module.css';
 import { useToast } from '@/components/Toast';
@@ -473,8 +475,11 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
             <div className="card">
               <h3 style={{ marginBottom: 4 }}>Amount</h3>
               <p className="small" id="amount-help" style={{ marginBottom: 14 }}>
-                Minimum {money(deal.minInvestment)}. Your money waits in escrow until the
-                deal closes, and comes back if it does not.
+                <Term q="Why is the minimum what it is?" quiet>
+                  Minimum {money(deal.minInvestment)}
+                </Term>
+                . {explainMinimum(deal.minInvestment, deal.allocationTotal)} Your money waits in
+                escrow until the deal closes, and comes back if it does not.
               </p>
 
               <label className="field">

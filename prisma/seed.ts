@@ -22,6 +22,7 @@ import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { PrismaClient } from '../lib/generated/prisma/client';
 import { brandArt } from '../lib/brand';
 import { defaultMinimumToClose } from '../lib/funding';
+import { defaultMinInvestment } from '../lib/minimums';
 import { investorCapFor } from '../lib/spv-rules';
 import { feeSentence } from '../lib/fees';
 
@@ -1383,8 +1384,15 @@ function closesIn(days: number): string {
  */
 /* Minimums follow the rule in lib/funding.ts (defaultMinimumToClose)
    unless a deal sets its own; caps follow lib/spv-rules.ts. */
-const FUNDING: Record<string, { minimum?: number; lead?: 'altspot' | 'partner'; cap?: number }> = {
+const FUNDING: Record<
+  string,
+  { minimum?: number; lead?: 'altspot' | 'partner'; cap?: number; minInvestment?: number }
+> = {
   kestrel: { lead: 'partner' },
+  /* Set per offering (the deck): the lead took Meridel to the standard
+     minimum so a newer member can start there, and left the rest to the
+     rule in lib/minimums.ts. */
+  meridel: { minInvestment: 10_000 },
 };
 
 /**
@@ -1421,7 +1429,11 @@ async function main() {
       pricePerShare: deal.pricePerShare ?? null,
       blurb: deal.blurb,
       risks: deal.risks,
-      minInvestment: deal.minInvestment,
+      /* The minimum is the rule unless the lead set one by hand: $10K
+         standard, $5K under $250K, $25K over $1M (lib/minimums.ts). The
+         per-deal figure in the seed data above is retired. */
+      minInvestment:
+        FUNDING[deal.id]?.minInvestment ?? defaultMinInvestment(deal.allocationTotal),
       allocationTotal: deal.allocationTotal,
       allocationRemaining: deal.allocationRemaining,
       minimumToClose: FUNDING[deal.id]?.minimum ?? defaultMinimumToClose(deal.allocationTotal),

@@ -40,6 +40,7 @@ import AssetClassIcon from '@/components/AssetClassIcon';
 import BackerMark from '@/components/BackerMark';
 import FundingProgress from '@/components/FundingProgress';
 import SidePanel from '@/components/SidePanel';
+import Term from '@/components/Term';
 import WaitlistButton from '@/components/WaitlistButton';
 import { SHOW_SPONSOR_ALIGNMENT } from '@/lib/config';
 import type { DealView, SubscriptionView } from '@/lib/domain';
@@ -89,12 +90,18 @@ export default function DealPeek({
 
   const facts = [
     {
+      id: 'minimum',
       icon: CircleDollarSign,
-      key: 'Minimum investment',
+      key: (
+        <Term q="Why is the minimum what it is?" quiet>
+          Minimum investment
+        </Term>
+      ),
       value: money(deal.minInvestment),
     },
-    { icon: TrendingUp, key: 'Stage', value: deal.stage },
+    { id: 'stage', icon: TrendingUp, key: 'Stage', value: deal.stage },
     {
+      id: 'class',
       icon: Layers,
       key: 'Class',
       value: (
@@ -105,6 +112,7 @@ export default function DealPeek({
       ),
     },
     {
+      id: 'industry',
       icon: Building2,
       key: 'Industry',
       value: deal.industry ? industryLabel(deal.industry) : 'Multi-sector',
@@ -161,8 +169,8 @@ export default function DealPeek({
             At a glance
           </h3>
           <dl className={s.facts}>
-            {facts.map(({ icon: Icon, key, value }) => (
-              <div className={s.fact} key={key}>
+            {facts.map(({ id, icon: Icon, key, value }) => (
+              <div className={s.fact} key={id}>
                 <span className={s.factGlyph} aria-hidden="true">
                   <Icon size={14} strokeWidth={1.6} />
                 </span>

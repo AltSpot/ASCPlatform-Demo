@@ -74,6 +74,54 @@ export const KIND_LABEL: Record<LibraryKind, string> = {
 
 const LIBRARY: LibraryItem[] = [
   {
+    slug: 'twenty-positions-equal-weight',
+    kind: 'article',
+    title: 'Twenty positions, equal weight',
+    standfirst:
+      'Early-stage outcomes are skewed, so the count matters more than the pick. How a diversified sleeve is built, and why the minimums on this platform sit where they do.',
+    topic: 'Portfolio construction',
+    author: 'AltSpot Capital',
+    publishedAt: '2026-09-17T15:00:00.000Z',
+    minutes: 5,
+    art: 'linear-gradient(135deg,#140F07 0%,#4A3010 50%,#B8924A 118%)',
+    body: [
+      {
+        type: 'p',
+        text: 'A single early-stage investment is a coin with a bent edge: most land small, a few land very large, and nobody can tell you in advance which. That shape is why the people who do this well talk less about picking and more about counting.',
+      },
+      { type: 'h', text: 'What the count does' },
+      {
+        type: 'p',
+        text: 'Suppose any one deal has a one-in-twenty chance of a very large outcome. With five positions the chance of holding at least one is about 23%. With ten it is about 40%. With twenty it is about 64%. The arithmetic is the whole argument: the count is what turns a skewed distribution from a lottery ticket into a portfolio.',
+      },
+      {
+        type: 'p',
+        text: 'The evidence from angel portfolios points the same way. In the Angel Capital Association’s portfolio data, investors holding fifteen to twenty-five companies saw median returns well above those holding one to five, and 88% of investors with fifteen or more positions had positive returns. Past portfolios, other investors, other decades: it says nothing about any deal on this platform, and it is the best-known study of the question.',
+      },
+      { type: 'h', text: 'How a sleeve is usually built' },
+      {
+        type: 'list',
+        items: [
+          'A sleeve of 5% to 10% of investable assets. The rest of a portfolio stays where it is.',
+          'Deployed over about three years, six or seven positions a year, so no single vintage decides the outcome.',
+          'About twenty positions at equal weight, around 5% of the sleeve each. Early positions will look heavy until the count catches up.',
+          '20% to 30% kept back for follow-ons in the ones that break out.',
+        ],
+      },
+      {
+        type: 'note',
+        text: 'For someone with $2M of investable assets that is a sleeve of up to $200,000 and about $10,000 a deal. For $5M it is about $25,000 a deal. That $10,000 to $25,000 band is where the minimums on this platform sit: $10,000 as the standard, $5,000 on the smallest vehicles, $25,000 on the largest.',
+      },
+      { type: 'h', text: 'What this is not' },
+      {
+        type: 'p',
+        text: 'A description of a structure, not advice about your money. How much of your own assets belongs in early-stage investing, if any, depends on things this page cannot see: your liquidity, your horizon, your tax position, everything else you hold. That conversation belongs with your advisor. What the platform can do is make the structure easy to follow: minimums in the band, a Portfolio page that counts your positions against twenty, and a marketplace that keeps the shelf full enough to get there.',
+      },
+    ],
+    sourceNote:
+      'Written by AltSpot Capital. The probabilities are arithmetic on an assumed hit rate, illustrative only. The angel portfolio findings are the Angel Capital Association’s published portfolio data, cited as published and not independently verified; they describe other investors’ portfolios in other periods and are not a projection of any outcome here. Not investment advice.',
+  },
+  {
     slug: 'what-a-secondary-actually-buys',
     kind: 'article',
     title: 'What a secondary actually buys',

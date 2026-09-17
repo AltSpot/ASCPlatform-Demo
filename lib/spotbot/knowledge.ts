@@ -18,6 +18,11 @@ import {
   CARRY_PERCENT,
   INVESTOR_CAP_DEFAULT,
   INVESTOR_CAP_MAX,
+  MIN_INVESTMENT_FLOOR,
+  MIN_INVESTMENT_LARGE,
+  MIN_INVESTMENT_LARGE_VEHICLE,
+  MIN_INVESTMENT_SMALL_VEHICLE,
+  MIN_INVESTMENT_STANDARD,
   QUALIFYING_VC_FUND_MAX_CAPITAL,
   RETIREMENT_BLOCK_PERCENT,
   RETIREMENT_WARN_PERCENT,
@@ -25,6 +30,7 @@ import {
 } from '../config';
 import { feeSentence } from '../fees';
 import { money } from '../format';
+import { chanceOfAtLeastOne, SLEEVE, sleevePlan } from '../portfolio-plan';
 
 export interface KnowledgeTopic {
   id: string;
@@ -263,6 +269,54 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       `Two limits, and both are shown on the deal. Members: an SPV admits up to ${INVESTOR_CAP_DEFAULT} members, or up to ${INVESTOR_CAP_MAX} where it qualifies as a venture capital fund of ${money(QUALIFYING_VC_FUND_MAX_CAPITAL)} or less. That is an Investment Company Act limit, not a Rule 506(b) one. Once an SPV is full, a new member joins the waitlist instead and anyone already in keeps their spot. Retirement money: subscriptions through an IRA or 401(k) stay under ${RETIREMENT_BLOCK_PERCENT}% of each SPV. One that would take them to ${RETIREMENT_WARN_PERCENT}% goes through with a warning, and one that would reach ${RETIREMENT_BLOCK_PERCENT}% is refused. The invest page tells you as you type.`,
     source: 'AltSpot platform guide, SPV admissions',
     related: ['spv', 'ira-profile', 'funding-window'],
+  },
+  {
+    id: 'minimum-investment',
+    question: 'Why is the minimum what it is?',
+    keywords: [
+      'minimum investment',
+      'minimum check',
+      'smallest check',
+      'minimum amount',
+      'why is the minimum',
+      'how small',
+      'from $5,000',
+      '$5,000 minimum',
+      '$10,000 minimum',
+      '$25,000 minimum',
+      'lowest amount',
+    ],
+    answer:
+      `Minimums are set per offering by the lead, inside one rule: ${money(MIN_INVESTMENT_STANDARD)} is the standard, vehicles under ${money(MIN_INVESTMENT_SMALL_VEHICLE)} go down to a ${money(MIN_INVESTMENT_FLOOR)} floor, and vehicles over ${money(MIN_INVESTMENT_LARGE_VEHICLE)} carry ${money(MIN_INVESTMENT_LARGE)}. So the platform starts from ${money(MIN_INVESTMENT_FLOOR)}, and every deal page states its own. The band exists because the platform is built for members putting many small positions to work rather than one large one: a member building a twenty-position sleeve writes checks in the ${money(MIN_INVESTMENT_STANDARD)} to ${money(MIN_INVESTMENT_LARGE)} range, and the minimums sit where those checks land.`,
+    source: 'AltSpot platform guide, minimums',
+    related: ['portfolio-construction', 'allocation', 'fees'],
+  },
+  {
+    id: 'portfolio-construction',
+    question: 'Why does the platform talk about twenty positions?',
+    keywords: [
+      'twenty positions',
+      '20 positions',
+      'diversification',
+      'diversify',
+      'diversified',
+      'portfolio construction',
+      'equal weight',
+      'follow on',
+      'follow-on',
+      'follow ons',
+      'reserve for follow',
+      'sleeve',
+      'how many positions',
+      'spread',
+      'concentration',
+      'concentrated',
+      'power law',
+    ],
+    answer:
+      `Because early-stage outcomes are skewed: a few positions carry a portfolio, and nobody knows in advance which. If any one deal has a one-in-twenty chance of a very large outcome, ${SLEEVE.targetPositions} positions give about a ${Math.round(chanceOfAtLeastOne(20) * 100)}% chance of holding one, ten give ${Math.round(chanceOfAtLeastOne(10) * 100)}%, and five give ${Math.round(chanceOfAtLeastOne(5) * 100)}%. That arithmetic is the case for the count. The way a diversified early-stage sleeve is usually built: ${SLEEVE.minPercent}% to ${SLEEVE.maxPercent}% of investable assets, deployed over about ${SLEEVE.deployYears} years, into roughly ${SLEEVE.targetPositions} positions at equal weight, with ${SLEEVE.reserveMinPercent}% to ${SLEEVE.reserveMaxPercent}% kept back for follow-ons in the ones that break out. On ${money(2_000_000)} investable that is a ${money(sleevePlan(2_000_000).sleeveHigh)} sleeve and about ${money(sleevePlan(2_000_000).perDealHigh)} a deal; on ${money(5_000_000)} it is ${money(sleevePlan(5_000_000).perDealHigh)} a deal, which is where the platform's minimums sit. Your Portfolio page counts your positions against twenty. This describes a structure, not your money: how much you commit is between you and your advisor.`,
+    source: 'AltSpot platform guide, portfolio construction',
+    related: ['minimum-investment', 'illiquidity', 'portfolio-page'],
   },
   {
     id: 'illiquidity',
