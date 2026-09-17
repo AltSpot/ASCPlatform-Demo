@@ -1,0 +1,8 @@
+{
+  "out": "screenshots/phase2/00-daylight-brighter",
+  "shots": [
+    { "name": "dashboard", "steps": [{ "go": "/reshoot?as=recent&to=/dashboard" }, { "eval": "localStorage.setItem('asc.theme','light')" }, { "go": "/dashboard" }] },
+    { "name": "marketplace", "steps": [{ "go": "/reshoot?as=recent&to=/marketplace" }, { "eval": "localStorage.setItem('asc.theme','light')" }, { "go": "/marketplace" }] },
+    { "name": "deal", "steps": [{ "go": "/reshoot?as=recent&to=/deals/calder" }, { "eval": "localStorage.setItem('asc.theme','light')" }, { "go": "/deals/calder" }] }
+  ]
+}

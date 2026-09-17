@@ -1121,9 +1121,11 @@ html[data-theme='light']{
      and the warmth moved into the light that falls on it, which is the
      atmosphere layer below. Still not --as-paper: that is the document
      surface and is nearly pure white. */
-  --as-ink:#ECE4D8;
-  --as-ink-2:#E5DCCD;
-  --as-ink-3:#DDD2C1;
+  /* Brighter (Tyler, 2026-09-17): the ground moved toward warm white,
+     and every text ratio below only rises on it. */
+  --as-ink:#F8F4EE;
+  --as-ink-2:#F2ECE3;
+  --as-ink-3:#EAE2D6;
 
   /* ---- text, measured against the WORST pane, not the canvas ----
      The ground is dust running into apricot, and the hottest point of
@@ -1217,11 +1219,11 @@ html[data-theme='light']{
      Raised means adding white; recessed means adding warm shadow. The
      wells are brown rather than black: black on cream goes grey and
      drags the whole page toward newsprint. */
-  --fill-card:rgba(250,252,255,.13);   /* THE glass pane. Barely tinted, a cool white */
+  --fill-card:rgba(252,253,255,.30);   /* THE glass pane. Barely tinted, a cool white */
   --fill-input:rgba(255,255,255,.44);
   --panel-2:rgba(255,255,255,.50);
-  --surface-1:rgba(255,255,255,.22);   /* quiet fill inside a card */
-  --surface-2:rgba(255,255,255,.42);   /* raised: hover rows, chips */
+  --surface-1:rgba(255,255,255,.34);   /* quiet fill inside a card */
+  --surface-2:rgba(255,255,255,.54);   /* raised: hover rows, chips */
   --surface-3:rgba(255,255,255,.78);   /* present: thumbs, filled tracks, quiet pills */
   --surface-well:rgba(110,70,28,.07);  /* recessed: inputs, inset panels */
   --track:rgba(110,70,28,.14);         /* the unfilled half of a meter */
@@ -1264,8 +1266,8 @@ html[data-theme='light']{
   --glass-sat:112%;
   --glass-bright:1.07;
   --glass-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23f)'/%3E%3C/svg%3E");
-  --glass:rgba(255,253,250,.38);
-  --glass-solid:rgba(255,252,248,.74);
+  --glass:rgba(255,254,252,.52);
+  --glass-solid:rgba(255,254,251,.84);
   --glass-tint-gold:linear-gradient(180deg,rgba(214,168,86,.16),rgba(214,168,86,.04));
   --glass-tint-ember:linear-gradient(180deg,rgba(229,102,26,.11),rgba(229,102,26,.02));
 
@@ -1389,21 +1391,21 @@ html[data-theme='light'] body::before{
     radial-gradient(34% 30% at 34% 40%,rgba(214,232,250,.30),transparent 72%),
     radial-gradient(30% 28% at 82% 70%,rgba(206,228,248,.22),transparent 72%),
     /* gold, entering top of centre */
-    radial-gradient(54% 46% at 44% -10%,rgba(214,172,98,.34),transparent 72%),
+    radial-gradient(54% 46% at 44% -10%,rgba(214,172,98,.24),transparent 72%),
     /* orange, top right, wider */
-    radial-gradient(56% 54% at 100% 0%,rgba(243,152,7,.20),rgba(229,102,26,.05) 50%,transparent 76%),
+    radial-gradient(56% 54% at 100% 0%,rgba(243,152,7,.14),rgba(229,102,26,.03) 50%,transparent 76%),
     /* apricot, left of middle */
-    radial-gradient(44% 40% at 10% 56%,rgba(238,172,104,.24),transparent 72%),
+    radial-gradient(44% 40% at 10% 56%,rgba(238,172,104,.16),transparent 72%),
     /* apricot, right of middle */
-    radial-gradient(48% 44% at 74% 46%,rgba(240,164,92,.22),transparent 72%),
+    radial-gradient(48% 44% at 74% 46%,rgba(240,164,92,.15),transparent 72%),
     /* ember, bottom right */
-    radial-gradient(50% 52% at 100% 100%,rgba(229,102,26,.13),transparent 70%),
+    radial-gradient(50% 52% at 100% 100%,rgba(229,102,26,.09),transparent 70%),
     /* gold, bottom left */
-    radial-gradient(54% 52% at -2% 100%,rgba(214,172,98,.36),transparent 70%),
+    radial-gradient(54% 52% at -2% 100%,rgba(214,172,98,.25),transparent 70%),
     /* champagne, bottom centre */
-    radial-gradient(48% 36% at 50% 106%,rgba(228,192,124,.28),transparent 70%),
+    radial-gradient(48% 36% at 50% 106%,rgba(228,192,124,.20),transparent 70%),
     /* the sweep */
-    linear-gradient(125deg,#F6F1E9 0%,#F2E7D6 34%,#F1DEC4 68%,#F0D6B4 100%);
+    linear-gradient(125deg,#FEFCF9 0%,#FBF6EE 34%,#F9F0E2 68%,#F7EAD6 100%);
 }
 html[data-theme='light'] body::after{opacity:.012}
 
