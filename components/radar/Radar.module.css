@@ -22,7 +22,7 @@
   /* Three across from 2026-09-17, so each card has room for the line
      that says what the company does. */
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
+  gap: 40px 32px;
   /* Cards keep their own height. One card opening its research must
      not stretch its neighbour into a column of empty space. */
   align-items: start;

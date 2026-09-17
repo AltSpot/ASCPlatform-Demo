@@ -127,7 +127,7 @@ export default function DealCard({
         : null;
 
   return (
-    <div className="card deal-card">
+    <div className={full ? `card deal-card ${s.fullCard}` : 'card deal-card'}>
       <div className={`thumb ${s.art}`} style={{ background: deal.art }}>
         {status ? (
           <span className={s.status} data-tone={status.tone} title={status.title}>

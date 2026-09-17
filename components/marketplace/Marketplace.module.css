@@ -441,7 +441,7 @@
    ================================================================== */
 
 .art {
-  height: 118px;
+  height: 136px;
 }
 
 .cardMark {
@@ -580,4 +580,26 @@
 }
 .status[data-tone='action'] svg {
   stroke: var(--fg-on-action);
+}
+
+/* ------------------------------------------------------------------
+   A full SPV: still open to the waitlist, so not greyed out as closed.
+   The art is quieter and cooler, the bar steps back, and the mark sits a
+   little lower in the band, enough to set the card apart in a row.
+   ------------------------------------------------------------------ */
+.fullCard .art {
+  filter: saturate(0.45) brightness(0.9);
+}
+.fullCard .cardMark {
+  opacity: 0.8;
+}
+.fullCard :global(.deal-body) {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--surface-1) 0 1px,
+    transparent 1px 9px
+  );
+}
+.fullCard .status {
+  filter: none;
 }
