@@ -23,6 +23,7 @@ import { ISOLATED_ALLOCATION } from '../config';
 import { parseBacking } from '../backers';
 import { canViewDealDetail } from '../domain';
 import { canSubscribeToDeal, type RelationshipView } from '../relationship';
+import { usableScenarioSet } from '../scenarios';
 import type {
   DealChart,
   DealMedia,
@@ -86,6 +87,8 @@ export function toDealView(row: Deal): DealView {
     ),
     whatWeLike: parseJson<string[]>(row.whatWeLikeJson, [], `${row.id}.whatWeLike`),
     outcomes: parseJson<DealOutcomes>(row.outcomesJson, {}, `${row.id}.outcomes`),
+    /* All of the spec or nothing: an incomplete set is null, not partial. */
+    scenarios: usableScenarioSet(parseJson<unknown>(row.scenariosJson, {}, `${row.id}.scenarios`)),
     indicators: parseJson<Record<string, IndicatorValue>>(
       row.indicatorsJson,
       {},

@@ -114,6 +114,18 @@ export const FEE_TERMS = {
 export const CARRY_PERCENT = 20;
 
 /**
+ * Illustrative return scenarios on a deal page (lib/scenarios.ts,
+ * components/deal/ReturnScenarios.tsx). OFF until counsel approves. On,
+ * a deal renders them only if it carries a complete scenario set: at
+ * least three cases with a total loss first, neutral labels, every input
+ * shown, net beside gross, sources and dates on every external input, a
+ * methodology, and the disclaimer beside it. The set each member saw is
+ * recorded (ScenarioView). Never on a share card, in an email, or on a
+ * public page: the component exists on the deal page and nowhere else.
+ */
+export const SHOW_RETURN_SCENARIOS = process.env.ASC_SHOW_RETURN_SCENARIOS === 'true';
+
+/**
  * Admissions close this many hours before the scheduled wire. At the
  * cut-off the member register locks and every percentage freezes.
  */

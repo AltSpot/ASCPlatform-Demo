@@ -53,6 +53,7 @@ export type AuditAction =
   | 'referral.link_created'
   /* A member's deal preferences, for matchmaking. */
   | 'preferences.saved'
+  | 'scenarios.shown'
   | 'demo.reset';
 
 interface AuditInput {

@@ -414,6 +414,7 @@ function fullDeal(): DealView {
     preferredTerms: [{ k: 'Liquidation', v: 'WITHHELD_PREFERRED' }],
     whatWeLike: ['WITHHELD_LIKE'],
     outcomes: { intro: 'WITHHELD_OUTCOME' },
+    scenarios: null,
     indicators: { arr: { value: 'WITHHELD_INDICATOR' } },
     rounds: [{ round: 'Seed', date: '2025', preMoney: 'WITHHELD_ROUND' }],
     blurb: 'Clinical documentation for senior care.',

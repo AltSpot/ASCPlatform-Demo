@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
     ASC_SHOW_FEE_TERMS: process.env.ASC_SHOW_FEE_TERMS ?? 'false',
     ASC_SHOW_CARRY_TERMS: process.env.ASC_SHOW_CARRY_TERMS ?? 'false',
     ASC_SHOW_SPONSOR_ALIGNMENT: process.env.ASC_SHOW_SPONSOR_ALIGNMENT ?? 'true',
+    ASC_SHOW_RETURN_SCENARIOS: process.env.ASC_SHOW_RETURN_SCENARIOS ?? 'false',
     ASC_ADMISSION_CUTOFF_HOURS: process.env.ASC_ADMISSION_CUTOFF_HOURS ?? '24',
   },
 };

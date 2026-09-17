@@ -1,4 +1,5 @@
 import type { Backing } from './backers';
+import type { ScenarioSet } from './scenarios';
 import {
   canSeeOfferings,
   questionnaireSubmitted,
@@ -298,6 +299,12 @@ export interface DealView {
   preferredTerms: DealTerm[];
   whatWeLike: string[];
   outcomes: DealOutcomes;
+  /**
+   * Illustrative return scenarios, or null. Null unless the deal carries
+   * a set that passes every check in lib/scenarios.ts; the component
+   * also sits behind SHOW_RETURN_SCENARIOS.
+   */
+  scenarios: ScenarioSet | null;
   indicators: Record<string, IndicatorValue>;
   rounds: FundingRound[];
   blurb: string;

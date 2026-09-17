@@ -92,6 +92,8 @@ interface SeedDeal {
   indicators?: Record<string,{value:string;note?:string}>;
   rounds?: Record<string,unknown>[];
   outcomes?: Record<string, unknown>;
+  /** Illustrative scenarios (lib/scenarios.ts ScenarioSet). Invented data. */
+  scenarios?: Record<string, unknown>;
   media: { type: string; label: string; series: number[]; caption: string };
   charts?: {
     key: string;
@@ -200,6 +202,87 @@ const DEALS: SeedDeal[] = [
        (work order screen 18): a multiple beside an ARR figure reads as a
        projection whatever the caveat under it says. */
     outcomes: {},
+    /* Illustrative scenarios to counsel's spec (2026-09-17), behind
+       SHOW_RETURN_SCENARIOS. INVENTED DATA, invented comparables, for the
+       demo only: every name below is fictional and says so. Downside
+       first, total loss included, neutral labels, dilution modelled. */
+    scenarios: {
+      version: '2026-09-17.1',
+      asOf: '2026-09-17',
+      preparedBy: 'AltSpot Capital (demo environment, illustrative model)',
+      numbersFrom:
+        'Company-provided revenue plan, not independently verified. Exit values are assumptions, not forecasts.',
+      inputs: {
+        entryPreMoney: 30_000_000,
+        roundSize: 6_000_000,
+        spvInvestment: 2_000_000,
+        dilutionToExitPercent: 30,
+        exitYear: 6,
+        basis: 'Equity value of the company at the assumed exit',
+        metric: {
+          label: 'Contracted ARR, company plan for year 3',
+          value: '$9,000,000',
+          source: 'Company-provided plan, June 2026. Not independently verified.',
+        },
+      },
+      cases: [
+        {
+          label: 'Scenario A',
+          exitValuation: 0,
+          note: 'The company fails or is sold for less than its preferred stack. Nothing is recovered.',
+        },
+        {
+          label: 'Scenario B',
+          exitValuation: 45_000_000,
+          note: 'Sold near the entry post-money after further dilution.',
+        },
+        {
+          label: 'Scenario C',
+          exitValuation: 150_000_000,
+          note: 'An acquisition at roughly four times the entry post-money.',
+        },
+        {
+          label: 'Scenario D',
+          exitValuation: 400_000_000,
+          note: 'A larger strategic outcome. Assumed, not forecast.',
+        },
+      ],
+      comparables: [
+        {
+          name: 'Halden Grid Systems (fictional)',
+          value: '$210M acquisition, 6.1x revenue',
+          source: 'Demo data set, invented for the demo environment',
+          pulledOn: '2026-09-10',
+        },
+        {
+          name: 'Corbel Analytics (fictional)',
+          value: '$95M Series C, 8.4x revenue',
+          source: 'Demo data set, invented for the demo environment',
+          pulledOn: '2026-09-10',
+        },
+        {
+          name: 'Tallis Interconnect (fictional)',
+          value: '$380M acquisition, 5.2x revenue',
+          source: 'Demo data set, invented for the demo environment',
+          pulledOn: '2026-09-10',
+        },
+      ],
+      comparablesCriteria:
+        'Grid and utility software companies acquired or financed between 2023 and 2026 at $50M to $500M, where a revenue figure was disclosed. Every entry is fictional, invented for the demo environment.',
+      methodology: [
+        'Ownership at close is the SPV investment divided by the post-money valuation.',
+        'Ownership at exit applies the assumed dilution from future rounds to ownership at close.',
+        'Proceeds in each case are ownership at exit multiplied by the assumed equity value, with no preference or ratchet modelled.',
+        'IRR is the annualized multiple over the assumed years from close to exit; no interim distributions are assumed.',
+      ],
+      limitations: [
+        'Exit values, timing and dilution are assumptions. Any of them may prove wrong by a wide margin.',
+        'The preferred stack, ratchets, option pool refreshes and pay-to-play terms in later rounds are not modelled and can change outcomes materially.',
+        'The revenue plan is the company’s and has not been independently verified.',
+        'Comparable data describes other companies at other times and does not describe this one.',
+        'Private investments are illiquid; there may be no exit at all.',
+      ],
+    },
     risks:
       'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: utility sales cycles are long and budget-driven, and slippage of a few procurements materially changes the growth picture; regulators must continue accepting model-based studies, and a policy reversal would slow adoption; incumbent vendors and large consultancies are well capitalized and could bundle competing tools; and the position is illiquid with no public market and no promised exit timeline.',
     minInvestment: 10000,
@@ -1366,6 +1449,7 @@ async function main() {
       preferredTermsJson: JSON.stringify(deal.preferredTerms ?? []),
       whatWeLikeJson: JSON.stringify(deal.whatWeLike ?? []),
       outcomesJson: JSON.stringify(deal.outcomes ?? {}),
+      scenariosJson: JSON.stringify(deal.scenarios ?? {}),
       indicatorsJson: JSON.stringify(deal.indicators ?? {}),
       roundsJson: JSON.stringify(deal.rounds ?? []),
       backingJson: JSON.stringify(deal.backing ?? []),

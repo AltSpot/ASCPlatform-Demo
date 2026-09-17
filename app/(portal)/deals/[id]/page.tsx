@@ -28,6 +28,7 @@ import DealStep from '@/components/deal/DealStep';
 import MoreDeals from '@/components/deal/MoreDeals';
 import DealCharts from '@/components/deal/DealCharts';
 import Outcomes from '@/components/deal/Outcomes';
+import ReturnScenarios from '@/components/deal/ReturnScenarios';
 import RiskPanel from '@/components/deal/RiskPanel';
 import KeyIndicators from '@/components/deal/KeyIndicators';
 import RoundHistory from '@/components/deal/RoundHistory';
@@ -46,7 +47,9 @@ import { getDealAccess, listDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getResumable } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
+import { recordScenarioView } from '@/lib/repositories/scenario-views';
 import { getStanding, waitlistedDeals } from '@/lib/repositories/spv';
+import { SHOW_RETURN_SCENARIOS } from '@/lib/config';
 import { admissionsOpen, isFull } from '@/lib/spv-rules';
 
 export const dynamic = 'force-dynamic';
@@ -148,6 +151,12 @@ export default async function DealPage({
    */
   const viewOnly = !deal.subscribable && !resume;
 
+  /* Illustrative scenarios: behind the switch, only a complete set, only
+     here, and what was shown is recorded to the member before it renders
+     (lib/repositories/scenario-views.ts). */
+  const scenarios = SHOW_RETURN_SCENARIOS ? deal.scenarios : null;
+  if (scenarios) await recordScenarioView(user.id, deal.id, scenarios);
+
   const ctaFor = (className: string) =>
     !resume && closedToNew ? (
       <span className={s.admissionsClosed}>Admissions closed</span>
@@ -218,6 +227,8 @@ export default async function DealPage({
       <RoundHistory rounds={deal.rounds} />
 
       <Outcomes outcomes={deal.outcomes} />
+
+      {scenarios ? <ReturnScenarios set={scenarios} /> : null}
 
       <RiskPanel risks={deal.risks} />
 
