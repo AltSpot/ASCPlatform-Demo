@@ -853,8 +853,8 @@ const DEALS: SeedDeal[] = [
     risks:
       'Early-stage venture. Total loss of capital is possible. Clinical services carry regulatory, liability and staffing risk; reimbursement rates can change; practice consolidation can concentrate the customer base; and the position is illiquid with no promised exit.',
     minInvestment: 10000,
-    allocationTotal: 1500000,
-    allocationRemaining: 1120000,
+    allocationTotal: 900000,
+    allocationRemaining: 560000,
     closesInDays: 33,
     launchedDaysAgo: 22,
     altspotCommitted: 0,
@@ -923,8 +923,8 @@ const DEALS: SeedDeal[] = [
     risks:
       'Seed-stage venture, the earliest on the shelf. Total loss of capital is the most likely single outcome for a company at this stage. Process scale-up can fail; construction customers are conservative and slow; steel slag supply depends on a small number of mills; and the position is illiquid with no promised exit.',
     minInvestment: 10000,
-    allocationTotal: 750000,
-    allocationRemaining: 410000,
+    allocationTotal: 240000,
+    allocationRemaining: 95000,
     closesInDays: 41,
     launchedDaysAgo: 15,
     altspotCommitted: 0,
@@ -996,8 +996,8 @@ const DEALS: SeedDeal[] = [
     risks:
       'Clinical-stage biotech. Total loss of capital is possible and common at this stage. The Phase 2 study can fail on safety or efficacy; manufacturing a stabilised enzyme at scale is unproven; regulators can require more trials than planned; rare disease markets are small; and the position is illiquid with no promised exit.',
     minInvestment: 10000,
-    allocationTotal: 2200000,
-    allocationRemaining: 1600000,
+    allocationTotal: 950000,
+    allocationRemaining: 690000,
     closesInDays: 44,
     launchedDaysAgo: 6,
     altspotCommitted: 0,
@@ -1384,15 +1384,91 @@ function closesIn(days: number): string {
  */
 /* Minimums follow the rule in lib/funding.ts (defaultMinimumToClose)
    unless a deal sets its own; caps follow lib/spv-rules.ts. */
+/**
+ * DEMO SEAM. An illustrative scenario set for any open deal that states an
+ * entry valuation in its terms, to counsel's spec (lib/scenarios.ts):
+ * four cases with the total loss first, neutral labels, dilution modelled,
+ * every input from the deal's own terms, no comparables (so no external
+ * input to source), the methodology and the limits. A secondary is bought
+ * at a late valuation, so its cases sit closer to entry and its horizon is
+ * shorter. Invented data, labelled as such on the page.
+ */
+function parseMoney(text: string): number | null {
+  const m = text.replace(/,/g, '').match(/\$?\s*([\d.]+)\s*([BMK])?/i);
+  if (!m) return null;
+  const n = Number(m[1]);
+  const unit = (m[2] ?? '').toUpperCase();
+  return Math.round(n * (unit === 'B' ? 1e9 : unit === 'M' ? 1e6 : unit === 'K' ? 1e3 : 1));
+}
+
+function scenariosFor(deal: SeedDeal): Record<string, unknown> | undefined {
+  if (deal.status === 'closed') return undefined;
+  const entryTerm = deal.terms.find((t) => /pre-money valuation|implied valuation/i.test(t.k));
+  const entry = entryTerm ? parseMoney(entryTerm.v) : null;
+  if (!entry) return undefined;
+  const roundTerm = deal.terms.find((t) => /round size/i.test(t.k));
+  const round = roundTerm ? (parseMoney(roundTerm.v) ?? 0) : 0;
+  const secondary = deal.assetClass === 'secondary';
+  const post = entry + round;
+  const multiples = secondary ? [0, 0.75, 2, 4] : [0, 1.25, 4, 10];
+  const notes = secondary
+    ? [
+        'The company fails or is sold below the price paid. Nothing is recovered.',
+        'Sold below the entry valuation after further dilution.',
+        'An exit at roughly twice the entry valuation.',
+        'A larger outcome. Assumed, not forecast.',
+      ]
+    : [
+        'The company fails or is sold for less than its preferred stack. Nothing is recovered.',
+        'Sold near the entry post-money after further dilution.',
+        'An acquisition at roughly four times the entry post-money.',
+        'A larger strategic outcome. Assumed, not forecast.',
+      ];
+  return {
+    version: '2026-09-17.1',
+    asOf: '2026-09-17',
+    preparedBy: 'AltSpot Capital (demo environment, illustrative model)',
+    numbersFrom:
+      'Entry valuation and round size from the deal terms. Exit values are assumptions, not forecasts, and no company projection is used.',
+    inputs: {
+      entryPreMoney: entry,
+      roundSize: round,
+      spvInvestment: deal.allocationTotal,
+      dilutionToExitPercent: secondary ? 10 : 30,
+      exitYear: secondary ? 3 : 6,
+      basis: 'Equity value of the company at the assumed exit',
+    },
+    cases: multiples.map((m, i) => ({
+      label: `Scenario ${'ABCD'[i]}`,
+      exitValuation: Math.round(post * m),
+      note: notes[i],
+    })),
+    comparables: [],
+    comparablesCriteria: '',
+    methodology: [
+      'Ownership at close is the SPV investment divided by the post-money valuation (for a secondary, the implied valuation).',
+      'Ownership at exit applies the assumed dilution from future rounds to ownership at close.',
+      'Proceeds in each case are ownership at exit multiplied by the assumed equity value, with no preference or ratchet modelled.',
+      'IRR is the annualized multiple over the assumed years from close to exit; no interim distributions are assumed.',
+    ],
+    limitations: [
+      'Exit values, timing and dilution are assumptions. Any of them may prove wrong by a wide margin.',
+      'The preferred stack, ratchets, option pool refreshes and pay-to-play terms in later rounds are not modelled and can change outcomes materially.',
+      'Private investments are illiquid; there may be no exit at all.',
+    ],
+  };
+}
+
 const FUNDING: Record<
   string,
   { minimum?: number; lead?: 'altspot' | 'partner'; cap?: number; minInvestment?: number }
 > = {
   kestrel: { lead: 'partner' },
-  /* Set per offering (the deck): the lead took Meridel to the standard
-     minimum so a newer member can start there, and left the rest to the
-     rule in lib/minimums.ts. */
-  meridel: { minInvestment: 10_000 },
+  /* Set per offering (the deck): the lead took Halyard down to the
+     standard minimum, and left every other deal to the rule in
+     lib/minimums.ts, which the shelf's allocations now span, $5,000 on the
+     smallest vehicle to $25,000 on the largest. */
+  halyard: { minInvestment: 10_000 },
 };
 
 /**
@@ -1461,7 +1537,10 @@ async function main() {
       preferredTermsJson: JSON.stringify(deal.preferredTerms ?? []),
       whatWeLikeJson: JSON.stringify(deal.whatWeLike ?? []),
       outcomesJson: JSON.stringify(deal.outcomes ?? {}),
-      scenariosJson: JSON.stringify(deal.scenarios ?? {}),
+      /* Every open deal with an entry valuation carries an illustrative
+         set for the demo (Tyler, 2026-09-17), built by the rule below
+         unless the deal wrote its own. */
+      scenariosJson: JSON.stringify(deal.scenarios ?? scenariosFor(deal) ?? {}),
       indicatorsJson: JSON.stringify(deal.indicators ?? {}),
       roundsJson: JSON.stringify(deal.rounds ?? []),
       backingJson: JSON.stringify(deal.backing ?? []),

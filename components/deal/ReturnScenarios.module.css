@@ -1,16 +1,12 @@
-/* Illustrative scenarios: the label first, the inputs beside the cases,
-   comparables and method under them, the disclaimer adjacent. */
+/* Illustrative scenarios, the digestible edition: one line of warning, a
+   row of assumption tiles, one four-column table, the method folded, the
+   disclaimer adjacent. */
 
 .banner {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 22px;
-  padding: 12px 16px;
-  border-radius: var(--r-md);
-  background-color: var(--surface-well);
-  background-image: var(--glass-tint-ember);
-  box-shadow: inset 0 0 0 1px var(--hair-ember);
+  gap: 9px;
+  margin: 0 0 18px;
   font-size: 14px;
   line-height: 1.5;
   color: var(--as-text-body);
@@ -20,86 +16,62 @@
   margin-top: 3px;
   stroke: var(--as-ember);
 }
-.banner b {
+.banner b,
+.whose b,
+.netNote b,
+.criteria b,
+.compList b {
   font-weight: var(--w-medium);
   color: var(--as-text);
 }
 
-.grid {
+/* ---------- assumptions ---------- */
+
+.tiles {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
-  gap: 26px;
-  align-items: start;
-}
-@media (max-width: 1000px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.key {
-  margin: 0 0 12px;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--as-text-muted);
-}
-
-.inputs {
-  padding: 18px 20px 16px;
-  border-radius: var(--r-md);
-  background: var(--surface-well);
-  box-shadow: inset 0 0 0 1px var(--hair-soft);
-}
-.facts {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
   margin: 0;
 }
-.facts > div {
+.tile {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--hair-soft);
+  gap: 3px;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
 }
-.facts > div:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-.facts dt {
+.tile dt {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: var(--ls-text);
   color: var(--as-text-muted);
 }
-.facts dd {
+.tile dd {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   margin: 0;
-  font-size: 14px;
+  font-size: 14.5px;
+  font-weight: var(--w-medium);
   color: var(--as-text);
 }
-.facts dd small {
+.tile dd small {
   font-size: var(--fs-label);
+  font-weight: var(--w-regular);
   color: var(--as-text-muted);
 }
+
 .whose {
-  margin: 14px 0 0;
+  margin: 12px 0 22px;
   font-size: var(--fs-meta);
   line-height: 1.5;
   color: var(--as-text-muted);
 }
-.whose b,
-.criteria b,
-.netNote b {
-  font-weight: var(--w-medium);
-  color: var(--as-text);
-}
+
+/* ---------- the cases ---------- */
 
 .tableWrap {
   min-width: 0;
@@ -113,12 +85,14 @@
 .note {
   display: block;
   margin-top: 2px;
+  max-width: 44ch;
   font-size: var(--fs-label);
   line-height: 1.4;
   color: var(--as-text-muted);
 }
 .net {
   font-weight: var(--w-semi);
+  font-size: 15px;
   color: var(--as-text);
 }
 .table tr[data-loss='true'] td {
@@ -133,18 +107,44 @@
   color: var(--as-text-muted);
 }
 
+/* ---------- comparables ---------- */
+
 .comps {
-  margin-top: 28px;
+  margin-top: 22px;
+}
+.key {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+.compList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-meta);
+  color: var(--as-text-body);
+}
+.compList span {
+  color: var(--as-text-muted);
 }
 
+/* ---------- the fold ---------- */
+
 .method {
-  margin-top: 24px;
+  margin-top: 20px;
   border-radius: var(--r-md);
   background: var(--surface-well);
   box-shadow: inset 0 0 0 1px var(--hair-soft);
 }
 .method summary {
-  padding: 14px 18px;
+  padding: 13px 18px;
   cursor: pointer;
   font-size: 14px;
   font-weight: var(--w-medium);
@@ -157,7 +157,7 @@
   color: var(--as-text-body);
 }
 .methodBody h4 {
-  margin: 12px 0 6px;
+  margin: 14px 0 8px;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: var(--w-medium);
@@ -181,7 +181,7 @@
 
 .disclaimer {
   margin: 18px 0 0;
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-left: 3px solid var(--as-ember);
   font-size: var(--fs-meta);
   line-height: 1.6;

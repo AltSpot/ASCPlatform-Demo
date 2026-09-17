@@ -1,22 +1,21 @@
 /**
- * Illustrative return scenarios (counsel's build spec, 2026-09-17).
+ * Illustrative return scenarios (counsel's build spec, 2026-09-17),
+ * simplified to what the spec requires and no more (Tyler: "way more
+ * digestible").
  *
  * Renders only when SHOW_RETURN_SCENARIOS is on AND the deal carries a
- * set that passed every check in lib/scenarios.ts; otherwise the page
- * has no such section. Inside the memo, never in the hero, a share card,
- * an email or a public page. What it shows, all of it on one screen:
+ * set that passed every check in lib/scenarios.ts. Inside the memo, never
+ * in the hero, a share card, an email or a public page. On one screen:
  *
- *   - the label ILLUSTRATIVE, always, and the as-of date;
- *   - every input: entry valuation, round, ownership at close, assumed
- *     dilution, exit year, the basis, and whose numbers they are;
- *   - the cases, downside first, the total loss among them, with gross
- *     AND net multiple and IRR side by side, net of the platform fee, the
- *     management fee reserve and carried interest as the offering
- *     documents describe them (figures only behind their own switches);
- *   - the line that no scenario is more likely than another;
- *   - comparables with source, date pulled and the selection criteria;
- *   - the methodology and the limitations of hypothetical figures;
- *   - the disclaimer, adjacent, not in a footer.
+ *   - ILLUSTRATIVE, the as-of date, and that no scenario is more likely;
+ *   - every input as a row of small tiles, and whose numbers they are;
+ *   - the cases, downside first, the total loss among them, with the NET
+ *     multiple and IRR (the spec allows net alone where one number fits;
+ *     gross is one press away under Methodology, never without net);
+ *   - what net is after, and that nothing assumes a tax treatment;
+ *   - comparables with source, date and criteria, when any were used;
+ *   - the methodology, the gross figures and the limits, folded;
+ *   - counsel's disclaimer, adjacent.
  *
  * Nothing here reads the diligence score, names AltSpot's past deals, or
  * assumes any tax treatment. Server component; the page records the
@@ -45,6 +44,12 @@ function pct(x: number): string {
   return `${(x * 100).toFixed(1)}%`;
 }
 
+function compactMoney(x: number): string {
+  if (x >= 1e9) return `$${(x / 1e9).toFixed(x % 1e9 === 0 ? 0 : 1)}B`;
+  if (x >= 1e6) return `$${(x / 1e6).toFixed(x % 1e6 === 0 ? 0 : 1)}M`;
+  return money(x);
+}
+
 export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
   const results = evaluateScenarios(set);
   const { inputs } = set;
@@ -55,137 +60,91 @@ export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
       ? feeSentence()
       : 'the platform fee, the management fee reserve and carried interest, each as described in the offering documents.';
 
+  const tiles: { k: string; v: string; note?: string }[] = [
+    { k: 'Entry', v: `${compactMoney(inputs.entryPreMoney)} pre`, note: `${compactMoney(post)} post` },
+    ...(inputs.roundSize > 0 ? [{ k: 'Round', v: compactMoney(inputs.roundSize) }] : []),
+    { k: 'SPV invests', v: compactMoney(inputs.spvInvestment), note: `${pct(ownershipAtClose(inputs))} at close` },
+    {
+      k: 'Dilution to exit',
+      v: `${inputs.dilutionToExitPercent}%`,
+      note: `${pct(ownershipAtExit(inputs))} at exit`,
+    },
+    { k: 'Assumed exit', v: `Year ${inputs.exitYear}` },
+    { k: 'Exit figure', v: inputs.basis },
+    ...(inputs.metric
+      ? [{ k: inputs.metric.label, v: inputs.metric.value, note: inputs.metric.source }]
+      : []),
+  ];
+
   return (
-    <Section
-      eyebrow="Illustrative scenarios"
-      title="If it worked out badly, middling, or well. Illustrative only."
-      id="scenarios"
-    >
-      <div className={s.banner} role="note">
-        <CircleAlert size={16} strokeWidth={1.8} aria-hidden="true" />
+    <Section eyebrow="Illustrative scenarios" title="Three ways it could go, and the loss." id="scenarios">
+      <p className={s.banner} role="note">
+        <CircleAlert size={15} strokeWidth={1.8} aria-hidden="true" />
         <span>
-          <b>Illustrative. Not a projection.</b> Hypothetical figures from the assumptions shown,
-          as of {dateStr(set.asOf)}. No scenario is more likely than any other, and one of them is
-          the total loss of your investment.
+          <b>Illustrative, not a projection.</b> Hypothetical figures from the assumptions below,
+          as of {dateStr(set.asOf)}. No scenario is more likely than any other.
         </span>
-      </div>
+      </p>
 
-      <div className={s.grid}>
-        <div className={s.inputs}>
-          <h3 className={s.key}>Every input</h3>
-          <dl className={s.facts}>
-            <div>
-              <dt>Entry valuation</dt>
-              <dd>
-                {money(inputs.entryPreMoney)} pre-money, {money(post)} post
-              </dd>
-            </div>
-            <div>
-              <dt>Round</dt>
-              <dd>{money(inputs.roundSize)}</dd>
-            </div>
-            <div>
-              <dt>SPV investment</dt>
-              <dd>{money(inputs.spvInvestment)}</dd>
-            </div>
-            <div>
-              <dt>Ownership at close</dt>
-              <dd>{pct(ownershipAtClose(inputs))}</dd>
-            </div>
-            <div>
-              <dt>Assumed dilution to exit</dt>
-              <dd>
-                {inputs.dilutionToExitPercent}%, to {pct(ownershipAtExit(inputs))} at exit
-              </dd>
-            </div>
-            <div>
-              <dt>Assumed exit</dt>
-              <dd>Year {inputs.exitYear} after close</dd>
-            </div>
-            <div>
-              <dt>The exit figure is</dt>
-              <dd>{inputs.basis}</dd>
-            </div>
-            {inputs.metric ? (
-              <div>
-                <dt>{inputs.metric.label}</dt>
-                <dd>
-                  {inputs.metric.value}
-                  <small>{inputs.metric.source}</small>
-                </dd>
-              </div>
-            ) : null}
-          </dl>
-          <p className={s.whose}>
-            <b>Whose numbers.</b> {set.numbersFrom} Model built by {set.preparedBy}.
-          </p>
-        </div>
+      <dl className={s.tiles}>
+        {tiles.map((t) => (
+          <div className={s.tile} key={t.k}>
+            <dt>{t.k}</dt>
+            <dd>
+              {t.v}
+              {t.note ? <small>{t.note}</small> : null}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className={s.whose}>
+        <b>Whose numbers.</b> {set.numbersFrom} Model built by {set.preparedBy}.
+      </p>
 
-        <div className={s.tableWrap}>
-          <h3 className={s.key}>The cases, downside first</h3>
-          <table className={`tbl ${s.table}`}>
-            <thead>
-              <tr>
-                <th>Scenario</th>
-                <th className="num">Exit value</th>
-                <th className="num">Gross multiple</th>
-                <th className="num">
-                  <Term q="What are the fees?" quiet>
-                    Net multiple
-                  </Term>
-                </th>
-                <th className="num">Gross IRR</th>
-                <th className="num">Net IRR</th>
+      <div className={s.tableWrap}>
+        <table className={`tbl ${s.table}`}>
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th className="num">Exit value</th>
+              <th className="num">
+                <Term q="What are the fees?" quiet>
+                  Net multiple
+                </Term>
+              </th>
+              <th className="num">Net IRR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((r) => (
+              <tr key={r.label} data-loss={r.totalLoss}>
+                <td>
+                  <b>{r.label}</b>
+                  <span className={s.note}>{r.note}</span>
+                </td>
+                <td className="num">{r.totalLoss ? 'Nothing recovered' : compactMoney(r.exitValuation)}</td>
+                <td className={`num ${s.net}`}>{formatMultiple(r.netMultiple)}</td>
+                <td className={`num ${s.net}`}>{formatIrr(r.netIrr)}</td>
               </tr>
-            </thead>
-            <tbody>
-              {results.map((r) => (
-                <tr key={r.label} data-loss={r.totalLoss}>
-                  <td>
-                    <b>{r.label}</b>
-                    <span className={s.note}>{r.note}</span>
-                  </td>
-                  <td className="num">{r.totalLoss ? 'Nothing recovered' : money(r.exitValuation)}</td>
-                  <td className="num">{formatMultiple(r.grossMultiple)}</td>
-                  <td className={`num ${s.net}`}>{formatMultiple(r.netMultiple)}</td>
-                  <td className="num">{formatIrr(r.grossIrr)}</td>
-                  <td className={`num ${s.net}`}>{formatIrr(r.netIrr)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className={s.netNote}>
-            <b>Net</b> is after {netOf} Gross is before any of them. Both are before tax, and no
-            scenario assumes any tax treatment.
-          </p>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
+      <p className={s.netNote}>
+        <b>Net</b> is after {netOf} Before tax; no scenario assumes any tax treatment. Gross
+        figures are under Methodology.
+      </p>
 
       {set.comparables.length > 0 ? (
         <div className={s.comps}>
           <h3 className={s.key}>Comparable data used</h3>
-          <table className={`tbl ${s.table}`}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th className="num">Value</th>
-                <th>Source</th>
-                <th className="num">Pulled</th>
-              </tr>
-            </thead>
-            <tbody>
-              {set.comparables.map((c) => (
-                <tr key={c.name}>
-                  <td>
-                    <b>{c.name}</b>
-                  </td>
-                  <td className="num">{c.value}</td>
-                  <td className="small">{c.source}</td>
-                  <td className="num">{dateStr(c.pulledOn)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ul className={s.compList}>
+            {set.comparables.map((c) => (
+              <li key={c.name}>
+                <b>{c.name}</b> {c.value}. <span>{c.source}, {dateStr(c.pulledOn)}.</span>
+              </li>
+            ))}
+          </ul>
           <p className={s.criteria}>
             <b>Why these.</b> {set.comparablesCriteria} None of these companies reviewed, endorsed
             or agreed with the scenarios.
@@ -194,17 +153,41 @@ export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
       ) : null}
 
       <details className={s.method}>
-        <summary>Methodology, the full assumption set, and the limits of hypothetical figures</summary>
+        <summary>Methodology, gross figures, and the limits of hypothetical numbers</summary>
         <div className={s.methodBody}>
+          <h4>Gross beside net</h4>
+          <table className={`tbl ${s.table}`}>
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th className="num">Gross multiple</th>
+                <th className="num">Net multiple</th>
+                <th className="num">Gross IRR</th>
+                <th className="num">Net IRR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((r) => (
+                <tr key={r.label}>
+                  <td>{r.label}</td>
+                  <td className="num">{formatMultiple(r.grossMultiple)}</td>
+                  <td className="num">{formatMultiple(r.netMultiple)}</td>
+                  <td className="num">{formatIrr(r.grossIrr)}</td>
+                  <td className="num">{formatIrr(r.netIrr)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <h4>How the figures are built</h4>
           <ol>
             {set.methodology.map((line) => (
               <li key={line}>{line}</li>
             ))}
             <li>
-              Net figures deduct the platform fee from what the SPV deploys, apply carried
-              interest only to proceeds above the SPV&apos;s raise, and count the management fee
-              reserve in what you paid in, returning any part unearned at the assumed exit.
+              Net figures deduct the formation and administration fee from what the SPV deploys,
+              apply carried interest only to proceeds above the SPV&apos;s raise, and count the
+              management fee reserve in what you paid in, returning any part unearned at the
+              assumed exit.
             </li>
           </ol>
           <h4>Limits of hypothetical figures</h4>
