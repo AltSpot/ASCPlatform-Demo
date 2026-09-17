@@ -78,10 +78,11 @@ describe('the ember canvas is still the default', () => {
     assert.ok(!GLOBALS.includes('prefers-color-scheme'));
   });
 
-  test('the light theme is scoped to the attribute and nothing else', () => {
+  test('the themes are scoped to the attribute and nothing else', () => {
     const scoped = [...GLOBALS.matchAll(/html\[data-theme='(\w+)'\]/g)].map((m) => m[1]);
     assert.ok(scoped.length > 0, 'the light theme block is missing');
-    assert.deepEqual([...new Set(scoped)], ['light']);
+    // Daylight, and Ice (the ember canvas with icy glass, 2026-09-17).
+    assert.deepEqual([...new Set(scoped)].sort(), ['ice', 'light']);
   });
 });
 
@@ -296,5 +297,21 @@ describe('every token a stylesheet reads is a token something defines', () => {
       }
     }
     assert.deepEqual([...dangling], []);
+  });
+});
+
+describe('Ice restates only the glass', () => {
+  const ICE = block(GLOBALS, "html[data-theme='ice']");
+
+  test('it keeps Ember type and accents, so it needs no contrast pass of its own', () => {
+    for (const token of ['--as-text', '--as-text-muted', '--accent', '--as-ink', '--fg-on-gold']) {
+      assert.ok(!defined(ICE).has(token), `${token} must stay Ember's in Ice`);
+    }
+  });
+
+  test('it restates the pane', () => {
+    for (const token of ['--fill-card', '--card-edge', '--card-lift', '--card-sheen', '--glass-blur']) {
+      assert.ok(defined(ICE).has(token), `${token} is the glass and Ice must restate it`);
+    }
   });
 });

@@ -1229,17 +1229,17 @@ html[data-theme='light']{
      Raised means adding white; recessed means adding warm shadow. The
      wells are brown rather than black: black on cream goes grey and
      drags the whole page toward newsprint. */
-  --fill-card:rgba(252,253,255,.06);   /* THE glass pane. Nearly clear (Tyler, 2026-09-17): the light edge and the blur make it a pane, not the white */
+  --fill-card:rgba(255,255,255,.16);   /* THE glass pane. Nearly clear (Tyler, 2026-09-17): the light edge and the blur make it a pane, not the white */
   --fill-input:rgba(255,255,255,.30);
   --panel-2:rgba(255,255,255,.26);
   --surface-1:rgba(255,255,255,.14);   /* quiet fill inside a card */
   --surface-2:rgba(255,255,255,.28);   /* raised: hover rows, chips */
   --surface-3:rgba(255,255,255,.55);   /* present: thumbs, filled tracks, quiet pills */
   --surface-well:rgba(110,70,28,.07);  /* recessed: inputs, inset panels */
-  --track:rgba(110,70,28,.14);         /* the unfilled half of a meter */
+  --track:rgba(110,70,28,.20);         /* the unfilled half of a meter */
   --surface-sunk:rgba(110,70,28,.11);  /* deepest: the rail foot */
   --edge-top:rgba(255,255,255,.72);    /* the lit lip, softened into the pane */
-  --card-edge:transparent;             /* no drawn rim. See :root */
+  --card-edge:rgba(255,255,255,.78);  /* the clear-glass rim: a thin, even line of light all round */             /* no drawn rim. See :root */
   --surface-toast:rgba(255,250,244,.86);
 
   /* ---- glass ----
@@ -1272,8 +1272,8 @@ html[data-theme='light']{
      neutral so warmth reads as light rather than colour, brightness
      lifts the pane the way frosted glass lifts what is behind it, and a
      fine grain gives the surface the tooth of real frost. */
-  --glass-blur:20px;
-  --glass-sat:175%;
+  --glass-blur:26px;
+  --glass-sat:150%;
   --glass-bright:1;
   --glass-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23f)'/%3E%3C/svg%3E");
   --glass:rgba(255,254,252,.26);
@@ -1284,7 +1284,7 @@ html[data-theme='light']{
   /* Cards carry their own light. The sheen is a single soft diagonal,
      brightest at the top left, so a grid of them reads as panes under
      one light source rather than as swatches. */
-  --card-sheen:var(--glass-grain),linear-gradient(155deg,rgba(255,255,255,.46) 0%,rgba(244,249,255,.10) 34%,rgba(255,255,255,0) 58%,rgba(255,255,255,.14) 100%);
+  --card-sheen:var(--glass-grain),linear-gradient(180deg,rgba(255,255,255,.26) 0%,rgba(255,255,255,.06) 55%,rgba(255,255,255,.02) 100%);
   --hero-wash:.16;
   /* EDGES ARE LIGHT. A specular line along the top where light enters and
      a dimmer one along the bottom where it leaves, each offset only
@@ -1296,16 +1296,9 @@ html[data-theme='light']{
      shade gathers inside the bottom, and the cast shadow is two layers
      pulled in under it. */
   --card-lift:
-    inset 1.5px 1.5px 0 rgba(255,255,255,.95),
-    inset -1px -1px 0 rgba(255,255,255,.45),
-    0 0 0 1px rgba(150,112,60,.10),
-    inset 0 1px 1px rgba(255,255,255,.85),
-    inset 0 -1px 1px rgba(255,255,255,.30),
-    inset 0 20px 28px -24px rgba(255,255,255,.34),
-    inset 0 -18px 26px -22px rgba(120,70,20,.08),
-    0 1px 2px rgba(110,62,18,.06),
-    0 12px 28px -12px rgba(130,72,20,.18),
-    0 34px 64px -32px rgba(130,72,20,.18);
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 1px 2px rgba(110,62,18,.05),
+    0 16px 36px -20px rgba(130,72,20,.20);
 
   /* ---- accent washes, lifted ----
      7% orange is a warm glow on the ember canvas and literally nothing
@@ -1334,13 +1327,9 @@ html[data-theme='light']{
   --shadow-cta:0 6px 20px rgba(243,152,7,.42);
   --shadow-cta-hover:0 10px 30px rgba(243,152,7,.55);
   --shadow-card-hover:
-    inset 0 1px 1px rgba(255,255,255,.95),
-    inset 0 -1px 1px rgba(255,255,255,.38),
-    inset 0 20px 28px -24px rgba(255,255,255,.85),
-    inset 0 -18px 26px -22px rgba(120,70,20,.08),
+    inset 0 1px 0 rgba(255,255,255,1),
     0 2px 4px rgba(110,62,18,.07),
-    0 18px 36px -12px rgba(130,72,20,.22),
-    0 46px 84px -34px rgba(130,72,20,.24);
+    0 24px 48px -20px rgba(130,72,20,.28);
   --shadow-frame:0 20px 56px rgba(74,56,26,.16);
   --shadow-knob:0 1px 3px rgba(74,56,26,.22);
   --shadow-orb-sm:0 0 14px rgba(199,154,75,.45);
@@ -1396,6 +1385,43 @@ html[data-theme='light']{
    little loud: every wash came down, gold came up, and the sweep ends
    at #F1D6B2 rather than #F2BF8C. The gleam stays, top left. The layer
    is fixed, so a long page still shifts warmth as it scrolls. */
+/* ============================================================
+   ICE — the ember canvas, with light, icy glass on it
+   ============================================================
+   Tyler, 2026-09-17. The page is Ember's: the dark ground and its warm
+   bloom. The panes are not smoked but frosted: a cool, nearly clear fill,
+   a thin even rim of light all round, a bright top edge and a deep soft
+   shadow, the look of clear glass over a dark room. Only the glass layer
+   is restated; type, accents, paint and every other token are Ember's,
+   so nothing here needs its own contrast pass. */
+html[data-theme='ice']{
+  --fill-card:rgba(226,240,255,.085);
+  --card-edge:rgba(220,236,255,.22);
+  --edge-top:rgba(240,248,255,.24);
+  --glass-blur:28px;
+  --glass-sat:140%;
+  --glass-bright:1.14;
+  --card-sheen:linear-gradient(180deg,rgba(236,246,255,.13) 0%,rgba(236,246,255,.03) 55%,rgba(236,246,255,.01) 100%);
+  --card-lift:
+    inset 0 1px 0 rgba(240,248,255,.30),
+    0 1px 1px rgba(0,0,0,.35),
+    0 24px 56px -26px rgba(0,0,0,.80);
+  --shadow-card-hover:
+    inset 0 1px 0 rgba(240,248,255,.42),
+    0 2px 3px rgba(0,0,0,.35),
+    0 30px 64px -24px rgba(0,0,0,.82),
+    0 0 42px rgba(200,225,255,.07);
+  --surface-1:rgba(225,238,255,.05);
+  --surface-2:rgba(225,238,255,.09);
+  --surface-3:rgba(225,238,255,.15);
+  --track:rgba(225,238,255,.12);
+  --hair-neutral:rgba(220,236,255,.14);
+  --hair-soft:rgba(220,236,255,.07);
+  --panel-2:rgba(225,238,255,.07);
+  --glass:rgba(22,26,32,.52);
+  --glass-solid:rgba(20,24,30,.78);
+}
+
 html[data-theme='light'] body::before{
   background:
     /* THE GLEAM, upper left */
@@ -1475,5 +1501,7 @@ html[data-theme='light'] img[src$='/brand/altspot-wordmark.svg']{
 
 html[data-theme='light'] .deal-card{box-shadow:var(--card-lift)}
 html[data-theme='light'] .deal-card:hover{box-shadow:var(--shadow-card-hover)}
+html[data-theme='ice'] .deal-card{box-shadow:var(--card-lift)}
+html[data-theme='ice'] .deal-card:hover{box-shadow:var(--shadow-card-hover)}
 
 

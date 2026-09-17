@@ -1,7 +1,12 @@
 'use client';
 
 /**
- * Ember or Daylight, as a segmented pill on the rail.
+ * Ember, Ice or Daylight, as a segmented pill on the rail.
+ *
+ * Ice (2026-09-17) is the ember canvas with clear, icy glass panes on it.
+ * Three segments share the rail's width, so only the lit one carries its
+ * word; the other two are their glyph, with the name on hover and for
+ * screen readers.
  *
  * TWO BUTTONS RATHER THAN ONE. A single toggle has to choose between
  * showing the theme you are in and showing the theme you would get,
@@ -30,18 +35,19 @@
  * folded sections and the rail width are: it is a fact about a screen,
  * not about an investor, and it is not worth a column or a round trip.
  */
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Snowflake, Sun } from 'lucide-react';
 import { useSyncExternalStore } from 'react';
 
 import s from './ThemeToggle.module.css';
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'ice' | 'light';
 
 const STORE = 'asc.theme';
 
 /** What the document is actually painting, right now. */
 function readTheme(): Theme {
-  return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+  const attr = document.documentElement.dataset.theme;
+  return attr === 'light' || attr === 'ice' ? attr : 'dark';
 }
 
 function subscribe(onChange: () => void): () => void {
@@ -65,7 +71,7 @@ function subscribe(onChange: () => void): () => void {
 }
 
 export function setTheme(next: Theme): void {
-  if (next === 'light') document.documentElement.dataset.theme = 'light';
+  if (next === 'light' || next === 'ice') document.documentElement.dataset.theme = next;
   else delete document.documentElement.dataset.theme;
 
   try {
@@ -77,6 +83,7 @@ export function setTheme(next: Theme): void {
 
 const OPTIONS: { id: Theme; label: string; glyph: typeof Moon }[] = [
   { id: 'dark', label: 'Ember', glyph: Moon },
+  { id: 'ice', label: 'Ice', glyph: Snowflake },
   { id: 'light', label: 'Daylight', glyph: Sun },
 ];
 
@@ -103,7 +110,7 @@ export default function ThemeToggle() {
             title={label}
           >
             <Glyph size={14} strokeWidth={1.6} aria-hidden="true" />
-            <span className={s.label}>{label}</span>
+            {on ? <span className={s.label}>{label}</span> : null}
           </button>
         );
       })}
