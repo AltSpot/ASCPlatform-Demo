@@ -212,7 +212,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
         text: 'You can hold something illiquid for an indefinite period. You have no need for liquidity here, your current needs are provided for elsewhere, and a total loss would not change your circumstances.',
       },
       {
-        text: 'Class B Units do not vote and carry limited information rights. The Manager operates under narrowed duties and broad indemnification, and it holds an earlier position in Calder from the seed round. All of this is in the memorandum risk factors.',
+        text: 'Class B Units do not vote and carry limited information rights. The Manager operates under narrowed duties and broad indemnification. All of this is in the memorandum risk factors.',
       },
       {
         lead: 'What you pay',

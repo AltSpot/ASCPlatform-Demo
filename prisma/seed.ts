@@ -136,7 +136,7 @@ const DEALS: SeedDeal[] = [
       'The grid is the bottleneck for everything: AI datacenters, electrification, and 2,900 gigawatts of generation and storage waiting in interconnection queues. Every project in that queue needs studies before it connects, and the studies are the chokepoint.',
       'Calder replaces spreadsheet-era power-flow tooling with physics-informed models that produce regulator-ready studies in days instead of months, validated against the same reliability standards utilities are audited on.',
       'The data moat compounds. Every study Calder runs enriches a living model of the transmission system that no point-in-time consultant and no legacy vendor holds. Utility number twelve gets a better product because of the first eleven.',
-      'AltSpot participated in the seed at $12M pre-money and is leading the Series A at $30M. We hold a board observer seat, receive monthly financials, and have direct CEO access. Our investors see what we see.',
+      'AltSpot is leading the Series A at $30M pre-money, with a board observer seat, monthly financials and direct CEO access. Our investors see what we see.',
     ],
     // The standard set. Gaps are left genuinely empty rather than guessed:
     // they render as "Not disclosed" and are the diligence list to close.
@@ -152,13 +152,13 @@ const DEALS: SeedDeal[] = [
         round: 'Seed',
         date: '2025',
         preMoney: '$12,000,000',
-        note: 'AltSpot participated alongside a deep-tech seed fund.',
+        note: 'Led by a deep-tech seed fund.',
       },
       {
         round: 'Series A',
         date: 'Aug 2026',
         preMoney: '$30,000,000',
-        note: 'AltSpot leading with $600,000 of its own capital.',
+        note: 'AltSpot-led. The round on offer.',
         current: true,
       },
     ],
@@ -173,13 +173,13 @@ const DEALS: SeedDeal[] = [
       { k: 'Monthly burn', v: '~$210K', note: 'disciplined, post-revenue' },
     ],
     summary:
-      'Calder Grid sells physics-informed AI that runs the interconnection and planning studies the electric grid depends on, compressing a 14-month process into days. Contracted ARR is $2.4M across 11 investor-owned utilities and 4 of the ten largest renewable developers, up 3.1x in twelve months. AltSpot participated in the seed and is leading the Series A with $600,000 of its own capital.',
+      'Calder Grid sells physics-informed AI that runs the interconnection and planning studies the electric grid depends on, compressing a 14-month process into days. Contracted ARR is $2.4M across 11 investor-owned utilities and 4 of the ten largest renewable developers, up 3.1x in twelve months. AltSpot is leading the Series A.',
     whatWeLike: [
       'The buyer has no alternative that is both fast and audit-grade. Consultants are slow, legacy tools predate the engineers using them, and the queue roughly doubles every three years.',
       'Multi-year contracts with 100% logo retention. A utility that files Calder studies with its regulator has made a switching decision measured in decades.',
       'Every study compounds the dataset. Calder holds a living model of the transmission system that gets harder to replicate with each engagement.',
       'Demand is structural. AI datacenter load growth alone underwrites the queue for a decade, and every megawatt needs a study before it connects.',
-      'We have been inside the company since the seed, with a board observer seat, monthly financials and direct CEO access.',
+      'A board observer seat, monthly financials and direct CEO access come with leading the round.',
     ],
     terms: [
       { k: 'Security', v: 'Series A Preferred Stock' },
@@ -211,7 +211,7 @@ const DEALS: SeedDeal[] = [
         'Illustrative only, based on a $30M entry. Outcomes depend on exit timing, dilution and valuation, and no return is promised.',
     },
     risks:
-      'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: utility sales cycles are long and budget-driven, and slippage of a few procurements materially changes the growth picture; regulators must continue accepting model-based studies, and a policy reversal would slow adoption; incumbent vendors and large consultancies are well capitalized and could bundle competing tools; and the position is illiquid with no public market and no promised exit timeline. AltSpot’s own $600,000 carries these same risks.',
+      'This is an early-stage venture investment and total loss of capital is possible. The vehicle is a single-purpose entity holding one position, so there is no diversification within it. Specific risks: utility sales cycles are long and budget-driven, and slippage of a few procurements materially changes the growth picture; regulators must continue accepting model-based studies, and a policy reversal would slow adoption; incumbent vendors and large consultancies are well capitalized and could bundle competing tools; and the position is illiquid with no public market and no promised exit timeline.',
     minInvestment: 10000,
     allocationTotal: 2000000,
     allocationRemaining: 640000,
@@ -219,7 +219,7 @@ const DEALS: SeedDeal[] = [
     launchedDaysAgo: 26,
     altspotCommitted: 600000,
     committedNote:
-      'AltSpot participated in the seed and is leading this round with $600,000 of its own capital.',
+      '',
     sortOrder: 0,
     media: {
       type: 'metric',
@@ -333,7 +333,7 @@ const DEALS: SeedDeal[] = [
       },
       {
         q: 'What are the biggest risks?',
-        a: 'Early-stage loss risk is real and total loss is possible. The vehicle holds one position, so there is no diversification. Utility procurement is slow, and a few slipped contracts change the growth picture. Regulatory acceptance of model-based studies must continue. The position is illiquid with no promised exit. AltSpot’s own $600,000 carries these same risks. Please read the risk factors in the Memorandum before subscribing.',
+        a: 'Early-stage loss risk is real and total loss is possible. The vehicle holds one position, so there is no diversification. Utility procurement is slow, and a few slipped contracts change the growth picture. Regulatory acceptance of model-based studies must continue. The position is illiquid with no promised exit. Please read the risk factors in the Memorandum before subscribing.',
       },
       {
         q: 'What makes the data moat real?',
@@ -680,7 +680,7 @@ const DEALS: SeedDeal[] = [
     },
     rounds: [
       { round: 'Seed', date: '2023', preMoney: '$14,000,000', note: 'Robotics-focused seed fund led.' },
-      { round: 'Series A', date: '2025', preMoney: '$52,000,000', note: 'AltSpot participated.' },
+      { round: 'Series A', date: '2025', preMoney: '$52,000,000' },
       { round: 'Series B', date: 'Sep 2026', preMoney: '$140,000,000', note: 'AltSpot leading.', current: true },
     ],
     metrics: [
@@ -713,7 +713,7 @@ const DEALS: SeedDeal[] = [
     closesInDays: 27,
     launchedDaysAgo: 21,
     altspotCommitted: 500000,
-    committedNote: 'AltSpot participated in the Series A and is leading this round.',
+    committedNote: '',
     sortOrder: 2,
     media: { type: 'metric', label: 'Annualized revenue', series: [900, 1400, 2100, 3500, 4600, 6200, 7800, 9100], caption: 'Annualized fleet revenue by quarter, $K. Source: monthly management accounts.' },
     charts: [
@@ -723,7 +723,7 @@ const DEALS: SeedDeal[] = [
     backing: [{ firm: 'northlight', role: 'co-invest' }],
     docs: ['Investment Memo: Ferrule Robotics Series B', 'Subscription Agreement: ASC Ferrule I', 'Risk Factors & Disclosures'],
     spotbot: [
-      { q: 'Why did AltSpot pick this one?', a: 'Members did, first. Ferrule was the most-voted industrial name on the Radar for two quarters, and AltSpot had participated in the Series A, so it had the access to lead. Not legal, tax, or investment advice.' },
+      { q: 'Why did AltSpot pick this one?', a: 'Members did, first. Ferrule was the most-voted industrial name on the Radar for two quarters, and the company invited AltSpot to lead the round. Not legal, tax, or investment advice.' },
     ],
     deck: [],
   },

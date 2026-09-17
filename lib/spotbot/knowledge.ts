@@ -168,7 +168,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'cap table',
     ],
     answer:
-      'A special purpose vehicle is a single-purpose LLC formed to hold one investment and nothing else. You subscribe for membership interests in the SPV, and the SPV holds the position in the underlying company or asset. It exists so a group of investors can come in through one line on the cap table, with one set of documents and one administrator. The deal page names the SPV that issues your agreement. AltSpot manages it and invests its own capital alongside you in the same vehicle.',
+      'A special purpose vehicle is a single-purpose LLC formed to hold one investment and nothing else. You subscribe for membership interests in the SPV, and the SPV holds the position in the underlying company or asset. It exists so a group of investors can come in through one line on the cap table, with one set of documents and one administrator. The deal page names the SPV that issues your agreement. AltSpot organizes and advises it.',
     source: 'AltSpot subscription agreement, offering entity',
     related: ['fees', 'documents'],
   },
@@ -289,7 +289,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'listing board',
     ],
     answer:
-      'It is a shelf, not a listing board. Deals reach AltSpot through operators and specialists it already knows, then go through diligence: the operator and their record, the unit economics, the structure and the terms, and the specific way this one loses money. Most stop there. What survives is offered only if AltSpot is willing to commit its own capital on the same terms. That is why the marketplace holds a handful of deals at a time rather than a scrolling feed. Diligence reduces surprises. It does not remove risk.',
+      'It is a shelf, not a listing board. Deals reach AltSpot through operators and specialists it already knows, then go through diligence: the operator and their record, the unit economics, the structure and the terms, and the specific way this one loses money. Most stop there. What survives is offered only after it clears AltSpot\'s screening criteria and human review. That is why the marketplace holds a handful of deals at a time rather than a scrolling feed. Diligence reduces surprises. It does not remove risk.',
     source: 'AltSpot platform guide, sourcing and diligence',
     related: ['deal-page', 'data-room'],
   },
@@ -700,7 +700,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'buy on radar',
     ],
     answer:
-      'They are opposites, and the tab is the only thing they share. The Marketplace is what AltSpot is offering right now: deals it sourced, underwrote and committed its own capital to, each one open to subscribe today. Radar is the other direction. It is a board of private companies AltSpot does not own, is not raising for, and is not offering, listed so members can say which ones AltSpot should go after next. Names are ranked by how much money the membership has put behind them, so the board reads as what the room wants. Nothing on Radar can be bought, and nothing on the Marketplace is voted on.',
+      'They are opposites, and the tab is the only thing they share. The Marketplace is what AltSpot is offering right now: deals it sourced and diligenced, each organized and advised by AltSpot and open to subscribe today. Radar is the other direction. It is a board of private companies AltSpot does not own, is not raising for, and is not offering, listed so members can say which ones AltSpot should go after next. Names are ranked by how much money the membership has put behind them, so the board reads as what the room wants. Nothing on Radar can be bought, and nothing on the Marketplace is voted on.',
     source: 'AltSpot Radar, board disclosure',
     related: ['radar-vote', 'sourcing', 'secondaries'],
   },
