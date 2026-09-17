@@ -3,8 +3,8 @@
  *
  * Executes the subscription agreement. Every section defined in
  * lib/subscription-sections.ts must already be confirmed — checked here, not
- * just in the UI. Signing reserves the allocation, starts the 10-day funding
- * clock, and files the executed agreement into Docs in one
+ * just in the UI. Signing re-checks the SPV admissions rules, reserves the
+ * spot, sets the deadline to the admission cut-off, and files the executed agreement into Docs in one
  * transaction-shaped sequence.
  *
  * DEMO SEAM — the signature is a typed name, not an executed e-signature.
@@ -28,6 +28,7 @@
  *     that gets filed change.
  */
 import { requireUser } from '@/lib/auth';
+import { AdmissionError } from '@/lib/domain';
 import {
   NotFoundError,
   ok,
@@ -39,6 +40,8 @@ import {
 import { renderBinder } from '@/lib/documents/render';
 import { getDealRecord } from '@/lib/repositories/deals';
 import { getVault, listProfiles } from '@/lib/repositories/investor';
+import { getStanding } from '@/lib/repositories/spv';
+import { decideAdmission, isRetirementProfile } from '@/lib/spv-rules';
 import { dateStr, maskTin, money } from '@/lib/format';
 import { saveDocument } from '@/lib/repositories/documents';
 import { getSubscription, signSubscription } from '@/lib/repositories/subscriptions';
@@ -64,9 +67,29 @@ export const POST = route(
     const body = await readJson<{ signature?: unknown }>(request);
     const signature = requireString(body.signature, 'signature', { maxLength: 160 });
 
+    const deal = await getDealRecord(current.dealId);
+    if (deal) {
+      const [standing, profilesForRule] = await Promise.all([
+        getStanding(deal.id, user.id),
+        listProfiles(user.id),
+      ]);
+      if (standing) {
+        const decision = decideAdmission({
+          targetClose: deal.targetClose,
+          status: deal.status,
+          standing: standing.standing,
+          alreadyMember: standing.alreadyMember,
+          amount: current.amount,
+          retirement: isRetirementProfile(
+            profilesForRule.find((p) => p.id === current.profileId)?.type,
+          ),
+        });
+        if (!decision.ok) throw new AdmissionError(decision.code, decision.message);
+      }
+    }
+
     const signed = await signSubscription(user.id, id, signature);
 
-    const deal = await getDealRecord(current.dealId);
     if (deal) {
       const [vault, profiles] = await Promise.all([
         getVault(user.id),

@@ -20,6 +20,8 @@ import {
   listProfiles,
 } from '@/lib/repositories/investor';
 import { getResumable } from '@/lib/repositories/subscriptions';
+import { getStanding } from '@/lib/repositories/spv';
+import { admissionsOpen, isFull } from '@/lib/spv-rules';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,11 +46,23 @@ export default async function InvestPage({
     redirect(`/wizard?step=${gate.missing[0].step}&then=${deal.id}`);
   }
 
-  const [vault, profiles, resume] = await Promise.all([
+  const [vault, profiles, resume, spv] = await Promise.all([
     getVault(user.id),
     listProfiles(user.id),
     getResumable(user.id, deal.id),
+    getStanding(deal.id, user.id),
   ]);
+
+  /* Screens 12 and 13: past the cut-off, or a full SPV for someone not
+     already in it, there is nothing to start here. The deal page says why
+     and offers the waitlist. */
+  if (
+    !resume &&
+    spv &&
+    (!admissionsOpen(deal.targetClose, deal.status) || (isFull(spv.standing) && !spv.alreadyMember))
+  ) {
+    redirect(`/deals/${deal.id}`);
+  }
 
   // Already signed — funding is the only thing left to do.
   if (resume?.state === 'docs_signed') {
@@ -62,6 +76,7 @@ export default async function InvestPage({
       vault={vault}
       initialProfiles={profiles}
       existing={resume}
+      spv={spv}
     />
   );
 }

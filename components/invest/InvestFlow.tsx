@@ -43,6 +43,7 @@ import {
   SUBSCRIPTION_SECTION_COUNT,
   SUBSCRIPTION_SECTIONS,
 } from '@/lib/subscription-sections';
+import { decideAdmission, isRetirementProfile, type SpvStanding } from '@/lib/spv-rules';
 
 interface InvestFlowProps {
   deal: DealView;
@@ -50,6 +51,8 @@ interface InvestFlowProps {
   vault: VaultView;
   initialProfiles: ProfileView[];
   existing: SubscriptionView | null;
+  /** Where the SPV stands, for the retirement-money limit (screen 13). */
+  spv: { standing: SpvStanding; alreadyMember: boolean } | null;
 }
 
 export default function InvestFlow({
@@ -58,6 +61,7 @@ export default function InvestFlow({
   vault,
   initialProfiles,
   existing,
+  spv,
 }: InvestFlowProps) {
   const router = useRouter();
   const toast = useToast();
@@ -128,6 +132,21 @@ export default function InvestFlow({
 
   const selectedProfile = profiles.find((p) => p.id === selectedProfileId) ?? null;
 
+  /* The SPV admissions rules, run as the member types, so the limit is
+     explained before they press anything. The server runs the same rule
+     again at start and at signing. */
+  const admission = spv
+    ? decideAdmission({
+        targetClose: deal.targetClose,
+        status: deal.status,
+        standing: spv.standing,
+        alreadyMember: spv.alreadyMember,
+        amount,
+        retirement: isRetirementProfile(selectedProfile?.type),
+      })
+    : null;
+  const retirementBlocked = admission !== null && !admission.ok && admission.code === 'retirement_cap';
+
   const done = (id: number) => isSectionConfirmed(answers, id);
   const confirmedCount = SUBSCRIPTION_SECTIONS.filter((s) => done(s.id)).length;
   const allConfirmed = confirmedCount === SUBSCRIPTION_SECTION_COUNT;
@@ -197,6 +216,10 @@ export default function InvestFlow({
 
     if (!selectedProfileId) {
       toast('Choose or create an investment profile first.');
+      return;
+    }
+    if (admission && !admission.ok) {
+      toast(admission.message);
       return;
     }
     if (amount < deal.minInvestment) {
@@ -489,6 +512,14 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 </div>
               )}
 
+              {admission && !admission.ok ? (
+                <div className="demo-note" role="alert">
+                  {admission.message}
+                </div>
+              ) : admission?.ok && admission.warning ? (
+                <div className="demo-note">{admission.warning}</div>
+              ) : null}
+
               <div className="hr" />
 
               <div className="small">
@@ -499,7 +530,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 className="btn btn-gold btn-block"
                 style={{ marginTop: 18 }}
                 onClick={beginDocs}
-                disabled={busy}
+                disabled={busy || retirementBlocked}
               >
                 Continue to documents
               </button>

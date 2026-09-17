@@ -45,6 +45,9 @@ describe('referralLanding', () => {
 describe('referral source is reporting only', () => {
   const DECIDERS = [
     'lib/fees.ts',
+    'lib/funding.ts',
+    'lib/spv-rules.ts',
+    'lib/repositories/spv.ts',
     'lib/relationship.ts',
     'lib/domain.ts',
     'lib/repositories/deals.ts',

@@ -38,6 +38,7 @@ import type {
 } from '../domain';
 import type { Deal } from '../generated/prisma/client';
 import { getRelationshipView } from './investor';
+import { getStandings } from './spv';
 
 /**
  * Parse a JSON column with a typed fallback. A malformed blob degrades
@@ -100,6 +101,7 @@ export function toDealView(row: Deal): DealView {
     minimumToClose: row.minimumToClose,
     leadType: row.leadType,
     investorCap: row.investorCap,
+    members: 0,
     launchedAt: row.launchedAt.toISOString(),
     // Fails closed. Only a viewer-aware read (withViewer below) opens it.
     subscribable: false,
@@ -221,6 +223,15 @@ export type DealAccess =
  * simulated is the seeded history, not the restriction.
  */
 
+/** Fill how many members hold a spot in each SPV. */
+async function withMembers(deals: DealView[], userId: string): Promise<DealView[]> {
+  const standings = await getStandings(deals.map((d) => d.id), userId);
+  return deals.map((deal) => ({
+    ...deal,
+    members: standings.get(deal.id)?.standing.members ?? 0,
+  }));
+}
+
 /** Stamp whether this viewer may subscribe, from the one rule that decides it. */
 function withViewer(deal: DealView, relationship: RelationshipView): DealView {
   return { ...deal, subscribable: canSubscribeToDeal(relationship, deal.launchedAt) };
@@ -234,7 +245,7 @@ export async function listDealsForViewer(
   if (!canViewDealDetail(relationship)) return [];
 
   const deals = await listDealRecords(userId);
-  return deals.map((deal) => withViewer(deal, relationship));
+  return withMembers(deals.map((deal) => withViewer(deal, relationship)), userId);
 }
 
 /**
@@ -253,7 +264,9 @@ export async function getDealAccess(
   if (!canViewDealDetail(relationship)) return { access: 'locked', relationship };
 
   const deal = await getDealRecord(id, userId);
-  return deal ? { access: 'open', deal: withViewer(deal, relationship) } : null;
+  if (!deal) return null;
+  const [withCount] = await withMembers([withViewer(deal, relationship)], userId);
+  return { access: 'open', deal: withCount };
 }
 
 /**

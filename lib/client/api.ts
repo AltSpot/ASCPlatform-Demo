@@ -170,6 +170,9 @@ export const api = {
   fundSubscription: (id: string, method: string) =>
     post<SubscriptionView>(`/subscriptions/${id}/fund`, { method }),
   cancelSubscription: (id: string) => del<void>(`/subscriptions/${id}`),
+  /** A full SPV: wait for a spot. Reserves nothing. */
+  joinWaitlist: (dealId: string, amount?: number) =>
+    post<{ joinedAt: string; position: number }>(`/deals/${dealId}/waitlist`, { amount }),
 
   // ---- watchlist ----
   /** This investor's own saved deals. Not AltSpot Radar. */

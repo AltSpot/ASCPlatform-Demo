@@ -25,6 +25,7 @@ import AssetClassIcon from '@/components/AssetClassIcon';
 import BackerMark from '@/components/BackerMark';
 import FundingProgress from '@/components/FundingProgress';
 import SidePanel from '@/components/SidePanel';
+import WaitlistButton from '@/components/WaitlistButton';
 import { SHOW_SPONSOR_ALIGNMENT } from '@/lib/config';
 import type { DealView, SubscriptionView } from '@/lib/domain';
 import { money } from '@/lib/format';
@@ -62,6 +63,8 @@ export default function DealPeek({
         Resume
       </Link>
     )
+  ) : deal.subscribable && deal.members > 0 && deal.members >= deal.investorCap ? (
+    <WaitlistButton dealId={deal.id} />
   ) : deal.subscribable ? (
     <Link className="btn btn-gold" href={`/invest/${deal.id}`}>
       Invest

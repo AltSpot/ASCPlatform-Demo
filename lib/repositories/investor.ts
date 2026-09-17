@@ -13,7 +13,8 @@ import 'server-only';
 import { COOLING_OFF_DAYS } from '../config';
 import { prisma } from '../db';
 import { DEMO_PERSONA, personaEmail } from '../demo-persona';
-import { DAY_MS, FUNDING_WINDOW_DAYS } from '../domain';
+import { DAY_MS } from '../domain';
+import { admissionCutoff } from '../funding';
 import type {
   AccreditationStatus,
   AccreditationView,
@@ -162,7 +163,7 @@ const SEED_PENDING = {
   dealId: 'tessellate',
   amount: 50_000,
   signedDaysAgo: 7,
-  /** The funding window, in days from signature. Matches lib/domain.ts. */
+  /** Fallback only, when the deal's closing date cannot be read. */
   windowDays: 10,
 };
 
@@ -645,9 +646,8 @@ async function seedPendingCommitment(userId: string, now: number): Promise<void>
   if (!deal) return;
 
   const signedAt = new Date(now - SEED_PENDING.signedDaysAgo * DAY_MS);
-  const deadline = new Date(
-    signedAt.getTime() + SEED_PENDING.windowDays * DAY_MS,
-  );
+  const cutoff = admissionCutoff(deal.targetClose);
+  const deadline = new Date(cutoff ?? signedAt.getTime() + SEED_PENDING.windowDays * DAY_MS);
 
   const subscription = await prisma.subscription.create({
     data: {
@@ -727,7 +727,7 @@ async function seedRecentBook(userId: string, now: number): Promise<void> {
         seeded: true,
         signature: null,
         signedAt: signed ? at : null,
-        fundingDeadline: signed ? new Date(at.getTime() + FUNDING_WINDOW_DAYS * DAY_MS) : null,
+        fundingDeadline: signed ? new Date(admissionCutoff(deal.targetClose) ?? at.getTime()) : null,
         fundedAt: funded ? new Date(at.getTime() + DAY_MS) : null,
         fundingMethod: funded ? 'ACH · linked account' : null,
         createdAt: at,

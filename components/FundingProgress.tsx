@@ -106,6 +106,12 @@ export default function FundingProgress({
         <p className={s.admissions}>
           {f.admissionsOpen ? 'Admissions close' : 'Admissions closed'} ·{' '}
           {dateStr(f.admissionsCloseAt)}
+          {deal.members && deal.investorCap ? (
+            <span className={s.members}>
+              {' '}
+              · {Math.min(deal.members, deal.investorCap)} of {deal.investorCap} members
+            </span>
+          ) : null}
         </p>
       ) : null}
     </div>

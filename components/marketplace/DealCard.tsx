@@ -100,6 +100,7 @@ export default function DealCard({
   );
 
   const viewOnly = !deal.subscribable && !resume;
+  const full = !resume && deal.members > 0 && deal.members >= deal.investorCap;
 
   return (
     <div className="card deal-card">
@@ -123,6 +124,7 @@ export default function DealCard({
               {resume.state === 'docs_signed' ? 'Signed · send to escrow' : 'In progress'}
             </span>
           ) : null}
+          {full ? <span className={`${s.state} ${s.stateProgress}`}>SPV full</span> : null}
           {watched ? (
             <span className={`${s.state} ${s.stateSaved}`}>
               <Star size={11} strokeWidth={2} aria-hidden="true" />

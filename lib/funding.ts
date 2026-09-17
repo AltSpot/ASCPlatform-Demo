@@ -27,6 +27,9 @@ export interface FundingInput {
   /** Display date of the scheduled close and wire, e.g. "Oct 6, 2026". */
   targetClose: string;
   status: string;
+  /** Members holding a spot, when a viewer-aware read filled it. */
+  members?: number;
+  investorCap?: number;
 }
 
 export interface FundingView {

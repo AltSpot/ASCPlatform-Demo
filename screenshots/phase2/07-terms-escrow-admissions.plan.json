@@ -1,0 +1,136 @@
+{
+  "out": "screenshots/phase2/07-terms-escrow-admissions",
+  "shots": [
+    {
+      "name": "01-screen6-7-deal-costs",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "scroll": "#terms"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const t = document.getElementById('terms').innerText.toLowerCase(); if (!t.includes('what it costs')) throw new Error('no cost table'); if (!t.includes('disclosed in the memorandum')) throw new Error('fee off-state copy missing'); if (!t.includes('no capital calls')) throw new Error('no capital calls line missing'); if (/carr(y|ied)/.test(t)) throw new Error('carry shown with the flag off'); const body = document.body.innerText; if (/10% carr|ten percent carr|5% (management|at closing)/i.test(body)) throw new Error('old fee figure on the deal page'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-screen11-risk",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "scroll": "#risk"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (t.includes('600,000')) throw new Error('$600,000 still on the page'); if (!/sponsors included/i.test(t)) throw new Error('closing risk line missing'); })()"
+        }
+      ]
+    },
+    {
+      "name": "03-screen8-10-amount-panel",
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['held in escrow until close', 'admissions close', 'nothing billed annually', 'amount', 'read', 'sign', 'escrow']) if (!t.includes(w)) throw new Error('missing ' + w); if (/carr(y|ied)/.test(t)) throw new Error('carry on the amount panel'); if (t.includes('funded')) throw new Error('funded on the amount panel'); })()"
+        }
+      ]
+    },
+    {
+      "name": "04-screen9-payment",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "fetch('/api/subscriptions').then(r => r.json()).then(list => { const s = list.find(x => x.state === 'docs_signed'); if (!s) throw new Error('no signed subscription to send'); location.href = '/payment/' + s.id; })"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['send to escrow with same-day ach', 'admissions close', 'escrow summary']) if (!t.includes(w)) throw new Error('missing ' + w); if (t.includes('fund now')) throw new Error('fund now still here'); })()"
+        }
+      ]
+    },
+    {
+      "name": "05-screen9-in-escrow",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "fetch('/api/subscriptions').then(r => r.json()).then(list => { const s = list.find(x => x.state === 'docs_signed'); if (!s) throw new Error('no signed subscription to send'); location.href = '/payment/' + s.id; })"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => /to escrow$/i.test(x.textContent.trim())); if (!b) throw new Error('no send button'); b.click(); })()"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('your subscription is in escrow')) throw new Error('confirmation missing'); if (!t.includes('the deal closes when the minimum is met')) throw new Error('close line missing'); if (/\\bfunded\\b/.test(t)) throw new Error('funded on the confirmation'); })()"
+        }
+      ]
+    },
+    {
+      "name": "06-screen13-full-spv",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/halyard"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('join the waitlist')) throw new Error('no waitlist ask on a full SPV'); if (!t.includes('of 100 members')) throw new Error('member count missing'); })()"
+        },
+        {
+          "eval": "fetch('/api/subscriptions', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ dealId: 'halyard', amount: 25000 }) }).then(async r => { const j = await r.json(); if (r.status !== 409 || j.error.code !== 'investor_cap') throw new Error('cap not enforced: ' + r.status + ' ' + JSON.stringify(j)); })"
+        }
+      ]
+    },
+    {
+      "name": "07-screen13-retirement-limit",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "fetch('/api/profiles', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'IRA / 401(k)', name: 'Demo IRA' }) }).then(r => r.json()).then(p => fetch('/api/subscriptions', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ dealId: 'basalt', amount: 100000, profileId: p.id }) })).then(async r => { const j = await r.json(); if (r.status !== 409 || j.error.code !== 'retirement_cap') throw new Error('retirement limit not enforced: ' + r.status + ' ' + JSON.stringify(j)); })"
+        }
+      ],
+      "capture": false
+    },
+    {
+      "name": "08-screen12-register",
+      "steps": [
+        {
+          "go": "/reshoot?to=/ops/register/calder"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['member register', 'share of spv', 'admitted', 'of 100']) if (!t.includes(w)) throw new Error('missing ' + w); })()"
+        }
+      ]
+    }
+  ]
+}

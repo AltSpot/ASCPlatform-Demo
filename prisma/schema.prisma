@@ -572,3 +572,22 @@ model ReferralCode {
 
   @@map("referral_codes")
 }
+
+// ---------------- SPV admissions ----------------
+
+/// A member waiting for a spot in an SPV that has reached its investor
+/// cap (Deal.investorCap). Joining reserves nothing and moves no money; if
+/// a spot opens before admissions close, AltSpot tells members in the order
+/// they joined. One row per member per deal.
+model SpvWaitlistEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  dealId    String
+  /// What the member would put in, if a spot opens. Integer dollars.
+  amount    Int?
+  createdAt DateTime @default(now())
+
+  @@unique([userId, dealId])
+  @@index([dealId])
+  @@map("spv_waitlist")
+}

@@ -10,11 +10,10 @@ import 'server-only';
 
 import { prisma } from '../db';
 import { ISOLATED_ALLOCATION } from '../config';
+import { admissionCutoff } from '../funding';
 import { audit } from '../audit';
 import {
   assertTransition,
-  DAY_MS,
-  FUNDING_WINDOW_DAYS,
   RESUMABLE_STATES,
   SUBSCRIPTION_STATES,
   type SubscriptionState,
@@ -57,7 +56,7 @@ export function toSubscriptionView(row: Subscription): SubscriptionView {
 }
 
 /**
- * Lapse any signed commitment whose 10-day funding window has passed and
+ * Lapse any signed commitment not in escrow by the admission cut-off and
  * hand its allocation back to the deal. Called on every authenticated
  * read, which keeps the demo honest without needing a scheduler.
  */
@@ -248,8 +247,9 @@ export async function confirmSection(
 
 /**
  * Execute the agreement. This is the moment the allocation is actually
- * reserved, so the deal's remaining allocation drops here — not at
- * funding — and the 10-day clock starts.
+ * reserved, so the deal's remaining allocation drops here, not at escrow.
+ * The deadline is the admission cut-off: a signed subscription not in
+ * escrow by then lapses.
  */
 export async function signSubscription(
   userId: string,
@@ -262,6 +262,11 @@ export async function signSubscription(
   assertTransition(current.state, SUBSCRIPTION_STATES.SIGNED);
 
   const now = new Date();
+  const deal = await prisma.deal.findUnique({
+    where: { id: current.dealId },
+    select: { targetClose: true },
+  });
+  const cutoff = deal ? admissionCutoff(deal.targetClose) : null;
   const [row] = await prisma.$transaction([
     prisma.subscription.update({
       where: { id },
@@ -269,7 +274,7 @@ export async function signSubscription(
         state: SUBSCRIPTION_STATES.SIGNED,
         signature,
         signedAt: now,
-        fundingDeadline: new Date(now.getTime() + FUNDING_WINDOW_DAYS * DAY_MS),
+        fundingDeadline: cutoff === null ? null : new Date(cutoff),
       },
     }),
     // Under isolated allocation the deal row is never touched: each

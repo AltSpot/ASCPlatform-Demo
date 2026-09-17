@@ -6,10 +6,12 @@
  * client-side gate is a courtesy, this is the control. Three checks, in
  * order: the 506(b) relationship gate (may the member see offerings at
  * all), the per-deal rule (the deal must have opened after the member's
- * relationship date, or it is view-only), then W-9 and KYC.
+ * relationship date, or it is view-only), then W-9 and KYC, then the SPV
+ * admissions rules (lib/spv-rules.ts): admissions still open, a spot under
+ * the investor cap, and retirement money under its limit.
  */
 import { requireUser } from '@/lib/auth';
-import { evaluateInvestGate } from '@/lib/domain';
+import { AdmissionError, evaluateInvestGate } from '@/lib/domain';
 import { dateStr } from '@/lib/format';
 import {
   ForbiddenError,
@@ -23,6 +25,8 @@ import {
 import { viewOnlyCopy } from '@/lib/relationship';
 import { getDealAccess } from '@/lib/repositories/deals';
 import { getWizardView, listProfiles } from '@/lib/repositories/investor';
+import { getStanding } from '@/lib/repositories/spv';
+import { decideAdmission, isRetirementProfile } from '@/lib/spv-rules';
 import {
   getResumable,
   listSubscriptions,
@@ -73,12 +77,28 @@ export const POST = route(async (request: Request) => {
 
   // The profile must belong to this investor.
   let profileId: string | null = null;
+  let profileType: string | null = null;
   if (typeof body.profileId === 'string' && body.profileId) {
     const profiles = await listProfiles(user.id);
-    if (!profiles.some((p) => p.id === body.profileId)) {
+    const profile = profiles.find((p) => p.id === body.profileId);
+    if (!profile) {
       throw new ValidationError('Unknown investment profile');
     }
+    profileType = profile.type;
     profileId = body.profileId;
+  }
+
+  const standing = await getStanding(deal.id, user.id);
+  if (standing) {
+    const decision = decideAdmission({
+      targetClose: deal.targetClose,
+      status: deal.status,
+      standing: standing.standing,
+      alreadyMember: standing.alreadyMember,
+      amount,
+      retirement: isRetirementProfile(profileType),
+    });
+    if (!decision.ok) throw new AdmissionError(decision.code, decision.message);
   }
 
   // One live draft per deal — resume rather than stacking duplicates.

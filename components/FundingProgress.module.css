@@ -114,3 +114,7 @@
   text-transform: uppercase;
   color: var(--accent);
 }
+
+.members {
+  color: var(--as-text-muted);
+}

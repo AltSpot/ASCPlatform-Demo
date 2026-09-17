@@ -2066,3 +2066,16 @@
   font-size: var(--fs-meta);
   color: var(--as-text-muted);
 }
+
+.admissionsClosed {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}

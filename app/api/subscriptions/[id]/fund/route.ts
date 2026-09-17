@@ -1,7 +1,9 @@
 /**
  * POST /api/subscriptions/:id/fund
  *
- * Moves a signed commitment to `funded`. The state transition stays
+ * Moves a signed commitment to `funded`, which the product calls in escrow.
+ * Refused once admissions have closed (lib/spv-rules.ts): money that
+ * arrives after the cut-off cannot join the register. The state transition stays
  * server-side because it is the books-and-records event: it is what says
  * the money arrived.
  *
@@ -22,6 +24,9 @@
  *     call. Nothing downstream of the state machine changes.
  */
 import { requireUser } from '@/lib/auth';
+import { AdmissionError } from '@/lib/domain';
+import { getDealRecord } from '@/lib/repositories/deals';
+import { admissionsOpen } from '@/lib/spv-rules';
 import { NotFoundError, ok, readJson, requireString, route } from '@/lib/http';
 import { noteSubscriptionAgreement } from '@/lib/repositories/documents';
 import { getSubscription, fundSubscription } from '@/lib/repositories/subscriptions';
@@ -36,6 +41,14 @@ export const POST = route(
 
     const body = await readJson<{ method?: unknown }>(request);
     const method = requireString(body.method, 'method', { maxLength: 80 });
+
+    const deal = await getDealRecord(current.dealId);
+    if (deal && !admissionsOpen(deal.targetClose, deal.status)) {
+      throw new AdmissionError(
+        'admissions_closed',
+        'Admissions for this SPV have closed. The member register is locked.',
+      );
+    }
 
     const funded = await fundSubscription(user.id, id, method);
 

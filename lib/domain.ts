@@ -59,6 +59,21 @@ export class InvalidTransitionError extends Error {
   }
 }
 
+/**
+ * An SPV admissions rule refused a subscription: admissions closed, the
+ * investor cap, or the retirement-money limit (lib/spv-rules.ts). HTTP 409
+ * with the rule's own code, so the page can say which.
+ */
+export class AdmissionError extends Error {
+  constructor(
+    readonly code: 'admissions_closed' | 'investor_cap' | 'retirement_cap',
+    message: string,
+  ) {
+    super(message);
+    this.name = 'AdmissionError';
+  }
+}
+
 export function assertTransition(from: string, to: SubscriptionState): void {
   if (!canTransition(from as SubscriptionState, to)) {
     throw new InvalidTransitionError(from, to);
@@ -109,7 +124,11 @@ export type AccreditationStatus =
 
 export type KycStatus = 'not_started' | 'pending' | 'cleared' | 'rejected';
 
-/** A signed commitment must be funded inside this window or it lapses. */
+/**
+ * Retired with the 10-day funding window. A signed subscription now has
+ * until the admission cut-off (lib/funding.ts). Kept for the Spot copy
+ * and seeds that still read it; do not use for a deadline.
+ */
 export const FUNDING_WINDOW_DAYS = 10;
 
 export const DAY_MS = 86_400_000;
@@ -293,6 +312,11 @@ export interface DealView {
   leadType: string;
   /** Most members this SPV may admit. */
   investorCap: number;
+  /**
+   * Members holding a spot (signed, in escrow or admitted). Zero unless a
+   * viewer-aware read filled it (lib/repositories/spv.ts).
+   */
+  members: number;
   /** ISO. When the offering opened to members. */
   launchedAt: string;
   /**

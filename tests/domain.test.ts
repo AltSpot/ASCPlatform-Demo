@@ -425,6 +425,7 @@ function fullDeal(): DealView {
     minimumToClose: 1_000_000,
     leadType: 'altspot',
     investorCap: 100,
+    members: 0,
     launchedAt: '2026-08-01T00:00:00.000Z',
     subscribable: false,
     altspotCommitted: 250_000,

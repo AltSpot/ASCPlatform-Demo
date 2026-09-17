@@ -38,12 +38,15 @@ import WatchToggle from '@/components/deal/WatchToggle';
 import WhatWeLike from '@/components/deal/WhatWeLike';
 import s from '@/components/deal/Deal.module.css';
 import InvestButton from '@/components/InvestButton';
+import WaitlistButton from '@/components/WaitlistButton';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
 import { getDealAccess, listDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getResumable } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
+import { getStanding, waitlistedDeals } from '@/lib/repositories/spv';
+import { admissionsOpen, isFull } from '@/lib/spv-rules';
 
 export const dynamic = 'force-dynamic';
 
@@ -113,10 +116,17 @@ export default async function DealPage({
     />
   );
 
-  const [wizard, resume] = await Promise.all([
+  const [wizard, resume, standing, waiting] = await Promise.all([
     getWizardView(user.id),
     getResumable(user.id, deal.id),
+    getStanding(deal.id, user.id),
+    waitlistedDeals(user.id),
   ]);
+  /* Work order screens 12 and 13: past the cut-off there is nothing to
+     ask for, and a full SPV asks for a place in line instead. A member
+     already holding a spot is never turned away. */
+  const closedToNew = !admissionsOpen(deal.targetClose, deal.status);
+  const full = standing ? isFull(standing.standing) && !standing.alreadyMember : false;
   const gate = evaluateInvestGate(wizard);
 
   /**
@@ -138,7 +148,15 @@ export default async function DealPage({
   const viewOnly = !deal.subscribable && !resume;
 
   const ctaFor = (className: string) =>
-    resume ? (
+    !resume && closedToNew ? (
+      <span className={s.admissionsClosed}>Admissions closed</span>
+    ) : !resume && full ? (
+      <WaitlistButton
+        dealId={deal.id}
+        className={className}
+        initiallyJoined={waiting.includes(deal.id)}
+      />
+    ) : resume ? (
       resume.state === 'docs_signed' ? (
         <Link className={className} href={`/payment/${resume.id}`}>
           Send to escrow

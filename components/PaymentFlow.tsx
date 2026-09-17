@@ -145,7 +145,7 @@ export default function PaymentFlow({
               <>
                 <p className="small" style={{ marginBottom: 16 }}>
                   From your linked account to the SPV&rsquo;s escrow account. In production
-                  this settles through {PARTNERS.payments} to an escrow account in the
+                  this settles through {PARTNERS.payments}{' '}to an escrow account in the
                   SPV&rsquo;s name at {PARTNERS.custody}, never through an AltSpot account.
                 </p>
                 <div className="choice sel" style={{ marginBottom: 16 }}>

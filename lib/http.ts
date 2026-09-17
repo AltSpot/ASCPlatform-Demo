@@ -9,7 +9,7 @@ import 'server-only';
 import { NextResponse } from 'next/server';
 
 import { UnauthorizedError } from './auth';
-import { InvalidTransitionError } from './domain';
+import { AdmissionError, InvalidTransitionError } from './domain';
 
 export interface ApiError {
   error: { code: string; message: string };
@@ -68,6 +68,9 @@ export function route<TArgs extends unknown[]>(
       }
       if (error instanceof ForbiddenError) {
         return fail('forbidden', error.message, 403);
+      }
+      if (error instanceof AdmissionError) {
+        return fail(error.code, error.message, 409);
       }
       if (error instanceof InvalidTransitionError) {
         return fail('invalid_state', error.message, 409);
