@@ -1,8 +1,7 @@
 /**
  * What the platform has actually charged this investor.
  *
- * Every other surface states the fee model as a promise: 5% once at
- * closing, 10% of profits at exit, nothing else. This is the only place
+ * Every other surface states the fee model as a promise. This is the only place
  * that states it as a number against their own money, which is the
  * form an investor actually wants it in and the form a platform is
  * least often willing to print.
@@ -14,6 +13,7 @@
  * it is owed on nothing until something is sold. Collapsing the three
  * into one "fees" figure would misstate two of them.
  */
+import { NO_CAPITAL_CALLS } from '@/lib/fees';
 import { money } from '@/lib/format';
 
 import s from './FeesPaid.module.css';
@@ -28,10 +28,14 @@ export interface FeeLine {
 }
 
 export default function FeesPaid({ lines }: { lines: FeeLine[] }) {
-  if (lines.length === 0) return null;
-
   return (
     <div className="card">
+      {lines.length === 0 ? (
+        <p className={s.model}>
+          Your management fee and any carried interest are set out in each deal&rsquo;s
+          memorandum. {NO_CAPITAL_CALLS}
+        </p>
+      ) : null}
       <div className={s.rows}>
         {lines.map((line) => (
           <div key={line.key} className={s.row} data-contingent={line.contingent}>
@@ -42,11 +46,7 @@ export default function FeesPaid({ lines }: { lines: FeeLine[] }) {
         ))}
       </div>
 
-      <p className={s.model}>
-        That is the whole model. One management fee, charged once at closing.
-        Ten percent of profits at exit. No annual fee, no administration
-        reserve, and no capital calls, ever.
-      </p>
+      {lines.length > 0 ? <p className={s.model}>{NO_CAPITAL_CALLS}</p> : null}
     </div>
   );
 }

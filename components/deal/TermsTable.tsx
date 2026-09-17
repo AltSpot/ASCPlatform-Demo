@@ -5,12 +5,16 @@
  * is priced at, how big the round is, and the price per share. The second
  * is the preferred terms that attach to it.
  *
- * Deliberately absent: vehicle, minimum investment, allocation remaining
- * and target close. The first three already appear in the hero and were
- * repeating themselves here, and there is no target close on a back-raise
- * where the SPV already holds the shares.
+ * The third is what it costs (work order screens 6 and 7), from
+ * lib/fees.ts: with SHOW_FEE_TERMS off, one row that names the management
+ * fee and points at the memorandum, and no figure; with SHOW_CARRY_TERMS
+ * off, no carry row at all. Under it, always, no capital calls.
+ *
+ * Deliberately absent: minimum to close, closing date and escrow status,
+ * which are the hero's funding picture.
  */
 import type { DealView } from '@/lib/domain';
+import { NO_CAPITAL_CALLS, dealFeeRows } from '@/lib/fees';
 
 import Section from './Section';
 import s from './Deal.module.css';
@@ -21,7 +25,7 @@ export default function TermsTable({ deal }: { deal: DealView }) {
     ...(deal.pricePerShare ? [{ k: 'Price per share', v: deal.pricePerShare }] : []),
   ];
 
-  if (economics.length === 0 && deal.preferredTerms.length === 0) return null;
+  const costs = dealFeeRows().map((row) => ({ k: row.label, v: row.detail }));
 
   return (
     <Section eyebrow="Terms" title="What you are agreeing to." id="terms">
@@ -32,6 +36,11 @@ export default function TermsTable({ deal }: { deal: DealView }) {
           <Table rows={deal.preferredTerms} caption="Preferred terms" />
         </div>
       )}
+
+      <div style={{ marginTop: 26 }}>
+        <Table rows={costs} caption="What it costs" />
+        <p className={s.costNote}>{NO_CAPITAL_CALLS}</p>
+      </div>
     </Section>
   );
 }

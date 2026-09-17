@@ -154,64 +154,52 @@ const LIBRARY: LibraryItem[] = [
       'Explainer written by AltSpot Capital. General structural education about how private secondaries work. It is not investment advice, it is not about any specific offering, and no figure in it describes an actual transaction.',
   },
   {
-    slug: 'why-we-charge-once',
+    slug: 'how-altspot-is-paid',
     kind: 'article',
-    title: 'Why we charge once',
+    title: 'How AltSpot is paid',
     standfirst:
-      'Most private vehicles charge an annual fee on committed capital. We charge one fee at closing and take nothing again until an exit. Here is the arithmetic behind that choice.',
+      'Every deal on the platform is its own SPV, and AltSpot organizes and advises each one. Here is how that work is paid for, in the order the money moves.',
     topic: 'How AltSpot works',
     author: 'AltSpot Capital',
-    publishedAt: '2026-08-18T13:00:00.000Z',
-    minutes: 6,
+    publishedAt: '2026-09-17T13:00:00.000Z',
+    minutes: 4,
     art: 'linear-gradient(135deg,#1A1206 0%,#5A3C14 55%,#C79A4B 118%)',
     body: [
       {
         type: 'p',
-        text: 'The standard private-fund fee is two percent a year on committed capital, for ten years, plus twenty percent of profits. It is so standard that it is rarely stated as what it costs: on a ten year hold, the annual fee alone takes roughly a fifth of the commitment before a single dollar of profit is measured.',
+        text: 'A deal-by-deal platform does its expensive work before a member ever sees a deal: sourcing, diligence, structuring the vehicle. After that comes the part that lasts for years, which is holding the position, reporting on it, and filing a K-1 every season until it exits. The fee is built around both.',
       },
-      { type: 'h', text: 'What an annual fee is actually paying for' },
+      { type: 'h', text: 'First, your money waits in escrow' },
       {
         type: 'p',
-        text: 'An annual management fee funds a team doing continuous work: sourcing, monitoring, reporting, and holding a position through cycles. In a blind-pool fund that work is real and it starts before there is anything to show for it, because the investor commits capital to a strategy rather than to a company.',
+        text: 'When you subscribe, your money goes to escrow, in an account in the SPV\'s name, never to an AltSpot account. The deal closes only when its minimum is met by the closing date. If it is not, escrow returns what you sent.',
       },
+      { type: 'h', text: 'At closing, a flat fee and a reserve' },
       {
         type: 'p',
-        text: 'A deal-by-deal platform is a different shape. The sourcing and the diligence happen before the deal is shown. By the time a member sees it, the work that costs money has already been done, and it was done once.',
-      },
-      { type: 'h', text: 'So we charge for it once' },
-      {
-        type: 'p',
-        text: 'Five percent of the commitment, collected at closing. That is the whole management fee, and it is never charged again for the life of the position. There is no annual draw, no administration reserve, and no capital call. A member who commits fifty thousand dollars pays two thousand five hundred dollars once, at the moment the position is created, and knows on day one what the position cost to own.',
+        text: 'Each SPV pays a flat fee to be organized, the same for every vehicle whatever its size. The management fee is an annual rate on committed capital for an assumed term, funded once at closing as a reserve. It is drawn down as it is earned, and anything unearned comes back to members.',
       },
       {
         type: 'note',
-        text: 'A fee charged once is easy to compare and hard to hide. A fee charged annually compounds quietly for a decade, and the total is almost never stated as a single number anywhere in the documents.',
+        text: 'Funding the reserve at closing is what lets us promise no capital calls. Nothing is billed annually and no one is asked for more money later.',
       },
-      { type: 'h', text: 'And ten percent of profits, at exit' },
+      { type: 'h', text: 'At exit, a share of profit' },
       {
         type: 'p',
-        text: 'Carried interest is ten percent, on profits only, and only when a position actually exits. If the position returns your capital and nothing more, the carry is zero. If it is written off, the carry is zero. There is no preferred-return hurdle and no catch-up, because there is nothing to catch up on: we have not been drawing a fee in the meantime.',
-      },
-      { type: 'h', text: 'The trade we are making' },
-      {
-        type: 'p',
-        text: 'A one-time fee front-loads our revenue and gives us no income from a position while we hold it. That is the point. It means we have no reason to keep a vehicle alive that should be wound up, and no reason to raise a fund for a strategy we have not sourced yet.',
-      },
-      {
-        type: 'p',
-        text: 'It also means we take almost all of our upside in carry, which only arrives if something exits above cost. We think that is the correct place for our incentive to sit. It is not a claim about outcomes, and nothing here should be read as one.',
+        text: 'Carried interest is a share of profit, not of capital, and only when a position exits. Capital comes back first. If a position returns your capital and nothing more, or is written off, the carry is zero.',
       },
       {
         type: 'list',
         items: [
-          'One management fee: 5% of the commitment, charged once at closing.',
-          'Carried interest: 10% of profits, at exit only.',
-          'No annual fee, no administration reserve, no capital calls, ever.',
+          'Money waits in escrow until the minimum is met.',
+          'A flat fee per SPV, and a management fee reserve funded once at closing.',
+          'Carried interest on profits at exit only.',
+          'The exact terms are in each deal\'s memorandum. No capital calls.',
         ],
       },
     ],
     sourceNote:
-      'Written by AltSpot Capital about its own fee model. The figures describe what AltSpot charges. They are not a projection and they say nothing about what any position will return.',
+      'Written by AltSpot Capital about its own fee structure. It describes how fees work, not what any deal costs; the figures for each deal are in its memorandum. Nothing here is a projection or a statement about what any position will return.',
   },
   {
     slug: 'the-denominator-problem',

@@ -33,6 +33,7 @@ import {
   selectedChoice,
   unconfirmedSections,
 } from '@/lib/subscription-sections';
+import { feeSentence } from '@/lib/fees';
 
 /** Every confirmation code the product can legitimately produce. */
 const VALID_CODES = SUBSCRIPTION_SECTIONS.flatMap((section) =>
@@ -381,16 +382,14 @@ describe('selectedChoice', () => {
 });
 
 describe('the document states the fee model lib/fees.ts computes', () => {
-  test('the "What you pay" clause is 5% once at closing and 10% carry, and nothing else', () => {
+  test('the "What you pay" clause is the sentence lib/fees.ts states, and nothing else', () => {
     const section = getSection(3)!;
     const clause = section.points.find((p) => p.lead === 'What you pay');
     assert.ok(clause, 'the executed agreement no longer states what the investor pays');
-    assert.match(clause.text, /5% management fee/);
+    assert.equal(clause.text, feeSentence());
     assert.match(clause.text, /once at closing/);
-    assert.match(clause.text, /never annually/);
-    assert.match(clause.text, /[Tt]en percent carried interest/);
-    assert.match(clause.text, /at exit/);
-    assert.match(clause.text, /no capital calls, ever/);
+    assert.match(clause.text, /No capital calls/);
+    assert.doesNotMatch(clause.text, /ten percent|10% carr/i);
   });
 
   test('the agreement never introduces a fee the product does not charge', () => {
@@ -400,6 +399,7 @@ describe('the document states the fee model lib/fees.ts computes', () => {
     for (const banned of [
       /annual fee/i,
       /admin(istrative)? reserve/i,
+      /of capital raised/i,
       /reserve for expenses/i,
       /subsequent capital contribution/i,
       /additional capital contribution/i,

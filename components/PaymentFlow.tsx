@@ -35,7 +35,7 @@ export default function PaymentFlow({
   const [state, setState] = useState(subscription.state);
   const [busy, setBusy] = useState(false);
 
-  const fees = feeBreakdown(deal.fees, subscription.amount);
+  const fees = feeBreakdown(subscription.amount);
 
   async function fund() {
     if (busy) return;
@@ -223,7 +223,7 @@ export default function PaymentFlow({
           <p className="small" style={{ marginBottom: 12 }}>
             {deal.name} · {deal.entity}
           </p>
-          <FeeTable fees={deal.fees} amount={subscription.amount} />
+          <FeeTable amount={subscription.amount} targetClose={deal.targetClose} />
           <div className="hr" />
           <p className="tiny">
             Funds are held in the deal&rsquo;s segregated account through the hold period

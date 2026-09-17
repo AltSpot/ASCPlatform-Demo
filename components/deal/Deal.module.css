@@ -2049,3 +2049,10 @@
   border-radius: var(--r-pill);
   background: var(--surface-2);
 }
+
+/* Under the cost table: no capital calls, always. */
+.costNote {
+  margin: 10px 0 0;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}

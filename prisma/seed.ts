@@ -1,9 +1,9 @@
 /**
  * Marketplace seed.
  *
- * Fee model, every deal: 5% management fee charged once at closing,
- * 10% carried interest on profits at exit. Nothing else: no annual
- * fees, no capital calls.
+ * Fees and carry are not per deal: they are the platform's terms, in
+ * lib/config.ts (FEE_TERMS, CARRY_PERCENT), and they render only behind
+ * SHOW_FEE_TERMS and SHOW_CARRY_TERMS. The fees column is written empty.
  *
  * Calder Grid, the lead deal, is FICTIONAL: it mirrors the shape of a real
  * AltSpot deal package (structure, terms, checkout flow), but the company,
@@ -20,6 +20,7 @@ import 'dotenv/config';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { PrismaClient } from '../lib/generated/prisma/client';
 import { brandArt } from '../lib/brand';
+import { feeSentence } from '../lib/fees';
 
 const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL ?? 'file:./ascplatform.db',
@@ -88,7 +89,6 @@ interface SeedDeal {
   indicators?: Record<string,{value:string;note?:string}>;
   rounds?: Record<string,unknown>[];
   outcomes?: Record<string, unknown>;
-  fees: { management: number; carry: number };
   media: { type: string; label: string; series: number[]; caption: string };
   charts?: {
     key: string;
@@ -110,8 +110,6 @@ interface SeedDeal {
     stats?: { k: string; v: string }[];
   }[];
 }
-
-const FEES = { management: 5, carry: 10 };
 
 const DEALS: SeedDeal[] = [
   // ------------------------------------------------------------------
@@ -223,7 +221,6 @@ const DEALS: SeedDeal[] = [
     committedNote:
       'AltSpot participated in the seed and is leading this round with $600,000 of its own capital.',
     sortOrder: 0,
-    fees: FEES,
     media: {
       type: 'metric',
       label: 'Contracted ARR',
@@ -332,7 +329,7 @@ const DEALS: SeedDeal[] = [
       },
       {
         q: 'How is AltSpot paid on this deal?',
-        a: 'A 5% management fee, charged once at closing, not annually. Then 10% carried interest on profits at exit. That is the entire fee model: no annual fees, no capital calls, no hidden charges. Not legal, tax, or investment advice.',
+        a: `AltSpot organizes and advises the SPV. ${feeSentence()} Not legal, tax, or investment advice.`,
       },
       {
         q: 'What are the biggest risks?',
@@ -429,42 +426,39 @@ const DEALS: SeedDeal[] = [
     logoUrl: '/brand/altspot-logo-black.png',
     headline: 'Every AltSpot-led deal in one commitment.',
     blurb:
-      'One vehicle that invests in every AltSpot-led deal of the vintage automatically, on the same terms the marketplace sees. One subscription, one K-1.',
+      'One vehicle that invests in every AltSpot-led deal of the vintage automatically. One subscription, one K-1.',
     thesis: [
-      'One subscription covers the vintage. The fund invests in every deal AltSpot leads over the deployment period, on the same terms offered deal by deal on the marketplace, without the investor having to pick.',
+      'One subscription covers the vintage. The fund invests in every deal AltSpot leads over the deployment period, without the investor having to pick.',
       'Diversification is the point. A single early-stage position can go to zero. Ten to fifteen positions across the vintage means no single outcome decides the fund.',
-      'AltSpot is the general partner and has committed $1,000,000 of the $10M target. The fee model is the same as every single deal: 5% once at closing, 10% carry at exit. No annual fees. Commitments are funded in full at closing, so there are no capital calls.',
+      'AltSpot organizes and advises the fund. Commitments are funded in full at closing, so there are no capital calls.',
     ],
     metrics: [
       { k: 'Fund target', v: '$10M' },
       { k: 'Planned positions', v: '10–15' },
-      { k: 'GP commitment', v: '$1M' },
+      { k: 'Minimum to close', v: '$5M' },
       { k: 'Deployment period', v: '18 mo' },
     ],
     terms: [
       { k: 'Vehicle', v: 'AltSpot Growth Fund I, LLC' },
       { k: 'Fund target', v: '$10,000,000' },
-      { k: 'GP commitment', v: '$1,000,000 (AltSpot)' },
       { k: 'Deployment', v: '10 to 15 AltSpot-led deals' },
     ],
     risks:
-      'The fund invests in early-stage and growth-stage private companies and total loss of capital is possible. Positions are selected by AltSpot during the vintage and are not known in advance, so you are underwriting the process, not a named company. Deployment pace depends on deal flow and may be slower than planned. Fund interests are illiquid with no secondary market and no promised exit timeline. AltSpot’s own $1,000,000 carries these same risks.',
+      'The fund invests in early-stage and growth-stage private companies and total loss of capital is possible. Positions are selected by AltSpot during the vintage and are not known in advance, so you are underwriting the process, not a named company. Deployment pace depends on deal flow and may be slower than planned. Fund interests are illiquid with no secondary market and no promised exit timeline.',
     minInvestment: 25000,
     allocationTotal: 10000000,
     allocationRemaining: 6900000,
     closesInDays: 47,
     launchedDaysAgo: 13,
-    altspotCommitted: 1000000,
-    committedNote:
-      'AltSpot is the general partner and has committed $1,000,000 of the $10M target.',
+    altspotCommitted: 0,
+    committedNote: '',
     sortOrder: 3,
-    fees: FEES,
     media: {
       type: 'metric',
       label: 'Capital committed',
       series: [1.0, 1.4, 1.9, 2.4, 3.1],
       caption:
-        'Committed capital in $M since the fund opened, including the GP commitment. Source: fund records.',
+        'Committed capital in $M since the fund opened. Source: fund records.',
     },
     docs: [
       'Private Placement Memorandum: AltSpot Growth Fund I, LLC',
@@ -476,7 +470,7 @@ const DEALS: SeedDeal[] = [
     spotbot: [
       {
         q: 'What exactly am I buying?',
-        a: 'Membership interests in AltSpot Growth Fund I, LLC, a $10M vehicle managed by AltSpot Capital, LLC. The fund invests in each AltSpot-led deal during the deployment period, on the same terms those deals are offered on the marketplace. You own interests in the fund, not shares of the underlying companies. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
+        a: 'Membership interests in AltSpot Growth Fund I, LLC, a $10M vehicle organized and advised by AltSpot. The fund invests in each AltSpot-led deal during the deployment period. You own interests in the fund, not shares of the underlying companies. Subject to Manager acceptance and required documentation. Not legal, tax, or investment advice.',
       },
       {
         q: 'Are there capital calls?',
@@ -484,7 +478,7 @@ const DEALS: SeedDeal[] = [
       },
       {
         q: 'How is AltSpot paid on this deal?',
-        a: 'A 5% management fee charged once at closing, and 10% carried interest on profits at exit. The same model as every single deal, applied once at the fund level rather than per position. No annual fees and no capital calls. Not legal, tax, or investment advice.',
+        a: `${feeSentence()} Charged once at the fund level rather than per position. Not legal, tax, or investment advice.`,
       },
     ],
     deck: [
@@ -493,12 +487,11 @@ const DEALS: SeedDeal[] = [
         title: 'One commitment. The whole vintage.',
         body: [
           'The fund subscribes to every AltSpot-led deal during the deployment period, on the terms each deal is offered at. Investors get the vintage without picking, and without watching the marketplace for each close.',
-          'Commitments are funded in full at closing. No capital calls, no annual fees, one K-1.',
+          'Commitments are funded in full at closing. No capital calls, one K-1.',
         ],
         stats: [
           { k: 'Fund target', v: '$10M' },
           { k: 'Planned positions', v: '10–15' },
-          { k: 'GP commitment', v: '$1M' },
         ],
       },
       {
@@ -506,7 +499,6 @@ const DEALS: SeedDeal[] = [
         title: 'The portfolio does the work one deal cannot.',
         body: [
           'Early-stage outcomes are skewed: a small number of positions drive the result, and any single one can go to zero. Spreading a commitment across the vintage is the structural answer.',
-          'AltSpot commits its own capital at the fund level, the same way it commits on every single deal.',
         ],
       },
     ],
@@ -576,7 +568,6 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 300000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
     sortOrder: 1,
-    fees: FEES,
     media: { type: 'metric', label: 'Entry vs. last tender', series: [90, 100], caption: 'AltSpot entry indexed against the April 2026 employee tender (100).' },
     docs: ['Investment Memo: Aurelia Labs Secondary (AltSpot)', 'Subscription Agreement: ASC Aurelia SPV', 'Transfer & Issuer Approval Summary', 'Risk Factors & Disclosures'],
     spotbot: [
@@ -645,7 +636,6 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 250000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
     sortOrder: 8,
-    fees: FEES,
     media: { type: 'metric', label: 'Entry vs. last round', series: [88, 100], caption: 'AltSpot entry indexed against the Series K (100).' },
     docs: ['Investment Memo: Tessellate Secondary (AltSpot)', 'Subscription Agreement: ASC Tessellate SPV', 'Transfer & Issuer Approval Summary', 'Risk Factors & Disclosures'],
     spotbot: [
@@ -725,7 +715,6 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 500000,
     committedNote: 'AltSpot participated in the Series A and is leading this round.',
     sortOrder: 2,
-    fees: FEES,
     media: { type: 'metric', label: 'Annualized revenue', series: [900, 1400, 2100, 3500, 4600, 6200, 7800, 9100], caption: 'Annualized fleet revenue by quarter, $K. Source: monthly management accounts.' },
     charts: [
       { key: 'rev', label: 'Annualized revenue', unit: 'usd-k', kind: 'area', points: [['Q4 24', 900], ['Q1 25', 1400], ['Q2 25', 2100], ['Q3 25', 3500], ['Q4 25', 4600], ['Q1 26', 6200], ['Q2 26', 7800], ['Q3 26', 9100]].map(([label, value]) => ({ label: label as string, value: value as number })), caption: 'Fleet revenue, annualized from the last month of each quarter.', source: 'Monthly management accounts' },
@@ -801,7 +790,6 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 300000,
     committedNote: 'AltSpot is leading this round.',
     sortOrder: 3,
-    fees: FEES,
     media: { type: 'metric', label: 'Contracted revenue', series: [300, 520, 800, 1240, 1700, 2300, 2950, 3600], caption: 'Contracted annual revenue by quarter, $K.' },
     backing: [{ firm: 'bellwether', role: 'co-invest' }],
     docs: ['Investment Memo: Loomline Health Series A', 'Subscription Agreement: ASC Loomline I', 'Risk Factors & Disclosures'],
@@ -872,7 +860,6 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 150000,
     committedNote: 'AltSpot is leading this round.',
     sortOrder: 5,
-    fees: FEES,
     media: { type: 'metric', label: 'Tonnes produced', series: [0, 0, 40, 180, 420, 760, 1100, 1500], caption: 'Binder produced per quarter, tonnes.' },
     backing: [{ firm: 'cobaltpeak', role: 'co-invest' }],
     docs: ['Investment Memo: Basalt Materials Seed', 'Subscription Agreement: ASC Basalt I', 'Risk Factors & Disclosures'],
@@ -946,12 +933,11 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 400000,
     committedNote: 'AltSpot is co-investing alongside the round lead.',
     sortOrder: 4,
-    fees: FEES,
     media: { type: 'metric', label: 'Backlog', series: [40, 55, 70, 95, 120, 150, 180, 210], caption: 'Contracted backlog by quarter, $M.' },
     backing: [{ firm: 'ashgrove', role: 'led' }],
     docs: ['Investment Memo: Kestrel Autonomy Series C', 'Subscription Agreement: ASC Kestrel I', 'Risk Factors & Disclosures'],
     spotbot: [
-      { q: 'What does co-invest mean here?', a: 'Another fund is leading the round and set the terms. AltSpot negotiated an allocation on those same terms and is investing alongside. Members get the same security and the same price. Not legal, tax, or investment advice.' },
+      { q: 'What does partner-led mean here?', a: 'A syndicate partner leads this round and set its terms. AltSpot organizes and advises the SPV that members invest through, the same as on every deal. Not legal, tax, or investment advice.' },
     ],
     deck: [],
   },
@@ -1015,7 +1001,6 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 500000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
     sortOrder: 6,
-    fees: FEES,
     media: { type: 'metric', label: 'Entry vs. last round', series: [87, 100], caption: 'AltSpot entry indexed against the Series D (100).' },
     backing: [{ firm: 'sableridge', role: 'prior' }],
     docs: ['Investment Memo: Northstar Secondary (AltSpot)', 'Subscription Agreement: ASC Northstar SPV', 'Transfer & Issuer Approval Summary', 'Risk Factors & Disclosures'],
@@ -1090,7 +1075,6 @@ const DEALS: SeedDeal[] = [
     altspotCommitted: 700000,
     committedNote: 'AltSpot is leading this round and takes a board seat.',
     sortOrder: 7,
-    fees: FEES,
     media: { type: 'metric', label: 'Revenue', series: [21, 29, 38, 52, 64, 74, 84, 96], caption: 'Trailing twelve-month revenue by quarter, $M.' },
     backing: [{ firm: 'halcyon', role: 'co-invest' }],
     docs: ['Investment Memo: Halyard Freight Growth Round', 'Subscription Agreement: ASC Halyard I', 'Risk Factors & Disclosures'],
@@ -1132,7 +1116,6 @@ const DEALS: SeedDeal[] = [
     targetClose: 'Jun 12, 2025',
     altspotCommitted: 800000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
-    fees: FEES,
     sortOrder: 90,
     status: 'closed',
     media: { type: 'metric', label: '', series: [], caption: '' },
@@ -1173,7 +1156,6 @@ const DEALS: SeedDeal[] = [
     targetClose: 'Nov 20, 2025',
     altspotCommitted: 400000,
     committedNote: 'Acquired as principal; AltSpot retains its position permanently.',
-    fees: FEES,
     sortOrder: 91,
     status: 'closed',
     media: { type: 'metric', label: '', series: [], caption: '' },
@@ -1214,7 +1196,6 @@ const DEALS: SeedDeal[] = [
     targetClose: 'Feb 28, 2025',
     altspotCommitted: 300000,
     committedNote: 'Acquired as principal; AltSpot held to exit alongside investors.',
-    fees: FEES,
     sortOrder: 92,
     status: 'closed',
     media: { type: 'metric', label: '', series: [], caption: '' },
@@ -1326,7 +1307,8 @@ async function main() {
       sortOrder: deal.sortOrder,
       status: deal.status ?? 'open',
       thesisJson: JSON.stringify(deal.thesis),
-      feesJson: JSON.stringify(deal.fees),
+      /* Retired: fee terms live in lib/config.ts. */
+      feesJson: '{}',
       mediaJson: JSON.stringify(deal.media),
       chartsJson: JSON.stringify(deal.charts ?? []),
       docsJson: JSON.stringify(deal.docs),

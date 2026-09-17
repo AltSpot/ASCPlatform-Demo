@@ -14,6 +14,9 @@
  * process and never about performance.
  */
 
+import { CARRY_PERCENT, SHOW_CARRY_TERMS } from '../config';
+import { feeSentence } from '../fees';
+
 export interface KnowledgeTopic {
   id: string;
   /** The canonical phrasing. Doubles as a suggested question. */
@@ -186,7 +189,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'two and twenty',
     ],
     answer:
-      'Two numbers, and that is the whole model. A 5 percent management fee on your subscription, charged once at closing, not every year. Then 10 percent carried interest on profits at exit, on every deal. There is no annual fee, no capital call and no line item that appears later. The invest page itemizes your all-in cost before you sign, so the total you see on day one is the total you ever pay in.',
+      `AltSpot organizes and advises every SPV, and this is how it is paid. ${feeSentence()} The full terms are in each deal's memorandum, and the invest page shows what goes to escrow before you sign.`,
     source: 'AltSpot fee schedule and the subscription agreement',
     related: ['carry-mechanics', 'no-capital-calls', 'confirmations'],
   },
@@ -196,7 +199,6 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
     keywords: [
       'carry',
       'carried interest',
-      '10 percent',
       'profits',
       'at exit',
       'promote',
@@ -204,7 +206,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'when do you get paid',
     ],
     answer:
-      'Carried interest is AltSpot\'s share of the profit, not of your capital. At an exit the SPV returns your invested capital first. Anything above that is profit, and AltSpot takes 10 percent of it. If there is no profit there is no carry. It is charged at exit, so nothing is deducted while the position is held. That is deliberate: AltSpot gets paid meaningfully only when the deal works.',
+      `Carried interest is a share of the profit, not of your capital. At an exit the SPV returns invested capital first, and carry applies only to what is above that. If there is no profit there is no carry, and nothing is deducted while a position is held. ${SHOW_CARRY_TERMS ? `On AltSpot-led deals it is ${CARRY_PERCENT} percent of profits.` : 'The rate is set out in each deal\'s memorandum.'}`,
     source: 'AltSpot fee schedule and the subscription agreement',
     related: ['fees', 'illiquidity', 'after-funding'],
   },
@@ -308,16 +310,19 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'pitch deck',
     ],
     answer:
-      'The deal page is the whole pitch, top to bottom, in the same order every time so pages can be compared like for like. The header carries the deal, the sector and the SPV that issues your agreement. Then AltSpot\'s own committed capital, the headline numbers, the story chapter by chapter, the thesis, the trend chart, the risk section stated plainly, the terms table, the two fees at 5 percent once at closing and 10 percent carry at exit, and the data room. The allocation bar shows how much of the round is still open.',
+      'The deal page is the whole pitch, top to bottom, in the same order every time so pages can be compared like for like. The header carries the deal, whether AltSpot or a partner leads it, and the funding picture: raised so far, the minimum to close, the closing date and the escrow status. Then the overview, the headline numbers, the round history, the risk section stated plainly, the terms and what it costs, and the data room. AltSpot organizes and advises every deal on the platform.',
     source: 'AltSpot platform guide, deal pages',
     related: ['allocation', 'fees', 'data-room'],
   },
   {
     id: 'allocation',
-    question: 'What does the allocation bar mean?',
+    question: 'What does the funding bar mean?',
     keywords: [
       'allocation',
       'allocation bar',
+      'funding bar',
+      'minimum to close',
+      'raised so far',
       'remaining',
       'how much is left',
       'filled',
@@ -327,7 +332,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'reserve my spot',
     ],
     answer:
-      'The bar is the share of the round already spoken for. Your spot is reserved the moment you sign, not when the money lands, which is why signing early matters when a deal is filling. If you start an investment and walk away without signing, nothing is held. The deal terms carry the minimum subscription, and the amount field will not accept less. When a round is oversubscribed, allocations can be cut back at closing.',
+      'The bar measures what has been raised against the minimum the SPV needs to close. The tick marks the minimum; the faint track past it is how far the round may go. Every subscription waits in escrow, and the deal closes once the minimum is met by the closing date. If it is not met, escrow returns the money. Admissions close 24 hours before the wire, and when a round is oversubscribed, allocations can be cut back at closing.',
     source: 'AltSpot platform guide, allocation and closing',
     related: ['cut-back', 'funding-window', 'signing'],
   },
@@ -484,7 +489,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'distributions',
     ],
     answer:
-      'Your funds are held until the round closes. At closing the issuer accepts the subscription, the one-time 5 percent management fee is taken, and the SPV deploys the capital. The position then appears on your dashboard at cost. After that you get periodic updates from the operator, a K-1 for the SPV each tax season filed into Docs, and distributions to your linked account if and when the deal produces them. The final outcome is settled at exit, which is where the 10 percent carry applies.',
+      'Your money waits in escrow until the round closes. At closing the minimum has been met, the SPV takes in every admitted subscription, the management fee reserve is funded, and the SPV buys its position. The position then appears on your dashboard at cost. After that you get periodic updates from the operator, a K-1 for the SPV each tax season filed into Docs, and distributions to your linked account if and when the deal produces them. The final outcome is settled at exit, which is where any carried interest applies.',
     source: 'AltSpot platform guide, subscription lifecycle',
     related: ['position-value', 'carry-mechanics', 'documents'],
   },

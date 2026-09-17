@@ -21,6 +21,8 @@
  * representation does not exist in this product.
  */
 
+import { feeSentence } from './fees';
+
 /** One line of a panel. `lead` is the conspicuous label a regulator looks for. */
 export interface SectionPoint {
   lead?: string;
@@ -214,7 +216,7 @@ export const SUBSCRIPTION_SECTIONS: readonly SubscriptionSection[] = [
       },
       {
         lead: 'What you pay',
-        text: 'A 5% management fee, charged once at closing, never annually. Ten percent carried interest on profits at exit. Nothing else, and no capital calls, ever.',
+        text: feeSentence(),
       },
     ],
   },

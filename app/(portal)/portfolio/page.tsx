@@ -36,7 +36,8 @@ import ValueCurve from '@/components/portfolio/ValueCurve';
 import FeesPaid, { type FeeLine } from '@/components/portfolio/FeesPaid';
 import { requireUser } from '@/lib/auth';
 import { HELD_STATES, isLivePosition } from '@/lib/domain';
-import { feeBreakdown } from '@/lib/fees';
+import { CARRY_PERCENT, FEE_TERMS, SHOW_CARRY_TERMS, SHOW_FEE_TERMS } from '@/lib/config';
+import { carryOn, feeBreakdown, reservePercent } from '@/lib/fees';
 import { irr, ledgerBook, positionFlows } from '@/lib/portfolio-metrics';
 import { money, percent } from '@/lib/format';
 import { getDealsByIds } from '@/lib/repositories/deals';
@@ -232,17 +233,16 @@ export default async function PortfolioPage() {
    * they were paid out, and money that is owed on nothing until a mark
    * becomes an exit. See components/portfolio/FeesPaid.tsx.
    */
-  const managementPaid = held.reduce((sum, sub) => {
-    const fees = deals.get(sub.dealId)?.fees;
-    return fees ? sum + feeBreakdown(fees, sub.amount).management : sum;
-  }, 0);
+  const managementPaid = held.reduce(
+    (sum, sub) => sum + feeBreakdown(sub.amount).reserve,
+    0,
+  );
 
   /* Distributions are what reached the investor, so carry was already
      taken out of them. Grossing the recorded gain back up is what says
-     how much: at a 10% rate, $90 paid out means $10 kept. */
+     how much: at a 20% rate, $80 paid out means $20 kept. */
   const carryTaken = held.reduce((sum, sub) => {
-    const rate = deals.get(sub.dealId)?.fees.carry ?? 0;
-    if (!rate) return sum;
+    const rate = CARRY_PERCENT;
     const netGain = (distributions.items ?? [])
       .filter((item) => item.subscriptionId === sub.id && item.kind === 'gain')
       .reduce((paid, item) => paid + item.amount, 0);
@@ -251,35 +251,44 @@ export default async function PortfolioPage() {
 
   /* Only on positions marked above cost, and only hypothetically: a
      mark is not an exit and carry is owed on nothing until it is. */
-  const carryAccruing = live.reduce((sum, sub) => {
-    const rate = deals.get(sub.dealId)?.fees.carry ?? 0;
-    const gain = (sub.currentValue ?? sub.amount) - sub.amount;
-    return gain > 0 ? sum + (gain * rate) / 100 : sum;
-  }, 0);
+  const carryAccruing = live.reduce(
+    (sum, sub) => sum + carryOn((sub.currentValue ?? sub.amount) - sub.amount),
+    0,
+  );
 
+  /* Figures only behind their switches (lib/config.ts). Off, the section
+     says where the terms are instead of printing a number. */
   const feeLines: FeeLine[] = [
-    {
-      key: 'management',
-      label: 'Management fees paid',
-      amount: Math.round(managementPaid),
-      note: `5% of each commitment, charged once at closing across ${held.length} position${held.length === 1 ? '' : 's'}. Never annual.`,
-    },
-    {
-      key: 'carry-taken',
-      label: 'Carry taken at exit',
-      amount: Math.round(carryTaken),
-      note:
-        carryTaken > 0
-          ? '10% of profits, deducted from proceeds before they were distributed to you.'
-          : 'Nothing has exited above cost yet, so no carry has been taken.',
-    },
-    {
-      key: 'carry-accruing',
-      label: 'Carry if marked today',
-      amount: Math.round(carryAccruing),
-      note: 'What 10% of profits would come to at current marks. Owed on nothing until a position actually exits.',
-      contingent: true,
-    },
+    ...(SHOW_FEE_TERMS
+      ? [
+          {
+            key: 'management',
+            label: 'Management fee reserves funded',
+            amount: Math.round(managementPaid),
+            note: `${reservePercent()}% of each commitment (${FEE_TERMS.annualPercent}% a year for ${FEE_TERMS.termYears} years), funded once at closing across ${held.length} position${held.length === 1 ? '' : 's'}. Unearned amounts come back to you.`,
+          },
+        ]
+      : []),
+    ...(SHOW_CARRY_TERMS
+      ? [
+          {
+            key: 'carry-taken',
+            label: 'Carry taken at exit',
+            amount: Math.round(carryTaken),
+            note:
+              carryTaken > 0
+                ? `${CARRY_PERCENT}% of profits, deducted from proceeds before they were distributed to you.`
+                : 'Nothing has exited above cost yet, so no carry has been taken.',
+          },
+          {
+            key: 'carry-accruing',
+            label: 'Carry if marked today',
+            amount: Math.round(carryAccruing),
+            note: `What ${CARRY_PERCENT}% of profits would come to at current marks. Owed on nothing until a position actually exits.`,
+            contingent: true,
+          },
+        ]
+      : []),
   ];
 
   /**
@@ -541,7 +550,7 @@ export default async function PortfolioPage() {
         together, MOIC is total value over invested for one position, and TVPI
         is the same ratio across the book. Net IRR is money-weighted and
         annualized, with today&rsquo;s fair value as the closing flow; it is net
-        of the one-time management fee and of carry taken from proceeds.
+        of the management fee and of any carry taken from proceeds.
         Exposure is weighted by invested capital rather than by mark, because a
         mark moves for reasons unrelated to the allocation you chose, and a
         multi-deal fund reads as diversified because it spans industries by

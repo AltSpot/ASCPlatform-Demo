@@ -1,185 +1,116 @@
 /**
- * Fee math, and the promise the product makes about it.
+ * Fee math and fee words (docs/structure-decisions-sept-2026.md section
+ * 15; work order screens 6, 7 and 8).
  *
- * The economics AltSpot commits to are one 5% management fee charged once
- * at closing, and 10% carried interest on profits at exit. Nothing else. No
- * annual fees, no capital calls, no admin reserve.
+ * The model: a flat fee per SPV, plus an annualized management fee of 1%
+ * a year for five years, funded at closing as a reserve (5% of the
+ * subscription), drawn down as earned, unearned amounts refunded. Carry
+ * is 20% of profits at exit. No capital calls.
  *
- * Most of this file is not arithmetic. The arithmetic is four lines and it
- * is easy. What is hard is keeping the model from quietly growing a third
- * charge two years from now, in a place nobody thought to look. So these
- * tests assert the SHAPE of the fee model as much as its values: the module
- * exports one function, the breakdown carries four fields, and the amount
- * due at closing is the subscription plus the management fee and nothing
- * else. A new fee cannot be added without one of them failing.
- *
- * lib/subscription-sections.test.ts holds the other half of this: that the
- * executed agreement states the same numbers. The two are meant to be the
- * same promise written twice.
+ * Two things matter as much as the arithmetic. The shape: what goes to
+ * escrow is the subscription plus the reserve and nothing else, so a new
+ * charge cannot appear without a test failing. And the switches: with
+ * SHOW_FEE_TERMS and SHOW_CARRY_TERMS off, no fee or carry figure appears
+ * in any word this module produces.
  */
-import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 
-import * as feesModule from '@/lib/fees';
-import { feeBreakdown } from '@/lib/fees';
-import { money } from '@/lib/format';
-import type { DealFees } from '@/lib/domain';
+import { CARRY_PERCENT, FEE_TERMS, SHOW_CARRY_TERMS, SHOW_FEE_TERMS } from '@/lib/config';
+import {
+  NO_CAPITAL_CALLS,
+  carryOn,
+  carryRow,
+  dealFeeRows,
+  feeBreakdown,
+  feeSentence,
+  reservePercent,
+} from '@/lib/fees';
 
-/** The rates every deal in the product carries. */
-const ASCP: DealFees = { management: 5, carry: 10 };
+const FIGURE = /\d+(\.\d+)?\s*%|\$\s?\d/;
 
-/** Reads a rendered figure back out of the string the investor sees. */
-const parseMoney = (rendered: string) => Number(rendered.replace(/[$,]/g, ''));
-
-describe('the fee model is exactly two numbers', () => {
-  test('lib/fees.ts exports one function and nothing else', () => {
-    // A second export here would be a second fee. Adding `annualFee`,
-    // `capitalCall` or `adminReserve` fails this line, which is the point.
-    assert.deepEqual(Object.keys(feesModule).sort(), ['feeBreakdown']);
+describe('the model', () => {
+  test('is the decided terms: $10,000 per SPV, 1% a year for five years, 20% carry', () => {
+    assert.equal(FEE_TERMS.flatPerSpv, 10_000);
+    assert.equal(FEE_TERMS.annualPercent, 1);
+    assert.equal(FEE_TERMS.termYears, 5);
+    assert.equal(reservePercent(), 5);
+    assert.equal(CARRY_PERCENT, 20);
   });
 
-  test('a fee breakdown carries four fields and no others', () => {
-    // The type system permits widening FeeBreakdown. This does not. Any
-    // new charge has to surface as a new key, so this is where a fee model
-    // that has grown a third component gets caught.
-    assert.deepEqual(Object.keys(feeBreakdown(ASCP, 100_000)).sort(), [
-      'allIn',
-      'amount',
-      'carry',
-      'management',
-    ]);
-  });
-
-  test('the breakdown takes no holding period, term or year, so no fee can recur', () => {
-    // An annual fee needs a time dimension to be computed against. There
-    // is none: the same subscription produces the same charge forever.
-    const first = feeBreakdown(ASCP, 100_000);
-    const later = feeBreakdown(ASCP, 100_000);
-    assert.deepEqual(later, first);
-    assert.deepEqual(feeBreakdown(ASCP, 100_000), first);
+  test('both display switches default to off', () => {
+    assert.equal(SHOW_FEE_TERMS, false);
+    assert.equal(SHOW_CARRY_TERMS, false);
   });
 });
 
-describe('the 5% management fee, charged once at closing', () => {
-  test('the minimum investment is charged $500 and settles at $10,500', () => {
-    const breakdown = feeBreakdown(ASCP, 10_000);
-    assert.equal(breakdown.amount, 10_000);
-    assert.equal(breakdown.management, 500);
-    assert.equal(breakdown.allIn, 10_500);
+describe('feeBreakdown', () => {
+  test('the reserve is additive: escrow receives subscription plus reserve, nothing else', () => {
+    const b = feeBreakdown(25_000);
+    assert.deepEqual(Object.keys(b).sort(), ['allIn', 'amount', 'reserve']);
+    assert.equal(b.reserve, 1_250);
+    assert.equal(b.allIn, 26_250);
   });
 
-  test('the fee is a straight percentage of the subscription at every size', () => {
-    for (const amount of [10_000, 25_000, 100_000, 250_000, 1_000_000, 100_000_000]) {
-      const breakdown = feeBreakdown(ASCP, amount);
-      assert.equal(
-        breakdown.management,
-        amount * 0.05,
-        `management fee on ${amount} is not 5%`,
-      );
+  test('money stays in integer dollars', () => {
+    for (const amount of [10_000, 10_001, 33_333, 1_234_567]) {
+      const b = feeBreakdown(amount);
+      assert.ok(Number.isInteger(b.reserve));
+      assert.equal(b.allIn, b.amount + b.reserve);
     }
   });
 
-  test('the amount due at closing is the subscription plus the fee and nothing else', () => {
-    // The single most important line in this file. If a charge is ever
-    // introduced that the investor pays but this sum does not include,
-    // the checkout summary, the agreement and the funding page stop
-    // agreeing, which is the exact failure lib/fees.ts exists to prevent.
-    for (const amount of [10_000, 12_345, 25_000, 999_999, 1_000_000]) {
-      const breakdown = feeBreakdown(ASCP, amount);
-      assert.equal(
-        breakdown.allIn,
-        breakdown.amount + breakdown.management,
-        `all-in on ${amount} contains a charge that is not the management fee`,
-      );
+  test('a missing, negative or non-finite amount is zero, not a charge', () => {
+    for (const amount of [0, -5_000, Number.NaN, Number.POSITIVE_INFINITY]) {
+      assert.deepEqual(feeBreakdown(amount), { amount: 0, reserve: 0, allIn: 0 });
     }
   });
 
-  test('a deal with no management fee costs exactly the subscription', () => {
-    const breakdown = feeBreakdown({ management: 0, carry: 10 }, 50_000);
-    assert.equal(breakdown.management, 0);
-    assert.equal(breakdown.allIn, 50_000);
-  });
-
-  test('the management rate is read from the deal, not hardcoded', () => {
-    // Every seeded deal is 5, but the rate lives on the deal record. The
-    // math must follow the record, or a deal could show one number and
-    // charge another.
-    assert.equal(feeBreakdown({ management: 2, carry: 10 }, 100_000).management, 2_000);
-    assert.equal(feeBreakdown({ management: 7.5, carry: 10 }, 100_000).management, 7_500);
+  test('the reserve follows the terms it is given', () => {
+    assert.equal(feeBreakdown(100_000, { flatPerSpv: 0, annualPercent: 2, termYears: 3 }).reserve, 6_000);
   });
 });
 
-describe('10% carried interest, on profits at exit only', () => {
-  test('carry is passed through as a percentage, never as a dollar charge', () => {
-    const breakdown = feeBreakdown(ASCP, 100_000);
-    assert.equal(breakdown.carry, 10);
-    // Carry is 10 percent, not ten dollars and not $10,000. If it were
-    // ever converted to money here it would read as due today.
-    assert.notEqual(breakdown.carry, 100_000 * 0.1);
-  });
-
-  test('changing the carry rate never changes what is due at closing', () => {
-    // Carry is charged on profits at exit. Nothing about it can reach the
-    // amount an investor wires today.
-    const base = feeBreakdown({ management: 5, carry: 10 }, 250_000);
-    for (const carry of [0, 20, 50, 100]) {
-      const other = feeBreakdown({ management: 5, carry }, 250_000);
-      assert.equal(other.allIn, base.allIn, `carry ${carry} moved the all-in figure`);
-      assert.equal(other.management, base.management);
-    }
+describe('carry', () => {
+  test('is a share of profit, and nothing on a loss', () => {
+    assert.equal(carryOn(50_000), 10_000);
+    assert.equal(carryOn(0), 0);
+    assert.equal(carryOn(-20_000), 0);
   });
 });
 
-describe('money is integer dollars', () => {
-  test('an integer subscription with a rate that divides cleanly stays integral', () => {
-    for (const amount of [10_000, 20_000, 25_000, 1_000_000]) {
-      const { management, allIn } = feeBreakdown(ASCP, amount);
-      assert.ok(Number.isInteger(management), `fee on ${amount} is fractional`);
-      assert.ok(Number.isInteger(allIn), `all-in on ${amount} is fractional`);
-    }
+describe('the words', () => {
+  test('off: the deal page names the fee, points at the memorandum, and shows no figure', () => {
+    const rows = dealFeeRows(false, false);
+    assert.equal(rows.length, 1);
+    for (const row of rows) assert.doesNotMatch(`${row.label} ${row.detail}`, FIGURE);
+    assert.match(rows[0].detail, /memorandum/);
   });
 
-  test('a subscription not divisible by 20 yields a fractional fee, and the display still adds up', () => {
-    // Documented behavior, deliberately not asserted as integral.
-    // Subscriptions are validated as integers with a floor, not a step, so
-    // $10,001 is a legal amount and 5% of it is $500.05. That figure is
-    // derived and never persisted, and because the subscription itself is
-    // an integer, the rendered fee and the rendered all-in round in step.
-    // The three numbers an investor reads therefore always reconcile.
-    const breakdown = feeBreakdown(ASCP, 10_001);
-    assert.equal(breakdown.management, 500.05);
-    assert.equal(Number.isInteger(breakdown.management), false);
-
-    for (const amount of [10_001, 10_010, 10_030, 12_345, 999_999]) {
-      const { management, allIn } = feeBreakdown(ASCP, amount);
-      assert.equal(
-        parseMoney(money(allIn)),
-        amount + parseMoney(money(management)),
-        `the checkout summary for ${amount} does not add up as displayed`,
-      );
-    }
+  test('off: no carry line anywhere', () => {
+    assert.equal(carryRow(false), null);
+    assert.doesNotMatch(feeSentence(false, false), /carr(y|ied)/i);
+    assert.doesNotMatch(feeSentence(false, false), FIGURE);
   });
 
-  test('large subscriptions do not drift on floating point', () => {
-    const breakdown = feeBreakdown(ASCP, 100_000_000);
-    assert.equal(breakdown.management, 5_000_000);
-    assert.equal(breakdown.allIn, 105_000_000);
-  });
-});
-
-describe('an amount that is not a real subscription costs nothing', () => {
-  test('zero, negative, missing and non-finite amounts collapse to zero', () => {
-    // The amount arrives from a number field in a browser. It is a real
-    // input and it must never produce a negative charge or a NaN total.
-    for (const amount of [0, -1, -100_000, NaN, Infinity, -Infinity]) {
-      const breakdown = feeBreakdown(ASCP, amount);
-      assert.equal(breakdown.amount, 0, `amount ${amount}`);
-      assert.equal(breakdown.management, 0, `management on ${amount}`);
-      assert.equal(breakdown.allIn, 0, `all-in on ${amount}`);
-    }
+  test('on: the figures come from config', () => {
+    const detail = dealFeeRows(true, true).map((r) => r.detail).join(' ');
+    assert.match(detail, /1% a year for 5 years/);
+    assert.match(detail, /\$10,000 per SPV/);
+    assert.match(detail, /20% of profits at exit/);
   });
 
-  test('a refused amount still reports the deal carry, so the panel never blanks', () => {
-    assert.equal(feeBreakdown(ASCP, 0).carry, 10);
+  test('no line ever calls the fee a percentage of capital raised, or says ten percent carry', () => {
+    const all = [
+      ...dealFeeRows(true, true).map((r) => r.detail),
+      feeSentence(true, true),
+      feeSentence(false, false),
+    ].join(' ');
+    assert.doesNotMatch(all, /of capital raised|10% carr|ten percent carr/i);
+  });
+
+  test('always says there are no capital calls', () => {
+    assert.ok(feeSentence(false, false).includes(NO_CAPITAL_CALLS));
+    assert.ok(feeSentence(true, true).includes(NO_CAPITAL_CALLS));
   });
 });

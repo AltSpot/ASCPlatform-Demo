@@ -116,17 +116,6 @@ export const DAY_MS = 86_400_000;
 
 // ---------------- editorial blobs (JSON columns) ----------------
 
-/**
- * The entire fee model. One number charged once, one number at exit.
- * Deliberately not extensible — see lib/fees.ts.
- */
-export interface DealFees {
-  /** One-time management fee, percent of subscription, collected at closing. */
-  management: number;
-  /** Carried interest on profits at exit, percent. 10 on every deal. */
-  carry: number;
-}
-
 export interface DealMedia {
   type: string;
   label: string;
@@ -317,7 +306,6 @@ export interface DealView {
   committedNote: string;
   status: string;
   thesis: string[];
-  fees: DealFees;
   media: DealMedia;
   /** Series from the data room. Empty for a deal with no company data. */
   charts: DealChart[];

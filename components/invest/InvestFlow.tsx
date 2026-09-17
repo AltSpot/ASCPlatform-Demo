@@ -489,7 +489,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
               <div className="hr" />
 
               <div className="small">
-                <FeeTable fees={deal.fees} amount={amount} />
+                <FeeTable amount={amount} targetClose={deal.targetClose} />
               </div>
 
               <button
@@ -552,7 +552,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 >
                   {/* The all-in cost belongs beside the risk it buys. */}
                   {currentSection.id === 3 && (
-                    <FeeTable fees={deal.fees} amount={amount} />
+                    <FeeTable amount={amount} targetClose={deal.targetClose} />
                   )}
                 </ConfirmPanel>
               )}

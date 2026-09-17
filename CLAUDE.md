@@ -714,10 +714,19 @@ value, so a dash never has to be typed into a string.
 
 These are the claims the product makes. Do not let a change quietly break them.
 
-- **One 5% management fee, charged once at closing.** Not annual.
-- **10% carried interest on profits at exit**, on every deal.
-- Nothing else. No annual fees, **no capital calls, ever**, and no admin
-  reserve — do not reintroduce either concept, including in document text.
+- **The fee** (decided Sept 16, 2026): a flat fee per SPV
+  (`FEE_TERMS.flatPerSpv`, $10,000) plus an annualized management fee
+  (`FEE_TERMS.annualPercent` a year for `termYears`, 1% for 5) funded once
+  at closing as a reserve, drawn down as earned, unearned amounts refunded.
+  The reserve is additive: escrow receives subscription plus reserve.
+  **Never a percentage of capital raised** (counsel: broker-dealer line).
+- **Carry** is `CARRY_PERCENT` (20%) of profits at exit. No 10% anywhere.
+- **Fee and carry numbers render only behind `SHOW_FEE_TERMS` and
+  `SHOW_CARRY_TERMS`**, both off by default and inlined at build through
+  `next.config.ts`. Every word about fees comes from `lib/fees.ts`
+  (`dealFeeRows`, `feeSentence`, `NO_CAPITAL_CALLS`), so a flag cannot
+  show a figure on one surface and hide it on another; `tests/fees.test.ts`
+  asserts no figure appears with the flags off. **No capital calls, ever.**
 - **AltSpot's own committed capital is stored on every deal but not shown.**
   `altspotCommitted` stays in the schema, the seed and `DealSummary`; no card,
   hero, stat band or Spot answer prints it. Removed from every surface by

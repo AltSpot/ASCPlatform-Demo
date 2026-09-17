@@ -24,7 +24,6 @@ import { parseBacking } from '../backers';
 import { canViewDealDetail } from '../domain';
 import { canSubscribeToDeal, type RelationshipView } from '../relationship';
 import type {
-  DealFees,
   DealChart,
   DealMedia,
   DealMetric,
@@ -52,8 +51,6 @@ function parseJson<T>(raw: string, fallback: T, context: string): T {
     return fallback;
   }
 }
-
-const FALLBACK_FEES: DealFees = { management: 5, carry: 10 };
 
 const FALLBACK_MEDIA: DealMedia = {
   type: 'metric',
@@ -110,7 +107,6 @@ export function toDealView(row: Deal): DealView {
     committedNote: row.committedNote,
     status: row.status,
     thesis: parseJson<string[]>(row.thesisJson, [], `${row.id}.thesis`),
-    fees: parseJson<DealFees>(row.feesJson, FALLBACK_FEES, `${row.id}.fees`),
     media: parseJson<DealMedia>(row.mediaJson, FALLBACK_MEDIA, `${row.id}.media`),
     charts: parseJson<DealChart[]>(row.chartsJson ?? '[]', [], `${row.id}.charts`),
     backing: parseBacking(parseJson<unknown>(row.backingJson, [], `${row.id}.backing`)),

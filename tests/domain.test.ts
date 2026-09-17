@@ -431,7 +431,6 @@ function fullDeal(): DealView {
     committedNote: 'WITHHELD_COMMITTED_NOTE',
     status: 'open',
     thesis: ['WITHHELD_THESIS'],
-    fees: { management: 5, carry: 10 },
     media: { type: 'metric', label: 'WITHHELD_MEDIA', series: [1, 2], caption: '' },
     docs: ['WITHHELD_DOC'],
     spotbot: [{ q: 'WITHHELD_Q', a: 'WITHHELD_A' }],
