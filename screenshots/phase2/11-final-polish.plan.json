@@ -1,0 +1,449 @@
+{
+  "out": "screenshots/phase2/11-final-polish",
+  "shots": [
+    {
+      "name": "01-dashboard-ember-needs-you-bell",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('needs you')) throw new Error('no Needs you section'); if (!t.includes('complete investment')) throw new Error('strip still says send to escrow'); const bell = document.querySelector('[data-tour=\"bell\"]'); if (!bell) throw new Error('no bell'); if (!/\\d/.test(bell.textContent)) throw new Error('bell has no count'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-bell-panel",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "document.querySelector('[data-tour=\"bell\"]').click()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d) throw new Error('bell panel did not open'); if (!/Tessellate/.test(d.innerText)) throw new Error('bell panel has no Tessellate row'); })()"
+        }
+      ]
+    },
+    {
+      "name": "03-spot-fees-visual",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: { question: 'What are the fees?' } }))"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const p = document.getElementById('spotbot-panel'); if (!p) throw new Error('Spot did not open'); if (!/What goes to escrow/i.test(p.innerText)) throw new Error('no fee picture in the answer'); if (/never advises/i.test(p.innerText)) throw new Error('footer line still present'); })()"
+        }
+      ]
+    },
+    {
+      "name": "04-spot-expanded-escrow-path",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: { question: 'What happens after I send to escrow?' } }))"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "document.querySelector('#spotbot-panel button[aria-label=\"Expand the conversation\"]').click()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const p = document.getElementById('spotbot-panel'); if (!/From signing to close/i.test(p.innerText)) throw new Error('no escrow path'); if (p.getBoundingClientRect().width < 700) throw new Error('panel did not expand'); })()"
+        }
+      ]
+    },
+    {
+      "name": "05-term-opens-spot",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const t = [...document.querySelectorAll('button[title^=\"Ask Spot\"]')].find(b => /minimum to close/i.test(b.textContent)); if (!t) throw new Error('no Minimum to close term'); t.click(); })()"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const p = document.getElementById('spotbot-panel'); if (!p || !/funding bar/i.test(p.innerText)) throw new Error('term did not open Spot with the funding answer'); })()"
+        }
+      ]
+    },
+    {
+      "name": "06-how-it-works-ask-spot",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.dataset.theme='ice'"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "[...document.querySelectorAll('button')].find(b => /how it works/i.test(b.textContent)).click()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d || !/Ask Spot/.test(d.innerText)) throw new Error('no Ask Spot line in How it works'); })()"
+        }
+      ]
+    },
+    {
+      "name": "07-marketplace-ember-action-card",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('.deal-card')].find(c => /Tessellate/.test(c.textContent)); if (!card) throw new Error('no Tessellate card'); const b = card.querySelector('.btn-action'); if (!b) throw new Error('no action button'); const bg = getComputedStyle(b).backgroundImage; if (!/gradient/.test(bg)) throw new Error('action button is not the heat ramp: ' + bg); card.scrollIntoView({ block: 'center' }); })()"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "08-quick-look-redesign",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "[...document.querySelectorAll('button[aria-label^=\"Quick look at Calder\"]')][0].click()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); const t = d.innerText; for (const k of ['THE RAISE', 'AT A GLANCE', 'WHY WE LIKE IT', 'WHO IS BEHIND IT', 'Ask Spot']) if (!t.includes(k)) throw new Error('quick look missing ' + k); })()"
+        }
+      ]
+    },
+    {
+      "name": "09-deal-spv-today",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/Retirement money/.test(t)) throw new Error('no retirement meter'); if (!/20% warns/.test(t) || !/25% refused/.test(t)) throw new Error('no marks'); if (!/Funded · closed|Held in escrow|In escrow/.test(t)) throw new Error('no escrow status'); })()"
+        },
+        {
+          "scroll": "#spv"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "10-deal-scenarios",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/Illustrative only/.test(t)) throw new Error('no scenarios (built without ASC_SHOW_RETURN_SCENARIOS?)'); if (!/Nothing recovered/.test(t)) throw new Error('total loss row missing'); if (!/net multiple/i.test(t)) throw new Error('no net column'); if (/base case|target|expected|projected/i.test(document.querySelector('#scenarios').innerText.replace(/not predictions or projections/i,''))) throw new Error('forbidden framing'); const rows = [...document.querySelectorAll('#scenarios tbody tr')]; if (!/Scenario A/.test(rows[0].innerText)) throw new Error('downside is not first'); })()"
+        },
+        {
+          "scroll": "#scenarios"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "11-watchlist-explore-quick-look",
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/Explore/.test(t)) throw new Error('no Explore on the watchlist'); const view = [...document.querySelectorAll('button')].find(b => /^View/.test(b.textContent.trim())); if (!view) throw new Error('no View button'); view.click(); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d || !/quick look/i.test(d.getAttribute('aria-label') || '')) throw new Error('View did not open the quick look'); if (location.pathname !== '/watchlist') throw new Error('left the page'); })()"
+        }
+      ]
+    },
+    {
+      "name": "12-watchlist-search-row-press",
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "document.querySelector('input[role=\"combobox\"]').focus()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const rows = [...document.querySelectorAll('[role=\"option\"]')]; if (rows.length === 0) throw new Error('no suggestions'); if (!document.querySelector('button[aria-label=\"Close the results\"]')) throw new Error('no Close button'); const radar = rows.find(r => /On the Radar/.test(r.textContent)); radar.click(); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { if (!document.querySelector('[role=\"group\"][aria-label^=\"Vote on\"]')) throw new Error('row press did not open the quick vote'); })()"
+        }
+      ]
+    },
+    {
+      "name": "13-preferences-umbrella",
+      "steps": [
+        {
+          "go": "/reshoot?as=recent&to=/preferences"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/How do you want to see deals\\?/.test(t)) throw new Error('no umbrella question'); [...document.querySelectorAll('button')].find(b => /Tune what I see/.test(b.textContent)).click(); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const chip = [...document.querySelectorAll('button[aria-pressed]')].find(b => /Venture/.test(b.textContent)); chip.click(); const bg = getComputedStyle(chip).backgroundImage; if (/gradient/.test(bg)) throw new Error('chosen chip still wears the CTA gradient'); })()"
+        },
+        {
+          "wait": 400
+        }
+      ]
+    },
+    {
+      "name": "14-preferences-saved",
+      "steps": [
+        {
+          "go": "/reshoot?as=recent&to=/preferences"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "[...document.querySelectorAll('button')].find(b => /Tune what I see/.test(b.textContent)).click()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "[...document.querySelectorAll('button[aria-pressed]')].find(b => /Venture/.test(b.textContent)).click()"
+        },
+        {
+          "eval": "[...document.querySelectorAll('button')].find(b => /Save preferences/.test(b.textContent)).click()"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/Saved\\. Deals that fit are marked For you/.test(t)) throw new Error('no saved confirmation'); if (!/Venture/.test(t)) throw new Error('summary missing'); if (location.pathname !== '/preferences') throw new Error('left the page'); })()"
+        }
+      ]
+    },
+    {
+      "name": "15-tour-first-card",
+      "steps": [
+        {
+          "go": "/reshoot?as=recent&to=%2Fdashboard%3Ftour%3D1"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('[role=\"dialog\"][aria-label=\"Walkthrough\"]'); if (!d) throw new Error('walkthrough did not open with ?tour=1'); if (!/Two minutes on how AltSpot works/.test(d.innerText)) throw new Error('first card wrong'); })()"
+        }
+      ]
+    },
+    {
+      "name": "16-tour-marketplace-card",
+      "steps": [
+        {
+          "go": "/reshoot?as=recent&to=%2Fdashboard%3Ftour%3D1"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "[...document.querySelectorAll('[aria-label=\"Walkthrough\"] button')].find(b => /^Next/.test(b.textContent.trim())).click()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "[...document.querySelectorAll('[aria-label=\"Walkthrough\"] button')].find(b => /^Next/.test(b.textContent.trim())).click()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('[aria-label=\"Walkthrough\"]'); if (!/two lanes/i.test(d.innerText)) throw new Error('marketplace card not reached'); })()"
+        }
+      ]
+    },
+    {
+      "name": "17-tour-not-shown-to-seeded-member",
+      "capture": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.removeItem('asc.tour.v1')"
+        },
+        {
+          "go": "/dashboard"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "(() => { if (document.querySelector('[aria-label=\"Walkthrough\"]')) throw new Error('walkthrough shown to a member with a book'); })()"
+        }
+      ]
+    },
+    {
+      "name": "18-dashboard-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "[...document.querySelectorAll('h2')].find(h => /^Explore/.test(h.textContent.trim()))?.scrollIntoView({ block: 'center' })"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "19-marketplace-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.dataset.theme='ice'"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    }
+  ]
+}
