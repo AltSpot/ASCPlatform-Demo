@@ -3,17 +3,22 @@
 /**
  * Deal preferences: as quick as it can be. Rules in lib/preferences.ts.
  *
- * DESIGN (2026-09-17: "less text, icons, extremely easy"). It opens on one
- * choice, Everything or Tune it; Everything saves in one press. Tune it
- * shows six numbered questions as panes, each a title, one short line and
- * a set of icon chips: nothing to type, nothing required, a question left
- * alone means any. Asset class, stage, who leads and check size sit two by
- * two; industry, the longest, gets the full width. A bar pinned to the
- * bottom counts what is answered and holds the one button.
+ * DESIGN (2026-09-17: "less text, icons, extremely easy"; then "make the
+ * umbrella obvious, less orange, show me it saved"). Step one is one
+ * card that asks the question and holds the two ways to answer it:
+ * Everything saves in one press; Tune it opens step two, five numbered
+ * questions as panes, each a title, one short line and a set of icon
+ * chips. Nothing to type, nothing required, a question left alone means
+ * any. Gold is a line and a glyph here, not a fill: the chosen choice and
+ * the chosen chips wear a gold ring, and the one gradient on the page is
+ * the progress bar. Saving does not send the member away: the form is
+ * replaced by a confirmation that says what was saved and offers the two
+ * places to go next.
  */
 import {
   Bell,
   Check,
+  CircleCheck,
   CircleDollarSign,
   Factory,
   Layers,
@@ -23,6 +28,7 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useId, useState, type ReactNode } from 'react';
 
@@ -32,7 +38,14 @@ import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import { LEAD_FILTER_LABEL, STAGE_KEYS, STAGE_LABEL } from '@/lib/explore';
 import type { LeadType } from '@/lib/funding';
-import { CHECK_SIZES, EVERYTHING, type CheckSize, type Preferences } from '@/lib/preferences';
+import {
+  CHECK_SIZES,
+  EVERYTHING,
+  isOpenToEverything,
+  summarize,
+  type CheckSize,
+  type Preferences,
+} from '@/lib/preferences';
 import { ASSET_CLASSES, INDUSTRIES, type AssetClass, type Industry } from '@/lib/taxonomy';
 
 import s from './PreferencesForm.module.css';
@@ -116,6 +129,16 @@ function Question<T extends string>({
   );
 }
 
+/** The words for a saved set, from the same labels the chips use. */
+function words(p: Preferences): string {
+  return summarize(p, {
+    assetClass: (k) => ASSET_CLASSES[k].label,
+    industry: (k) => INDUSTRIES[k],
+    stage: (k) => STAGE_LABEL[k],
+    lead: (k) => LEAD_FILTER_LABEL[k],
+  });
+}
+
 export default function PreferencesForm({
   initial,
   returnTo = '/dashboard',
@@ -128,9 +151,10 @@ export default function PreferencesForm({
   const [prefs, setPrefs] = useState<Preferences>(
     initial ?? { ...EVERYTHING, showEverything: false },
   );
-  const [mode, setMode] = useState<'choose' | 'tune'>(
+  const [mode, setMode] = useState<'choose' | 'tune' | 'saved'>(
     initial && !initial.showEverything ? 'tune' : 'choose',
   );
+  const [saved, setSaved] = useState<Preferences | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function save(next: Preferences) {
@@ -138,6 +162,9 @@ export default function PreferencesForm({
     setBusy(true);
     try {
       await api.savePreferences(next);
+      setSaved(next);
+      setPrefs(next);
+      setMode('saved');
       toast(
         next.showEverything ? (
           <>
@@ -149,10 +176,12 @@ export default function PreferencesForm({
           </>
         ),
       );
-      router.push(returnTo);
+      /* The dashboard card and the Settings summary read the new answer
+         on their next render; refresh so going back shows it. */
       router.refresh();
     } catch {
       toast('Those did not save. Try again.');
+    } finally {
       setBusy(false);
     }
   }
@@ -167,43 +196,102 @@ export default function PreferencesForm({
     prefs.checkSize ? 1 : 0,
   ].filter(Boolean).length;
 
+  if (mode === 'saved' && saved) {
+    const everything = isOpenToEverything(saved);
+    return (
+      <section className={s.saved} aria-live="polite" aria-label="Preferences saved">
+        <span className={s.savedMark} aria-hidden="true">
+          <CircleCheck size={24} strokeWidth={1.7} />
+        </span>
+        <h2 className={s.savedTitle}>
+          {everything ? 'Saved. You will see everything.' : 'Saved. Deals that fit are marked For you.'}
+        </h2>
+        <p className={s.savedLine}>
+          {everything
+            ? 'Every deal you are eligible for stays on the marketplace, with nothing marked ahead of the rest. Narrow it any time from Settings.'
+            : `You asked for: ${words(saved)} Every deal you are eligible for stays on the marketplace; the ones that fit carry a For you mark, and ${saved.notifyMatches ? 'you will hear when one opens' : 'you chose not to be told when one opens'}.`}
+        </p>
+        <div className={s.savedActions}>
+          <Link className="btn btn-gold" href="/marketplace">
+            See the marketplace →
+          </Link>
+          <Link className="btn btn-ghost" href={returnTo}>
+            {returnTo === '/settings' ? 'Back to Settings' : 'Back to your dashboard'}
+          </Link>
+          <button
+            type="button"
+            className="btn btn-quiet"
+            onClick={() => setMode(everything ? 'choose' : 'tune')}
+          >
+            Change it
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <div className={s.form}>
-      <div className={s.choices}>
-        <button
-          type="button"
-          className={s.choice}
-          data-on={initial?.showEverything === true}
-          onClick={() => save({ ...EVERYTHING, notifyMatches: prefs.notifyMatches })}
-          disabled={busy}
-        >
-          <span className={s.choiceIcon}>
-            <Sparkles size={20} strokeWidth={1.6} aria-hidden="true" />
+      <div className={s.umbrella}>
+        <span className={s.stepLabel}>
+          <span className={s.stepNum} aria-hidden="true">
+            1
           </span>
-          <span className={s.choiceText}>
-            <b>Show me everything</b>
-            <span>One tap. Narrow it any time.</span>
-          </span>
-        </button>
-        <button
-          type="button"
-          className={s.choice}
-          data-on={mode === 'tune'}
-          onClick={() => setMode('tune')}
-          disabled={busy}
-        >
-          <span className={s.choiceIcon}>
-            <SlidersHorizontal size={20} strokeWidth={1.6} aria-hidden="true" />
-          </span>
-          <span className={s.choiceText}>
-            <b>Tune what I see</b>
-            <span>Tap what you like. Skip the rest.</span>
-          </span>
-        </button>
+          Pick one
+        </span>
+        <h2 className={s.umbrellaTitle}>How do you want to see deals?</h2>
+        <div className={s.choices} role="radiogroup" aria-label="How do you want to see deals">
+          <button
+            type="button"
+            role="radio"
+            aria-checked={mode === 'choose' && initial?.showEverything === true}
+            className={s.choice}
+            data-on={mode === 'choose' && initial?.showEverything === true}
+            onClick={() => save({ ...EVERYTHING, notifyMatches: prefs.notifyMatches })}
+            disabled={busy}
+          >
+            <span className={s.choiceIcon}>
+              <Sparkles size={20} strokeWidth={1.6} aria-hidden="true" />
+            </span>
+            <span className={s.choiceText}>
+              <b>Show me everything</b>
+              <span>One press, done. Narrow it any time.</span>
+            </span>
+            <span className={s.choiceCheck} aria-hidden="true">
+              <Check size={12} strokeWidth={2.6} />
+            </span>
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={mode === 'tune'}
+            className={s.choice}
+            data-on={mode === 'tune'}
+            onClick={() => setMode('tune')}
+            disabled={busy}
+          >
+            <span className={s.choiceIcon}>
+              <SlidersHorizontal size={20} strokeWidth={1.6} aria-hidden="true" />
+            </span>
+            <span className={s.choiceText}>
+              <b>Tune what I see</b>
+              <span>Five quick questions. Skip any of them.</span>
+            </span>
+            <span className={s.choiceCheck} aria-hidden="true">
+              <Check size={12} strokeWidth={2.6} />
+            </span>
+          </button>
+        </div>
       </div>
 
       {mode === 'tune' ? (
         <div className={s.tune}>
+          <span className={s.stepLabel}>
+            <span className={s.stepNum} aria-hidden="true">
+              2
+            </span>
+            Tune it. Everything is optional.
+          </span>
           <div className={s.grid}>
             <Question<AssetClass>
               n={1}
