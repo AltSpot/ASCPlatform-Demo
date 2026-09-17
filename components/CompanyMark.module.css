@@ -28,3 +28,14 @@
   line-height: 1;
   color: var(--as-cream-ink);
 }
+
+/* A drawn mark is its own tile (scripts/make-marks.mjs): no cream plate
+   around it, or every mark reads as a tile inside a tile. */
+.plate:has(.logo) {
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+}
+.plate:has(.logo) .logo {
+  border-radius: var(--r-md);
+}

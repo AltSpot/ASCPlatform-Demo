@@ -9,6 +9,9 @@
  *   - a signed-out request gets a 404;
  *   - a mark named after a deal is served only to a member who has
  *     cleared the relationship gate, the same rule as the deal itself;
+ *   - a Radar mark, radar-<slug>.svg, is served to any signed-in member
+ *     for any name on the Radar, deal or not, so its answer never differs
+ *     between a name that is a deal and one that is not;
  *   - anything the viewer may not see answers exactly like a file that
  *     does not exist, so the route cannot be used to learn names.
  *
@@ -22,6 +25,7 @@ import { getSessionUser } from '@/lib/auth';
 import { canSeeOfferings } from '@/lib/relationship';
 import { isDealId } from '@/lib/repositories/deals';
 import { getRelationshipView } from '@/lib/repositories/investor';
+import { findRadarCompany } from '@/lib/terminal/radar';
 
 const NAME = /^[a-z0-9-]{1,48}\.svg$/;
 const MARKS_DIR = path.join(process.cwd(), 'private', 'marks');
@@ -43,14 +47,17 @@ export async function GET(
   const { file } = await context.params;
   if (!NAME.test(file)) return notFound();
 
-  const id = file.slice(0, -'.svg'.length);
-  if (await isDealId(id)) {
+  let id = file.slice(0, -'.svg'.length);
+  if (id.startsWith('radar-')) {
+    id = id.slice('radar-'.length);
+    if (!findRadarCompany(id)) return notFound();
+  } else if (await isDealId(id)) {
     const relationship = await getRelationshipView(user.id);
     if (!canSeeOfferings(relationship)) return notFound();
   }
 
   try {
-    const body = await readFile(path.join(MARKS_DIR, file));
+    const body = await readFile(path.join(MARKS_DIR, `${id}.svg`));
     return new Response(body, {
       status: 200,
       headers: {

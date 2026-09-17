@@ -87,6 +87,7 @@ export interface RadarResearch {
 import type { Backing } from '../backers';
 import type { AssetClass, Industry } from '../taxonomy';
 import { compact } from '../format';
+import BRAND_HUES from '../brand-hues.json';
 
 export {
   ASSET_CLASSES,
@@ -737,12 +738,27 @@ export function voteIndexOf(amount: number): number {
 }
 
 /** The tracked companies, in display order. */
+/**
+ * DEMO SEAM. Every invented company has a drawn mark (scripts/make-marks.mjs).
+ * Radar marks go through their own name, radar-<slug>.svg, even when the
+ * same company is also a deal: /api/marks hides deal marks from a member
+ * who has not cleared the 506(b) gate, and if a Radar card's image loaded
+ * for one name and not another, the difference would say which names are
+ * live deals.
+ */
+function withMark(company: RadarCompany): RadarCompany {
+  if (company.logoUrl || !(company.slug in BRAND_HUES)) return company;
+  return { ...company, logoUrl: `/api/marks/radar-${company.slug}.svg` };
+}
+
+const MARKED: RadarCompany[] = COMPANIES.map(withMark);
+
 export async function listRadarCompanies(): Promise<RadarCompany[]> {
-  return COMPANIES;
+  return MARKED;
 }
 
 export function findRadarCompany(slug: string): RadarCompany | null {
-  return COMPANIES.find((company) => company.slug === slug) ?? null;
+  return MARKED.find((company) => company.slug === slug) ?? null;
 }
 
 /**
