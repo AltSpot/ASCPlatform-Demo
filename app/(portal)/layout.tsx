@@ -17,7 +17,7 @@ import FirstRunTour from '@/components/FirstRunTour';
 import Sidebar from '@/components/Sidebar';
 import SpotBotDock from '@/components/spotbot/SpotBotDock';
 import { getSessionUser } from '@/lib/auth';
-import { evaluateInvestGate } from '@/lib/domain';
+import { evaluateInvestGate, HELD_STATES } from '@/lib/domain';
 import { getWizardView } from '@/lib/repositories/investor';
 import { listNeedsYou } from '@/lib/repositories/needs-you';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
@@ -43,10 +43,12 @@ export default async function PortalLayout({
   const gate = evaluateInvestGate(wizard);
   const { stage } = wizard.relationship;
   /* The walkthrough is offered once the questionnaire is approved and
-     before the first position: the moment the dashboard is emptiest. The
-     browser remembers a finished tour; ?tour=1 replays it. */
+     before the first held position (a signed, unfunded commitment does not
+     count: the dashboard is still empty). The browser remembers a finished
+     tour; ?tour=1 replays it. */
   const offerTour =
-    subscriptions.length === 0 && (stage === 'eligible' || stage === 'cooling_off');
+    !subscriptions.some((s) => HELD_STATES.includes(s.state)) &&
+    (stage === 'eligible' || stage === 'cooling_off');
   const status = gate.ok
     ? 'approved'
     : stage === 'eligible'
