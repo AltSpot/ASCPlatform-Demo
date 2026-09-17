@@ -1,0 +1,125 @@
+/**
+ * Where a deal's raise stands: the funding-progress rules, stated once.
+ *
+ * Every deal raises into escrow and closes when the minimum is met. So
+ * the number that matters is raised against the MINIMUM TO CLOSE, not
+ * against the allocation: the allocation is only how far the round may
+ * go ("up to"), and a bar against it made a deal that had already
+ * cleared its minimum look a third empty. The allocation is still drawn,
+ * as a fainter second cap.
+ *
+ * Admissions close ADMISSION_CUTOFF_HOURS before the wire, which is the
+ * closing date. At that moment the member register locks.
+ *
+ * Pure and isomorphic. Every function takes `now` so it can be tested
+ * without a clock.
+ */
+import { ADMISSION_CUTOFF_HOURS } from './config';
+
+export type LeadType = 'altspot' | 'partner';
+
+export type EscrowStatus = 'held' | 'closed';
+
+export interface FundingInput {
+  allocationTotal: number;
+  allocationRemaining: number;
+  minimumToClose: number;
+  /** Display date of the scheduled close and wire, e.g. "Oct 6, 2026". */
+  targetClose: string;
+  status: string;
+}
+
+export interface FundingView {
+  raised: number;
+  minimum: number;
+  allocation: number;
+  /** Raised as a percent of the minimum, 0 to 100 (capped for the bar). */
+  toMinimumPct: number;
+  /** Raised as a percent of the allocation, 0 to 100. */
+  ofAllocationPct: number;
+  /** The minimum as a percent of the allocation: where its tick sits. */
+  minimumAtPct: number;
+  minimumMet: boolean;
+  escrow: EscrowStatus;
+  /** ISO, or null when the closing date cannot be read. */
+  closesAt: string | null;
+  /** ISO. When admissions close and the register locks. */
+  admissionsCloseAt: string | null;
+  admissionsOpen: boolean;
+}
+
+const HOUR_MS = 3_600_000;
+
+function clampPct(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.min(100, Math.max(0, Math.round(value)));
+}
+
+/** The closing date as a timestamp: end of that day, UTC. */
+export function closingTime(targetClose: string): number | null {
+  const at = Date.parse(`${targetClose} 23:59:59 UTC`);
+  if (Number.isFinite(at)) return at;
+  const plain = Date.parse(targetClose);
+  return Number.isFinite(plain) ? plain : null;
+}
+
+/** When admissions close for a deal closing at `targetClose`. */
+export function admissionCutoff(
+  targetClose: string,
+  hours: number = ADMISSION_CUTOFF_HOURS,
+): number | null {
+  const close = closingTime(targetClose);
+  return close === null ? null : close - hours * HOUR_MS;
+}
+
+export function fundingView(deal: FundingInput, now: number = Date.now()): FundingView {
+  const allocation = Math.max(0, deal.allocationTotal);
+  const raised = Math.max(0, allocation - Math.max(0, deal.allocationRemaining));
+  const minimum = Math.max(0, deal.minimumToClose) || allocation;
+
+  const close = closingTime(deal.targetClose);
+  const cutoff = admissionCutoff(deal.targetClose);
+  const escrow: EscrowStatus = deal.status === 'closed' ? 'closed' : 'held';
+
+  return {
+    raised,
+    minimum,
+    allocation,
+    toMinimumPct: clampPct(minimum > 0 ? (raised / minimum) * 100 : 0),
+    ofAllocationPct: clampPct(allocation > 0 ? (raised / allocation) * 100 : 0),
+    minimumAtPct: clampPct(allocation > 0 ? (minimum / allocation) * 100 : 100),
+    minimumMet: raised >= minimum && minimum > 0,
+    escrow,
+    closesAt: close === null ? null : new Date(close).toISOString(),
+    admissionsCloseAt: cutoff === null ? null : new Date(cutoff).toISOString(),
+    admissionsOpen: escrow === 'held' && cutoff !== null && now < cutoff,
+  };
+}
+
+/** The deal type chip. */
+export const LEAD_LABEL: Record<LeadType, string> = {
+  altspot: 'AltSpot-led',
+  partner: 'Partner-led',
+};
+
+export function isLeadType(value: string): value is LeadType {
+  return value === 'altspot' || value === 'partner';
+}
+
+export const ESCROW_LABEL: Record<EscrowStatus, string> = {
+  held: 'Held in escrow',
+  closed: 'Closed',
+};
+
+/** Lead prefixes older tags carried, now said by the deal type chip. */
+const LEAD_PREFIX = /^(AltSpot-led|Partner-led|Co-invest|AltSpot fund)\s*·\s*/i;
+
+/**
+ * The one chip a card or hero wears: the deal type, then what the round
+ * is. "AltSpot-led · Series A", "Partner-led · Series C".
+ */
+export function dealChip(deal: { leadType: string; tag: string }): string {
+  const lead = isLeadType(deal.leadType) ? LEAD_LABEL[deal.leadType] : LEAD_LABEL.altspot;
+  const round = deal.tag.replace(LEAD_PREFIX, '').trim();
+  return round ? `${lead} · ${round}` : lead;
+}

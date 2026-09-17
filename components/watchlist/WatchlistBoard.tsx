@@ -40,6 +40,7 @@ import { useToast } from '@/components/Toast';
 import { api, ApiError } from '@/lib/client/api';
 import type { DealView } from '@/lib/domain';
 import { dateStr, daysLeft, money } from '@/lib/format';
+import { fundingView } from '@/lib/funding';
 
 import s from './Watchlist.module.css';
 
@@ -457,17 +458,8 @@ function DealRow({
   subscribed: boolean;
   onRemove: () => void;
 }) {
-  const pct = deal.allocationTotal
-    ? Math.min(
-        100,
-        Math.max(
-          0,
-          Math.round(
-            ((deal.allocationTotal - deal.allocationRemaining) / deal.allocationTotal) * 100,
-          ),
-        ),
-      )
-    : 0;
+  /* Against the minimum to close, like every funding bar (lib/funding.ts). */
+  const pct = fundingView(deal).toMinimumPct;
   const days = daysLeft(deal.targetClose);
   const soon = days > 0 && days <= CLOSING_SOON_DAYS;
 
@@ -481,7 +473,7 @@ function DealRow({
           <AssetClassIcon assetClass={deal.assetClass} size={12} />
         </div>
         <div className={s.meter}>
-          <div className={s.bar} aria-label={`${pct}% subscribed`} role="img">
+          <div className={s.bar} aria-label={`${pct}% of the minimum raised`} role="img">
             <div className={s.fill} style={{ width: `${Math.max(2, pct)}%` }} />
           </div>
           <span className={s.closes} data-soon={soon}>

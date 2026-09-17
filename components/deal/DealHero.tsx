@@ -13,16 +13,25 @@
  * artwork and mark, so the hero has the same shape either way and a
  * missing walkthrough is not a hole in the page.
  *
- * The fact strip lost two of its five. The fee and the carry are 5% and
- * 10% on every deal AltSpot has ever done, so beside a scarce figure
- * like what is left of the allocation they were filler; they are stated
- * as one line under the strip, and in full in the terms section.
+ * THE FUNDING PICTURE (work order screen 5). Every deal raises into
+ * escrow and closes when its minimum is met, so the strip under the ask
+ * is RAISED SO FAR, MINIMUM TO CLOSE, CLOSING DATE and ESCROW STATUS, with
+ * the bar measured against the minimum (components/FundingProgress). The
+ * deal type chip says who leads. Under it, on every deal, AltSpot's role:
+ * organizer and adviser. The alignment chip carries no figure, no entity
+ * and no mechanism, and is a config switch (SHOW_SPONSOR_ALIGNMENT). No
+ * fee or carry figure appears in the hero; those are in the terms, behind
+ * their own switches.
  */
 import type { ReactNode } from 'react';
 
+import { ShieldCheck, Users } from 'lucide-react';
+
 import BackerMark from '@/components/BackerMark';
+import FundingProgress from '@/components/FundingProgress';
+import { SHOW_SPONSOR_ALIGNMENT } from '@/lib/config';
 import type { DealView } from '@/lib/domain';
-import { money } from '@/lib/format';
+import { dealChip } from '@/lib/funding';
 
 import s from './Deal.module.css';
 
@@ -36,20 +45,6 @@ export default function DealHero({
   /** Header controls, set hard right: the watchlist toggle today. */
   tools?: ReactNode;
 }) {
-  const subscribed =
-    deal.allocationTotal > 0
-      ? Math.min(
-          100,
-          Math.max(
-            0,
-            Math.round(
-              ((deal.allocationTotal - deal.allocationRemaining) / deal.allocationTotal) *
-                100,
-            ),
-          ),
-        )
-      : 0;
-
   return (
     <header className={s.hero}>
       <div className={s.heroWash} style={{ background: deal.art }} aria-hidden="true" />
@@ -86,7 +81,7 @@ export default function DealHero({
             {tools}
           </div>
 
-          <span className="chip">{deal.tag}</span>
+          <span className="chip">{dealChip(deal)}</span>
 
           <h1 className={s.headline}>{deal.headline ?? deal.blurb}</h1>
 
@@ -104,34 +99,24 @@ export default function DealHero({
 
           <div className={s.actions}>{cta}</div>
 
-          <div className={s.heroFacts}>
-            <Fact k="Minimum" v={money(deal.minInvestment)} />
-            <Fact k="Allocation" v={money(deal.allocationTotal)} />
-            <Fact k="Remaining" v={money(deal.allocationRemaining)} />
+          <div className={s.heroFunding}>
+            <FundingProgress deal={deal} showAdmissions />
           </div>
 
-          <div className={s.heroAlloc}>
-            <div className={s.heroBar}>
-              <div className={s.heroFill} style={{ width: `${Math.max(2, subscribed)}%` }} />
-            </div>
-            <p className={s.heroBarLab}>
-              <span>{subscribed}% subscribed</span>
-              <span>
-                {deal.fees.management}% at closing · {deal.fees.carry}% carry
+          <div className={s.heroRole}>
+            <span className={s.organized}>
+              <ShieldCheck size={13} strokeWidth={1.7} aria-hidden="true" />
+              Organized and advised by AltSpot
+            </span>
+            {SHOW_SPONSOR_ALIGNMENT ? (
+              <span className={s.alignment}>
+                <Users size={13} strokeWidth={1.7} aria-hidden="true" />
+                Sponsors invest alongside members
               </span>
-            </p>
+            ) : null}
           </div>
         </div>
       </div>
     </header>
-  );
-}
-
-function Fact({ k, v }: { k: string; v: string }) {
-  return (
-    <div className={s.fact}>
-      <div className={s.factK}>{k}</div>
-      <div className={s.factV}>{v}</div>
-    </div>
   );
 }

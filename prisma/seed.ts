@@ -19,6 +19,7 @@ import 'dotenv/config';
 
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { PrismaClient } from '../lib/generated/prisma/client';
+import { brandArt } from '../lib/brand';
 
 const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL ?? 'file:./ascplatform.db',
@@ -884,7 +885,7 @@ const DEALS: SeedDeal[] = [
     id: 'kestrel',
     name: 'Kestrel Autonomy',
     entity: 'ASC Kestrel I, LLC',
-    tag: 'Co-invest · Series C',
+    tag: 'Partner-led · Series C',
     kind: 'led',
     sector: 'Autonomous ISR · Aerospace & Defense',
     stage: 'Series C Preferred',
@@ -1252,6 +1253,39 @@ function closesIn(days: number): string {
   });
 }
 
+/**
+ * What each SPV must raise into escrow to close, and who leads it
+ * (work order screens 5 and 18). Kestrel is the partner-led deal: its
+ * lead is the invented firm on its backing line. Every other deal is
+ * AltSpot-led. Closed deals met their minimum, which is why they closed.
+ */
+const FUNDING: Record<string, { minimum: number; lead?: 'altspot' | 'partner'; cap?: number }> = {
+  calder: { minimum: 1_000_000 },
+  'growth-fund': { minimum: 5_000_000, cap: 250 },
+  aurelia: { minimum: 1_500_000 },
+  tessellate: { minimum: 1_250_000 },
+  ferrule: { minimum: 1_200_000 },
+  loomline: { minimum: 750_000 },
+  basalt: { minimum: 400_000 },
+  kestrel: { minimum: 2_000_000, lead: 'partner' },
+  northstar: { minimum: 2_500_000 },
+  halyard: { minimum: 2_000_000 },
+  harborline: { minimum: 2_500_000 },
+  vantage: { minimum: 1_500_000 },
+  northwind: { minimum: 1_000_000 },
+};
+
+/**
+ * DEMO SEAM. Each invented company's mark and card art come from its hue
+ * (lib/brand.ts), so a shelf of ten reads as ten companies rather than
+ * ten navy gradients. The mark is private/marks/<id>.svg, served behind
+ * login by /api/marks.
+ */
+function brand(id: string): { art: string; logoUrl: string } | null {
+  const art = brandArt(id);
+  return art ? { art, logoUrl: `/api/marks/${id}.svg` } : null;
+}
+
 const PARTNER_CODES = [
   { code: 'northlight', label: 'Northlight Partners' },
   { code: 'ashgrove', label: 'Ashgrove Capital' },
@@ -1268,8 +1302,8 @@ async function main() {
       stage: deal.stage,
       assetClass: deal.assetClass,
       industry: deal.industry,
-      art: deal.art,
-      logoUrl: deal.logoUrl ?? null,
+      art: brand(deal.id)?.art ?? deal.art,
+      logoUrl: brand(deal.id)?.logoUrl ?? deal.logoUrl ?? null,
       headline: deal.headline,
       summary: deal.summary ?? null,
       pricePerShare: deal.pricePerShare ?? null,
@@ -1278,6 +1312,10 @@ async function main() {
       minInvestment: deal.minInvestment,
       allocationTotal: deal.allocationTotal,
       allocationRemaining: deal.allocationRemaining,
+      minimumToClose:
+        FUNDING[deal.id]?.minimum ?? Math.round((deal.allocationTotal * 0.5) / 50_000) * 50_000,
+      leadType: FUNDING[deal.id]?.lead ?? 'altspot',
+      investorCap: FUNDING[deal.id]?.cap ?? 100,
       targetClose:
         deal.closesInDays !== undefined
           ? closesIn(deal.closesInDays)

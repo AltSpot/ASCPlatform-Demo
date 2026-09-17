@@ -35,9 +35,11 @@
 import { Eye, Radar } from 'lucide-react';
 import Link from 'next/link';
 
+import FundingProgress from '@/components/FundingProgress';
 import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
+import { dealChip } from '@/lib/funding';
 
 import s from './Marketplace.module.css';
 
@@ -87,7 +89,7 @@ export default function DealCard({
   return (
     <div className={watched || fromRadar ? `card deal-card ${s.mine}` : 'card deal-card'}>
       <div className="thumb" style={{ background: deal.art }}>
-        <span className="chip">{deal.tag}</span>
+        <span className="chip">{deal.redacted ? deal.tag : dealChip(deal)}</span>
         <WatchStar
           dealId={deal.id}
           dealName={deal.name}
@@ -143,31 +145,11 @@ export default function DealCard({
         {deal.redacted ? (
           <LockedFigures />
         ) : (
-          <Allocation total={deal.allocationTotal} remaining={deal.allocationRemaining} />
+          <FundingProgress deal={deal} compact />
         )}
 
         <div className="deal-actions">{primary}</div>
       </div>
-    </div>
-  );
-}
-
-/**
- * How much of the allocation is spoken for. One bar and one figure: the
- * percentage. The dollars are on the deal page.
- */
-function Allocation({ total, remaining }: { total: number; remaining: number }) {
-  const pct =
-    total > 0
-      ? Math.min(100, Math.max(0, Math.round(((total - remaining) / total) * 100)))
-      : 0;
-
-  return (
-    <div className={s.alloc} aria-label={`${pct}% subscribed`}>
-      <div className={s.allocBar}>
-        <div className={s.allocFill} style={{ width: `${Math.max(2, pct)}%` }} />
-      </div>
-      <span className={s.allocPct}>{pct}%</span>
     </div>
   );
 }

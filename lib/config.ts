@@ -73,3 +73,60 @@ export const PARTNERS = {
   esign: 'Anvil',
   email: 'Postmark',
 } as const;
+
+// ---------------- deal terms (docs/structure-decisions-sept-2026.md) ----------------
+
+/**
+ * Whether fee numbers appear anywhere in the product. OFF until counsel
+ * confirms the wording. Off, every fee line reads as a disclosure with no
+ * figure ("Management fee, disclosed in the memorandum"); the math in
+ * lib/fees.ts runs either way, so turning this on changes words, not money.
+ */
+export const SHOW_FEE_TERMS = process.env.ASC_SHOW_FEE_TERMS === 'true';
+
+/** Whether a carry number appears anywhere. OFF: no carry line at all. */
+export const SHOW_CARRY_TERMS = process.env.ASC_SHOW_CARRY_TERMS === 'true';
+
+/**
+ * The alignment chip, SPONSORS INVEST ALONGSIDE MEMBERS. No figure, no
+ * entity, no mechanism, ever. On by default because the narrative line is
+ * the plan; turn it off if it is not literally true on a deal's day one.
+ * Also decides whether the risk section says "sponsors included".
+ */
+export const SHOW_SPONSOR_ALIGNMENT = process.env.ASC_SHOW_SPONSOR_ALIGNMENT !== 'false';
+
+/**
+ * The fee (section 15, decided Sept 16): a flat fee per SPV, plus an
+ * annualized management fee on committed capital for an assumed term,
+ * funded at closing as a reserve, drawn down as earned, with anything
+ * unearned refunded. Integer dollars and whole percents.
+ */
+export const FEE_TERMS = {
+  /** Charged to the SPV once. Disclosed in the memorandum, not per member. */
+  flatPerSpv: 10_000,
+  /** Percent of committed capital per year. */
+  annualPercent: 1,
+  /** Years the reserve is sized for. */
+  termYears: 5,
+} as const;
+
+/** Carried interest on profits at exit, percent. Behind SHOW_CARRY_TERMS. */
+export const CARRY_PERCENT = 20;
+
+/**
+ * Admissions close this many hours before the scheduled wire. At the
+ * cut-off the member register locks and every percentage freezes.
+ */
+export const ADMISSION_CUTOFF_HOURS = Number(process.env.ASC_ADMISSION_CUTOFF_HOURS ?? 24);
+
+/** Per-SPV investor cap: the default, and the most a setting may allow. */
+export const INVESTOR_CAP_DEFAULT = 100;
+export const INVESTOR_CAP_MAX = 250;
+
+/**
+ * Retirement money (IRA and similar) as a share of one SPV's raise, in
+ * percent. Warn at the first, refuse a subscription that would reach the
+ * second.
+ */
+export const RETIREMENT_WARN_PERCENT = 20;
+export const RETIREMENT_BLOCK_PERCENT = 25;

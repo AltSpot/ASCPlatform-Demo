@@ -228,6 +228,17 @@ model Deal {
   /// only to deals launched after their relationship was established
   /// (User.relationshipEstablishedAt); earlier deals are shown view-only.
   launchedAt          DateTime @default(now())
+  /// The raise the SPV must reach to close. Subscriptions sit in escrow
+  /// until it is met; if it is not met by the closing date, escrow refunds.
+  /// The funding-progress bar measures raised against this, not against
+  /// the allocation, which is only the "up to" cap.
+  minimumToClose      Int    @default(0)
+  /// 'altspot' or 'partner'. Who leads the deal. AltSpot organizes and
+  /// advises every SPV either way.
+  leadType            String @default("altspot")
+  /// Most members this SPV may admit. 100 by default; up to 250 only for
+  /// a qualifying venture capital fund of $12M or less. A setting per SPV.
+  investorCap         Int    @default(100)
   altspotCommitted    Int
   committedNote       String
   status              String @default("open")

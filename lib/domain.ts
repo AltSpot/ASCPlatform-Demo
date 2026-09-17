@@ -298,6 +298,12 @@ export interface DealView {
   allocationTotal: number;
   allocationRemaining: number;
   targetClose: string;
+  /** What the SPV must raise into escrow to close. See lib/funding.ts. */
+  minimumToClose: number;
+  /** 'altspot' or 'partner'. AltSpot organizes and advises either way. */
+  leadType: string;
+  /** Most members this SPV may admit. */
+  investorCap: number;
   /** ISO. When the offering opened to members. */
   launchedAt: string;
   /**

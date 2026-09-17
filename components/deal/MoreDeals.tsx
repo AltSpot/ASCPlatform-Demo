@@ -19,7 +19,7 @@ import Link from 'next/link';
 
 import CompanyMark from '@/components/CompanyMark';
 import type { DealShelfItem } from '@/lib/domain';
-import { compact } from '@/lib/format';
+import { fundingView } from '@/lib/funding';
 
 import s from './Deal.module.css';
 
@@ -53,11 +53,17 @@ export default function MoreDeals({ deals }: { deals: DealShelfItem[] }) {
             </span>
 
             <span className={s.moreFig}>
-              {deal.redacted ? 'Verify' : `${compact(deal.allocationRemaining)} left`}
+              {deal.redacted ? 'Verify' : fundingLine(deal)}
             </span>
           </Link>
         ))}
       </div>
     </section>
   );
+}
+
+/** Where the raise stands, in a word or a figure. */
+function fundingLine(deal: Parameters<typeof fundingView>[0]): string {
+  const f = fundingView(deal);
+  return f.minimumMet ? 'Minimum met' : `${f.toMinimumPct}% of min`;
 }

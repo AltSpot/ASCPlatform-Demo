@@ -265,9 +265,7 @@
   flex: none;
   border-radius: var(--r-md);
   object-fit: contain;
-  padding: 5px;
-  background: var(--scrim-media-soft);
-  border: 1px solid var(--hair);
+  
 }
 
 .name {
@@ -365,78 +363,7 @@
   width: 100%;
 }
 
-/* Three facts, not five, and evenly divided rather than spaced: in a
-   column this narrow a flex gap left one of them orphaned on a second
-   line at most widths. */
-.heroFacts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  width: 100%;
-  margin-top: auto;
-  padding-top: 18px;
-  border-top: 1px solid var(--hair);
-}
 
-.fact {
-  min-width: 0;
-}
-
-.factK {
-  font-family: var(--fm);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-  margin-bottom: 6px;
-  white-space: nowrap;
-}
-
-.factV {
-  font-family: var(--fm);
-  font-variant-numeric: tabular-nums;
-  font-size: 16px;
-  color: var(--ink);
-  white-space: nowrap;
-}
-
-.heroAlloc {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.heroBar {
-  height: 5px;
-  border-radius: var(--r-pill);
-  background: var(--surface-2);
-  overflow: hidden;
-}
-
-.heroFill {
-  height: 100%;
-  border-radius: var(--r-pill);
-  background: var(--as-cta-gradient);
-}
-
-/* The fee model rides on the same line as the subscription figure. It
-   is the same on every deal, so it belongs beside a number rather than
-   occupying two of five slots above it. */
-.heroBarLab {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-  font-variant-numeric: tabular-nums;
-}
 
 /* Below this the two columns stop being two columns worth having: the
    sidebar has already taken 236px, and what is left splits into a film
@@ -2073,4 +2000,42 @@
   .chartCard:hover {
     transform: none;
   }
+}
+
+/* ---------- the funding picture and AltSpot's role (screen 5) ---------- */
+
+.heroFunding {
+  width: 100%;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--hair);
+}
+
+.heroRole {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  width: 100%;
+}
+
+.organized,
+.alignment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+.organized svg,
+.alignment svg {
+  stroke: var(--as-gold);
+}
+.alignment {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
 }

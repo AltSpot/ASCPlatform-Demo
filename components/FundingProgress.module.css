@@ -1,0 +1,114 @@
+/* The funding picture. Fields as kickers over mono figures, then the bar. */
+
+.full,
+.compact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 6px;
+}
+@media (max-width: 1360px) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 14px;
+  }
+}
+
+.field {
+  min-width: 0;
+}
+.field dt {
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  white-space: nowrap;
+}
+.field dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  color: var(--as-text);
+  white-space: nowrap;
+}
+
+.field dd.escrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+.escrow svg {
+  stroke: var(--as-gold);
+}
+
+/* The allocation's scale. The minimum is a solid track, the rest of the
+   "up to" a fainter one, and gold is what is in. */
+.bar {
+  position: relative;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  overflow: hidden;
+}
+.toMinimum {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--track);
+}
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+}
+.tick {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--as-text);
+  opacity: 0.55;
+}
+
+.caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.met {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--good);
+}
+
+.admissions {
+  margin: 4px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}

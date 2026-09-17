@@ -37,6 +37,7 @@ import {
   type DealView,
 } from '@/lib/domain';
 import { dateStr, daysLeft } from '@/lib/format';
+import { fundingView } from '@/lib/funding';
 import { ASSET_CLASSES, isAssetClass } from '@/lib/taxonomy';
 
 import w from './WatchlistBlock.module.css';
@@ -241,10 +242,8 @@ export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
  * option, which is the only question a saved deal raises.
  */
 function Figures({ deal }: { deal: DealView }) {
-  const taken = deal.allocationTotal - deal.allocationRemaining;
-  const pct = deal.allocationTotal
-    ? Math.min(100, Math.max(0, (taken / deal.allocationTotal) * 100))
-    : 0;
+  /* Against the minimum to close, like every funding bar. */
+  const pct = fundingView(deal).toMinimumPct;
 
   const days = daysLeft(deal.targetClose);
 
@@ -253,7 +252,7 @@ function Figures({ deal }: { deal: DealView }) {
       className={w.bar}
       data-soon={days > 0 && days <= CLOSING_SOON_DAYS}
       role="img"
-      aria-label={`${pct.toFixed(0)} percent subscribed`}
+      aria-label={`${pct} percent of the minimum raised`}
     >
       <div className={w.fill} style={{ width: `${Math.max(2, pct)}%` }} />
     </div>

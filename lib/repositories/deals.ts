@@ -100,6 +100,9 @@ export function toDealView(row: Deal): DealView {
     allocationTotal: row.allocationTotal,
     allocationRemaining: row.allocationRemaining,
     targetClose: row.targetClose,
+    minimumToClose: row.minimumToClose,
+    leadType: row.leadType,
+    investorCap: row.investorCap,
     launchedAt: row.launchedAt.toISOString(),
     // Fails closed. Only a viewer-aware read (withViewer below) opens it.
     subscribable: false,

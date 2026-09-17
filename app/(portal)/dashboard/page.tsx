@@ -57,6 +57,7 @@ import { getMarks } from '@/lib/repositories/marks';
 import { getRadarBoard } from '@/lib/repositories/radar';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { countWatchers, listWatchlist } from '@/lib/repositories/watchlist';
+import { fundingView } from '@/lib/funding';
 import { getMarketNews } from '@/lib/terminal/news';
 
 import d from './Dashboard.module.css';
@@ -278,10 +279,8 @@ export default async function DashboardPage() {
       .map((deal) => ({
         deal,
         id: deal.id,
-        subscribedShare:
-          !deal.redacted && deal.allocationTotal > 0
-            ? (deal.allocationTotal - deal.allocationRemaining) / deal.allocationTotal
-            : 0,
+        /* Against the minimum to close, the same measure as every bar. */
+        subscribedShare: deal.redacted ? 0 : fundingView(deal).toMinimumPct / 100,
         watchers: watchers.get(deal.id) ?? 0,
         radarDollars: radarDollarsByDeal.get(deal.id) ?? 0,
         daysToClose: closeRank(deal),
@@ -305,7 +304,11 @@ export default async function DashboardPage() {
       name: deal.name,
       art: deal.art,
       logoUrl: deal.logoUrl,
-      figure: deal.redacted ? 'Open now' : `${compact(deal.allocationRemaining)} left`,
+      figure: deal.redacted
+        ? 'Open now'
+        : fundingView(deal).minimumMet
+          ? 'Minimum met'
+          : `${fundingView(deal).toMinimumPct}% of minimum`,
       line: deal.redacted ? 'Verify to see terms' : `Closes ${shortDate(deal.targetClose)}`,
       href: `/deals/${deal.id}`,
       hot: !deal.redacted && daysLeft(deal.targetClose) <= 14,
