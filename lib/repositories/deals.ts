@@ -293,3 +293,13 @@ export async function getDealsByIds(ids: string[]): Promise<Map<string, DealView
   const rows = await prisma.deal.findMany({ where: { id: { in: ids } } });
   return new Map(rows.map((row) => [row.id, toDealView(row)]));
 }
+
+/**
+ * Is this the id of a deal, open or closed? For deciding which gate a
+ * request falls under, never for answering a member: a caller must not
+ * reveal the result to someone who has not cleared the relationship gate.
+ */
+export async function isDealId(id: string): Promise<boolean> {
+  const row = await prisma.deal.findUnique({ where: { id }, select: { id: true } });
+  return row !== null;
+}

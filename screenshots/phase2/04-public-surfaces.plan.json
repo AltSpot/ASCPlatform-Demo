@@ -1,0 +1,34 @@
+{
+  "out": "screenshots/phase2/04-public-surfaces",
+  "shots": [
+    {
+      "name": "01-logged-out-mark-and-deal",
+      "steps": [
+        { "go": "/" },
+        { "get": "/api/marks/calder.svg", "expect": 404 },
+        { "get": "/calder-logo.svg", "expect": 404 },
+        { "get": "/brand/companies/README.txt", "expect": 404 },
+        { "eval": "(() => { const og = document.querySelector('meta[property=\"og:description\"]'); if (!og || og.content !== 'The new standard for private market ownership.') throw new Error('og description wrong: ' + (og && og.content)); if (document.title !== 'AltSpot') throw new Error('title: ' + document.title); })()" }
+      ],
+      "capture": false
+    },
+    {
+      "name": "02-locked-member-mark",
+      "steps": [
+        { "go": "/reshoot?as=new&to=/dashboard" },
+        { "get": "/api/marks/calder.svg", "expect": 404 },
+        { "get": "/api/marks/not-a-mark.svg", "expect": 404 }
+      ],
+      "capture": false
+    },
+    {
+      "name": "03-eligible-member-shelf-with-mark",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/marketplace" },
+        { "get": "/api/marks/calder.svg", "expect": 200 },
+        { "eval": "new Promise((res, rej) => { const img = document.querySelector('img[src=\"/api/marks/calder.svg\"]'); if (!img) return rej(new Error('calder mark not on the shelf')); const done = () => img.naturalWidth > 0 ? res() : rej(new Error('calder mark did not load')); img.complete ? done() : img.addEventListener('load', done); })" }
+      ],
+      "scroll": "#lane-invest"
+    }
+  ]
+}

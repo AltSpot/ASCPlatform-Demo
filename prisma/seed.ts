@@ -128,7 +128,7 @@ const DEALS: SeedDeal[] = [
     assetClass: 'venture',
     industry: 'energy-climate',
     art: 'linear-gradient(135deg,#0A1322 0%,#14325A 55%,#2E6FD1 115%)',
-    logoUrl: '/calder-logo.svg',
+    logoUrl: '/api/marks/calder.svg',
     headline:
       'The intelligence layer for the electric grid.',
     blurb:

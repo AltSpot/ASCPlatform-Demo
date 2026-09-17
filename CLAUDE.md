@@ -84,7 +84,7 @@ Concretely:
   invented. The real-company entries that were live (OpenAI and Databricks
   secondaries; OpenAI, SpaceX, Anthropic and Databricks on the Radar) are
   kept verbatim in `prisma/archive/real-companies.seed.txt` and
-  `lib/terminal/radar.archive.txt`, with their marks still in `public/`,
+  `lib/terminal/radar.archive.txt`, with their marks in `private/marks/`,
   so they paste back when approval lands. Their stand-ins are `aurelia`
   and `tessellate`. Calder Grid leads; the shelf holds ten open deals
   across seed to Series C venture, growth equity and late-stage
@@ -733,6 +733,17 @@ These are the claims the product makes. Do not let a change quietly break them.
   own link is created the first time they open Settings. Counsel's per-investor
   relationship certification by a lead is part of the partner flow and is not
   built yet
+- **Nothing logged out names an offering** (work order screen 4). Company marks
+  are not in `public/`: they live in `private/marks/` and are served by
+  `/api/marks/<name>.svg`, signed in only, and a mark named after a deal only to a
+  member past the relationship gate. Anything the viewer may not see is the same
+  404 as a missing file. Site-wide metadata (tab title, link previews, social
+  cards) is the platform line only. `tests/public-surfaces.test.ts` reads the
+  deal and Radar names from source and fails if any appears in `public/`, the
+  login page or the root metadata. **Deal emails** go only to
+  `listDealEmailAudience` (eligible, relationship before launch: the same rule as
+  joining); the Postmark send in `lib/integrations/postmark.ts` is a DEMO SEAM
+  with no trigger until a back office exists
 - SpotBot **explains, never advises** — every answer cites its provenance
 - Secondaries is visible but disabled, pending a BD partner and counsel
 

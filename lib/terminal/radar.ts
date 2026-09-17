@@ -108,7 +108,7 @@ export interface RadarCompany {
    * The company's own mark, served from /public. Optional: a company
    * without one falls back to a monogram on the same plate, so the
    * board never looks half-finished while marks are being collected.
-   * Drop an SVG at public/brand/companies/<slug>.svg and point here.
+   * Drop an SVG at private/marks/<slug>.svg (served at /api/marks/<slug>.svg) and point here.
    */
   logoUrl?: string;
   /**

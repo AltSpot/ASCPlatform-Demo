@@ -70,10 +70,30 @@ const monoOnest = localFont({
   preload: false,
 });
 
+/**
+ * What a link to this site shows anywhere it is pasted: a browser tab, a
+ * chat preview, a social card. Platform only (Rule 506(b), work order
+ * screen 4): no deal, no Radar company, no term. Pages that name a deal
+ * set their own title, and those pages are behind login and the
+ * relationship gate, so a preview crawler never sees one.
+ */
+const TAGLINE = 'The new standard for private market ownership.';
+
 export const metadata: Metadata = {
-  title: 'AltSpot Capital · Investor Portal',
-  description:
-    'The private room. Sourced, underwritten, and co-invested private-market opportunities for approved AltSpot members.',
+  title: 'AltSpot',
+  description: TAGLINE,
+  openGraph: {
+    title: 'AltSpot',
+    description: TAGLINE,
+    siteName: 'AltSpot',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'AltSpot',
+    description: TAGLINE,
+  },
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({

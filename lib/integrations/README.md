@@ -20,6 +20,7 @@ grep -rn "DEMO SEAM" app lib components
 | Bank linking | Plaid | `app/api/bank/route.ts` POST, `components/wizard/PlaidDemoModal.tsx` |
 | ACH transfers | Modern Treasury | `app/api/subscriptions/[id]/fund/route.ts` |
 | E-signature | Anvil | `app/api/subscriptions/[id]/sign/route.ts` |
+| Deal announcements | Postmark | `lib/integrations/postmark.ts` (audience: `listDealEmailAudience`) |
 | Taxpayer ID tokenization | (not chosen) | `tinToken` in `lib/repositories/investor.ts` |
 
 Accreditation is deliberately absent. AltSpot reviews the certification
