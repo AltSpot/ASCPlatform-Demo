@@ -10,17 +10,32 @@
  * the invest flow. It adds no step to investing; the card's own button
  * still goes straight to the deal.
  *
- * WHAT IT SHOWS, figures first: the funding picture (raised, minimum to
- * close, closing date, escrow, admissions), four facts, three reasons we
- * like it cut to one sentence each, AltSpot's role, and the risk line.
+ * LAYOUT (Tyler, 2026-09-17: "more balanced, easier to digest"). Four
+ * blocks, each under the same small header, each in its own well, in the
+ * order a member decides: the raise (the bar, the four figures, the
+ * admissions line), the facts as four tiles with a glyph each, three
+ * reasons numbered, then who is behind it. The risk line and the door to
+ * Spot close it. Nothing is redacted from the earlier edition; it is the
+ * same information given a grid.
+ *
  * No fee or carry figure: those are on the deal page, behind their
  * switches. Invest goes to /invest, which re-checks every rule (the
  * relationship gate, the per-deal launch date, setup) on the server; a
  * deal this member may only read offers no invest button at all.
  */
-import { ArrowRight, Check, Eye, ShieldCheck, Users } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  CircleDollarSign,
+  Eye,
+  Layers,
+  ShieldCheck,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 
+import AskSpot from '@/components/AskSpot';
 import AssetClassIcon from '@/components/AssetClassIcon';
 import BackerMark from '@/components/BackerMark';
 import FundingProgress from '@/components/FundingProgress';
@@ -72,6 +87,30 @@ export default function DealPeek({
     </Link>
   ) : null;
 
+  const facts = [
+    {
+      icon: CircleDollarSign,
+      key: 'Minimum investment',
+      value: money(deal.minInvestment),
+    },
+    { icon: TrendingUp, key: 'Stage', value: deal.stage },
+    {
+      icon: Layers,
+      key: 'Class',
+      value: (
+        <span className={s.withIcon}>
+          <AssetClassIcon assetClass={deal.assetClass} size={11} />
+          {klass ?? deal.assetClass}
+        </span>
+      ),
+    },
+    {
+      icon: Building2,
+      key: 'Industry',
+      value: deal.industry ? industryLabel(deal.industry) : 'Multi-sector',
+    },
+  ];
+
   return (
     <SidePanel
       open={open}
@@ -89,6 +128,7 @@ export default function DealPeek({
           <div className={s.who}>
             <span className="chip">{dealChip(deal)}</span>
             <h2 className={s.name}>{deal.name}</h2>
+            {deal.headline ? <p className={s.headline}>{deal.headline}</p> : null}
           </div>
         </div>
       }
@@ -102,8 +142,6 @@ export default function DealPeek({
       }
     >
       <div className={s.body}>
-        {deal.headline ? <p className={s.headline}>{deal.headline}</p> : null}
-
         {!deal.subscribable && !resume ? (
           <p className={s.viewOnly}>
             <Eye size={15} strokeWidth={1.7} aria-hidden="true" />
@@ -111,64 +149,85 @@ export default function DealPeek({
           </p>
         ) : null}
 
-        <section className={s.block}>
+        <section className={s.block} aria-labelledby={`${deal.id}-raise`}>
+          <h3 className={s.key} id={`${deal.id}-raise`}>
+            The raise
+          </h3>
           <FundingProgress deal={deal} showAdmissions />
         </section>
 
-        <dl className={s.facts}>
-          <div>
-            <dt>Minimum investment</dt>
-            <dd>{money(deal.minInvestment)}</dd>
-          </div>
-          <div>
-            <dt>Stage</dt>
-            <dd>{deal.stage}</dd>
-          </div>
-          <div>
-            <dt>Class</dt>
-            <dd className={s.withIcon}>
-              <AssetClassIcon assetClass={deal.assetClass} size={11} />
-              {klass ?? deal.assetClass}
-            </dd>
-          </div>
-          <div>
-            <dt>Industry</dt>
-            <dd>{deal.industry ? industryLabel(deal.industry) : 'Multi-sector'}</dd>
-          </div>
-        </dl>
+        <section className={s.block} aria-labelledby={`${deal.id}-facts`}>
+          <h3 className={s.key} id={`${deal.id}-facts`}>
+            At a glance
+          </h3>
+          <dl className={s.facts}>
+            {facts.map(({ icon: Icon, key, value }) => (
+              <div className={s.fact} key={key}>
+                <span className={s.factGlyph} aria-hidden="true">
+                  <Icon size={14} strokeWidth={1.6} />
+                </span>
+                <dt>{key}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
         {likes.length > 0 ? (
-          <section className={s.block}>
-            <div className={s.key}>Why we like it</div>
-            <ul className={s.likes}>
-              {likes.map((point) => (
+          <section className={s.block} aria-labelledby={`${deal.id}-why`}>
+            <h3 className={s.key} id={`${deal.id}-why`}>
+              Why we like it
+            </h3>
+            <ol className={s.likes}>
+              {likes.map((point, i) => (
                 <li key={point}>
-                  <Check size={14} strokeWidth={2} aria-hidden="true" />
-                  {firstSentence(point)}
+                  <span className={s.num} aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span>{firstSentence(point)}</span>
                 </li>
               ))}
-            </ul>
+            </ol>
           </section>
         ) : null}
 
-        <div className={s.role}>
-          <span>
-            <ShieldCheck size={13} strokeWidth={1.7} aria-hidden="true" />
-            Organized and advised by AltSpot
-          </span>
-          {SHOW_SPONSOR_ALIGNMENT ? (
-            <span>
-              <Users size={13} strokeWidth={1.7} aria-hidden="true" />
-              Sponsors invest alongside members
-            </span>
-          ) : null}
-          {deal.backing[0] ? <BackerMark backing={deal.backing[0]} /> : null}
-        </div>
+        <section className={s.block} aria-labelledby={`${deal.id}-who`}>
+          <h3 className={s.key} id={`${deal.id}-who`}>
+            Who is behind it
+          </h3>
+          <ul className={s.role}>
+            <li>
+              <ShieldCheck size={14} strokeWidth={1.7} aria-hidden="true" />
+              <span>
+                <b>Organized and advised by AltSpot.</b> Every deal is its own SPV.
+              </span>
+            </li>
+            {SHOW_SPONSOR_ALIGNMENT ? (
+              <li>
+                <Users size={14} strokeWidth={1.7} aria-hidden="true" />
+                <span>
+                  <b>Sponsors invest alongside members.</b>
+                </span>
+              </li>
+            ) : null}
+            {deal.backing[0] ? (
+              <li className={s.backer}>
+                <BackerMark backing={deal.backing[0]} />
+              </li>
+            ) : null}
+          </ul>
+        </section>
 
         <p className={s.risk}>
           Private investments are illiquid and can lose all of their value. Read the full
           deal and its documents before you invest.
         </p>
+
+        <AskSpot
+          compact
+          lead="Anything unclear about how this works?"
+          question="What does the funding bar mean?"
+        />
       </div>
     </SidePanel>
   );
