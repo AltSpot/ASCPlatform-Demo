@@ -13,7 +13,7 @@ import 'server-only';
 import { COOLING_OFF_DAYS } from '../config';
 import { prisma } from '../db';
 import { DEMO_PERSONA, personaEmail } from '../demo-persona';
-import { DAY_MS } from '../domain';
+import { DAY_MS, FUNDING_WINDOW_DAYS } from '../domain';
 import type {
   AccreditationStatus,
   AccreditationView,
@@ -182,11 +182,15 @@ const CLEAN_ADDRESS = /\+new(\+|@)/i;
 /**
  * DEMO SEAM — the address that mints a member who joined recently.
  *
- * Onboarded, eligible, and holding nothing, with a relationship
- * established RECENT_RELATIONSHIP_DAYS_AGO days ago: past the cooling-off
- * period, but after some open deals launched. That is the only way to
- * show the Rule 506(b) view-only state, where a deal that opened before
- * the member joined can be read but not joined, without waiting a month.
+ * Onboarded and eligible, with a relationship established
+ * RECENT_RELATIONSHIP_DAYS_AGO days ago: past the cooling-off period, but
+ * after some open deals launched. That is the only way to show the Rule
+ * 506(b) view-only state, where a deal that opened before the member
+ * joined can be read but not joined, without waiting a month.
+ *
+ * It carries a book of its own (RECENT_BOOK), and every line of it is in
+ * a deal that opened after the relationship date. A recent member cannot
+ * hold anything older, so this account never borrows the three-year book.
  */
 const RECENT_ADDRESS = /\+recent(\+|@)/i;
 const RECENT_RELATIONSHIP_DAYS_AGO = 40;
@@ -210,9 +214,10 @@ export async function ensureInvestorRecords(userId: string): Promise<void> {
   /* A brand-new account, and nothing is written into it. */
   if (!user || CLEAN_ADDRESS.test(user.email)) return;
 
-  /* A recent member: onboarded, no book. */
+  /* A recent member: onboarded, with a book only as old as they are. */
   if (RECENT_ADDRESS.test(user.email)) {
     await completeOnboarding(userId, user.name, RECENT_RELATIONSHIP_DAYS_AGO);
+    await seedRecentBook(userId, Date.now());
     return;
   }
 
@@ -673,6 +678,88 @@ async function seedPendingCommitment(userId: string, now: number): Promise<void>
       savedAt: signedAt,
     },
   });
+}
+
+/**
+ * DEMO SEAM — what a member who joined 40 days ago has done since.
+ *
+ * Everything here is in a deal that launched after that member's
+ * relationship date (see launchedDaysAgo in prisma/seed.ts), because
+ * anything earlier would be a subscription the 506(b) rule forbids. Deals
+ * that open and close in 30 to 60 days have not closed yet, so nothing is
+ * accepted, marked or distributed: two commitments funded and waiting for
+ * close, one signed and waiting for funding, one draft, three Radar votes
+ * and two saved deals. Calder stays untouched so the lead deal can still
+ * be walked from the shelf.
+ *
+ * Production contract: there is none. Delete this with the other seams.
+ */
+const RECENT_BOOK = [
+  { dealId: 'ferrule', amount: 25_000, state: 'funded', signedDaysAgo: 18 },
+  { dealId: 'loomline', amount: 15_000, state: 'funded', signedDaysAgo: 12 },
+  { dealId: 'northstar', amount: 25_000, state: 'docs_signed', signedDaysAgo: 4 },
+  { dealId: 'basalt', amount: 10_000, state: 'started', signedDaysAgo: 2 },
+] as const;
+
+const RECENT_VOTES = [
+  { slug: 'cinder', amount: 50_000, rank: 1 },
+  { slug: 'orrery', amount: 25_000, rank: 2 },
+  { slug: 'quillon', amount: 10_000, rank: 3 },
+];
+
+const RECENT_WATCHLIST = ['calder', 'growth-fund'];
+
+async function seedRecentBook(userId: string, now: number): Promise<void> {
+  for (const entry of RECENT_BOOK) {
+    const deal = await prisma.deal.findUnique({ where: { id: entry.dealId } });
+    if (!deal) continue;
+
+    const at = new Date(now - entry.signedDaysAgo * DAY_MS);
+    const signed = entry.state !== 'started';
+    const funded = entry.state === 'funded';
+
+    const subscription = await prisma.subscription.create({
+      data: {
+        userId,
+        dealId: deal.id,
+        amount: entry.amount,
+        state: entry.state,
+        seeded: true,
+        signature: null,
+        signedAt: signed ? at : null,
+        fundingDeadline: signed ? new Date(at.getTime() + FUNDING_WINDOW_DAYS * DAY_MS) : null,
+        fundedAt: funded ? new Date(at.getTime() + DAY_MS) : null,
+        fundingMethod: funded ? 'ACH · linked account' : null,
+        createdAt: at,
+      },
+    });
+
+    if (signed) {
+      await prisma.document.create({
+        data: {
+          userId,
+          dealId: deal.id,
+          subscriptionId: subscription.id,
+          name: `Subscription Agreement: ${deal.entity}`,
+          type: 'agreement',
+          note: funded ? 'Signed · funded, awaiting countersign' : 'Signed · awaiting funding',
+          savedAt: at,
+        },
+      });
+    }
+  }
+
+  for (const vote of RECENT_VOTES) {
+    await prisma.radarInterest.create({
+      data: { userId, companySlug: vote.slug, amount: vote.amount, rank: vote.rank },
+    });
+  }
+
+  for (const [index, dealId] of RECENT_WATCHLIST.entries()) {
+    const deal = await prisma.deal.findUnique({ where: { id: dealId } });
+    if (!deal) continue;
+    await prisma.watchlistItem.create({ data: { userId, dealId, rank: index + 1 } });
+  }
 }
 
 // ---------------- wizard ----------------

@@ -1,0 +1,8 @@
+{
+  "out": "screenshots/phase2/02b-recent-dashboard",
+  "shots": [
+    { "name": "01-dashboard-top", "steps": [{ "go": "/reshoot?as=recent&to=/dashboard" }] },
+    { "name": "02-dashboard-investments", "steps": [{ "go": "/reshoot?as=recent&to=/dashboard" }, { "wait": 500 }], "scroll": "#investments" },
+    { "name": "03-portfolio", "steps": [{ "go": "/reshoot?as=recent&to=/portfolio" }] }
+  ]
+}

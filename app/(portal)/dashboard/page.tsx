@@ -271,7 +271,10 @@ export default async function DashboardPage() {
   );
   const popular = rankByPopularity(
     shelf
-      .filter((deal) => !subscribedDeals.has(deal.id))
+      /* Only deals this member can actually join. A deal that opened before
+         their relationship date is view-only under Rule 506(b), and a row
+         that invites them to it would send them to a page that says no. */
+      .filter((deal) => !subscribedDeals.has(deal.id) && !deal.redacted && deal.subscribable)
       .map((deal) => ({
         deal,
         id: deal.id,
