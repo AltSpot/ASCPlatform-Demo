@@ -22,6 +22,7 @@ import WatchlistBoard, {
 } from '@/components/watchlist/WatchlistBoard';
 import { requireUser } from '@/lib/auth';
 import type { DealView } from '@/lib/domain';
+import { exploreGroups } from '@/lib/explore';
 import { canSeeOfferings } from '@/lib/relationship';
 import { listDealsForViewer } from '@/lib/repositories/deals';
 import { getRelationshipView } from '@/lib/repositories/investor';
@@ -66,6 +67,10 @@ export default async function WatchlistPage() {
       companies={companies}
       subscribed={[...new Set(subscriptions.map((s) => s.dealId))]}
       locked={!canSeeOfferings(relationship)}
+      /* Explore, as on the dashboard (Tyler, 2026-09-17): the ways into
+         the shelf, under the two lists, so an empty page has somewhere
+         to go and a full one has a next step. */
+      explore={exploreGroups(deals)}
     />
   );
 }

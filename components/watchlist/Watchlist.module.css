@@ -112,6 +112,44 @@
 .result[aria-selected='true'] {
   background: var(--surface-2);
 }
+/* The whole row is the press; the pill on the right only says what for. */
+.resultPress {
+  cursor: pointer;
+}
+.resultPress:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+.resultHint {
+  pointer-events: none;
+}
+.resultPress:hover .resultHint {
+  color: var(--accent-hot);
+}
+
+.done {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  float: right;
+  margin: 2px 2px 0 0;
+  padding: 5px 10px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+}
+.done:hover {
+  background: var(--surface-3);
+  color: var(--as-text);
+}
 
 .resultWho {
   flex: 1;
@@ -342,6 +380,9 @@
   align-items: center;
   gap: 5px;
   padding: 6px 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   border-radius: var(--r-pill);
   font-family: var(--font-mono);
   font-size: var(--fs-label);
@@ -372,6 +413,22 @@
   border-top: 1px solid var(--hair-neutral);
   font-size: var(--fs-meta);
   color: var(--as-text-muted);
+}
+
+/* ---------- explore, at the foot ---------- */
+
+.explore {
+  margin-top: 40px;
+}
+.exploreLink {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--accent);
+}
+.exploreLink:hover {
+  color: var(--accent-hot);
 }
 
 /* ---------- nothing yet ---------- */

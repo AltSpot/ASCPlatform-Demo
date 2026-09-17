@@ -32,13 +32,17 @@ import {
   X,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import AssetClassIcon from '@/components/AssetClassIcon';
+import CollapsibleSection from '@/components/CollapsibleSection';
 import CompanyMark from '@/components/CompanyMark';
+import ExploreTiles from '@/components/ExploreTiles';
+import DealPeek from '@/components/marketplace/DealPeek';
 import { useToast } from '@/components/Toast';
 import { api, ApiError } from '@/lib/client/api';
 import type { DealView } from '@/lib/domain';
+import type { ExploreGroup } from '@/lib/explore';
 import { dateStr, daysLeft, money } from '@/lib/format';
 import { fundingView } from '@/lib/funding';
 
@@ -75,6 +79,7 @@ export default function WatchlistBoard({
   companies,
   subscribed,
   locked,
+  explore,
 }: {
   /** Open deals this member may see. Empty before the gate opens. */
   deals: DealView[];
@@ -86,10 +91,15 @@ export default function WatchlistBoard({
   subscribed: string[];
   /** True until offerings open to this member. */
   locked: boolean;
+  /** The Explore slices of the shelf (lib/explore.ts), for the foot of the page. */
+  explore?: ExploreGroup[];
 }) {
   const toast = useToast();
 
   const [watched, setWatched] = useState(initialWatched);
+  /* View opens the deal's quick look here rather than leaving the page
+     (Tyler, 2026-09-17); the full deal is one press further inside it. */
+  const [peek, setPeek] = useState<DealView | null>(null);
   const [votes, setVotes] = useState<Record<string, number>>(() =>
     Object.fromEntries(
       companies
@@ -227,6 +237,7 @@ export default function WatchlistBoard({
                     deal={deal}
                     subscribed={inIt.has(deal.id)}
                     onRemove={() => unsave(deal)}
+                    onView={() => setPeek(deal)}
                   />
                 ))}
               </ul>
@@ -253,6 +264,7 @@ export default function WatchlistBoard({
                     amount={votes[company.slug]}
                     deal={company.dealId ? dealById.get(company.dealId) : undefined}
                     onVote={(amount) => vote(company, amount)}
+                    onView={(deal) => setPeek(deal)}
                   />
                 ))}
               </ul>
@@ -262,6 +274,27 @@ export default function WatchlistBoard({
           </section>
         </div>
       )}
+
+      {explore && explore.length > 0 ? (
+        <div className={s.explore}>
+          <CollapsibleSection
+            id="explore"
+            scope="watchlist"
+            title="Explore"
+            action={
+              <Link className={s.exploreLink} href="/marketplace">
+                All deals →
+              </Link>
+            }
+          >
+            <ExploreTiles groups={explore} />
+          </CollapsibleSection>
+        </div>
+      ) : null}
+
+      {peek ? (
+        <DealPeek deal={peek} open onClose={() => setPeek(null)} />
+      ) : null}
     </>
   );
 }
@@ -299,15 +332,26 @@ function Finder({
     setChoosing(null);
   };
 
+  /* A press anywhere outside the box closes the results (Tyler,
+     2026-09-17: "hard to close"), alongside Escape and the Done button. */
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(event: PointerEvent) {
+      if (!box.current?.contains(event.target as Node | null)) close();
+    }
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
+
   return (
     <div
       className={s.finder}
       ref={box}
-      onBlur={(event) => {
-        if (!box.current?.contains(event.relatedTarget as Node | null)) close();
-      }}
       onKeyDown={(event) => {
-        if (event.key === 'Escape') close();
+        if (event.key === 'Escape') {
+          close();
+          (event.currentTarget.querySelector('input') as HTMLInputElement | null)?.blur();
+        }
       }}
     >
       <label className={s.field}>
@@ -343,6 +387,15 @@ function Finder({
 
       {open ? (
         <div className={s.results} id={listId} role="listbox" aria-label="Matches">
+          <button
+            type="button"
+            className={s.done}
+            onClick={close}
+            aria-label="Close the results"
+          >
+            <X size={14} strokeWidth={1.8} aria-hidden="true" />
+            Close
+          </button>
           {nothing ? (
             <p className={s.none}>
               {q ? `Nothing matches “${query.trim()}” that is not already here.` : 'Everything is already on your watchlist.'}
@@ -350,8 +403,24 @@ function Finder({
           ) : (
             <>
               {!q ? <p className={s.resultsKey}>Suggestions</p> : null}
+              {/* The whole row is the press (Tyler, 2026-09-17): a deal
+                  saves, a Radar name opens its three amounts. The button
+                  on the right says what the press will do. */}
               {matchedDeals.map((deal) => (
-                <div className={s.result} key={deal.id} role="option" aria-selected={false}>
+                <div
+                  className={`${s.result} ${s.resultPress}`}
+                  key={deal.id}
+                  role="option"
+                  aria-selected={false}
+                  tabIndex={0}
+                  onClick={() => onSave(deal)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      onSave(deal);
+                    }
+                  }}
+                >
                   <CompanyMark name={deal.name} logoUrl={deal.logoUrl} size={32} />
                   <span className={s.resultWho}>
                     <b>{deal.name}</b>
@@ -360,22 +429,30 @@ function Finder({
                       Open deal
                     </span>
                   </span>
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-sm"
-                    onClick={() => onSave(deal)}
-                  >
-                    <Star size={14} strokeWidth={1.6} aria-hidden="true" />
+                  <span className={`btn btn-ghost btn-sm ${s.resultHint}`} aria-hidden="true">
+                    <Star size={14} strokeWidth={1.6} />
                     Save
-                  </button>
+                  </span>
                 </div>
               ))}
               {matchedCompanies.map((company) => (
                 <div
-                  className={s.result}
+                  className={
+                    choosing === company.slug ? s.result : `${s.result} ${s.resultPress}`
+                  }
                   key={company.slug}
                   role="option"
                   aria-selected={choosing === company.slug}
+                  tabIndex={choosing === company.slug ? -1 : 0}
+                  onClick={() => {
+                    if (choosing !== company.slug) setChoosing(company.slug);
+                  }}
+                  onKeyDown={(event) => {
+                    if (choosing !== company.slug && (event.key === 'Enter' || event.key === ' ')) {
+                      event.preventDefault();
+                      setChoosing(company.slug);
+                    }
+                  }}
                 >
                   <CompanyMark name={company.name} logoUrl={company.logoUrl} size={32} />
                   <span className={s.resultWho}>
@@ -395,14 +472,10 @@ function Finder({
                       onCancel={() => setChoosing(null)}
                     />
                   ) : (
-                    <button
-                      type="button"
-                      className="btn btn-ghost btn-sm"
-                      onClick={() => setChoosing(company.slug)}
-                    >
-                      <Plus size={14} strokeWidth={1.6} aria-hidden="true" />
+                    <span className={`btn btn-ghost btn-sm ${s.resultHint}`} aria-hidden="true">
+                      <Plus size={14} strokeWidth={1.6} />
                       Vote
-                    </button>
+                    </span>
                   )}
                 </div>
               ))}
@@ -453,10 +526,12 @@ function DealRow({
   deal,
   subscribed,
   onRemove,
+  onView,
 }: {
   deal: DealView;
   subscribed: boolean;
   onRemove: () => void;
+  onView: () => void;
 }) {
   /* Against the minimum to close, like every funding bar (lib/funding.ts). */
   const pct = fundingView(deal).toMinimumPct;
@@ -484,10 +559,10 @@ function DealRow({
 
       <div className={s.actions}>
         {subscribed ? <span className={s.inIt}>You are in</span> : null}
-        <Link className={s.go} href={`/deals/${deal.id}`}>
+        <button type="button" className={s.go} onClick={onView}>
           View
           <ArrowRight size={12} strokeWidth={1.8} aria-hidden="true" />
-        </Link>
+        </button>
         <button
           type="button"
           className={`${s.iconButton} ${s.starOn}`}
@@ -507,12 +582,14 @@ function VoteRow({
   amount,
   deal,
   onVote,
+  onView,
 }: {
   company: WatchCompany;
   amount: number;
   /** The open deal this name became, when the member may see it. */
   deal?: DealView;
   onVote: (amount: number) => Promise<boolean>;
+  onView: (deal: DealView) => void;
 }) {
   const [editing, setEditing] = useState(false);
 
@@ -554,10 +631,10 @@ function VoteRow({
               {money(amount)}
             </span>
             {deal ? (
-              <Link className={s.go} href={`/deals/${deal.id}`}>
+              <button type="button" className={s.go} onClick={() => onView(deal)}>
                 View
                 <ArrowRight size={12} strokeWidth={1.8} aria-hidden="true" />
-              </Link>
+              </button>
             ) : null}
             <button
               type="button"
