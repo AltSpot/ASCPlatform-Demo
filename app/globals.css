@@ -160,7 +160,7 @@
      the ground still shows through it, but what comes through is held
      back, so a card reads as a darker pane over the warm bloom instead of
      a lighter one, and type sits on something calmer. */
-  --fill-card:rgba(8,6,4,.32);
+  --fill-card:rgba(6,4,3,.44);
   --fill-input:rgba(255,255,255,.05);
   --fill-gold-tint:rgba(243,152,7,.05);
   --glass:rgba(10,8,6,.50);
@@ -210,7 +210,11 @@
      is the light caught on the top of the glass and the shade under its
      lower lip, both of which live in --card-lift. A border is kept on
      the rule (rather than removed) so no card changes size. */
-  --card-edge:transparent;
+  /* A hair of light on the rim (Tyler, 2026-09-17: the panes were
+     drowning in the ground, brown on brown). Still not a drawn line: the
+     lift below does the lifting, this only stops a pane's edge dissolving
+     into the bloom behind it. */
+  --card-edge:rgba(255,255,255,.075);
   /* THE RIM OF A SURFACE INSIDE A PANE (2026-09-17): a chip, an Explore
      tile, a menu item lit on a card. On ember it is a breath of light, so
      a tile is told from the card by depth as much as by line; on the
@@ -255,15 +259,14 @@
      enters at the top left and faint where it leaves, plus a hairline
      of reflection all round. This, not a fill, is what reads as glass. */
   --card-lift:
-    inset 1px 1px 0 rgba(255,255,255,.16),
-    inset -1px -1px 0 rgba(255,255,255,.05),
-    0 0 0 1px rgba(255,255,255,.045),
-    inset 0 1px 1px rgba(255,255,255,.10),
-    inset 0 -1px 1px rgba(0,0,0,.18),
-    inset 0 16px 28px -22px rgba(255,255,255,.07),
-    inset 0 -18px 28px -22px rgba(0,0,0,.45),
-    0 1px 1px rgba(0,0,0,.4),
-    0 22px 48px -20px rgba(0,0,0,.7);
+    inset 1px 1px 0 rgba(255,255,255,.20),
+    inset -1px -1px 0 rgba(255,255,255,.06),
+    inset 0 1px 1px rgba(255,255,255,.12),
+    inset 0 -1px 1px rgba(0,0,0,.22),
+    inset 0 18px 30px -22px rgba(255,255,255,.09),
+    inset 0 -18px 28px -22px rgba(0,0,0,.5),
+    0 1px 1px rgba(0,0,0,.45),
+    0 26px 56px -20px rgba(0,0,0,.8);
   /* Light falling across the pane. On dark it is a breath: six percent
      of white in the lit corner, gone by the middle. Enough that a panel
      over the ember bloom reads as smoked glass rather than a hole cut
@@ -315,6 +318,12 @@
     rgba(10,8,6,.4);
   --rail-blur:10px;
   --dock-bg:linear-gradient(180deg,rgba(22,17,10,.97),rgba(10,8,6,.99));
+  /* What sits inside the dock: a bubble, a suggestion pill, the composer,
+     and the rim that tells each from the dock's own ground. Tokens, because
+     on Daylight the dock is pale glass and a white pill on it vanished. */
+  --dock-bubble:rgba(255,255,255,.04);
+  --dock-pill:rgba(255,255,255,.05);
+  --dock-rim:rgba(255,255,255,.08);
   --scrim-modal:rgba(6,5,4,.72);          /* dims the page, not artwork */
   --tick-mark:rgba(255,255,255,.32);      /* chapter marks on a played bar */
 
@@ -586,7 +595,7 @@ body::before{
     radial-gradient(56% 52% at -4% 104%,rgba(199,154,75,.15),transparent 68%),
     radial-gradient(48% 36% at 50% 108%,rgba(230,199,122,.06),transparent 70%),
     radial-gradient(44% 40% at 42% 38%,rgba(214,172,98,.045),transparent 70%),
-    linear-gradient(135deg,rgba(40,26,12,0) 20%,rgba(84,46,10,.22) 100%),
+    linear-gradient(135deg,rgba(40,26,12,0) 20%,rgba(84,46,10,.14) 100%),
     radial-gradient(120% 120% at 50% 50%,transparent 60%,rgba(0,0,0,.42));
 }
 body::after{
@@ -1494,7 +1503,10 @@ html[data-theme='light']{
     linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,.08)),
     rgba(255,251,245,.16);
   --rail-blur:26px;
-  --dock-bg:linear-gradient(180deg,rgba(255,253,250,.72),rgba(253,247,239,.80));
+  --dock-bg:linear-gradient(180deg,rgba(255,253,250,.86),rgba(250,243,232,.92));
+  --dock-bubble:rgba(255,255,255,.62);
+  --dock-pill:rgba(255,255,255,.72);
+  --dock-rim:rgba(96,62,28,.16);
   /* A backdrop dims the page it covers. On cream that wants to be far
      lighter than the ember theme's, or the modal reads as a blackout. */
   --scrim-modal:rgba(46,36,18,.38);

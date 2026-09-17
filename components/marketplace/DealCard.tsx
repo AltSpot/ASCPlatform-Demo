@@ -182,7 +182,7 @@ export default function DealCard({
         <div className={`deal-actions ${s.cardActions}`}>
           <button
             type="button"
-            className={`btn btn-ghost btn-sm ${s.peekButton}`}
+            className={`btn btn-quiet btn-sm ${s.peekButton}`}
             onClick={() => setPeek(true)}
             aria-label={`Quick look at ${deal.name}`}
           >

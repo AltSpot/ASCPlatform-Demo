@@ -506,14 +506,16 @@
 .status svg {
   stroke: var(--on-media);
 }
-/* New is the one status that is good news, so it is the one in gold. */
+/* New is good news, said with a gold glyph on the same dark pill as the
+   others rather than a gold fill: three gold pills on one shelf, over
+   ten hue-lit art bands, was the loudest thing on the page (Tyler,
+   2026-09-17). The heat ramp stays reserved for a step under way. */
 .status[data-tone='new'] {
-  background: var(--as-cta-gradient);
-  color: var(--fg-on-gold);
-  box-shadow: 0 4px 14px rgba(243, 152, 7, 0.28);
+  color: var(--on-media);
+  box-shadow: inset 0 0 0 1px rgba(199, 154, 75, 0.55);
 }
 .status[data-tone='new'] svg {
-  stroke: var(--fg-on-gold);
+  stroke: var(--as-gold);
 }
 
 .mine {
