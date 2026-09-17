@@ -103,7 +103,7 @@ export default function DealCard({
   );
 
   const viewOnly = !deal.subscribable && !resume;
-  const full = !resume && deal.members > 0 && deal.members >= deal.investorCap;
+  const full = !resume && !deal.youAreIn && deal.members > 0 && deal.members >= deal.investorCap;
   const justOpened = isJustOpened(deal.launchedAt);
 
   /* One status, in order of what a member most needs to know. */

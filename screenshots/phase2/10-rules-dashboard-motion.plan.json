@@ -1,0 +1,81 @@
+{
+  "out": "screenshots/phase2/10-rules-dashboard-motion",
+  "shots": [
+    {
+      "name": "01-shelf-spacing-action-full",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 900 },
+        { "eval": "(() => { const t = document.body.innerText; if (!/Complete investment/.test(t)) throw new Error('no Complete investment action'); if (/Send to escrow/.test([...document.querySelectorAll('.deal-card .btn')].map(b => b.textContent).join('|'))) throw new Error('card still says Send to escrow'); if (!document.querySelector('.deal-card .btn-action')) throw new Error('no action style'); if (!/Meridel Bio/.test(t)) throw new Error('no biotech deal'); })()" },
+        { "scroll": "#open-now" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "02-deal-minimum-marker",
+      "steps": [
+        { "go": "/reshoot?to=/deals/ferrule" },
+        { "wait": 700 },
+        { "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('minimum')) throw new Error('no minimum label'); if (!t.includes('of 250 members')) throw new Error('venture SPV should show a 250 cap'); })()" }
+      ]
+    },
+    {
+      "name": "03-northstar-full",
+      "steps": [
+        { "go": "/reshoot?to=/deals/northstar" },
+        { "wait": 700 },
+        { "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('join the waitlist')) throw new Error('northstar not full'); if (!t.includes('of 100 members')) throw new Error('secondary should cap at 100'); })()" }
+      ]
+    },
+    {
+      "name": "04-dashboard-popular-votes",
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "wait": 900 },
+        { "eval": "[...document.querySelectorAll('h2')].find(h => /Most popular/.test(h.textContent))?.scrollIntoView({ block: 'start' })" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "05-dashboard-explore",
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "wait": 900 },
+        { "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(h => /^Explore/.test(h.textContent.trim())); if (!h) throw new Error('no explore'); if (!document.querySelector('[role=tablist][aria-label=\"Explore by\"]')) throw new Error('no explore menu'); h.scrollIntoView({ block: 'start' }); })()" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "06-preferences-ember",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/preferences" },
+        { "wait": 700 },
+        { "eval": "[...document.querySelectorAll('button')].find(x => /Tune what I see/.test(x.textContent)).click()" },
+        { "wait": 600 },
+        { "eval": "(() => { for (const label of ['Venture', 'Series A and B', 'Energy and climate']) { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === label); if (!b) throw new Error('no chip ' + label); b.click(); } })()" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "07-preferences-daylight",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/preferences" },
+        { "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'" },
+        { "wait": 700 },
+        { "eval": "[...document.querySelectorAll('button')].find(x => /Tune what I see/.test(x.textContent)).click()" },
+        { "wait": 700 },
+        { "eval": "(() => { for (const label of ['Growth equity', 'Artificial intelligence', 'AltSpot-led']) { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === label); if (!b) throw new Error('no chip ' + label); b.click(); } })()" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "08-dashboard-daylight",
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'" },
+        { "wait": 900 }
+      ]
+    }
+  ]
+}

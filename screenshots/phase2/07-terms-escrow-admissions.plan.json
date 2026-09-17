@@ -93,7 +93,7 @@
       "name": "06-screen13-full-spv",
       "steps": [
         {
-          "go": "/reshoot?to=/deals/halyard"
+          "go": "/reshoot?to=/deals/northstar"
         },
         {
           "wait": 500
@@ -102,7 +102,7 @@
           "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('join the waitlist')) throw new Error('no waitlist ask on a full SPV'); if (!t.includes('of 100 members')) throw new Error('member count missing'); })()"
         },
         {
-          "eval": "fetch('/api/subscriptions', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ dealId: 'halyard', amount: 25000 }) }).then(async r => { const j = await r.json(); if (r.status !== 409 || j.error.code !== 'investor_cap') throw new Error('cap not enforced: ' + r.status + ' ' + JSON.stringify(j)); })"
+          "eval": "fetch('/api/subscriptions', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ dealId: 'northstar', amount: 25000 }) }).then(async r => { const j = await r.json(); if (r.status !== 409 || j.error.code !== 'investor_cap') throw new Error('cap not enforced: ' + r.status + ' ' + JSON.stringify(j)); })"
         }
       ]
     },
@@ -128,7 +128,7 @@
           "wait": 500
         },
         {
-          "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['member register', 'share of spv', 'admitted', 'of 100']) if (!t.includes(w)) throw new Error('missing ' + w); })()"
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['member register', 'share of spv', 'admitted', 'of 250']) if (!t.includes(w)) throw new Error('missing ' + w); })()"
         }
       ]
     }

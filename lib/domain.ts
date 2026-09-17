@@ -317,6 +317,8 @@ export interface DealView {
    * viewer-aware read filled it (lib/repositories/spv.ts).
    */
   members: number;
+  /** Does this viewer already hold a spot in the SPV? */
+  youAreIn: boolean;
   /** ISO. When the offering opened to members. */
   launchedAt: string;
   /**

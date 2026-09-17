@@ -24,7 +24,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 
 import AssetClassIcon from '@/components/AssetClassIcon';
 import SliceIcon from '@/components/SliceIcon';
@@ -69,14 +69,23 @@ function Question<T extends string>({
   wide?: boolean;
 }) {
   const answered = selected.length > 0;
+  const titleId = useId();
   return (
-    <fieldset className={s.question} data-wide={wide} data-answered={answered}>
-      <legend className={s.qHead}>
+    <section
+      role="group"
+      aria-labelledby={titleId}
+      className={s.question}
+      data-wide={wide}
+      data-answered={answered}
+    >
+      <div className={s.qHead}>
         <span className={s.qNum} aria-hidden="true">
           {answered ? <Check size={13} strokeWidth={2.4} /> : n}
         </span>
         <Icon className={s.qIcon} size={17} strokeWidth={1.6} aria-hidden="true" />
-        <span className={s.qTitle}>{title}</span>
+        <span className={s.qTitle} id={titleId}>
+          {title}
+        </span>
         {answered ? (
           <button type="button" className={s.any} onClick={onClear}>
             Any
@@ -84,7 +93,7 @@ function Question<T extends string>({
         ) : (
           <span className={s.anyNote}>Any</span>
         )}
-      </legend>
+      </div>
       <p className={s.qHint}>{hint}</p>
       <div className={s.chips}>
         {options.map((o) => {
@@ -103,7 +112,7 @@ function Question<T extends string>({
           );
         })}
       </div>
-    </fieldset>
+    </section>
   );
 }
 

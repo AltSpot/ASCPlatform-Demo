@@ -63,7 +63,7 @@ export default function DealPeek({
         Finish signing
       </Link>
     )
-  ) : deal.subscribable && deal.members > 0 && deal.members >= deal.investorCap ? (
+  ) : deal.subscribable && !deal.youAreIn && deal.members > 0 && deal.members >= deal.investorCap ? (
     <WaitlistButton dealId={deal.id} />
   ) : deal.subscribable ? (
     <Link className="btn btn-gold" href={`/invest/${deal.id}`}>

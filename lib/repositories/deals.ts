@@ -102,6 +102,7 @@ export function toDealView(row: Deal): DealView {
     leadType: row.leadType,
     investorCap: row.investorCap,
     members: 0,
+    youAreIn: false,
     launchedAt: row.launchedAt.toISOString(),
     // Fails closed. Only a viewer-aware read (withViewer below) opens it.
     subscribable: false,
@@ -229,6 +230,7 @@ async function withMembers(deals: DealView[], userId: string): Promise<DealView[
   return deals.map((deal) => ({
     ...deal,
     members: standings.get(deal.id)?.standing.members ?? 0,
+    youAreIn: standings.get(deal.id)?.alreadyMember ?? false,
   }));
 }
 
