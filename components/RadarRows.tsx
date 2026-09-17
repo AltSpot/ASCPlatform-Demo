@@ -89,9 +89,21 @@ export default function RadarRows({ rows }: { rows: RadarRow[] }) {
               )}
             </span>
 
+            {/* The status sits under the name, on its own line, where it
+                always has room. It used to share the right-hand column with
+                the button and was cut off. */}
             <span className={s.who}>
               <span className={s.name}>{row.name}</span>
-              <span className={s.kind}>{classLabel(row.assetClass)}</span>
+              {row.live ? (
+                <span className={s.statusLine} data-live="true">
+                  <span className={s.liveDot} aria-hidden="true" />
+                  {row.live.subscribed ? 'Open now · you are in' : `Open now · closes ${row.live.closes}`}
+                </span>
+              ) : (
+                <span className={s.statusLine}>
+                  {classLabel(row.assetClass)} · Tracking
+                </span>
+              )}
             </span>
 
             <span className={s.vote}>
@@ -99,24 +111,12 @@ export default function RadarRows({ rows }: { rows: RadarRow[] }) {
               <span className={s.voteValue}>{money(row.voted)}</span>
             </span>
 
-            <span className={s.status}>
-              {row.live ? (
-                <>
-                  <span className={s.liveDot} aria-hidden="true" />
-                  <span className={s.liveText}>
-                    Open now · closes {row.live.closes}
-                  </span>
-                  {row.live.subscribed ? (
-                    <span className={s.inIt}>You are in</span>
-                  ) : (
-                    <Link className="btn btn-gold btn-sm" href={`/deals/${row.live.dealId}`}>
-                      Invest
-                    </Link>
-                  )}
-                </>
-              ) : (
-                <span className={s.tracking}>Tracking</span>
-              )}
+            <span className={s.action}>
+              {row.live && !row.live.subscribed ? (
+                <Link className={`btn btn-gold btn-sm ${s.invest}`} href={`/deals/${row.live.dealId}`}>
+                  Invest
+                </Link>
+              ) : null}
             </span>
           </li>
         ))}

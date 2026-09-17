@@ -1,61 +1,144 @@
-/* Explore: rows of small glass tiles, each a way into the shelf. */
+/* Explore: one glass panel, a menu of four ways in on the left, the
+   slices of the chosen one as tiles on the right. */
 
-.groups {
-  display: flex;
-  flex-direction: column;
+.panel {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
   gap: 22px;
+  padding: 18px;
+}
+@media (max-width: 900px) {
+  .panel {
+    grid-template-columns: 1fr;
+  }
 }
 
-.groupTitle {
-  margin: 0 0 10px;
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 18px;
+  border-right: 1px solid var(--hair-neutral);
+}
+@media (max-width: 900px) {
+  .menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0 0 14px;
+    border-right: none;
+    border-bottom: 1px solid var(--hair-neutral);
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border: none;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--as-text-muted);
+  cursor: pointer;
+  text-align: left;
+  font-size: 14.5px;
+  font-weight: var(--w-medium);
+  transition:
+    background var(--dur-1) ease,
+    color var(--dur-1) ease;
+}
+.menuItem svg {
+  flex: none;
+  stroke: currentColor;
+}
+.menuItem:hover {
+  background: var(--surface-1);
+  color: var(--as-text);
+}
+.menuItem[aria-selected='true'] {
+  background: var(--surface-2);
+  color: var(--as-text);
+  box-shadow: inset 2px 0 0 var(--as-gold);
+}
+.menuItem[aria-selected='true'] svg {
+  stroke: var(--as-gold);
+}
+.menuItem:focus-visible,
+.tile:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.menuLabel {
+  flex: 1;
+}
+.menuCount {
   font-family: var(--font-mono);
   font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
   color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
   gap: 12px;
+  align-content: start;
 }
 
 .tile {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  min-height: 108px;
-  padding: 16px;
-  border: 1px solid var(--card-edge);
-  border-radius: var(--r-lg);
-  background-color: var(--fill-card);
-  background-image: var(--card-sheen);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
-  box-shadow: var(--card-lift);
+  gap: 6px;
+  min-height: 112px;
+  padding: 14px 16px 16px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
   color: var(--as-text);
   text-decoration: none;
+  animation: tile-in 0.42s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 40ms);
   transition:
-    transform var(--dur-1) var(--ease-out),
-    box-shadow var(--dur-1) ease;
+    background var(--dur-1) ease,
+    transform var(--dur-1) var(--ease-out);
 }
 .tile:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
+  background: var(--surface-2);
+  transform: translateY(-3px);
   color: var(--as-text);
 }
-.tile:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 3px;
+
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.tileTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: auto;
+}
+
+.go {
+  stroke: var(--as-text-muted);
+  transition: transform var(--dur-1) var(--ease-out);
+}
+.tile:hover .go {
+  stroke: var(--as-gold);
+  transform: translate(2px, -2px);
 }
 
 .glyph {
   display: inline-grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--r-pill);
   background: var(--surface-2);
 }
@@ -64,8 +147,8 @@
 }
 
 .label {
-  margin-top: auto;
-  font-size: 14.5px;
+  margin-top: 12px;
+  font-size: 15px;
   font-weight: var(--w-medium);
   line-height: 1.25;
 }
@@ -76,4 +159,10 @@
   letter-spacing: var(--ls-text);
   color: var(--as-text-muted);
   font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    animation: none;
+  }
 }

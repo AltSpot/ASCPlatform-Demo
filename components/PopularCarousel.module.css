@@ -22,13 +22,16 @@
 .track {
   display: flex;
   gap: 18px;
-  padding: 12px var(--edge) 22px;
+  /* A scroller clips on both axes, so the glow a tile casts on hover and
+     the drift need real room inside it, given back with negative margins
+     so the section's spacing does not change. Without it the glow was
+     cut off at the top and bottom and left a hard line under the row. */
+  padding: 44px var(--edge) 64px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: var(--edge);
   scrollbar-width: none;
-  /* Room for the lift on hover and the drift. */
-  margin: -10px 0 -8px;
+  margin: -44px 0 -58px;
 }
 
 @media (max-width: 900px) {
@@ -80,10 +83,10 @@
     transform: translateY(0) rotate(0deg);
   }
   35% {
-    transform: translateY(-10px) rotate(-0.35deg);
+    transform: translateY(-7px) rotate(-0.25deg);
   }
   65% {
-    transform: translateY(-6px) rotate(0.25deg);
+    transform: translateY(-4px) rotate(0.15deg);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -181,13 +184,15 @@
   text-overflow: ellipsis;
 }
 
+/* The figure is support for the name, so it steps down: smaller, lighter
+   and a shade quieter, where it used to be nearly the name's twin. */
 .figure {
   margin-top: 6px;
   font-family: var(--font-mono);
-  font-size: 15px;
-  font-weight: var(--w-medium);
-  letter-spacing: -0.01em;
-  color: var(--as-text);
+  font-size: 13.5px;
+  font-weight: var(--w-regular);
+  letter-spacing: 0;
+  color: var(--as-text-body);
   font-variant-numeric: tabular-nums;
 }
 
