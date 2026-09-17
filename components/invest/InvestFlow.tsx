@@ -447,8 +447,8 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
             <div className="card">
               <h3 style={{ marginBottom: 4 }}>Amount</h3>
               <p className="small" id="amount-help" style={{ marginBottom: 14 }}>
-                Minimum {money(deal.minInvestment)} ·{' '}
-                {money(deal.allocationRemaining)} of allocation remaining.
+                Minimum {money(deal.minInvestment)}. Your money waits in escrow until the
+                deal closes, and comes back if it does not.
               </p>
 
               <label className="field">
@@ -481,8 +481,8 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
               )}
               {amount > deal.allocationRemaining && (
                 <div className="demo-note">
-                  Only {money(deal.allocationRemaining)} of allocation remains.
-                  Amounts above this join the waitlist at close.
+                  Only {money(deal.allocationRemaining)} of the allocation is left.
+                  Anything above it may be cut back at close.
                 </div>
               )}
 
