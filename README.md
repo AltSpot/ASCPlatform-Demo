@@ -123,12 +123,16 @@ macOS login. `uninstall` removes it.
    KYC (ID upload plus a live camera capture), investment profile, bank
    link through a stand-in for Plaid Link. Once approved, a card asks for
    deal preferences.
-3. **Dashboard**: what needs you, most popular, watchlist and votes,
-   Explore, your investments.
+3. **Dashboard**: what needs you (also on the bell in the rail, on every
+   page), most popular, watchlist and votes, Explore, your investments. A
+   newly approved member is offered a short walkthrough of all of it;
+   `?tour=1` replays it.
 4. **Marketplace**: open deals with the funding picture (raised against
    the minimum to close), Quick look, and the Radar.
 5. **Deal**: one scrollable page. The funding picture, the numbers, the
-   story, risk, terms and what it costs, data room.
+   story, illustrative scenarios when the switch is on, risk, terms and
+   what it costs, the SPV today (members against the cap, retirement money
+   against the rule), data room.
 6. **Invest**: profile and amount, then a split-screen subscription
    agreement that fills itself in as you confirm each section. One typed
    signature executes everything.
@@ -138,9 +142,11 @@ macOS login. `uninstall` removes it.
 8. **Docs / Profiles / Settings**: filed agreements, the Vault, demo
    reset.
 
-**SpotBot** rides along in a dock that knows which page you are on. It
-explains and never advises, and the refusal gate runs server-side before
-any answer is produced.
+**Spot** rides along in a dock that knows which page you are on. It
+explains and never advises, answers the mechanics with a picture (fees,
+carry, escrow, the funding bar, the SPV limits), and opens from any
+underlined term or Ask Spot line on the page. The refusal gate runs
+server-side before any answer is produced.
 
 To see the expiry state, sign a commitment and leave it unfunded past its
 deadline. **Settings → Reset demo data** wipes your investor and starts
@@ -353,6 +359,8 @@ credential.
 | `ASC_DEMO_MODE` | `lib/config.ts` | `true` (anything but the string `"false"` is on) |
 | `ASC_EPHEMERAL` | `lib/config.ts` | `true`. Sweeps demo accounts and isolates allocation per visitor |
 | `ASC_DEMO_TTL_HOURS` | `lib/config.ts` | `6`. How long a demo account survives |
+| `ASC_SHOW_FEE_TERMS`, `ASC_SHOW_CARRY_TERMS` | `lib/config.ts`, inlined at build | `false`. Fee and carry figures stay behind them until counsel confirms |
+| `ASC_SHOW_RETURN_SCENARIOS` | `lib/config.ts`, inlined at build | `false`. Illustrative scenarios on a deal page (`lib/scenarios.ts`); counsel approves before it goes on. The demo film's build sets it |
 | `PORT` | the serve scripts, `npm start` | `4000` |
 | `RENDER_API_KEY` | `scripts/render.mjs` only | unset. A real secret; needed only to deploy |
 | `RENDER_SERVICE_ID` | `scripts/render.mjs` only | the demo service id. An identifier, not a secret |

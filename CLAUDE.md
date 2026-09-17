@@ -65,6 +65,12 @@ Concretely:
   `components/CollapsibleSection.tsx`, and the folded state is a
   per-device preference in localStorage via `useSyncExternalStore`, never
   a column.
+  **Needs you is built once** (`lib/needs-you.ts`: a commitment with a
+  clock, a document to sign, a Radar name that opened, a lapsed
+  commitment) and read twice: the dashboard strip, which folds like every
+  other section, and the bell on the rail (`components/NotificationBell`,
+  fed by `lib/repositories/needs-you.ts` from the portal shell), which
+  opens the same rows in the side panel on any page (Tyler, 2026-09-17).
 - **A page never totals positions on its own.** `ledgerBook` in
   `lib/portfolio-metrics.ts` is the one place a book is summed, and both
   the dashboard and Portfolio read it; `tests/portfolio-metrics.test.ts`
@@ -206,10 +212,13 @@ started -> docs_signed -> funded -> accepted -> closed
 exits:   expired (not in escrow by the admission cut-off) | refunded | cut_back
 ```
 
-**`funded` is the code's word for IN ESCROW.** Copy never says funded: a
-member sends a subscription to escrow, the deal closes when its minimum is
-met, and escrow refunds if it is not. Same rule as vote and interest: copy
-says escrow, code keeps `funded`.
+**`funded` is the code's word for IN ESCROW.** Copy never says funded of a
+member's subscription: a member sends a subscription to escrow, the deal
+closes when its minimum is met, and escrow refunds if it is not. Same rule
+as vote and interest: copy says escrow, code keeps `funded`. The one place
+the word appears is the deal-level ESCROW STATUS once a deal has closed,
+`ESCROW_LABEL.closed` = "Funded · closed" (Tyler, 2026-09-17: a member
+wants to read that their money is in; counsel to confirm the word).
 
 Enforced by `assertTransition` in `lib/domain.ts`, called from
 `lib/repositories/subscriptions.ts`. Illegal transitions return HTTP 409.
@@ -367,6 +376,21 @@ line holds no matter what later produces the answers. `engine.ts` retrieves from
 Every answer carries a `source`, and the API route is authenticated like
 everything else. `components/SpotBot.tsx` is the separate per-deal Q&A card.
 
+**Spot answers with pictures** (Tyler, 2026-09-17). `lib/spotbot/visuals.ts`
+attaches a `SpotVisual` to a mechanic's answer (fees as a sum, carry as a
+split, escrow and the 506(b) gate as paths, the funding bar and the SPV
+limits as meters); `components/spotbot/SpotVisual.tsx` draws it under the
+prose. Every figure in a picture comes from the same function the product
+uses, and anything behind `SHOW_FEE_TERMS` or `SHOW_CARRY_TERMS` stays out of
+the picture when the switch is off. **Anything can open Spot with a
+question**: `lib/spotbot/open.ts` dispatches an event the dock listens for;
+`components/Term.tsx` wraps a word in running text (fine gold underline,
+small mark) and `components/AskSpot.tsx` is the "Still want to know more? Ask
+Spot" line at the foot of How it works, the quick look and similar panels.
+The dock has no footer line, Expand is a reading width and height, and the
+log is pinned by measurement (a ResizeObserver) rather than by smooth
+scroll, which fought the message animation.
+
 ## Design system
 
 `app/globals.css` is the single source of visual truth, and it now holds
@@ -490,14 +514,39 @@ sheen, blur, the surface ladder), never type or accents, and
 `tests/theme.test.ts` holds that. **Daylight panes are clear glass with a
 thin, even light rim** (`--card-edge`), after the reference Tyler shared.
 
+**The final pass** (Tyler, 2026-09-17). Ember's pane is smoked, not lit:
+`--fill-card` is a dark translucent fill (`rgba(8,6,4,.32)`), so a card is
+a darker pane over the warm bloom, and the bloom itself leans orange and
+gold with the ember pool kept. Ice's fill is nearly nothing and the pane is
+made of light (a stronger brightness lift, a cold rim, two cold pools in
+its ground). Daylight's steps inside a pane are far enough apart to be
+seen, and **`--inset-edge`** rims chips, Explore tiles, fact tiles and
+choices in light so a pill reads as a pill on clear glass rather than as
+text on the card. **Buttons**: the gold CTA carries a sheen and a lit lip;
+`.btn-ghost` and `.btn-quiet` are tinted glass with a rim (`--btn-rim`),
+never a flat fill; `.btn-action` (finish signing, complete investment) is
+the hot amber-to-ember ramp (`--action-fill`) with dark ink, the one ramp
+reserved for a step already under way, on the card status too.
+
 **Explore and preferences** (2026-09-17). The dashboard's Explore section is
 quick-filter tiles (`lib/explore.ts`: asset class, who leads, stage,
-industry) that open the marketplace already filtered through the URL. Deal
+industry) that open the marketplace already filtered through the URL; the
+Watchlist page carries the same section under its two lists. Deal
 preferences (`lib/preferences.ts`, `/preferences`) are asked by a card at the
 top of the dashboard once the questionnaire is approved, until answered, and
 changed from Settings. "Show me everything" is one press. Preferences mark
 deals (For you) and decide what a member is told about; they never hide an
-offering.
+offering. The form is one umbrella card with the two answers inside it, a
+numbered step two, gold as a ring and a glyph rather than a fill, and a
+saved state that stays on the page (Tyler, 2026-09-17).
+
+**The first-run walkthrough** (Tyler, 2026-09-17). `components/FirstRunTour`
+is offered by the portal shell once the questionnaire is approved and
+before the first position, remembered per device in localStorage, and
+replayed with `?tour=1` (the Settings card). Nine cards, one idea each,
+ringing the rail item, the bell or Spot's launcher they describe
+(`data-tour`). It explains; every button in it is a link the rail already
+has.
 
 #### Ember and Daylight
 
@@ -676,8 +725,9 @@ keep voting. Concretely (`components/marketplace/MarketplaceLanes.tsx`,
   names that are deals and names that are not.
 - **One side panel** (`components/SidePanel.tsx`) is how the marketplace
   says more without leaving the grid: a deal's Quick look
-  (`DealPeek`: funding picture, four facts, three reasons, AltSpot's
-  role, Full deal and Invest), a Radar company's Details (`RadarDetail`:
+  (`DealPeek`: four blocks under one small header each, the raise, four
+  facts as tiles, three reasons numbered, who is behind it, then the risk
+  line and Ask Spot; Full deal and Invest in the foot), a Radar company's Details (`RadarDetail`:
   demand, rank, a price strip, the two cases cut to first sentences, the
   vote in the header), and How it works for each lane
   (`components/HowItWorks.tsx`). Invest goes to `/invest`, which re-checks
@@ -716,7 +766,16 @@ Watchlist, Portfolio, Terminal) is **not a second marketplace**: one search
 box that saves a deal or casts a vote with three quick amounts, then two
 row lists, Saved deals and Your votes, and an empty state that sends the
 member to Explore investments. No cards, filters or demand figures there.
-Every write is the marketplace's own API call.
+Every write is the marketplace's own API call. A search result row is the
+press (a deal saves, a Radar name opens its three amounts), the results
+close on a press outside, Escape or Close, **View opens the quick look in
+the side panel** rather than leaving the page, and Explore sits under the
+two lists (Tyler, 2026-09-17).
+
+**The SPV today** (`components/deal/SpvStanding`, 2026-09-17) sits under a
+deal's terms: members against the investor cap and retirement money
+against the 20% and 25% marks, drawn live from the same standing the
+subscribe, sign and escrow routes decide on (`lib/repositories/spv.ts`).
 
 ### Voice
 
@@ -744,6 +803,21 @@ These are the claims the product makes. Do not let a change quietly break them.
   (`dealFeeRows`, `feeSentence`, `NO_CAPITAL_CALLS`), so a flag cannot
   show a figure on one surface and hide it on another; `tests/fees.test.ts`
   asserts no figure appears with the flags off. **No capital calls, ever.**
+- **Illustrative return scenarios render only behind `SHOW_RETURN_SCENARIOS`**
+  (off by default, inlined at build) and only for a deal whose
+  `scenariosJson` passes every check in `lib/scenarios.ts`: three or more
+  cases with the total loss first, neutral labels ("Scenario A", never base,
+  target, expected or projected), no probability language, dilution
+  modelled, every input on screen, net beside gross from the platform's own
+  fee and carry terms, sources and dates on every comparable with the
+  selection criteria, a methodology and the limits of hypothetical figures,
+  and counsel's disclaimer adjacent. `components/deal/ReturnScenarios` is the
+  only place they exist: never the hero, a share card, an email or a public
+  page. `ScenarioView` records what each member saw, by version, and the
+  first showing is audited (`scenarios.shown`). Never fed by the internal
+  diligence score, never compared to AltSpot's past deals, never after tax.
+  Counsel (Ben) approves before the switch goes on; the demo build for the
+  film runs with it on, over Calder's invented and labelled set
 - **AltSpot's own committed capital is stored on every deal but not shown.**
   `altspotCommitted` stays in the schema, the seed and `DealSummary`; no card,
   hero, stat band or Spot answer prints it. Removed from every surface by
