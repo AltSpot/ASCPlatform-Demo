@@ -379,11 +379,12 @@ existing markup keeps resolving. Prefer `--as-*` in new code.
 
 - **Borna** (`--font-display`) for display type. **Figtree**
   (`--font-sans`) for body and UI, 300 is the body default on dark.
-  **JetBrains Mono** (`--font-mono`, pointing at `--font-mono-jetbrains`;
-  on trial against Figtree, Manrope and Onest Tabular in
-  `components/TypeLab.tsx`, see below) for every eyebrow, label, table
-  header, source line and data figure, always uppercase and
-  letter-spaced. If the eyebrow is not monospace, it is not AltSpot.
+  **Manrope Tabular** (`--font-mono` and `--font-figure`, both `--font-data`)
+  for every eyebrow, label, table header, source line and every number on
+  the platform, large figures included. Its tabular digits are baked into
+  the default glyphs, so figures align in columns. Chosen in the type lab
+  over JetBrains Mono, Figtree and Onest (Tyler, 2026-09-17); the lab is
+  gone. Numbers never set in Borna.
 - **This product is the Capital line, so gold `--as-gold` #C79A4B leads.**
   V18 assigns one signal per product line and forbids mixing two in a
   composition: Terminal #F39807, Marketplace/Intelligence #E5661A,
@@ -480,23 +481,6 @@ these classes; they do not invent their own colours, radii or type scales. Inlin
 `style` is for layout one-offs only, never for colour or type. A component that
 genuinely needs new rules gets a CSS Module beside it (`components/deal/`,
 `components/spotbot/` and `components/invest/` all do), never a new global.
-
-### The type lab (temporary)
-
-`components/TypeLab.tsx` is a bottom-centre switcher on every page that
-repoints `--font-mono` at one of four faces through `html[data-mono]`,
-written before first paint like the theme and kept per device in
-`localStorage` (`asc.mono`). The monospace candidates (Red Hat, Geist
-Mono, IBM Plex, DM Mono) were tried and dropped, as were Inter, Geist,
-Plus Jakarta, Instrument, Mona, Public Sans and Schibsted. The
-`*-tabular-latin.woff2` files in `public/fonts/` are the variable latin builds with the `tnum` digits
-baked into the default glyphs, so they are tabular wherever the data
-face is read and nowhere else. It is a decision tool: when the face is
-chosen, delete the component, its mount and the candidate faces in
-`app/layout.tsx`, the `html[data-mono]` block at the foot of
-`globals.css` and the losing font files, then point `--font-mono` at the
-winner. The sans candidates set capitals wider than a mono does, so
-check tight spots (the rail's SOON badge truncates "Secondaries").
 
 ### Two themes: Ember and Daylight
 

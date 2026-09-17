@@ -26,7 +26,7 @@
 
 /* The one figure on the page that is allowed to be this big. */
 .readValue {
-  font-family: var(--font-display);
+  font-family:var(--font-figure);
   font-weight: var(--w-medium);
   font-size: 44px;
   line-height: 1;

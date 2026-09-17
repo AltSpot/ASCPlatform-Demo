@@ -268,10 +268,7 @@ describe('every token a stylesheet reads is a token something defines', () => {
     for (const external of [
       '--font-display',
       '--font-sans',
-      '--font-mono-jetbrains',
-      '--font-mono-figtree',
-      '--font-mono-manrope',
-      '--font-mono-onest',
+      '--font-data',
       '--rail',
     ]) {
       declared.add(external);

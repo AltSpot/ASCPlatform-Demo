@@ -11,7 +11,7 @@
 }
 
 .net {
-  font-family: var(--font-display);
+  font-family:var(--font-figure);
   font-weight: var(--w-medium);
   font-size: 27px;
   line-height: 1;

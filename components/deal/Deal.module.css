@@ -1393,7 +1393,7 @@
 .roundBarTrack{height:6px;border-radius: var(--r-pill);background:var(--track);overflow:hidden}
 .roundBar{height:100%;border-radius: var(--r-pill);background:linear-gradient(90deg,var(--gold),var(--orange),var(--ember))}
 .roundFacts{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-top:12px;flex-wrap:wrap}
-.roundValue{font-family:var(--fd);font-size:24px;letter-spacing:-.02em;color:var(--ink)}
+.roundValue{font-family:var(--font-figure);font-size:24px;letter-spacing:-.02em;color:var(--ink)}
 .roundPps{font-family:var(--fm);font-size: var(--fs-label);letter-spacing:.06em;color: var(--as-text-muted)}
 .roundNote{font-size: var(--fs-meta);color:var(--soft);margin-top:10px;line-height:1.5}
 

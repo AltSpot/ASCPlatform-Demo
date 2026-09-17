@@ -3,14 +3,13 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 
 import { ToastProvider } from '@/components/Toast';
-import TypeLab from '@/components/TypeLab';
 
 import './globals.css';
 
 /* The three faces are self-hosted and loaded here rather than through a
    CSS @import, so they are preloaded with the document and the first
    paint is Borna and Figtree, not Georgia and system-ui swapping a beat
-   later. Figtree and JetBrains Mono are the variable latin builds from
+   later. Figtree and Manrope are the variable latin builds from
    Google Fonts (OFL); Borna is an owned asset. Each face is exposed as
    the CSS variable globals.css already uses, so no component changes. */
 const display = localFont({
@@ -28,46 +27,16 @@ const sans = localFont({
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
 
-const mono = localFont({
-  src: '../public/fonts/jetbrains-mono-latin.woff2',
-  weight: '100 800',
-  variable: '--font-mono-jetbrains',
-  fallback: ['ui-monospace', 'Consolas', 'monospace'],
-});
-
-/* TYPE LAB. The candidates for the data face, loaded so the choice can
-   be made on the running platform rather than on a specimen sheet. None
-   is preloaded: a face is fetched only once the lab switches to it.
-
-   Every candidate is a sans with TABULAR figures: the variable latin
-   build of each family with its tnum digits baked into the default
-   glyphs with fontTools (a family with no tnum feature was rejected),
-   so digits align in columns wherever
-   --font-mono is read and nowhere else. The monospace candidates were
-   tried and dropped. Delete all of these, with components/TypeLab.tsx,
-   once a face is chosen. */
-const monoFigtree = localFont({
-  src: '../public/fonts/figtree-tabular-latin.woff2',
-  weight: '300 900',
-  variable: '--font-mono-figtree',
-  fallback: ['system-ui', 'sans-serif'],
-  preload: false,
-});
-
-const monoManrope = localFont({
+/* The data face: Manrope with its tabular figures baked into the default
+   glyphs (fontTools), so every number on the platform lines up in columns.
+   Chosen in the type lab over JetBrains Mono, Figtree and Onest (Tyler,
+   2026-09-17). It is --font-mono, which every eyebrow, label and figure
+   reads, and --font-figure, which the large display numbers read. */
+const data = localFont({
   src: '../public/fonts/manrope-tabular-latin.woff2',
   weight: '200 800',
-  variable: '--font-mono-manrope',
+  variable: '--font-data',
   fallback: ['system-ui', 'sans-serif'],
-  preload: false,
-});
-
-const monoOnest = localFont({
-  src: '../public/fonts/onest-tabular-latin.woff2',
-  weight: '100 900',
-  variable: '--font-mono-onest',
-  fallback: ['system-ui', 'sans-serif'],
-  preload: false,
 });
 
 /**
@@ -121,10 +90,7 @@ export default function RootLayout({
       className={[
         display.variable,
         sans.variable,
-        mono.variable,
-        monoFigtree.variable,
-        monoManrope.variable,
-        monoOnest.variable,
+        data.variable,
       ].join(' ')}
       suppressHydrationWarning
     >
@@ -136,12 +102,10 @@ export default function RootLayout({
         <Script id="asc-device-preferences" strategy="beforeInteractive">
           {"try{var d=document.documentElement.dataset;" +
             "if(localStorage.getItem('asc.rail.collapsed')==='true')d.rail='mini';" +
-            "if(localStorage.getItem('asc.theme')==='light')d.theme='light';" +
-            "var m=localStorage.getItem('asc.mono');if(m&&m!=='jetbrains')d.mono=m}catch(e){}"}
+            "var t=localStorage.getItem('asc.theme');if(t==='light'||t==='ice')d.theme=t}catch(e){}"}
         </Script>
 
         <ToastProvider>{children}</ToastProvider>
-        <TypeLab />
       </body>
     </html>
   );

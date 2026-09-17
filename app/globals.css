@@ -417,7 +417,9 @@
      app/layout.tsx. See the note above :root. The data face is one
      level removed so the type lab can swap it: next/font writes each
      candidate under its own name and --font-mono points at one. */
-  --font-mono:var(--font-mono-jetbrains);
+  --font-mono:var(--font-data);
+  /* Large figures: the same tabular face as every other number. */
+  --font-figure:var(--font-data);
   --w-light:300; --w-regular:400; --w-medium:500; --w-semi:600;
 
   /* ============ STATUS ============ */
@@ -778,7 +780,7 @@ label.field>span{
   font-weight: var(--w-medium);letter-spacing: var(--ls-text);
   text-transform: none;color: var(--as-text-muted);margin-bottom:9px;
 }
-.stat .v{font-family:var(--fd);font-size:32px;font-weight:500;line-height:1;letter-spacing:-.015em;color:var(--ink)}
+.stat .v{font-family:var(--font-figure);font-size:32px;font-weight:500;line-height:1;letter-spacing:-.015em;color:var(--ink)}
 .stat .v small{font-size:16px;color:var(--soft);font-family:var(--fb)}
 .stat .d{font-size: var(--fs-meta);margin-top:8px;color:var(--soft)}
 .up{color:var(--good)}.down{color:var(--bad)}
@@ -963,7 +965,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-figure)}
 
 /* countdown */
 .count{display:flex;align-items:baseline;gap:9px}
-.count .n{font-family:var(--fd);font-size:36px;color:var(--accent-hot);letter-spacing:-.02em}
+.count .n{font-family:var(--font-figure);font-size:36px;color:var(--accent-hot);letter-spacing:-.02em}
 
 /* spotbot */
 .spotbot{background-image:var(--glass-tint-gold),var(--card-sheen)}
@@ -1474,18 +1476,4 @@ html[data-theme='light'] img[src$='/brand/altspot-wordmark.svg']{
 html[data-theme='light'] .deal-card{box-shadow:var(--card-lift)}
 html[data-theme='light'] .deal-card:hover{box-shadow:var(--shadow-card-hover)}
 
-/* ============================================================
-   TYPE LAB — the data face, on trial
-   ============================================================
-   Temporary. components/TypeLab.tsx writes data-mono on <html> and
-   these point --font-mono at the candidate, so every eyebrow, label,
-   table header and figure on the platform changes at once, in both
-   themes. JetBrains Mono is the absence of the attribute. Delete this
-   block when the face is chosen and point --font-mono at the winner.
 
-   The tabular sans faces are not monospace, so the letter-spacing
-   the labels carry (tuned for a monospace advance) is left exactly as
-   it is: the point is to see them as they would ship, not flattered. */
-html[data-mono='figtree']{--font-mono:var(--font-mono-figtree)}
-html[data-mono='manrope']{--font-mono:var(--font-mono-manrope)}
-html[data-mono='onest']{--font-mono:var(--font-mono-onest)}

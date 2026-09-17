@@ -84,7 +84,7 @@
 }
 .engineValue {
   margin: 2px 0 0;
-  font-family: var(--font-display);
+  font-family:var(--font-figure);
   font-weight: var(--w-medium);
   font-size: 36px;
   line-height: 1;
