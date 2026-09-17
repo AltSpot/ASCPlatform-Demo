@@ -235,7 +235,13 @@
   /* Smoked glass. A lit top lip, a faint inner ring that stands in for
      the hairline without reading as one, a shade gathering at the
      bottom inside the pane, and a cast shadow pulled in under it. */
+  /* Glass edge (Tyler, 2026-09-17): a bevelled rim, lit where light
+     enters at the top left and faint where it leaves, plus a hairline
+     of reflection all round. This, not a fill, is what reads as glass. */
   --card-lift:
+    inset 1px 1px 0 rgba(255,255,255,.16),
+    inset -1px -1px 0 rgba(255,255,255,.05),
+    0 0 0 1px rgba(255,255,255,.045),
     inset 0 1px 1px rgba(255,255,255,.10),
     inset 0 -1px 1px rgba(0,0,0,.18),
     inset 0 16px 28px -22px rgba(255,255,255,.07),
@@ -1288,6 +1294,9 @@ html[data-theme='light']{
      shade gathers inside the bottom, and the cast shadow is two layers
      pulled in under it. */
   --card-lift:
+    inset 1.5px 1.5px 0 rgba(255,255,255,.95),
+    inset -1px -1px 0 rgba(255,255,255,.45),
+    0 0 0 1px rgba(150,112,60,.10),
     inset 0 1px 1px rgba(255,255,255,.85),
     inset 0 -1px 1px rgba(255,255,255,.30),
     inset 0 20px 28px -24px rgba(255,255,255,.34),
@@ -1390,24 +1399,24 @@ html[data-theme='light'] body::before{
     /* THE GLEAM, upper left */
     radial-gradient(48% 40% at 12% 6%,rgba(255,253,249,.82),transparent 70%),
     /* ice: two cool pools, faint, so the frost has something cold in it */
-    radial-gradient(34% 30% at 34% 40%,rgba(214,232,250,.30),transparent 72%),
-    radial-gradient(30% 28% at 82% 70%,rgba(206,228,248,.22),transparent 72%),
+    radial-gradient(34% 30% at 34% 40%,rgba(214,232,250,.36),transparent 72%),
+    radial-gradient(30% 28% at 82% 70%,rgba(206,228,248,.28),transparent 72%),
     /* gold, entering top of centre */
-    radial-gradient(54% 46% at 44% -10%,rgba(214,172,98,.24),transparent 72%),
+    radial-gradient(54% 46% at 44% -10%,rgba(214,172,98,.14),transparent 72%),
     /* orange, top right, wider */
-    radial-gradient(56% 54% at 100% 0%,rgba(243,152,7,.14),rgba(229,102,26,.03) 50%,transparent 76%),
+    radial-gradient(56% 54% at 100% 0%,rgba(243,152,7,.08),rgba(229,102,26,.02) 50%,transparent 76%),
     /* apricot, left of middle */
-    radial-gradient(44% 40% at 10% 56%,rgba(238,172,104,.16),transparent 72%),
+    radial-gradient(44% 40% at 10% 56%,rgba(238,172,104,.09),transparent 72%),
     /* apricot, right of middle */
-    radial-gradient(48% 44% at 74% 46%,rgba(240,164,92,.15),transparent 72%),
+    radial-gradient(48% 44% at 74% 46%,rgba(240,164,92,.08),transparent 72%),
     /* ember, bottom right */
-    radial-gradient(50% 52% at 100% 100%,rgba(229,102,26,.09),transparent 70%),
+    radial-gradient(50% 52% at 100% 100%,rgba(229,102,26,.05),transparent 70%),
     /* gold, bottom left */
-    radial-gradient(54% 52% at -2% 100%,rgba(214,172,98,.25),transparent 70%),
+    radial-gradient(54% 52% at -2% 100%,rgba(214,172,98,.15),transparent 70%),
     /* champagne, bottom centre */
-    radial-gradient(48% 36% at 50% 106%,rgba(228,192,124,.20),transparent 70%),
+    radial-gradient(48% 36% at 50% 106%,rgba(228,192,124,.12),transparent 70%),
     /* the sweep */
-    linear-gradient(125deg,#FEFCF9 0%,#FBF6EE 34%,#F9F0E2 68%,#F7EAD6 100%);
+    linear-gradient(125deg,#FEFDFB 0%,#FCF9F4 34%,#FAF5EC 68%,#F8F0E3 100%);
 }
 html[data-theme='light'] body::after{opacity:.012}
 
