@@ -20,6 +20,8 @@ import { X } from 'lucide-react';
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
+import { SPOT_OPEN_EVENT } from '@/lib/spotbot/open';
+
 import s from './SidePanel.module.css';
 
 export default function SidePanel({
@@ -67,6 +69,16 @@ export default function SidePanel({
       return () => window.clearTimeout(done);
     }
   }, [open, mounted]);
+
+  /* Anything in the panel that opens Spot (Ask Spot, an underlined term)
+     closes the panel first, so Spot is what the member sees open (Tyler,
+     2026-09-17). The dock is in the top layer too, but two things open at
+     once left it unclear that anything had happened. */
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener(SPOT_OPEN_EVENT, onClose);
+    return () => window.removeEventListener(SPOT_OPEN_EVENT, onClose);
+  }, [open, onClose]);
 
   if (!mounted) return null;
 

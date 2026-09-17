@@ -153,10 +153,16 @@ function gatePath(): SpotVisual {
     title: 'Before any deal is shown',
     steps: [
       { label: 'Investor questionnaire', note: 'Accreditation, experience, how you evaluate deals.' },
-      { label: 'AltSpot reviews it', note: 'The approval date is when the relationship begins.' },
-      { label: `Cooling off, ${COOLING_OFF_DAYS} days`, note: 'No offering is named or shown yet.', tone: 'warn' },
-      { label: 'Offerings open', note: 'You may join deals that open after your date.', tone: 'good' },
+      { label: 'AltSpot evaluates it', note: 'A real evaluation. The approval date is when the relationship begins.' },
+      ...(COOLING_OFF_DAYS > 0
+        ? [{ label: `Seasoning, ${COOLING_OFF_DAYS} days`, note: 'No offering is named or shown yet.', tone: 'warn' as const }]
+        : []),
+      { label: 'Offerings open', note: 'The moment you are approved. You may join deals that open after your date.', tone: 'good' },
     ],
+    otherwise: {
+      label: 'Deals that opened before your date',
+      note: 'Shown in full, view-only. The relationship has to come before the offer.',
+    },
   };
 }
 

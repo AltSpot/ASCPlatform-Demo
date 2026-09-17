@@ -107,7 +107,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
   },
   {
     id: 'relationship-506b',
-    question: 'Why is there a questionnaire and a wait before I see deals?',
+    question: 'Why is there a questionnaire before I see deals?',
     keywords: [
       '506b',
       '506(b)',
@@ -123,7 +123,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'proof',
     ],
     answer:
-      'Every deal is offered under Rule 506(b), which means no deal is ever advertised or named publicly. AltSpot first has to know you. You answer an investor questionnaire on your accreditation, your experience and how you evaluate private investments, AltSpot reviews it, and the date it approves you is when the relationship begins. Offerings open after a short cooling-off period, and you may join deals that open after that date. There is no letter to collect and no third-party verification: your answers and their dates are the record.',
+      'Every deal is offered under Rule 506(b), which means no deal is ever advertised or named publicly. AltSpot first has to know you. You answer an investor questionnaire on your accreditation, your experience and how you evaluate private investments, AltSpot reviews it, and the date it approves you is when the relationship begins. Offerings open the moment you are approved, and you may join deals that open after that date; deals that opened earlier are shown but stay view-only, because the relationship has to come before the offer. There is no waiting period, no letter to collect and no third-party verification: your answers, the evaluation and their dates are the record.',
     source: 'Regulation D, Rule 506(b)',
     related: ['accreditation', 'kyc', 'wizard-steps'],
   },
@@ -702,7 +702,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'five steps',
     ],
     answer:
-      'Five, and they are one-time. The investor questionnaire is where you certify you are accredited and tell AltSpot about your experience; offerings open after a short cooling-off period once it is approved. Your information is the Vault, the standard details that fill every document afterwards. Identity is the ID photo and live capture for the anti-money-laundering check. Investment profile decides who holds the position: personal, an entity or an IRA. Link bank sets up one-click escrow transfers and the account distributions return to. The questionnaire gates seeing deals; your information and identity gate investing. The rest you can finish later, though the invest page will ask for them.',
+      'Five, and they are one-time. The investor questionnaire is where you certify you are accredited and tell AltSpot about your experience; offerings open the moment it is approved, and you may join deals that open after that date. Your information is the Vault, the standard details that fill every document afterwards. Identity is the ID photo and live capture for the anti-money-laundering check. Investment profile decides who holds the position: personal, an entity or an IRA. Link bank sets up one-click escrow transfers and the account distributions return to. The questionnaire gates seeing deals; your information and identity gate investing. The rest you can finish later, though the invest page will ask for them.',
     source: 'AltSpot onboarding requirements',
     related: ['accreditation', 'kyc', 'profile-types'],
   },

@@ -87,7 +87,9 @@
    let go of their caps so an answer runs the width of the page. */
 .panelWide {
   width: min(760px, calc(100vw - 40px));
-  height: calc(100vh - 72px);
+  /* The dock sits 26px up with a 44px launcher and a 12px gap under the
+     panel, so this is the most height that keeps the head on screen. */
+  height: calc(100vh - 110px);
 }
 .panelWide .you {
   max-width: 70%;
@@ -312,8 +314,8 @@
   max-width: 88%;
   padding: 12px 14px 11px;
   border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--r-xs);
-  border: 1px solid var(--hair-soft);
-  background: var(--fill-card);
+  border: 1px solid var(--dock-rim);
+  background: var(--dock-bubble);
 }
 
 /* A refusal is an answer, not an error. Ember says "different kind of
@@ -324,10 +326,15 @@
 }
 
 .botBody {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
   font-size: 13.6px;
   line-height: 1.68;
   color: var(--as-text-body);
-  white-space: pre-wrap;
+}
+.botBody p {
+  margin: 0;
 }
 
 .src {
@@ -385,8 +392,8 @@
   gap: 6px;
   padding: 12px 14px;
   border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--r-xs);
-  border: 1px solid var(--hair-soft);
-  background: var(--fill-card);
+  border: 1px solid var(--dock-rim);
+  background: var(--dock-bubble);
 }
 
 .thinkDot {
@@ -448,9 +455,9 @@
 }
 .suggest {
   text-align: left;
-  border: 1px solid transparent;
+  border: 1px solid var(--dock-rim);
   border-radius: var(--r-pill);
-  background: var(--surface-1);
+  background: var(--dock-pill);
   color: var(--as-text-body);
   padding: 9px 15px;
   font-size: var(--fs-meta);
@@ -490,9 +497,9 @@
   resize: none;
   max-height: 132px;
   padding: 11px 14px;
-  border: 1px solid var(--hair-neutral);
+  border: 1px solid var(--dock-rim);
   border-radius: var(--r-lg);
-  background: var(--fill-input);
+  background: var(--dock-pill);
   color: var(--as-text);
   font-family: var(--font-sans);
   font-size: 13.2px;

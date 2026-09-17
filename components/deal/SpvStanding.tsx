@@ -86,22 +86,6 @@ export default function SpvStanding({
               {Math.round(retirePct)}%
             </span>
           </div>
-          <div className={s.marks} aria-hidden="true">
-            <span
-              className={s.markLabel}
-              data-tone="warn"
-              style={{ left: `${(RETIREMENT_WARN_PERCENT / scale) * 100}%` }}
-            >
-              {RETIREMENT_WARN_PERCENT}% warns
-            </span>
-            <span
-              className={s.markLabel}
-              data-tone="bad"
-              style={{ left: `${(RETIREMENT_BLOCK_PERCENT / scale) * 100}%` }}
-            >
-              {RETIREMENT_BLOCK_PERCENT}% refused
-            </span>
-          </div>
           <div
             className={s.track}
             role="img"
@@ -111,6 +95,14 @@ export default function SpvStanding({
             <span className={s.mark} data-tone="warn" style={{ left: `${(RETIREMENT_WARN_PERCENT / scale) * 100}%` }} />
             <span className={s.mark} data-tone="bad" style={{ left: `${(RETIREMENT_BLOCK_PERCENT / scale) * 100}%` }} />
           </div>
+          <ul className={s.legend} aria-hidden="true">
+            <li data-tone="warn">
+              <span className={s.tick} /> {RETIREMENT_WARN_PERCENT}% warns
+            </li>
+            <li data-tone="bad">
+              <span className={s.tick} /> {RETIREMENT_BLOCK_PERCENT}% refused
+            </li>
+          </ul>
           <p className={s.note}>
             IRA and 401(k) subscriptions stay under {RETIREMENT_BLOCK_PERCENT}% of each SPV. One that
             would take them to {RETIREMENT_WARN_PERCENT}% goes through with a warning; one that would

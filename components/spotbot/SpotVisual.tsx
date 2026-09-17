@@ -46,18 +46,6 @@ export default function SpotVisual({ visual }: { visual: Visual }) {
         <figure className={s.fig} aria-label={visual.title}>
           <figcaption className={s.title}>{visual.title}</figcaption>
           <div className={s.meterWrap}>
-            <div className={s.marks} aria-hidden="true">
-              {visual.marks.map((mark) => (
-                <span
-                  key={mark.label}
-                  className={s.markLabel}
-                  data-tone={mark.tone ?? 'default'}
-                  style={{ left: `${Math.min(100, Math.max(0, mark.at))}%` }}
-                >
-                  {mark.label}
-                </span>
-              ))}
-            </div>
             <div
               className={s.track}
               role="img"
@@ -74,7 +62,21 @@ export default function SpotVisual({ visual }: { visual: Visual }) {
                 />
               ))}
             </div>
-            <span className={s.fillLabel}>{visual.fillLabel}</span>
+            {/* The marks are named in a legend under the track, never over
+                it: two marks a few percent apart had their labels on top
+                of each other. */}
+            <ul className={s.legend}>
+              <li data-tone="fill">
+                <span className={s.swatch} aria-hidden="true" />
+                {visual.fillLabel}
+              </li>
+              {visual.marks.map((mark) => (
+                <li key={mark.label} data-tone={mark.tone ?? 'default'}>
+                  <span className={s.tick} aria-hidden="true" />
+                  {mark.label}
+                </li>
+              ))}
+            </ul>
           </div>
           <p className={s.caption}>{visual.caption}</p>
         </figure>

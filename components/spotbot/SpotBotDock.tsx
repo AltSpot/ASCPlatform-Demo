@@ -448,7 +448,11 @@ export default function SpotBotDock() {
                       className={styles.bot}
                       data-refused={message.refused ? 'true' : 'false'}
                     >
-                      <p className={styles.botBody}>{message.body}</p>
+                      <div className={styles.botBody}>
+                        {message.body.split(/\n\n+/).map((para, i) => (
+                          <p key={i}>{para}</p>
+                        ))}
+                      </div>
                       {message.visual ? <SpotVisual visual={message.visual} /> : null}
                       {message.source && (
                         <span className={styles.src}>Source · {message.source}</span>

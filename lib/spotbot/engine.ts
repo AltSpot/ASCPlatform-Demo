@@ -33,6 +33,7 @@
  */
 import { classify, normalize, refusalAnswer } from './gate';
 import { KNOWLEDGE, questionsFor, topic, type KnowledgeTopic } from './knowledge';
+import { paragraphs } from './format';
 import { pageContext, type PageContext } from './pages';
 import type { SpotBotAnswer, SpotBotRequest } from './types';
 import { visualFor } from './visuals';
@@ -128,7 +129,9 @@ export function retrieve(question: string, page: PageContext): KnowledgeTopic | 
 /** Said out loud when retrieval finds nothing. Honest beats plausible. */
 export function fallbackAnswer(page: PageContext): SpotBotAnswer {
   return {
-    body: `I do not have that one in the platform guide, and I would rather say so than guess. I cover how the platform and the process work: what a step requires, what a term means, what is in a document, and how the fees are charged. For anything specific to a deal, the offering documents in its data room govern. For anything about your own account or a live commitment, contact the AltSpot team directly. On this page, ${page.brief.charAt(0).toLowerCase()}${page.brief.slice(1)}`,
+    body: paragraphs(
+      `I do not have that one in the platform guide, and I would rather say so than guess. I cover how the platform and the process work: what a step requires, what a term means, what is in a document, and how the fees are charged. For anything specific to a deal, the offering documents in its data room govern. For anything about your own account or a live commitment, contact the AltSpot team directly. On this page, ${page.brief.charAt(0).toLowerCase()}${page.brief.slice(1)}`,
+    ),
     source: 'AltSpot platform guide',
     refused: false,
     followUps: page.suggested,
@@ -174,7 +177,7 @@ export async function generateAnswer(input: AnswerInput): Promise<SpotBotAnswer>
      without one is prose alone, and the field is simply absent. */
   const visual = visualFor(match.id);
   return {
-    body: match.answer,
+    body: paragraphs(match.answer),
     source: match.source,
     refused: false,
     followUps: questionsFor(match.related ?? []).slice(0, 3),

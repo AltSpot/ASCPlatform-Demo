@@ -67,25 +67,39 @@
   color: var(--bad);
 }
 
-.marks {
-  position: relative;
-  height: 16px;
-  margin-top: 6px;
-}
-.markLabel {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  white-space: nowrap;
+/* The marks are named under the track, never over it, so two marks a few
+   percent apart cannot stack their labels. */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: var(--ls-text);
   color: var(--as-text-muted);
 }
-.markLabel[data-tone='warn'] {
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tick {
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--as-amber);
+}
+.legend li[data-tone='bad'] .tick {
+  background: var(--as-ember);
+}
+.legend li[data-tone='warn'] {
   color: var(--warn);
 }
-.markLabel[data-tone='bad'] {
+.legend li[data-tone='bad'] {
   color: var(--bad);
 }
 
@@ -120,6 +134,9 @@
 }
 .mark[data-tone='bad'] {
   background: var(--as-ember);
+}
+.track {
+  margin-top: 8px;
 }
 
 .note {

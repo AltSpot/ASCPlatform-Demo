@@ -123,36 +123,27 @@
 
 .meterWrap {
   position: relative;
-  padding-top: 22px;
+  padding-top: 6px;
 }
 
-.marks {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 20px;
+.tick {
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--as-text-muted);
 }
-.markLabel {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: var(--ls-text);
-  color: var(--as-text-muted);
+.legend li[data-tone='gold'] .tick {
+  background: var(--as-gold);
 }
-.markLabel[data-tone='gold'] {
-  color: var(--accent);
+.legend li[data-tone='warn'] .tick {
+  background: var(--as-amber);
 }
-.markLabel[data-tone='warn'] {
-  color: var(--warn);
+.legend li[data-tone='bad'] .tick {
+  background: var(--as-ember);
 }
-.markLabel[data-tone='bad'] {
-  color: var(--bad);
-}
-/* The last mark hugs the right edge rather than hanging off it. */
-.markLabel:last-child {
-  transform: translateX(-100%);
+.legend li[data-tone='fill'] .swatch {
+  background: var(--as-gold);
 }
 
 .track {
@@ -185,15 +176,6 @@
 }
 .mark[data-tone='bad'] {
   background: var(--as-ember);
-}
-
-.fillLabel {
-  display: block;
-  margin-top: 8px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: var(--ls-text);
-  color: var(--as-text-muted);
 }
 
 /* ---------- sum ---------- */
