@@ -1,0 +1,65 @@
+{
+  "out": "screenshots/phase2/12-minimums-and-sleeve",
+  "shots": [
+    {
+      "name": "01-portfolio-building-the-sleeve",
+      "steps": [
+        { "go": "/reshoot?to=/portfolio" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1200 },
+        { "eval": "(() => { const t = document.body.innerText; if (!/Building the sleeve/.test(t)) throw new Error('no sleeve section'); if (!/of 20/.test(t)) throw new Error('no count against twenty'); if (!/not advice about your money/i.test(t)) throw new Error('footing line missing'); [...document.querySelectorAll('h2')].find(h => /Building the sleeve/.test(h.textContent)).scrollIntoView({ block: 'start' }); })()" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "02-deal-minimum-explained",
+      "steps": [
+        { "go": "/reshoot?to=/deals/calder" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1200 },
+        { "eval": "(() => { const t = document.body.innerText; if (!/Minimum \\$25,000/.test(t)) throw new Error('Calder minimum is not $25,000 (rule: over $1M)'); if (!/over \\$1,000,000/.test(t)) throw new Error('no explanation of the minimum'); document.querySelector('.' + [...document.styleSheets].length && 'body'); [...document.querySelectorAll('p')].find(p => /Ready to participate/.test(p.textContent))?.scrollIntoView({ block: 'center' }); })()" },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "03-meridel-set-per-offering",
+      "steps": [
+        { "go": "/reshoot?to=/deals/meridel" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1200 },
+        { "eval": "(() => { const t = document.body.innerText; if (!/Minimum \\$10,000/.test(t)) throw new Error('Meridel override not applied'); if (!/Set by the lead/.test(t)) throw new Error('override not explained'); })()" }
+      ]
+    },
+    {
+      "name": "04-spot-why-twenty",
+      "steps": [
+        { "go": "/reshoot?to=/portfolio" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 1200 },
+        { "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: { question: 'Why does the platform talk about twenty positions?' } }))" },
+        { "wait": 1800 },
+        { "eval": "(() => { const p = document.getElementById('spotbot-panel'); if (!p || !/64%/.test(p.innerText)) throw new Error('no portfolio construction answer'); if (!/How a diversified sleeve is built/i.test(p.innerText)) throw new Error('no sleeve picture'); })()" }
+      ]
+    },
+    {
+      "name": "05-spot-sizing-still-refused",
+      "capture": false,
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "wait": 900 },
+        { "post": "/api/spotbot", "body": { "question": "How much should I invest in Calder?", "pathname": "/deals/calder" } },
+        { "eval": "fetch('/api/spotbot',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:'How many deals should I do a year?',pathname:'/portfolio'})}).then(r=>r.json()).then(a=>{ if (!a.refused) throw new Error('sizing question was answered: ' + a.body.slice(0,80)); })" },
+        { "eval": "fetch('/api/spotbot',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:'Why is the minimum what it is?',pathname:'/deals/calder'})}).then(r=>r.json()).then(a=>{ if (a.refused || !/\\$5,000/.test(a.body) || !a.visual) throw new Error('minimum topic missing: ' + a.body.slice(0,80)); })" }
+      ]
+    },
+    {
+      "name": "06-terminal-twenty-positions",
+      "steps": [
+        { "go": "/reshoot?to=/terminal/twenty-positions-equal-weight" },
+        { "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'" },
+        { "wait": 1200 },
+        { "eval": "(() => { const t = document.body.innerText; if (!/Twenty positions, equal weight/.test(t)) throw new Error('article missing'); if (!/Not investment advice/.test(t)) throw new Error('source note missing'); })()" }
+      ]
+    }
+  ]
+}
