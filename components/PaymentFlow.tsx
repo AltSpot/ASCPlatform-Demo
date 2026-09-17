@@ -236,7 +236,12 @@ export default function PaymentFlow({
           <p className="small" style={{ marginBottom: 12 }}>
             {deal.name} · {deal.entity}
           </p>
-          <FeeTable amount={subscription.amount} targetClose={deal.targetClose} />
+          <FeeTable
+            amount={subscription.amount}
+            targetClose={deal.targetClose}
+            minimumToClose={deal.minimumToClose}
+            allocationTotal={deal.allocationTotal}
+          />
           <div className="hr" />
           <p className="tiny" style={{ display: 'flex', gap: 6 }}>
             <Lock size={12} strokeWidth={1.8} aria-hidden="true" style={{ flex: 'none', marginTop: 3 }} />

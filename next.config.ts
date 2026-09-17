@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
    * the right cost for a compliance switch.
    */
   env: {
-    ASC_SHOW_FEE_TERMS: process.env.ASC_SHOW_FEE_TERMS ?? 'false',
+    ASC_SHOW_FEE_TERMS: process.env.ASC_SHOW_FEE_TERMS ?? 'true',
     ASC_SHOW_CARRY_TERMS: process.env.ASC_SHOW_CARRY_TERMS ?? 'false',
     ASC_SHOW_SPONSOR_ALIGNMENT: process.env.ASC_SHOW_SPONSOR_ALIGNMENT ?? 'true',
     ASC_SHOW_RETURN_SCENARIOS: process.env.ASC_SHOW_RETURN_SCENARIOS ?? 'false',

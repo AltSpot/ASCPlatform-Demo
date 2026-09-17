@@ -38,8 +38,8 @@ describe('the model', () => {
     assert.equal(CARRY_PERCENT, 20);
   });
 
-  test('both display switches default to off', () => {
-    assert.equal(SHOW_FEE_TERMS, false);
+  test('fees show by default since counsel confirmed them; carry stays off', () => {
+    assert.equal(SHOW_FEE_TERMS, true);
     assert.equal(SHOW_CARRY_TERMS, false);
   });
 });
@@ -95,7 +95,12 @@ describe('the words', () => {
 
   test('on: the figures come from config', () => {
     const detail = dealFeeRows(true, true).map((r) => r.detail).join(' ');
-    assert.match(detail, /1% a year for 5 years/);
+    assert.match(detail, /1% per year of committed capital, 5 years/);
+    assert.match(detail, /ends early.*returned/);
+    assert.match(detail, /runs longer.*accrue.*distributions before carried interest/);
+    assert.match(detail, /pro rata/);
+    assert.match(detail, /pass through at cost/);
+    assert.match(detail, /escrow belongs to investors/i);
     assert.match(detail, /\$10,000 per SPV/);
     assert.match(detail, /20% of profits at exit/);
   });

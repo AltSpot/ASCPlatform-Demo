@@ -41,12 +41,17 @@ export const DEMO_TTL_HOURS = Number(process.env.ASC_DEMO_TTL_HOURS ?? 6);
 export const ISOLATED_ALLOCATION = EPHEMERAL_DEMO;
 
 /**
- * The 506(b) cooling-off period, in days, between AltSpot approving a
- * member's questionnaire and offerings opening to them. A compliance
- * setting rather than a constant: counsel may change it, and it applies
- * to every member's unlock date on the next read. See lib/relationship.ts.
+ * Days between AltSpot approving a member's questionnaire and offerings
+ * opening to them. ZERO (counsel, 2026-09-17, item 11): under the SEC's
+ * Citizen VC letter what matters is the quality of the relationship, a
+ * genuine, substantive evaluation, and the sequence, relationship before
+ * offer, not its duration. So offerings open the moment the evaluation
+ * approves a member, and the member may join only deals that open after
+ * that date (counsel's option (a), the cleanest). The setting survives so
+ * a seasoning period (option (b), five business days) is one line if it
+ * is ever wanted. See lib/relationship.ts.
  */
-export const COOLING_OFF_DAYS = Number(process.env.ASC_COOLING_OFF_DAYS ?? 30);
+export const COOLING_OFF_DAYS = Number(process.env.ASC_COOLING_OFF_DAYS ?? 0);
 
 export const SESSION_COOKIE = 'asc_session';
 
@@ -77,12 +82,14 @@ export const PARTNERS = {
 // ---------------- deal terms (docs/structure-decisions-sept-2026.md) ----------------
 
 /**
- * Whether fee numbers appear anywhere in the product. OFF until counsel
- * confirms the wording. Off, every fee line reads as a disclosure with no
- * figure ("Management fee, disclosed in the memorandum"); the math in
- * lib/fees.ts runs either way, so turning this on changes words, not money.
+ * Whether fee numbers appear anywhere in the product. ON since counsel
+ * confirmed the fee (2026-09-17: the 1% for five years prefunded, the flat
+ * $10,000 formation and administration fee per SPV, pass-throughs at cost,
+ * escrow interest to investors). Off, every fee line reads as a disclosure
+ * with no figure; the math in lib/fees.ts runs either way, so the switch
+ * changes words, not money.
  */
-export const SHOW_FEE_TERMS = process.env.ASC_SHOW_FEE_TERMS === 'true';
+export const SHOW_FEE_TERMS = process.env.ASC_SHOW_FEE_TERMS !== 'false';
 
 /** Whether a carry number appears anywhere. OFF: no carry line at all. */
 export const SHOW_CARRY_TERMS = process.env.ASC_SHOW_CARRY_TERMS === 'true';
