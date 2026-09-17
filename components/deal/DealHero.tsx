@@ -29,6 +29,7 @@ import { ShieldCheck, Users } from 'lucide-react';
 
 import BackerMark from '@/components/BackerMark';
 import FundingProgress from '@/components/FundingProgress';
+import Term from '@/components/Term';
 import { SHOW_SPONSOR_ALIGNMENT } from '@/lib/config';
 import type { DealView } from '@/lib/domain';
 import { dealChip } from '@/lib/funding';
@@ -108,7 +109,9 @@ export default function DealHero({
         <div className={s.heroRole}>
           <span className={s.organized}>
             <ShieldCheck size={13} strokeWidth={1.7} aria-hidden="true" />
-            Organized and advised by AltSpot
+            <Term q="What is an SPV?" quiet>
+              Organized and advised by AltSpot
+            </Term>
           </span>
           {SHOW_SPONSOR_ALIGNMENT ? (
             <span className={s.alignment}>

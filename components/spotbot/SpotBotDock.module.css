@@ -82,9 +82,26 @@
   animation: dockIn var(--dur-2) var(--ease-entrance);
 }
 
-/* A reading width, for a long answer or a document quote. */
+/* Expanded (Tyler, 2026-09-17: "hard to read every response in one
+   frame"): a reading width and nearly the whole height, and the bubbles
+   let go of their caps so an answer runs the width of the page. */
 .panelWide {
-  width: 620px;
+  width: min(760px, calc(100vw - 40px));
+  height: calc(100vh - 72px);
+}
+.panelWide .you {
+  max-width: 70%;
+}
+.panelWide .bot {
+  max-width: 100%;
+}
+.panelWide .botBody {
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+.panelWide .log {
+  padding: 22px 26px;
+  gap: 18px;
 }
 
 /* One corner glow, the V18 atmosphere in miniature. Decorative. */
@@ -205,6 +222,11 @@
   height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* The dock keeps the log pinned by measurement (see the component);
+     the browser's own smooth scroll would fight it. */
+  scroll-behavior: auto;
+  overflow-anchor: none;
+  scrollbar-gutter: stable;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -302,7 +324,7 @@
 }
 
 .botBody {
-  font-size: 13.2px;
+  font-size: 13.6px;
   line-height: 1.68;
   color: var(--as-text-body);
   white-space: pre-wrap;
@@ -457,7 +479,7 @@
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  padding: 12px 16px 10px;
+  padding: 12px 16px 14px;
   border-top: 1px solid var(--hair-neutral);
   flex: none;
 }
@@ -490,7 +512,8 @@
   flex: none;
   border: none;
   border-radius: var(--r-pill);
-  background: var(--as-cta-gradient);
+  background: var(--as-gold);
+  background-image: var(--cta-sheen), var(--as-cta-gradient);
   color: var(--fg-on-gold);
   font-family: var(--font-mono);
   font-size: var(--fs-label);
@@ -515,33 +538,6 @@
   color: var(--as-text-muted);
   cursor: not-allowed;
   box-shadow: none;
-}
-
-/* ---------- foot ---------- */
-
-.foot {
-  position: relative;
-  padding: 0 16px 13px;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text-muted);
-  line-height: 1.7;
-  flex: none;
-}
-
-.kbd {
-  display: inline-block;
-  margin: 0 3px;
-  padding: 1px 5px;
-  border: 1px solid var(--hair-neutral);
-  border-radius: var(--r-xs);
-  background: var(--surface-1);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  color: var(--as-text-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {

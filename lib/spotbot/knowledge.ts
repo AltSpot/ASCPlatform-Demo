@@ -14,8 +14,17 @@
  * process and never about performance.
  */
 
-import { CARRY_PERCENT, SHOW_CARRY_TERMS } from '../config';
+import {
+  CARRY_PERCENT,
+  INVESTOR_CAP_DEFAULT,
+  INVESTOR_CAP_MAX,
+  QUALIFYING_VC_FUND_MAX_CAPITAL,
+  RETIREMENT_BLOCK_PERCENT,
+  RETIREMENT_WARN_PERCENT,
+  SHOW_CARRY_TERMS,
+} from '../config';
 import { feeSentence } from '../fees';
+import { money } from '../format';
 
 export interface KnowledgeTopic {
   id: string;
@@ -227,6 +236,33 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'No. There are no capital calls on this platform, ever. You send your subscription to escrow once, and that is the end of your obligation. A traditional fund calls capital in tranches, so your real exposure is unknown for years. AltSpot deals are single SPVs funded in full at closing, so what you send is what is at risk. If a later round happens, it is offered as a separate deal you can decline.',
     source: 'AltSpot subscription agreement, no capital calls',
     related: ['fees', 'funding-window', 'illiquidity'],
+  },
+  {
+    id: 'spv-limits',
+    question: 'Is there a limit on how many members an SPV can have?',
+    keywords: [
+      'investor cap',
+      'member cap',
+      'member limit',
+      'how many members',
+      'how many investors',
+      'spv full',
+      'full',
+      'waitlist',
+      'wait list',
+      'retirement money',
+      'retirement limit',
+      'ira limit',
+      '401k',
+      '25%',
+      '20%',
+      '100 investors',
+      '250 investors',
+    ],
+    answer:
+      `Two limits, and both are shown on the deal. Members: an SPV admits up to ${INVESTOR_CAP_DEFAULT} members, or up to ${INVESTOR_CAP_MAX} where it qualifies as a venture capital fund of ${money(QUALIFYING_VC_FUND_MAX_CAPITAL)} or less. That is an Investment Company Act limit, not a Rule 506(b) one. Once an SPV is full, a new member joins the waitlist instead and anyone already in keeps their spot. Retirement money: subscriptions through an IRA or 401(k) stay under ${RETIREMENT_BLOCK_PERCENT}% of each SPV. One that would take them to ${RETIREMENT_WARN_PERCENT}% goes through with a warning, and one that would reach ${RETIREMENT_BLOCK_PERCENT}% is refused. The invest page tells you as you type.`,
+    source: 'AltSpot platform guide, SPV admissions',
+    related: ['spv', 'ira-profile', 'funding-window'],
   },
   {
     id: 'illiquidity',

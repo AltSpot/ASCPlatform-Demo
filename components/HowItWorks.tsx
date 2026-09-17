@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
+import AskSpot from '@/components/AskSpot';
 import SidePanel from '@/components/SidePanel';
 
 import s from './HowItWorks.module.css';
@@ -32,6 +33,8 @@ interface Edition {
   eyebrow: string;
   steps: { icon: LucideIcon; title: string; body: string }[];
   note: string;
+  /** What Spot is asked from the panel's foot. */
+  ask: string;
 }
 
 const EDITIONS: Record<'radar' | 'invest', Edition> = {
@@ -60,6 +63,7 @@ const EDITIONS: Record<'radar' | 'invest', Edition> = {
       },
     ],
     note: 'A vote is not a commitment. It reserves nothing, moves no money, and nothing on the Radar is being offered.',
+    ask: 'What does voting on the Radar do?',
   },
   invest: {
     eyebrow: 'Open now',
@@ -86,12 +90,13 @@ const EDITIONS: Record<'radar' | 'invest', Edition> = {
       },
     ],
     note: 'Admissions close 24 hours before the wire. Private investments are illiquid and can lose all of their value.',
+    ask: 'What happens after I send to escrow?',
   },
 };
 
 export default function HowItWorks({ edition }: { edition: 'radar' | 'invest' }) {
   const [open, setOpen] = useState(false);
-  const { eyebrow, steps, note } = EDITIONS[edition];
+  const { eyebrow, steps, note, ask } = EDITIONS[edition];
 
   return (
     <>
@@ -126,6 +131,8 @@ export default function HowItWorks({ edition }: { edition: 'radar' | 'invest' })
         </ol>
 
         <p className={s.note}>{note}</p>
+
+        <AskSpot question={ask} />
       </SidePanel>
     </>
   );

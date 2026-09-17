@@ -1,0 +1,301 @@
+/* The picture under a Spot answer. Tokens only; gold is the one accent,
+   green means done, ember means a limit. */
+
+.fig {
+  margin: 12px 0 2px;
+  padding: 12px 14px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-well);
+  box-shadow: inset 0 0 0 1px var(--hair-soft);
+}
+
+.title {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+}
+
+.caption {
+  margin: 10px 0 0;
+  font-size: var(--fs-label);
+  line-height: 1.5;
+  color: var(--as-text-muted);
+}
+
+/* ---------- path ---------- */
+
+.path {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.path::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  width: 1px;
+  background: var(--hair-strong);
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 21px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.node {
+  display: inline-grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  box-shadow: 0 0 0 3px var(--surface-well);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: var(--w-semi);
+  color: var(--as-text);
+}
+.step[data-tone='good'] .node {
+  background: var(--good-fill);
+  color: var(--good);
+}
+.step[data-tone='good'] .node svg {
+  stroke: var(--good);
+}
+.step[data-tone='warn'] .node {
+  background: var(--tint-ember);
+  color: var(--warn);
+}
+.step[data-tone='gold'] .node {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+}
+
+.stepText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-top: 1px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--as-text-muted);
+}
+.stepText b {
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+}
+
+.otherwise {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--hair-strong);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--as-text-muted);
+}
+.otherwise svg {
+  flex: none;
+  margin-top: 3px;
+  stroke: var(--as-gold);
+}
+.otherwise b {
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+}
+
+/* ---------- meter ---------- */
+
+.meterWrap {
+  position: relative;
+  padding-top: 22px;
+}
+
+.marks {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 20px;
+}
+.markLabel {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.markLabel[data-tone='gold'] {
+  color: var(--accent);
+}
+.markLabel[data-tone='warn'] {
+  color: var(--warn);
+}
+.markLabel[data-tone='bad'] {
+  color: var(--bad);
+}
+/* The last mark hugs the right edge rather than hanging off it. */
+.markLabel:last-child {
+  transform: translateX(-100%);
+}
+
+.track {
+  position: relative;
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: visible;
+}
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+}
+.mark {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 18px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  background: var(--as-text-muted);
+}
+.mark[data-tone='gold'] {
+  background: var(--as-gold);
+}
+.mark[data-tone='warn'] {
+  background: var(--as-amber);
+}
+.mark[data-tone='bad'] {
+  background: var(--as-ember);
+}
+
+.fillLabel {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+
+/* ---------- sum ---------- */
+
+.sum {
+  margin: 0;
+}
+.sumRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 0;
+}
+.sumRow + .sumRow {
+  border-top: 1px solid var(--hair-soft);
+}
+.sumRow dt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12.5px;
+  color: var(--as-text);
+}
+.sumRow dt small {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--as-text-muted);
+}
+.sumRow dd {
+  margin: 0;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--as-text);
+  text-align: right;
+}
+.sumRow[data-tone='quiet'] dd {
+  font-size: 11px;
+  color: var(--as-text-muted);
+}
+.sumTotal {
+  border-top: 1px solid var(--hair-strong) !important;
+  margin-top: 2px;
+}
+.sumTotal dt,
+.sumTotal dd {
+  font-weight: var(--w-semi);
+}
+.sumTotal dd {
+  color: var(--accent-hot);
+}
+
+/* ---------- split ---------- */
+
+.split {
+  display: flex;
+  height: 14px;
+  gap: 2px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.segment {
+  display: block;
+  flex-basis: 0;
+  min-width: 6px;
+}
+.segment[data-tone='gold'] {
+  background: var(--as-cta-gradient);
+}
+.segment[data-tone='ember'] {
+  background: var(--as-ember);
+}
+.segment[data-tone='base'] {
+  background: var(--as-bar-base);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: var(--as-text-body);
+}
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--as-bar-base);
+}
+.legend li[data-tone='gold'] .swatch {
+  background: var(--as-gold);
+}
+.legend li[data-tone='ember'] .swatch {
+  background: var(--as-ember);
+}

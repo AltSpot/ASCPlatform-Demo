@@ -1,0 +1,72 @@
+/* The Ask Spot line: the orb, a lead, and one warm button. */
+
+.ask {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  background-image: var(--glass-tint-gold);
+  background-color: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+}
+.compact {
+  margin-top: 0;
+  padding: 10px 12px;
+}
+
+.orb {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+.lead {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--as-text-body);
+}
+.compact .lead {
+  font-size: var(--fs-meta);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--as-gold);
+  background-image: var(--cta-sheen), var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-semi);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    var(--shadow-cta);
+  transition:
+    transform 0.28s var(--ease-fluid),
+    box-shadow 0.28s var(--ease-fluid);
+}
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    var(--shadow-cta-hover);
+}
+.button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.arrow {
+  transition: transform 0.28s var(--ease-fluid);
+}
+.button:hover .arrow {
+  transform: translateX(2px);
+}

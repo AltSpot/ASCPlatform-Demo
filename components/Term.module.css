@@ -1,0 +1,55 @@
+/* A pressable term in running text: the word, a fine gold underline, a
+   small mark. Inherits the type it sits in so it never changes the
+   sentence. */
+
+.term {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-color: var(--hair-gold-active);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+.term:hover {
+  color: var(--accent-hot);
+  text-decoration-color: var(--accent);
+}
+.term:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+.mark {
+  display: inline-grid;
+  place-items: center;
+  width: 1.05em;
+  height: 1.05em;
+  margin-left: 0.3em;
+  vertical-align: 0.15em;
+  border-radius: 50%;
+  background: var(--tint-gold);
+  box-shadow: inset 0 0 0 1px var(--hair-gold);
+  font-family: var(--font-mono);
+  font-size: 0.68em;
+  font-weight: var(--w-semi);
+  line-height: 1;
+  color: var(--accent);
+  text-decoration: none;
+}
+.term:hover .mark {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  box-shadow: none;
+}

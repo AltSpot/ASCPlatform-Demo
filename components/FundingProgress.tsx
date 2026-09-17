@@ -16,6 +16,7 @@
  */
 import { Check, Lock } from 'lucide-react';
 
+import Term from '@/components/Term';
 import { dateStr, money } from '@/lib/format';
 import { ESCROW_LABEL, fundingView, type FundingInput } from '@/lib/funding';
 
@@ -104,7 +105,11 @@ export default function FundingProgress({
           <dd>{money(f.raised)}</dd>
         </div>
         <div className={s.field}>
-          <dt>Minimum to close</dt>
+          <dt>
+            <Term q="What does the funding bar mean?" quiet>
+              Minimum to close
+            </Term>
+          </dt>
           <dd>{money(f.minimum)}</dd>
         </div>
         <div className={s.field}>
@@ -112,7 +117,11 @@ export default function FundingProgress({
           <dd>{dateStr(f.closesAt ?? deal.targetClose)}</dd>
         </div>
         <div className={s.field}>
-          <dt>Escrow status</dt>
+          <dt>
+            <Term q="What happens after I send to escrow?" quiet>
+              Escrow status
+            </Term>
+          </dt>
           <dd className={s.escrow}>
             <Lock size={13} strokeWidth={1.8} aria-hidden="true" />
             {ESCROW_LABEL[f.escrow]}
@@ -128,12 +137,17 @@ export default function FundingProgress({
 
       {showAdmissions && (f.escrow === 'raising' || f.escrow === 'minimum_met') && f.admissionsCloseAt ? (
         <p className={s.admissions}>
-          {f.admissionsOpen ? 'Admissions close' : 'Admissions closed'} ·{' '}
-          {dateStr(f.admissionsCloseAt)}
+          <Term q="When do admissions close?" quiet>
+            {f.admissionsOpen ? 'Admissions close' : 'Admissions closed'}
+          </Term>{' '}
+          · {dateStr(f.admissionsCloseAt)}
           {deal.members && deal.investorCap ? (
             <span className={s.members}>
               {' '}
-              · {Math.min(deal.members, deal.investorCap)} of {deal.investorCap} members
+              ·{' '}
+              <Term q="Is there a limit on how many members an SPV can have?" quiet>
+                {Math.min(deal.members, deal.investorCap)} of {deal.investorCap} members
+              </Term>
             </span>
           ) : null}
         </p>

@@ -28,9 +28,11 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ask } from '@/lib/spotbot/client';
+import { SPOT_OPEN_EVENT, type SpotOpenDetail } from '@/lib/spotbot/open';
 import { pageContext } from '@/lib/spotbot/pages';
-import type { SpotBotAnswer } from '@/lib/spotbot/types';
+import type { SpotBotAnswer, SpotVisual as Visual } from '@/lib/spotbot/types';
 
+import SpotVisual from './SpotVisual';
 import styles from './SpotBotDock.module.css';
 
 interface Message {
@@ -39,6 +41,7 @@ interface Message {
   body: string;
   source?: string;
   refused?: boolean;
+  visual?: Visual;
 }
 
 /** Shown when the request itself fails. Honest about which part broke. */
@@ -185,14 +188,48 @@ export default function SpotBotDock() {
     }
   }, [messages]);
 
-  /** Follow the conversation, unless the member has scrolled up to read. */
+  /**
+   * Follow the conversation, unless the member has scrolled up to read.
+   *
+   * SMOOTH, NOT SMOOTHED (2026-09-17). This used to call scrollTo with
+   * behavior smooth on every change, and the browser's smooth scroll
+   * fought the message's own entrance animation and the composer's
+   * resize, so the log lurched and then caught up. Now the log is
+   * pinned by measurement: whenever its content grows, a ResizeObserver
+   * sets scrollTop straight to the bottom inside a frame, and the only
+   * motion the eye sees is the new message rising into place. The one
+   * smooth scroll left is the Latest button, which the member presses.
+   */
+  const pinnedRef = useRef(true);
+  useEffect(() => {
+    pinnedRef.current = pinned;
+  }, [pinned]);
   useEffect(() => {
     const log = logRef.current;
-    if (!log || !pinned) return;
+    if (!log || !open) return;
+    const inner = log.firstElementChild;
+    if (!inner) return;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    log.scrollTo({ top: log.scrollHeight, behavior: reduced ? 'auto' : 'smooth' });
-  }, [messages, busy, open, pinned]);
+    let frame = 0;
+    const follow = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        if (pinnedRef.current) log.scrollTop = log.scrollHeight;
+      });
+    };
+    follow();
+    const observer = new ResizeObserver(follow);
+    observer.observe(inner);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    const log = logRef.current;
+    if (log && pinned) log.scrollTop = log.scrollHeight;
+  }, [messages, busy, pinned]);
 
   const onLogScroll = useCallback(() => {
     const log = logRef.current;
@@ -228,6 +265,7 @@ export default function SpotBotDock() {
           body: answer.body,
           source: answer.source,
           refused: answer.refused,
+          visual: answer.visual,
         });
         setFollowUps({ path: here, questions: answer.followUps });
       } catch {
@@ -238,6 +276,38 @@ export default function SpotBotDock() {
     },
     [busy, here, push],
   );
+
+  /**
+   * Anything on a page can open Spot and hand it a question: a term in
+   * running text, the Ask Spot line under How it works (lib/spotbot/open).
+   * The send is read through a ref so the listener is attached once.
+   */
+  const sendRef = useRef(send);
+  useEffect(() => {
+    sendRef.current = send;
+  }, [send]);
+  useEffect(() => {
+    function onOpen(event: Event) {
+      const { question } = (event as CustomEvent<SpotOpenDetail>).detail ?? {};
+      setOpen((was) => {
+        if (!was && !restored.current) {
+          restored.current = true;
+          const stored = loadThread();
+          if (stored.length > 0) {
+            nextId.current = stored.length;
+            setMessages(stored.map((m, i) => ({ ...m, id: i })));
+          }
+        }
+        return true;
+      });
+      if (question) {
+        /* After the panel has mounted, so the log exists to scroll. */
+        window.setTimeout(() => sendRef.current(question), 60);
+      }
+    }
+    window.addEventListener(SPOT_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(SPOT_OPEN_EVENT, onOpen);
+  }, []);
 
   const clearThread = useCallback(() => {
     setMessages([]);
@@ -317,8 +387,8 @@ export default function SpotBotDock() {
                 className={styles.tool}
                 onClick={() => setWide((w) => !w)}
                 aria-pressed={wide}
-                aria-label={wide ? 'Narrow the panel' : 'Widen the panel'}
-                title={wide ? 'Narrow' : 'Widen'}
+                aria-label={wide ? 'Shrink the conversation' : 'Expand the conversation'}
+                title={wide ? 'Shrink' : 'Expand'}
               >
                 {wide ? (
                   <Minimize2 size={14} strokeWidth={1.5} aria-hidden="true" />
@@ -379,10 +449,9 @@ export default function SpotBotDock() {
                       data-refused={message.refused ? 'true' : 'false'}
                     >
                       <p className={styles.botBody}>{message.body}</p>
+                      {message.visual ? <SpotVisual visual={message.visual} /> : null}
                       {message.source && (
-                        <span className={styles.src}>
-                          Spot · {message.source} · explains, never advises
-                        </span>
+                        <span className={styles.src}>Source · {message.source}</span>
                       )}
                       <button
                         className={styles.copy}
@@ -468,17 +537,15 @@ export default function SpotBotDock() {
               maxLength={400}
               autoComplete="off"
             />
-            <button className={styles.send} type="submit" disabled={busy || !draft.trim()}>
+            <button
+              className={styles.send}
+              type="submit"
+              disabled={busy || !draft.trim()}
+              title="Ask (Enter). Shift+Enter for a new line."
+            >
               Ask
             </button>
           </form>
-
-          <p className={styles.foot}>
-            Spot explains, it never advises.
-            <kbd className={styles.kbd}>Enter</kbd> to send,
-            <kbd className={styles.kbd}>Shift</kbd> +
-            <kbd className={styles.kbd}>Enter</kbd> for a new line.
-          </p>
         </div>
       )}
 

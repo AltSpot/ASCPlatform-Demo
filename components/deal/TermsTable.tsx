@@ -13,11 +13,21 @@
  * Deliberately absent: minimum to close, closing date and escrow status,
  * which are the hero's funding picture.
  */
+import type { ReactNode } from 'react';
+
+import Term from '@/components/Term';
 import type { DealView } from '@/lib/domain';
 import { NO_CAPITAL_CALLS, dealFeeRows } from '@/lib/fees';
 
 import Section from './Section';
 import s from './Deal.module.css';
+
+/** The cost rows a member might stop on, each wired to Spot's answer. */
+const COST_QUESTIONS: Record<string, string> = {
+  'Management fee': 'What are the fees?',
+  'SPV fee': 'What are the fees?',
+  'Carried interest': 'How does carried interest actually work?',
+};
 
 export default function TermsTable({ deal }: { deal: DealView }) {
   const economics = [
@@ -25,7 +35,15 @@ export default function TermsTable({ deal }: { deal: DealView }) {
     ...(deal.pricePerShare ? [{ k: 'Price per share', v: deal.pricePerShare }] : []),
   ];
 
-  const costs = dealFeeRows().map((row) => ({ k: row.label, v: row.detail }));
+  const costs = dealFeeRows().map((row) => ({
+    k: COST_QUESTIONS[row.label] ? (
+      <Term q={COST_QUESTIONS[row.label]}>{row.label}</Term>
+    ) : (
+      row.label
+    ),
+    key: row.label,
+    v: row.detail,
+  }));
 
   return (
     <Section eyebrow="Terms" title="What you are agreeing to." id="terms">
@@ -39,7 +57,11 @@ export default function TermsTable({ deal }: { deal: DealView }) {
 
       <div style={{ marginTop: 26 }}>
         <Table rows={costs} caption="What it costs" />
-        <p className={s.costNote}>{NO_CAPITAL_CALLS}</p>
+        <p className={s.costNote}>
+          <Term q="Will I be asked for more money later?" quiet>
+            {NO_CAPITAL_CALLS}
+          </Term>
+        </p>
       </div>
     </Section>
   );
@@ -49,7 +71,7 @@ function Table({
   rows,
   caption,
 }: {
-  rows: { k: string; v: string }[];
+  rows: { k: ReactNode; key?: string; v: string }[];
   caption: string;
 }) {
   return (
@@ -63,7 +85,7 @@ function Table({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.k}>
+            <tr key={row.key ?? String(row.k)}>
               <td>{row.k}</td>
               <td className="num">{row.v}</td>
             </tr>

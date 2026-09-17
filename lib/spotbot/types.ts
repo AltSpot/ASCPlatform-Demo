@@ -14,6 +14,51 @@ export type RefusalReason =
   | 'tax_or_legal_advice'
   | 'deal_comparison';
 
+export type VisualTone = 'gold' | 'good' | 'warn' | 'bad' | 'quiet';
+
+/**
+ * A picture Spot can answer with, beside the prose (Tyler, 2026-09-17:
+ * "allow Spot to create visuals ... instead of just long paragraphs").
+ * Four shapes cover the mechanics people ask about: a path of steps (the
+ * escrow lifecycle, the 506(b) gate, what an SPV is), a meter with marks
+ * on it (the funding bar, the investor cap, retirement money), a sum
+ * (what goes to escrow) and a split (how an exit is shared). Every
+ * figure in one is computed by the same functions the product uses, so a
+ * picture cannot disagree with a page, and a figure that is behind a
+ * switch is left out of the picture too. Serializable: the dock keeps
+ * the thread in sessionStorage.
+ */
+export type SpotVisual =
+  | {
+      kind: 'path';
+      title: string;
+      steps: { label: string; note: string; tone?: VisualTone }[];
+      /** A branch at the end: what happens if the happy path does not. */
+      otherwise?: { label: string; note: string };
+    }
+  | {
+      kind: 'meter';
+      title: string;
+      /** Percent of the track, 0 to 100. */
+      value: number;
+      fillLabel: string;
+      marks: { at: number; label: string; tone?: VisualTone }[];
+      caption: string;
+    }
+  | {
+      kind: 'sum';
+      title: string;
+      rows: { label: string; value: string; note?: string; tone?: VisualTone }[];
+      total: { label: string; value: string };
+      caption: string;
+    }
+  | {
+      kind: 'split';
+      title: string;
+      segments: { label: string; share: number; tone: 'base' | 'gold' | 'ember' }[];
+      caption: string;
+    };
+
 export interface SpotBotAnswer {
   /** The prose shown to the investor. Plain text, no markup. */
   body: string;
@@ -28,6 +73,8 @@ export interface SpotBotAnswer {
   reason?: RefusalReason;
   /** Follow-ups SpotBot can actually answer, offered as one-tap chips. */
   followUps: string[];
+  /** A picture of the mechanic, when the topic has one. */
+  visual?: SpotVisual;
 }
 
 export interface SpotBotRequest {

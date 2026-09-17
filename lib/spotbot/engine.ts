@@ -35,6 +35,7 @@ import { classify, normalize, refusalAnswer } from './gate';
 import { KNOWLEDGE, questionsFor, topic, type KnowledgeTopic } from './knowledge';
 import { pageContext, type PageContext } from './pages';
 import type { SpotBotAnswer, SpotBotRequest } from './types';
+import { visualFor } from './visuals';
 
 export interface AnswerInput {
   question: string;
@@ -169,11 +170,15 @@ export async function generateAnswer(input: AnswerInput): Promise<SpotBotAnswer>
   const match = retrieve(input.question, input.page);
   if (!match) return fallbackAnswer(input.page);
 
+  /* A mechanic gets its picture beside the prose (./visuals.ts); a topic
+     without one is prose alone, and the field is simply absent. */
+  const visual = visualFor(match.id);
   return {
     body: match.answer,
     source: match.source,
     refused: false,
     followUps: questionsFor(match.related ?? []).slice(0, 3),
+    ...(visual ? { visual } : {}),
   };
 }
 
