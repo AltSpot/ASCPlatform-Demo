@@ -153,11 +153,18 @@ export function isLeadType(value: string): value is LeadType {
   return value === 'altspot' || value === 'partner';
 }
 
+/**
+ * The words on the ESCROW STATUS field. "Funded" at close (Tyler,
+ * 2026-09-17): a member wants to read that their money is in. It is a
+ * statement of fact about the SPV, not the company: at close escrow
+ * released to the SPV and the SPV was funded; the SPV's own purchase is
+ * described in the closing notice. Counsel to confirm the word.
+ */
 export const ESCROW_LABEL: Record<EscrowStatus, string> = {
   raising: 'Held in escrow',
   minimum_met: 'In escrow · will close',
   admissions_closed: 'Admissions closed',
-  closed: 'Released at close',
+  closed: 'Funded · closed',
   returned: 'Returned to members',
 };
 
