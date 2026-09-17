@@ -854,6 +854,78 @@ const DEALS: SeedDeal[] = [
     ],
     deck: [],
   },
+  // ------------------------------------------------------------------
+  //  MERIDEL BIO — the biotech deal (Tyler, 2026-09-17). Invented.
+  // ------------------------------------------------------------------
+  {
+    id: 'meridel',
+    name: 'Meridel Bio',
+    entity: 'ASC Meridel I, LLC',
+    tag: 'AltSpot-led · Series A',
+    kind: 'led',
+    sector: 'Enzyme Therapeutics · Biotech',
+    stage: 'Series A Preferred',
+    assetClass: 'venture',
+    industry: 'healthcare',
+    art: 'linear-gradient(135deg,#061A14 0%,#12483A 55%,#5EE0B5 115%)',
+    headline: 'Enzymes that replace a missing one, made to last a month.',
+    blurb:
+      'Engineered replacement enzymes for rare metabolic disorders, built to stay active for weeks so patients dose monthly instead of weekly.',
+    summary:
+      'Meridel engineers replacement enzymes for rare inherited metabolic disorders, where the body cannot make one enzyme and patients today take weekly infusions for life. Its platform stabilises the enzyme so a single dose stays active for about a month. The lead programme finished a Phase 1 safety study this year and enters Phase 2 with this round. This is a biotech investment: its value turns on clinical results that have not happened yet.',
+    thesis: [
+      'Weekly infusion for life is the standard of care in these disorders. A monthly dose changes what treatment asks of a patient.',
+      'The platform is the asset: the same stabilising approach applies across a family of enzyme deficiencies.',
+      'Rare disease programmes carry orphan designation, which shortens review and extends exclusivity.',
+    ],
+    indicators: {
+      revenue: { value: 'n/a', note: 'Clinical stage. No product revenue.' },
+      growth: { value: 'n/a', note: 'Clinical stage.' },
+      grossMargin: { value: 'n/a', note: 'Clinical stage.' },
+      burn: { value: '~$1.1M', note: 'Per month. Funds Phase 2 readout.' },
+      entryMultiple: { value: 'n/a', note: 'Priced on the programme; see the memo.' },
+    },
+    rounds: [
+      { round: 'Seed', date: '2024', preMoney: '$14,000,000', note: 'Academic spin-out.' },
+      { round: 'Series A', date: 'Sep 2026', preMoney: '$48,000,000', note: 'AltSpot leading.', current: true },
+    ],
+    metrics: [
+      { k: 'Lead programme', v: 'Phase 2', note: 'entering with this round' },
+      { k: 'Dosing interval', v: '~28 days', note: 'Phase 1, vs weekly today' },
+      { k: 'Programmes', v: '3', note: 'one clinical, two preclinical' },
+    ],
+    terms: [
+      { k: 'Security', v: 'Series A Preferred Stock' },
+      { k: 'Pre-money valuation', v: '$48,000,000' },
+      { k: 'Round size', v: '$22,000,000' },
+    ],
+    preferredTerms: [
+      { k: 'Liquidation preference', v: '1x non-participating' },
+      { k: 'Pro-rata rights', v: 'Yes' },
+    ],
+    whatWeLike: [
+      'A clear clinical question with a readout inside the time this round funds.',
+      'One platform, several programmes, so a single result is not the whole company.',
+      'Orphan indications, where the path to approval is narrower and better defined.',
+    ],
+    outcomes: {},
+    risks:
+      'Clinical-stage biotech. Total loss of capital is possible and common at this stage. The Phase 2 study can fail on safety or efficacy; manufacturing a stabilised enzyme at scale is unproven; regulators can require more trials than planned; rare disease markets are small; and the position is illiquid with no promised exit.',
+    minInvestment: 10000,
+    allocationTotal: 2200000,
+    allocationRemaining: 1600000,
+    closesInDays: 44,
+    launchedDaysAgo: 6,
+    altspotCommitted: 0,
+    committedNote: '',
+    sortOrder: 6,
+    media: { type: 'metric', label: 'Patients dosed', series: [0, 4, 9, 14, 18], caption: 'Phase 1 participants dosed, cumulative.' },
+    docs: ['Investment Memo: Meridel Bio Series A', 'Subscription Agreement: ASC Meridel I', 'Risk Factors & Disclosures'],
+    spotbot: [
+      { q: 'What has to go right?', a: 'The Phase 2 study. This round funds it to a readout, and the value of the company turns on that result. Not legal, tax, or investment advice.' },
+    ],
+    deck: [],
+  },
   {
     id: 'kestrel',
     name: 'Kestrel Autonomy',

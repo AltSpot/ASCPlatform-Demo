@@ -1,6 +1,7 @@
 {
   "_note": "DEMO SEAM. Invented brand colours for invented companies. Each company has one hue (its glyph and the tint on its cards) and a tile (the dark ground its mark sits on). scripts/make-marks.mjs draws private/marks/<slug>.svg from these; lib/brand.ts hands them to cards. Real companies bring their own marks and this file goes.",
   "calder": { "hue": "#4F8DF7", "light": "#59E3FF", "tile": "#0A1322" },
+  "meridel": { "hue": "#5EE0B5", "light": "#C8F7E6", "tile": "#061A14" },
   "growth-fund": { "hue": "#C79A4B", "light": "#F1D58E", "tile": "#1C150A" },
   "aurelia": { "hue": "#FF7A59", "light": "#FFC7A8", "tile": "#1F0E0A" },
   "tessellate": { "hue": "#2EC4B6", "light": "#9BF1E6", "tile": "#07191A" },

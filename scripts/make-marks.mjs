@@ -26,6 +26,8 @@ const S5 = S.replace('stroke-width="7"', 'stroke-width="5"');
 const GLYPHS = {
   // Grid lines meeting at nodes.
   calder: `<path d="M28 70 L44 70 L44 46 L62 46" ${S}/><path d="M38 30 L56 30 L56 54 L72 54" ${S} opacity=".55"/><circle cx="72" cy="54" r="5.5" ${F}/><circle cx="28" cy="70" r="5.5" ${F}/>`,
+  // A double helix, drawn as two crossing strands and their rungs.
+  meridel: `<path d="M36 24 C64 38 36 62 64 76" ${S}/><path d="M64 24 C36 38 64 62 36 76" ${S} opacity=".6"/><path d="M42 36 L58 36 M42 64 L58 64" ${S5} opacity=".5"/>`,
   // Three stacked layers: many deals in one.
   'growth-fund': `<path d="M50 26 L76 39 L50 52 L24 39 Z" ${S}/><path d="M24 52 L50 65 L76 52" ${S} opacity=".75"/><path d="M24 64 L50 77 L76 64" ${S} opacity=".45"/>`,
   // An aura: a core and its rays.
