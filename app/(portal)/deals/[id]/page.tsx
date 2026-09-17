@@ -31,6 +31,7 @@ import Outcomes from '@/components/deal/Outcomes';
 import RiskPanel from '@/components/deal/RiskPanel';
 import KeyIndicators from '@/components/deal/KeyIndicators';
 import RoundHistory from '@/components/deal/RoundHistory';
+import SpvStanding from '@/components/deal/SpvStanding';
 import SummaryMedia from '@/components/deal/SummaryMedia';
 import TermsTable from '@/components/deal/TermsTable';
 import ViewOnly from '@/components/deal/ViewOnly';
@@ -222,6 +223,11 @@ export default async function DealPage({
 
       <TermsTable deal={deal} />
 
+      {/* The SPV today, live from its commitments: members against the
+          cap, retirement money against the rule (Tyler, 2026-09-17). */}
+      {standing ? (
+        <SpvStanding standing={standing.standing} alreadyMember={standing.alreadyMember} />
+      ) : null}
 
       <div className={s.section}>
         {viewOnly ? (
