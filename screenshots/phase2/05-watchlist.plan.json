@@ -4,51 +4,94 @@
     {
       "name": "01-watchlist-page",
       "steps": [
-        { "go": "/reshoot?as=recent&to=/watchlist" },
-        { "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['saved deals', 'your votes', 'calder', 'browse the marketplace']) if (!t.includes(w)) throw new Error('missing ' + w); const nav = [...document.querySelectorAll('nav a')].map(a => a.textContent.trim()).filter(Boolean); const i = nav.findIndex(n => n.includes('Portfolio')), j = nav.findIndex(n => n.includes('Terminal')), k = nav.findIndex(n => n.includes('Watchlist')); if (!(k >= 0 && k < i && i < j)) throw new Error('rail order ' + nav.join(',')); })()" }
+        {
+          "go": "/reshoot?as=recent&to=/watchlist"
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); for (const w of ['saved deals', 'your votes', 'calder', 'browse the marketplace']) if (!t.includes(w)) throw new Error('missing ' + w); const nav = [...document.querySelectorAll('nav a')].map(a => a.textContent.trim()).filter(Boolean); const i = nav.findIndex(n => n.includes('Portfolio')), j = nav.findIndex(n => n.includes('Terminal')), k = nav.findIndex(n => n.includes('Watchlist')); if (!(k >= 0 && k < i && i < j)) throw new Error('rail order ' + nav.join(',')); })()"
+        }
       ]
     },
     {
       "name": "02-add-from-search",
       "steps": [
-        { "go": "/reshoot?as=recent&to=/watchlist" },
-        { "eval": "document.querySelector('input[type=search]').focus()" },
-        { "wait": 300 },
-        { "eval": "(() => { if (!document.body.innerText.toLowerCase().includes('suggestions')) throw new Error('no suggestions'); })()" }
+        {
+          "go": "/reshoot?as=recent&to=/watchlist"
+        },
+        {
+          "eval": "document.querySelector('input[type=search]').focus()"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "eval": "(() => { if (!document.body.innerText.toLowerCase().includes('suggestions')) throw new Error('no suggestions'); })()"
+        }
       ]
     },
     {
       "name": "03-empty-watchlist",
       "steps": [
-        { "go": "/reshoot?as=new&to=/watchlist" },
-        { "eval": "(() => { const t = document.body.innerText; if (!t.includes('Nothing on your watchlist yet') || !t.includes('Explore investments')) throw new Error('empty state missing'); })()" }
+        {
+          "go": "/reshoot?as=new&to=/watchlist"
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!t.includes('Nothing on your watchlist yet') || !t.includes('Explore investments')) throw new Error('empty state missing'); })()"
+        }
       ]
     },
     {
       "name": "04-marketplace-yours",
       "steps": [
-        { "go": "/reshoot?as=recent&to=/marketplace" },
-        { "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim().startsWith('Yours')); if (!b) throw new Error('no Yours toggle'); b.click(); })()" },
-        { "wait": 400 },
-        { "eval": "(() => { const cards = document.querySelectorAll('.deal-card'); if (cards.length !== 2) throw new Error('Yours shows ' + cards.length + ' deals'); })()" }
+        {
+          "go": "/reshoot?as=recent&to=/marketplace"
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim().startsWith('Yours')); if (!b) throw new Error('no Yours toggle'); b.click(); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const cards = document.querySelectorAll('.deal-card'); if (cards.length !== 2) throw new Error('Yours shows ' + cards.length + ' deals'); })()"
+        }
       ]
     },
     {
       "name": "05-radar-how-it-works",
       "steps": [
-        { "go": "/reshoot?as=recent&to=/marketplace?view=radar" },
-        { "wait": 500 },
-        { "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === 'How it works'); if (!b) throw new Error('no How it works'); b.click(); if (!document.querySelector('dialog[open]')) throw new Error('panel did not open'); })()" },
-        { "wait": 400 }
+        {
+          "go": "/reshoot?as=recent&to=/marketplace?view=radar"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('#radar button')].find(x => x.textContent.trim() === 'How it works'); if (!b) throw new Error('no How it works'); b.click(); })()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d) throw new Error('panel did not open'); if (!/vote is not a commitment/i.test(d.innerText)) throw new Error('radar edition missing'); })()"
+        }
       ]
     },
     {
       "name": "06-dashboard-empty-watchlist",
       "steps": [
-        { "go": "/reshoot?as=new&to=/dashboard" },
-        { "eval": "(() => { if (!document.body.innerText.includes('Explore investments')) throw new Error('dashboard watchlist CTA missing'); })()" },
-        { "eval": "document.getElementById('watchlist')?.scrollIntoView({ block: 'center' })" },
-        { "wait": 300 }
+        {
+          "go": "/reshoot?as=new&to=/dashboard"
+        },
+        {
+          "eval": "(() => { if (!document.body.innerText.includes('Explore investments')) throw new Error('dashboard watchlist CTA missing'); })()"
+        },
+        {
+          "eval": "document.getElementById('watchlist')?.scrollIntoView({ block: 'center' })"
+        },
+        {
+          "wait": 300
+        }
       ]
     }
   ]

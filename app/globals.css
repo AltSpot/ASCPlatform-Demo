@@ -871,7 +871,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-figure)}
   transition:all .25s ease;z-index:200;font-size:14px;pointer-events:none;max-width:90vw;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast b{color:var(--accent-hot)}
+.toast b{color:var(--as-text);font-weight:var(--w-semi)}
 
 /* ---------- breadcrumb ---------- */
 .crumbs{

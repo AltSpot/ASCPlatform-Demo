@@ -1,0 +1,22 @@
+{
+  "out": "screenshots/phase2/08-radar-seed",
+  "shots": [
+    {
+      "name": "01-screen15-radar-mix",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace?view=radar" },
+        { "wait": 600 },
+        { "eval": "fetch('/api/radar').then(r => r.json()).then(list => { const rounds = list.map(c => c.lastRoundLabel); for (const r of ['Pre-seed', 'Seed', 'Series B', 'Series C']) if (!rounds.includes(r)) throw new Error('radar missing ' + r); if (!list.some(c => c.assetClass === 'secondary')) throw new Error('no late-stage secondaries'); if (/broker/i.test(document.getElementById('radar').innerText)) throw new Error('broker on the Radar'); })" }
+      ]
+    },
+    {
+      "name": "02-screen18-deal-no-projections",
+      "steps": [
+        { "go": "/reshoot?to=/deals/calder" },
+        { "wait": 500 },
+        { "eval": "(() => { const t = document.body.innerText; if (/Potential outcomes|3 to 4x|Aspen|Bentley|Emerson|Principal acquirer/i.test(t)) throw new Error('projection or real comparable on the deal page'); })()" },
+        { "eval": "fetch('/deals/aurelia').then(r => r.text()).then(html => { if (/Principal acquirer|AltSpot acquired/.test(html)) throw new Error('principal copy on a secondary'); })" }
+      ]
+    }
+  ]
+}
