@@ -56,6 +56,11 @@ export async function sweepStaleDemoAccounts(): Promise<number> {
     });
     if (stale.length === 0) return 0;
 
+    /* Rows keyed by user with no relation to cascade from. */
+    const ids = stale.map((u) => u.id);
+    await prisma.investorPreference.deleteMany({ where: { userId: { in: ids } } });
+    await prisma.spvWaitlistEntry.deleteMany({ where: { userId: { in: ids } } });
+
     const { count } = await prisma.user.deleteMany({
       where: { id: { in: stale.map((u) => u.id) } },
     });
@@ -113,5 +118,7 @@ export async function releaseHeldAllocation(userId: string): Promise<void> {
  * Other investors and the deal rows are untouched.
  */
 export async function deleteInvestor(userId: string): Promise<void> {
+  await prisma.investorPreference.deleteMany({ where: { userId } });
+  await prisma.spvWaitlistEntry.deleteMany({ where: { userId } });
   await prisma.user.delete({ where: { id: userId } });
 }

@@ -7,6 +7,7 @@
  */
 import { Copy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useState, useSyncExternalStore } from 'react';
 
 import { useToast } from '@/components/Toast';
@@ -28,7 +29,10 @@ const NOTIFICATIONS: { label: string; required?: boolean }[] = [
 export default function SettingsPanel({
   email,
   invitePath,
+  preferencesSummary,
 }: {
+  /** What the member asked to see, in words, or null if not answered. */
+  preferencesSummary: string | null;
   email: string;
   /** This member's own referral link path, e.g. /r/m-1a2b3c4d5e. */
   invitePath: string;
@@ -106,6 +110,18 @@ export default function SettingsPanel({
             >
               Save changes
             </button>
+          </div>
+
+          {/* Deal preferences: what is marked for this member and what they
+              hear about. Asked on the dashboard once accepted; changed here. */}
+          <div className="card">
+            <h3 style={{ marginBottom: 4 }}>Deal preferences</h3>
+            <p className="small" style={{ marginBottom: 14 }}>
+              {preferencesSummary ?? 'Not set yet. Tell us what you want to see.'}
+            </p>
+            <Link className="btn btn-ghost btn-sm" href="/preferences?from=settings">
+              {preferencesSummary ? 'Change preferences' : 'Set preferences'}
+            </Link>
           </div>
 
           {/* The invite link. Everyone who follows it lands on sign-up and

@@ -47,6 +47,8 @@ describe('referral source is reporting only', () => {
     'lib/fees.ts',
     'lib/funding.ts',
     'lib/spv-rules.ts',
+    'lib/preferences.ts',
+    'lib/explore.ts',
     'lib/repositories/spv.ts',
     'lib/relationship.ts',
     'lib/domain.ts',

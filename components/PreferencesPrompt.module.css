@@ -1,0 +1,42 @@
+/* The preferences card at the top of the dashboard. */
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+}
+.icon svg {
+  stroke: var(--as-gold);
+}
+.copy {
+  flex: 1;
+  min-width: 260px;
+}
+.title {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 20px;
+  color: var(--as-text);
+}
+.sub {
+  margin: 0;
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}

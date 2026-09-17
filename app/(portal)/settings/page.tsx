@@ -4,6 +4,10 @@ import { audit } from '@/lib/audit';
 import { requireUser } from '@/lib/auth';
 import { referralPath } from '@/lib/referral';
 import { getOrCreateMemberCode } from '@/lib/repositories/referrals';
+import { getPreferences } from '@/lib/repositories/preferences';
+import { LEAD_FILTER_LABEL, STAGE_LABEL } from '@/lib/explore';
+import { summarize } from '@/lib/preferences';
+import { ASSET_CLASSES, INDUSTRIES } from '@/lib/taxonomy';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,5 +26,21 @@ export default async function SettingsPage() {
     });
   }
 
-  return <SettingsPanel email={user.email} invitePath={referralPath(view.code)} />;
+  const prefs = await getPreferences(user.id);
+  const preferencesSummary = prefs
+    ? summarize(prefs, {
+        assetClass: (k) => ASSET_CLASSES[k].label,
+        industry: (k) => INDUSTRIES[k],
+        stage: (k) => STAGE_LABEL[k],
+        lead: (k) => LEAD_FILTER_LABEL[k],
+      })
+    : null;
+
+  return (
+    <SettingsPanel
+      email={user.email}
+      invitePath={referralPath(view.code)}
+      preferencesSummary={preferencesSummary}
+    />
+  );
 }

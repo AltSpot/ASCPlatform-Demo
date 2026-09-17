@@ -233,6 +233,18 @@ export async function ensureInvestorRecords(userId: string): Promise<void> {
    */
   await completeOnboarding(userId, user.name);
   await seedOpeningPosition(userId);
+  /* DEMO SEAM. A long-standing member answered their deal preferences
+     long ago. The +recent member has not, so the dashboard card that asks
+     can be shown on a call. */
+  await prisma.investorPreference.create({
+    data: {
+      userId,
+      assetClassesJson: JSON.stringify(['venture', 'growth']),
+      industriesJson: JSON.stringify(['energy-climate', 'artificial-intelligence', 'industrials']),
+      stagesJson: JSON.stringify(['early', 'growth']),
+      checkSize: '25-50',
+    },
+  });
 }
 
 /**

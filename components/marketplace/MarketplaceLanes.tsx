@@ -33,7 +33,7 @@
  * dashboard links there and Spot reads the query to know which room
  * it is in.
  */
-import { Clock, Radar, Star, Store, Users, X } from 'lucide-react';
+import { Clock, Radar, Sparkles, Star, Store, Users, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import TaxonomyFilters, {
@@ -66,6 +66,7 @@ export default function MarketplaceLanes({
   fromRadar,
   companies,
   radarSourced = [],
+  forYou = null,
   initialView,
   initialFilter = NO_QUICK_FILTER,
   locked,
@@ -76,6 +77,8 @@ export default function MarketplaceLanes({
   /** Deal ids the member voted for on the Radar before they opened. */
   fromRadar: string[];
   companies: RadarCompanyView[];
+  /** Deals that fit the member's preferences, or null when there are none to apply. */
+  forYou?: string[] | null;
   /** Open deals that came off the Radar. Shown as just opened, from the Radar. */
   radarSourced?: string[];
   initialView: 'current' | 'radar';
@@ -100,6 +103,7 @@ export default function MarketplaceLanes({
   });
   const [lane, setLane] = useState<Lane>(initialView === 'radar' ? 'radar' : 'invest');
   const [mineOnly, setMineOnly] = useState(false);
+  const [forYouOnly, setForYouOnly] = useState(false);
   const [savedIds, setSavedIds] = useState(watched);
   const [votedSlugs, setVotedSlugs] = useState(() =>
     companies.filter((c) => c.yourAmount !== null).map((c) => c.slug),
@@ -270,6 +274,18 @@ export default function MarketplaceLanes({
           <Star size={13} strokeWidth={1.7} aria-hidden="true" />
           Yours <span className={s.laneCount}>{yoursCount}</span>
         </button>
+        {forYou ? (
+          <button
+            type="button"
+            className={s.yours}
+            aria-pressed={forYouOnly}
+            onClick={() => setForYouOnly((on) => !on)}
+            title="Deals that match your preferences"
+          >
+            <Sparkles size={13} strokeWidth={1.7} aria-hidden="true" />
+            For you <span className={s.laneCount}>{forYou.length}</span>
+          </button>
+        ) : null}
         </div>
         <TaxonomyFilters
           counts={counts}
@@ -332,6 +348,7 @@ export default function MarketplaceLanes({
             filter={filter}
             bridgeHref="#radar"
             radarSourced={radarSourced}
+            onlyIds={forYouOnly && forYou ? forYou : null}
             lead={shelfOnly.lead}
             stage={shelfOnly.stage}
             mineOnly={mineOnly}

@@ -35,6 +35,8 @@ import { type OpenPosition } from '@/components/PositionTimeline';
 import PositionsTable, { type PositionRow } from '@/components/PositionsTable';
 import RadarRows, { type RadarRow } from '@/components/RadarRows';
 import SetupBanner from '@/components/SetupBanner';
+import PreferencesPrompt from '@/components/PreferencesPrompt';
+import { getPreferences } from '@/lib/repositories/preferences';
 import WatchlistBlock from '@/components/WatchlistBlock';
 import ExploreTiles from '@/components/ExploreTiles';
 import { exploreGroups } from '@/lib/explore';
@@ -94,6 +96,13 @@ export default async function DashboardPage() {
     getDealsForViewer(watchlist, user.id),
   ]);
   const gate = evaluateInvestGate(wizard);
+  /* Deal preferences are asked once the questionnaire is approved: the
+     cooling-off wait is the natural moment, and the answers are ready the
+     day offerings open. The card stays at the top until they answer. */
+  const preferences = await getPreferences(user.id);
+  const askPreferences =
+    preferences === null &&
+    (wizard.relationship.stage === 'cooling_off' || wizard.relationship.stage === 'eligible');
 
   /**
    * "Welcome back" to someone who created their account ninety seconds
@@ -383,6 +392,8 @@ export default async function DashboardPage() {
           Browse deals →
         </Link>
       </div>
+
+      {askPreferences ? <PreferencesPrompt /> : null}
 
       <SetupBanner gate={gate} wizard={wizard} />
 

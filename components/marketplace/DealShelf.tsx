@@ -45,7 +45,10 @@ export default function DealShelf({
   radarSourced = [],
   lead = null,
   stage = null,
+  onlyIds = null,
 }: {
+  /** Show only these deals (For you). */
+  onlyIds?: string[] | null;
   /** Shelf-only quick filters (lib/explore.ts). */
   lead?: LeadType | null;
   stage?: StageBucket | null;
@@ -123,9 +126,10 @@ export default function DealShelf({
           (filters.industry === null || deal.industry === filters.industry) &&
           (!mineOnly || saved.has(deal.id) || voted.has(deal.id)) &&
           (lead === null || (!deal.redacted && deal.leadType === lead)) &&
-          (stage === null || (!deal.redacted && stageBucket(deal) === stage)),
+          (stage === null || (!deal.redacted && stageBucket(deal) === stage)) &&
+          (onlyIds === null || onlyIds.includes(deal.id)),
       ),
-    [deals, filters, mineOnly, saved, voted, lead, stage],
+    [deals, filters, mineOnly, saved, voted, lead, stage, onlyIds],
   );
 
   return (

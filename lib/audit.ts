@@ -51,6 +51,8 @@ export type AuditAction =
   /* Which link a new member arrived through. Reporting only. */
   | 'referral.attributed'
   | 'referral.link_created'
+  /* A member's deal preferences, for matchmaking. */
+  | 'preferences.saved'
   | 'demo.reset';
 
 interface AuditInput {

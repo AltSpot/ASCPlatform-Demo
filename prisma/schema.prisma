@@ -591,3 +591,28 @@ model SpvWaitlistEntry {
   @@index([dealId])
   @@map("spv_waitlist")
 }
+
+// ---------------- deal preferences ----------------
+
+/// What a member wants to see, for matchmaking: asked once they are
+/// accepted, editable from Settings. Every list empty, or showEverything,
+/// means no filter. Preferences shape what is highlighted and what a
+/// member is told about; they never hide an offering from the shelf.
+model InvestorPreference {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  showEverything  Boolean  @default(false)
+  /// JSON string arrays of lib/taxonomy.ts and lib/explore.ts keys.
+  assetClassesJson String  @default("[]")
+  industriesJson   String  @default("[]")
+  stagesJson       String  @default("[]")
+  leadsJson        String  @default("[]")
+  /// A check-size band key from lib/preferences.ts, or null for any.
+  checkSize       String?
+  /// Tell the member when a matching deal opens.
+  notifyMatches   Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("investor_preferences")
+}

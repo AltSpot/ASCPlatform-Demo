@@ -21,6 +21,8 @@ import { getRadarBoard } from '@/lib/repositories/radar';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
 import { parseQuickFilter } from '@/lib/explore';
+import { isOpenToEverything, matchesPreferences } from '@/lib/preferences';
+import { getPreferences } from '@/lib/repositories/preferences';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,6 +59,14 @@ export default async function MarketplacePage({
      opened, from the Radar. Before the gate opens dealId is withheld and
      the shelf is empty, so nothing here can reveal a deal. */
   const onShelf = new Set(deals.map((deal) => deal.id));
+
+  /* Deals that fit what the member asked for. Null when they asked for
+     everything or have not answered: then there is nothing to single out. */
+  const prefs = await getPreferences(user.id);
+  const forYou =
+    prefs && !isOpenToEverything(prefs)
+      ? deals.filter((deal) => !deal.redacted && matchesPreferences(deal, prefs)).map((d) => d.id)
+      : null;
   const radarSourced = radar
     .filter((company) => company.dealId && onShelf.has(company.dealId))
     .map((company) => company.dealId as string);
@@ -72,6 +82,7 @@ export default async function MarketplacePage({
       fromRadar={fromRadar}
       companies={stillVoting}
       radarSourced={radarSourced}
+      forYou={forYou}
       locked={canSeeOfferings(relationship) ? null : relationship}
       initialView={params.view === 'radar' ? 'radar' : 'current'}
       initialFilter={parseQuickFilter(params)}

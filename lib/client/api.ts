@@ -23,6 +23,7 @@ import type {
   ExternalPositionInput,
   ExternalPositionView,
 } from '../repositories/external';
+import type { Preferences } from '../preferences';
 import type { QuestionnaireAnswers } from '../relationship';
 import type { RadarCompanyView } from '../terminal/radar';
 
@@ -173,6 +174,10 @@ export const api = {
   /** A full SPV: wait for a spot. Reserves nothing. */
   joinWaitlist: (dealId: string, amount?: number) =>
     post<{ joinedAt: string; position: number }>(`/deals/${dealId}/waitlist`, { amount }),
+
+  // ---- deal preferences ----
+  preferences: () => request<Preferences | null>('/preferences'),
+  savePreferences: (prefs: Preferences) => put<Preferences>('/preferences', prefs),
 
   // ---- watchlist ----
   /** This investor's own saved deals. Not AltSpot Radar. */
