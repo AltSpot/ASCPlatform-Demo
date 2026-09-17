@@ -48,6 +48,7 @@ export default function FundingProgress({
   const bar = (
     <div
       className={s.bar}
+      data-met={f.minimumMet}
       role="img"
       aria-label={
         f.minimumMet
@@ -57,8 +58,31 @@ export default function FundingProgress({
     >
       <span className={s.toMinimum} style={{ width: `${f.minimumAtPct}%` }} />
       <span className={s.fill} style={{ width: `${Math.max(2, f.ofAllocationPct)}%` }} />
+    </div>
+  );
+
+  /* The minimum is the line that decides whether the deal closes, so it
+     is drawn as a marker standing proud of the bar, with its word over it
+     wherever there is room, not a hairline inside the track. */
+  const withMarker = (
+    <div className={s.barWrap} data-compact={compact}>
+      {!compact ? (
+        <span
+          className={s.markerLabel}
+          data-met={f.minimumMet}
+          style={{ left: `${Math.min(92, Math.max(8, f.minimumAtPct))}%` }}
+        >
+          Minimum
+        </span>
+      ) : null}
+      {bar}
       {f.minimumAtPct < 100 ? (
-        <span className={s.tick} style={{ left: `${f.minimumAtPct}%` }} />
+        <span
+          className={s.marker}
+          data-met={f.minimumMet}
+          style={{ left: `${f.minimumAtPct}%` }}
+          aria-hidden="true"
+        />
       ) : null}
     </div>
   );
@@ -66,7 +90,7 @@ export default function FundingProgress({
   if (compact) {
     return (
       <div className={s.compact}>
-        {bar}
+        {withMarker}
         <p className={s.caption}>{label}</p>
       </div>
     );
@@ -96,13 +120,13 @@ export default function FundingProgress({
         </div>
       </dl>
 
-      {bar}
+      {withMarker}
       <p className={s.caption}>
         {label}
         <span>Up to {money(f.allocation)}</span>
       </p>
 
-      {showAdmissions && f.escrow === 'held' && f.admissionsCloseAt ? (
+      {showAdmissions && (f.escrow === 'raising' || f.escrow === 'minimum_met') && f.admissionsCloseAt ? (
         <p className={s.admissions}>
           {f.admissionsOpen ? 'Admissions close' : 'Admissions closed'} ·{' '}
           {dateStr(f.admissionsCloseAt)}

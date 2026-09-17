@@ -10,6 +10,7 @@ import {
   admissionCutoff,
   closingTime,
   dealChip,
+  defaultMinimumToClose,
   fundingView,
 } from '@/lib/funding';
 
@@ -38,9 +39,22 @@ describe('fundingView', () => {
     assert.equal(f.minimumAtPct, 50);
   });
 
-  test('escrow is held while open and closed once the deal closes', () => {
-    assert.equal(fundingView(OPEN).escrow, 'held');
-    assert.equal(fundingView({ ...OPEN, status: 'closed' }).escrow, 'closed');
+  test('escrow moves through its statuses', () => {
+    const close = closingTime(OPEN.targetClose)!;
+    const cutoff = admissionCutoff(OPEN.targetClose, 24)!;
+    const early = cutoff - 10 * 86_400_000;
+    assert.equal(fundingView({ ...OPEN, allocationRemaining: 1_500_000 }, early).escrow, 'raising');
+    assert.equal(fundingView(OPEN, early).escrow, 'minimum_met');
+    assert.equal(fundingView(OPEN, cutoff + 1).escrow, 'admissions_closed');
+    assert.equal(fundingView({ ...OPEN, allocationRemaining: 1_500_000 }, close + 1).escrow, 'returned');
+    assert.equal(fundingView({ ...OPEN, status: 'closed' }, early).escrow, 'closed');
+  });
+
+  test('the default minimum to close is half the allocation, floored and rounded', () => {
+    assert.equal(defaultMinimumToClose(2_000_000), 1_000_000);
+    assert.equal(defaultMinimumToClose(750_000), 400_000);
+    assert.equal(defaultMinimumToClose(300_000), 250_000);
+    assert.equal(defaultMinimumToClose(200_000), 200_000);
   });
 
   test('a deal with no minimum set falls back to its allocation', () => {

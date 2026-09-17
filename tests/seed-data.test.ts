@@ -19,16 +19,10 @@ describe('demo seed data', () => {
     assert.doesNotMatch(seed, /scenarios:\s*\[/);
   });
 
-  test('at least one partner-led deal, and every open deal has a minimum to close', () => {
+  test('at least one partner-led deal, and minimums and caps come from the rules', () => {
     assert.match(seed, /lead: 'partner'/);
-    const ids = [...seed.matchAll(/^\s{4}id: '([a-z-]+)',$/gm)].map((m) => m[1]);
-    const funding = seed.slice(seed.indexOf('const FUNDING'), seed.indexOf('};', seed.indexOf('const FUNDING')));
-    for (const id of ids) {
-      assert.ok(
-        funding.includes(`  ${id}: { minimum:`) || funding.includes(`'${id}': { minimum:`),
-        `${id} has no minimum to close`,
-      );
-    }
+    assert.match(seed, /minimumToClose: FUNDING\[deal\.id\]\?\.minimum \?\? defaultMinimumToClose/);
+    assert.match(seed, /investorCap: FUNDING\[deal\.id\]\?\.cap \?\? investorCapFor/);
   });
 
   test('no fee or carry figure is written into deal data', () => {

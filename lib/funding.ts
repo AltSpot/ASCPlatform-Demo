@@ -14,11 +14,32 @@
  * Pure and isomorphic. Every function takes `now` so it can be tested
  * without a clock.
  */
-import { ADMISSION_CUTOFF_HOURS } from './config';
+import {
+  ADMISSION_CUTOFF_HOURS,
+  MINIMUM_TO_CLOSE_FLOOR,
+  MINIMUM_TO_CLOSE_SHARE,
+} from './config';
 
 export type LeadType = 'altspot' | 'partner';
 
-export type EscrowStatus = 'held' | 'closed';
+/**
+ * Where a deal's escrow stands. Deal level; a member's own subscription
+ * has its own states (signed, in escrow, admitted).
+ *
+ *   raising            open, money arriving, below the minimum
+ *   minimum_met        open, the minimum is in escrow, the deal will close
+ *   admissions_closed  past the cut-off: register locked, awaiting the wire
+ *   closed             released at close to the SPV, which bought its position
+ *   returned           did not reach its minimum by the closing date, so
+ *                      escrow returned every subscription
+ */
+export type EscrowStatus = 'raising' | 'minimum_met' | 'admissions_closed' | 'closed' | 'returned';
+
+/** The minimum to close a deal would have if it did not set its own. */
+export function defaultMinimumToClose(allocationTotal: number): number {
+  const half = Math.max(MINIMUM_TO_CLOSE_FLOOR, allocationTotal * MINIMUM_TO_CLOSE_SHARE);
+  return Math.min(allocationTotal, Math.ceil(half / 50_000) * 50_000);
+}
 
 export interface FundingInput {
   allocationTotal: number;
@@ -82,7 +103,18 @@ export function fundingView(deal: FundingInput, now: number = Date.now()): Fundi
 
   const close = closingTime(deal.targetClose);
   const cutoff = admissionCutoff(deal.targetClose);
-  const escrow: EscrowStatus = deal.status === 'closed' ? 'closed' : 'held';
+  const minimumMet = raised >= minimum && minimum > 0;
+  const escrow: EscrowStatus =
+    deal.status === 'closed'
+      ? 'closed'
+      : deal.status === 'returned' || (close !== null && now > close && !minimumMet)
+        ? 'returned'
+        : cutoff !== null && now >= cutoff
+          ? 'admissions_closed'
+          : minimumMet
+            ? 'minimum_met'
+            : 'raising';
+  const open = escrow === 'raising' || escrow === 'minimum_met';
 
   return {
     raised,
@@ -91,11 +123,11 @@ export function fundingView(deal: FundingInput, now: number = Date.now()): Fundi
     toMinimumPct: clampPct(minimum > 0 ? (raised / minimum) * 100 : 0),
     ofAllocationPct: clampPct(allocation > 0 ? (raised / allocation) * 100 : 0),
     minimumAtPct: clampPct(allocation > 0 ? (minimum / allocation) * 100 : 100),
-    minimumMet: raised >= minimum && minimum > 0,
+    minimumMet,
     escrow,
     closesAt: close === null ? null : new Date(close).toISOString(),
     admissionsCloseAt: cutoff === null ? null : new Date(cutoff).toISOString(),
-    admissionsOpen: escrow === 'held' && cutoff !== null && now < cutoff,
+    admissionsOpen: open && cutoff !== null && now < cutoff,
   };
 }
 
@@ -122,8 +154,11 @@ export function isLeadType(value: string): value is LeadType {
 }
 
 export const ESCROW_LABEL: Record<EscrowStatus, string> = {
-  held: 'Held in escrow',
-  closed: 'Closed',
+  raising: 'Held in escrow',
+  minimum_met: 'In escrow · will close',
+  admissions_closed: 'Admissions closed',
+  closed: 'Released at close',
+  returned: 'Returned to members',
 };
 
 /** Lead prefixes older tags carried, now said by the deal type chip. */

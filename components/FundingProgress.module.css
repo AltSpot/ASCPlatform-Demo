@@ -75,15 +75,6 @@
   border-radius: var(--r-pill);
   background: var(--as-cta-gradient);
 }
-.tick {
-  position: absolute;
-  top: -2px;
-  bottom: -2px;
-  width: 2px;
-  margin-left: -1px;
-  background: var(--as-text);
-  opacity: 0.55;
-}
 
 .caption {
   display: flex;
@@ -117,4 +108,49 @@
 
 .members {
   color: var(--as-text-muted);
+}
+
+/* ---------- the minimum marker (2026-09-17: make the threshold obvious) ---------- */
+
+.barWrap {
+  position: relative;
+}
+.barWrap:not([data-compact='true']) {
+  padding-top: 20px;
+}
+.bar {
+  height: 8px;
+}
+
+.marker {
+  position: absolute;
+  bottom: -5px;
+  width: 3px;
+  height: 18px;
+  margin-left: -1.5px;
+  border-radius: var(--r-pill);
+  background: var(--as-text);
+  box-shadow: 0 0 0 2px var(--surface-sunk);
+}
+.barWrap[data-compact='true'] .marker {
+  bottom: -5px;
+}
+.marker[data-met='true'] {
+  background: var(--good-paint);
+}
+
+.markerLabel {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: var(--w-semi);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text);
+  white-space: nowrap;
+}
+.markerLabel[data-met='true'] {
+  color: var(--good);
 }

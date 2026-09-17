@@ -23,6 +23,7 @@
 import {
   INVESTOR_CAP_DEFAULT,
   INVESTOR_CAP_MAX,
+  QUALIFYING_VC_FUND_MAX_CAPITAL,
   RETIREMENT_BLOCK_PERCENT,
   RETIREMENT_WARN_PERCENT,
 } from './config';
@@ -31,6 +32,22 @@ import { admissionCutoff } from './funding';
 /** Profile types that hold retirement money. Matches the invest flow's options. */
 export function isRetirementProfile(type: string | null | undefined): boolean {
   return typeof type === 'string' && /\b(ira|401\s*\(?k\)?|retirement)\b/i.test(type);
+}
+
+/**
+ * The investor cap an SPV qualifies for (Investment Company Act, not
+ * Rule 506(b), which has no investor limit for accredited investors).
+ * 250 for a qualifying venture capital fund: primary equity in operating
+ * companies (venture or growth, or a vehicle investing in them) with
+ * aggregate capital of $12M or less. 100 for everything else under
+ * section 3(c)(1), which includes a vehicle buying secondary shares (not
+ * a qualifying investment) and real assets. Counsel confirms per SPV.
+ */
+export function investorCapFor(deal: { assetClass: string; allocationTotal: number }): number {
+  const qualifyingAssets = ['venture', 'growth', 'fund'].includes(deal.assetClass);
+  return qualifyingAssets && deal.allocationTotal <= QUALIFYING_VC_FUND_MAX_CAPITAL
+    ? INVESTOR_CAP_MAX
+    : INVESTOR_CAP_DEFAULT;
 }
 
 /** A cap setting, clamped to what the rules allow. */

@@ -11,6 +11,7 @@ import {
   buildRegister,
   decideAdmission,
   effectiveCap,
+  investorCapFor,
   isRetirementProfile,
   type SpvStanding,
 } from '@/lib/spv-rules';
@@ -59,6 +60,14 @@ describe('investor cap', () => {
 
   test('a member already in keeps their spot', () => {
     assert.equal(decide({ standing: FULL, alreadyMember: true }).ok, true);
+  });
+
+  test('250 for a qualifying venture capital fund, 100 otherwise', () => {
+    assert.equal(investorCapFor({ assetClass: 'venture', allocationTotal: 2_000_000 }), 250);
+    assert.equal(investorCapFor({ assetClass: 'venture', allocationTotal: 12_000_000 }), 250);
+    assert.equal(investorCapFor({ assetClass: 'venture', allocationTotal: 12_000_001 }), 100);
+    assert.equal(investorCapFor({ assetClass: 'secondary', allocationTotal: 2_000_000 }), 100);
+    assert.equal(investorCapFor({ assetClass: 'real-asset', allocationTotal: 2_000_000 }), 100);
   });
 
   test('the cap defaults to 100 and never exceeds 250', () => {

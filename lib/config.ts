@@ -119,9 +119,27 @@ export const CARRY_PERCENT = 20;
  */
 export const ADMISSION_CUTOFF_HOURS = Number(process.env.ASC_ADMISSION_CUTOFF_HOURS ?? 24);
 
-/** Per-SPV investor cap: the default, and the most a setting may allow. */
+/**
+ * Per-SPV investor cap. NOT a Rule 506(b) limit: 506(b) admits any number
+ * of accredited investors. The cap comes from the Investment Company Act.
+ * An SPV relies on section 3(c)(1), which allows at most 100 beneficial
+ * owners; a "qualifying venture capital fund" (equity in private operating
+ * companies, aggregate capital of $12M or less after the SEC's 2024
+ * inflation adjustment) may have up to 250. See lib/spv-rules.ts.
+ */
 export const INVESTOR_CAP_DEFAULT = 100;
 export const INVESTOR_CAP_MAX = 250;
+export const QUALIFYING_VC_FUND_MAX_CAPITAL = 12_000_000;
+
+/**
+ * Minimum to close, when a deal does not set its own: half of the
+ * allocation, never below the floor at which an SPV's fixed costs (the
+ * flat fee, the administrator, filings) stop being a large share of the
+ * raise, rounded up to a clean $50,000. A lead can always set a deal's
+ * minimum by hand, for instance to the smallest check a company will take.
+ */
+export const MINIMUM_TO_CLOSE_SHARE = 0.5;
+export const MINIMUM_TO_CLOSE_FLOOR = 250_000;
 
 /**
  * Retirement money (IRA and similar) as a share of one SPV's raise, in

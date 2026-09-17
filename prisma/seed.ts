@@ -21,6 +21,8 @@ import 'dotenv/config';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { PrismaClient } from '../lib/generated/prisma/client';
 import { brandArt } from '../lib/brand';
+import { defaultMinimumToClose } from '../lib/funding';
+import { investorCapFor } from '../lib/spv-rules';
 import { feeSentence } from '../lib/fees';
 
 const adapter = new PrismaBetterSqlite3({
@@ -977,7 +979,9 @@ const DEALS: SeedDeal[] = [
       'Late-stage does not mean low-risk. GPU pricing can fall as supply catches up; the company carries substantial debt against its hardware; a small number of lab customers drive most contracted revenue; private marks can fall; and the interest is illiquid until a realization event, with no IPO scheduled or promised. Total loss of capital is possible.',
     minInvestment: 25000,
     allocationTotal: 5000000,
-    allocationRemaining: 3100000,
+    /* 102 members at the seeded average ticket: a secondary SPV is held
+       to 100, so this is the full SPV the waitlist is shown on. */
+    allocationRemaining: 2450000,
     closesInDays: 22,
     launchedDaysAgo: 36,
     altspotCommitted: 0,
@@ -1222,20 +1226,10 @@ function closesIn(days: number): string {
  * lead is the invented firm on its backing line. Every other deal is
  * AltSpot-led. Closed deals met their minimum, which is why they closed.
  */
-const FUNDING: Record<string, { minimum: number; lead?: 'altspot' | 'partner'; cap?: number }> = {
-  calder: { minimum: 1_000_000 },
-  'growth-fund': { minimum: 5_000_000, cap: 250 },
-  aurelia: { minimum: 1_500_000 },
-  tessellate: { minimum: 1_250_000 },
-  ferrule: { minimum: 1_200_000 },
-  loomline: { minimum: 750_000 },
-  basalt: { minimum: 400_000 },
-  kestrel: { minimum: 2_000_000, lead: 'partner' },
-  northstar: { minimum: 2_500_000 },
-  halyard: { minimum: 2_000_000 },
-  harborline: { minimum: 2_500_000 },
-  vantage: { minimum: 1_500_000 },
-  northwind: { minimum: 1_000_000 },
+/* Minimums follow the rule in lib/funding.ts (defaultMinimumToClose)
+   unless a deal sets its own; caps follow lib/spv-rules.ts. */
+const FUNDING: Record<string, { minimum?: number; lead?: 'altspot' | 'partner'; cap?: number }> = {
+  kestrel: { lead: 'partner' },
 };
 
 /**
@@ -1275,10 +1269,9 @@ async function main() {
       minInvestment: deal.minInvestment,
       allocationTotal: deal.allocationTotal,
       allocationRemaining: deal.allocationRemaining,
-      minimumToClose:
-        FUNDING[deal.id]?.minimum ?? Math.round((deal.allocationTotal * 0.5) / 50_000) * 50_000,
+      minimumToClose: FUNDING[deal.id]?.minimum ?? defaultMinimumToClose(deal.allocationTotal),
       leadType: FUNDING[deal.id]?.lead ?? 'altspot',
-      investorCap: FUNDING[deal.id]?.cap ?? 100,
+      investorCap: FUNDING[deal.id]?.cap ?? investorCapFor(deal),
       targetClose:
         deal.closesInDays !== undefined
           ? closesIn(deal.closesInDays)
