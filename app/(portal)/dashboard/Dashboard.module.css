@@ -161,3 +161,18 @@
     gap: 24px;
   }
 }
+
+/* A section link that sits with its title rather than at the far end of
+   the rule: used where two sections share a row, so the link is not
+   crowding the section beside it. */
+.sectionLinkInline {
+  margin-left: 18px;
+  margin-right: auto;
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.sectionLinkInline:hover {
+  color: var(--accent-hot);
+}

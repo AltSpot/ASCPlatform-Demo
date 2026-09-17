@@ -406,7 +406,7 @@ export default async function DashboardPage() {
         id="watchlist"
         title="Watchlist"
         action={
-          <Link className={d.sectionLink} href="/watchlist">
+          <Link className={d.sectionLinkInline} href="/watchlist">
             Open watchlist →
           </Link>
         }

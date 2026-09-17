@@ -55,8 +55,8 @@
   box-shadow: var(--card-lift);
   text-decoration: none;
   color: var(--as-text);
-  animation: drift 7s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * -1.1s);
+  animation: drift 5.2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -0.85s);
   transition:
     transform var(--dur-1) var(--ease-out),
     box-shadow var(--dur-1) ease;
@@ -72,13 +72,23 @@
   outline-offset: 3px;
 }
 
+/* More float (Tyler, 2026-09-17): a longer rise with a soft settle and a
+   hair of tilt, staggered so the row moves like a swell, not in step. */
 @keyframes drift {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) rotate(0deg);
   }
-  50% {
-    transform: translateY(-4px);
+  35% {
+    transform: translateY(-10px) rotate(-0.35deg);
+  }
+  65% {
+    transform: translateY(-6px) rotate(0.25deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    animation: none;
   }
 }
 
@@ -219,6 +229,13 @@
 }
 .navBtn:hover {
   background: var(--btn-fill);
+}
+.navBtn[data-hidden='true'] {
+  opacity: 0;
+  pointer-events: none;
+}
+.navBtn {
+  transition: opacity var(--dur-1) ease;
 }
 .navBtn:focus-visible {
   outline: 2px solid var(--focus-ring);

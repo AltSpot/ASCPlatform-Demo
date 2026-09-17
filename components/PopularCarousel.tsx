@@ -20,7 +20,7 @@
  */
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import s from './PopularCarousel.module.css';
 
@@ -42,6 +42,26 @@ export interface PopularItem {
 
 export default function PopularCarousel({ items }: { items: PopularItem[] }) {
   const track = useRef<HTMLDivElement>(null);
+  /* Each arrow shows only when there is somewhere to go, so on first
+     load the back arrow is not sitting over the first tile. */
+  const [edges, setEdges] = useState({ start: true, end: false });
+
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return;
+    const update = () =>
+      setEdges({
+        start: el.scrollLeft <= 4,
+        end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4,
+      });
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      el.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [items.length]);
 
   const scrollBy = (dir: 1 | -1) => {
     const el = track.current;
@@ -84,10 +104,24 @@ export default function PopularCarousel({ items }: { items: PopularItem[] }) {
       </div>
 
       <div className={s.nav}>
-        <button type="button" className={s.navBtn} onClick={() => scrollBy(-1)} aria-label="Scroll back">
+        <button
+          type="button"
+          className={s.navBtn}
+          data-hidden={edges.start}
+          tabIndex={edges.start ? -1 : 0}
+          onClick={() => scrollBy(-1)}
+          aria-label="Scroll back"
+        >
           <ChevronLeft size={16} strokeWidth={1.6} aria-hidden="true" />
         </button>
-        <button type="button" className={s.navBtn} onClick={() => scrollBy(1)} aria-label="Scroll forward">
+        <button
+          type="button"
+          className={s.navBtn}
+          data-hidden={edges.end}
+          tabIndex={edges.end ? -1 : 0}
+          onClick={() => scrollBy(1)}
+          aria-label="Scroll forward"
+        >
           <ChevronRight size={16} strokeWidth={1.6} aria-hidden="true" />
         </button>
       </div>
