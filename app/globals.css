@@ -1398,13 +1398,13 @@ html[data-theme='light']{
    is restated; type, accents, paint and every other token are Ember's,
    so nothing here needs its own contrast pass. */
 html[data-theme='ice']{
-  --fill-card:rgba(226,240,255,.085);
-  --card-edge:rgba(220,236,255,.22);
-  --edge-top:rgba(240,248,255,.24);
-  --glass-blur:28px;
-  --glass-sat:140%;
-  --glass-bright:1.14;
-  --card-sheen:linear-gradient(180deg,rgba(236,246,255,.13) 0%,rgba(236,246,255,.03) 55%,rgba(236,246,255,.01) 100%);
+  --fill-card:rgba(214,232,252,.15);
+  --card-edge:rgba(226,240,255,.34);
+  --edge-top:rgba(244,250,255,.36);
+  --glass-blur:30px;
+  --glass-sat:120%;
+  --glass-bright:1.22;
+  --card-sheen:linear-gradient(180deg,rgba(240,248,255,.20) 0%,rgba(236,246,255,.07) 50%,rgba(210,230,250,.04) 100%);
   --card-lift:
     inset 0 1px 0 rgba(240,248,255,.30),
     0 1px 1px rgba(0,0,0,.35),
@@ -1414,9 +1414,9 @@ html[data-theme='ice']{
     0 2px 3px rgba(0,0,0,.35),
     0 30px 64px -24px rgba(0,0,0,.82),
     0 0 42px rgba(200,225,255,.07);
-  --surface-1:rgba(225,238,255,.05);
-  --surface-2:rgba(225,238,255,.09);
-  --surface-3:rgba(225,238,255,.15);
+  --surface-1:rgba(225,238,255,.07);
+  --surface-2:rgba(225,238,255,.12);
+  --surface-3:rgba(225,238,255,.19);
   --track:rgba(225,238,255,.12);
   --track-faint:rgba(225,238,255,.05);
   --hair-neutral:rgba(220,236,255,.14);

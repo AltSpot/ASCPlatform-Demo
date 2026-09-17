@@ -1,0 +1,110 @@
+{
+  "out": "screenshots/phase2/09-themes-explore-preferences",
+  "shots": [
+    {
+      "name": "01-dashboard-carousel-ember",
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 800 },
+        { "eval": "(() => { const back = document.querySelector('button[aria-label=\"Scroll back\"]'); if (!back) throw new Error('no back arrow'); if (getComputedStyle(back).opacity !== '0') throw new Error('back arrow visible at the start'); if (document.querySelector('[data-font]')) {} const f = getComputedStyle(document.documentElement).getPropertyValue('--font-mono'); if (!f) throw new Error('no data face'); })()" },
+        { "eval": "[...document.querySelectorAll('h2')].find(h => /Most popular/.test(h.textContent))?.scrollIntoView({ block: 'start' })" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "02-dashboard-watchlist-explore",
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "wait": 600 },
+        { "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(h => /^Explore/.test(h.textContent.trim())); if (!h) throw new Error('no Explore section'); const tiles = h.parentElement.querySelectorAll('a[href^=\"/marketplace?\"]'); if (tiles.length < 6) throw new Error('explore tiles ' + tiles.length); [...document.querySelectorAll('h2')].find(h => /Watchlist/.test(h.textContent)).scrollIntoView({ block: 'start' }); })()" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "03-explore-partner-led-filter",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace?lead=partner" },
+        { "wait": 900 },
+        { "eval": "(() => { const names = [...document.querySelectorAll('.deal-card h3')].map(h => h.textContent); if (names.length !== 1 || names[0] !== 'Kestrel Autonomy') throw new Error('partner-led filter shows ' + names.join(', ')); if (!/Partner-led/.test(document.body.innerText)) throw new Error('no clearable pill'); })()" }
+      ]
+    },
+    {
+      "name": "04-marketplace-daylight",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'" },
+        { "wait": 700 },
+        { "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('just opened')) throw new Error('no just opened status'); const radarNames = [...document.querySelectorAll('#radar article h3')].map(h => h.textContent); for (const n of ['Aurelia Labs', 'Ferrule Robotics', 'Tessellate Data']) if (radarNames.includes(n)) throw new Error(n + ' still on the Radar after opening'); })()" },
+        { "scroll": "#open-now" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "05-marketplace-ice",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace" },
+        { "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.dataset.theme='ice'" },
+        { "wait": 700 },
+        { "scroll": "#open-now" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "06-radar-ice",
+      "steps": [
+        { "go": "/reshoot?to=/marketplace?view=radar" },
+        { "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.dataset.theme='ice'" },
+        { "wait": 900 },
+        { "scroll": "#radar" },
+        { "wait": 400 }
+      ]
+    },
+    {
+      "name": "07-dashboard-daylight",
+      "steps": [
+        { "go": "/reshoot?to=/dashboard" },
+        { "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'" },
+        { "wait": 900 }
+      ]
+    },
+    {
+      "name": "08-preferences-prompt-recent-member",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/dashboard" },
+        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
+        { "wait": 700 },
+        { "eval": "(() => { if (!/What do you want to see\\?/.test(document.body.innerText)) throw new Error('no preferences card for a new member'); })()" }
+      ]
+    },
+    {
+      "name": "09-preferences-form",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/preferences" },
+        { "wait": 600 },
+        { "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => /Tune what I see/.test(x.textContent)); b.click(); })()" },
+        { "wait": 300 },
+        { "eval": "(() => { for (const label of ['Venture', 'Energy and climate', 'Series A and B', '$25K to $50K']) { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === label); if (!b) throw new Error('no chip ' + label); b.click(); } })()" },
+        { "wait": 300 }
+      ]
+    },
+    {
+      "name": "10-preferences-save-and-for-you",
+      "steps": [
+        { "go": "/reshoot?as=recent&to=/dashboard" },
+        { "eval": "fetch('/api/preferences', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ assetClasses: ['venture'], stages: ['early'] }) }).then(r => { if (r.status !== 200) throw new Error('save ' + r.status); location.href = '/marketplace'; })" },
+        { "wait": 1400 },
+        { "eval": "(() => { if (/What do you want to see\\?/.test(document.body.innerText)) throw new Error('card still asking'); const b = [...document.querySelectorAll('button')].find(x => /For you/i.test(x.textContent)); if (!b) throw new Error('no For you'); })()" }
+      ],
+      "capture": false
+    },
+    {
+      "name": "11-settings-preferences",
+      "steps": [
+        { "go": "/reshoot?to=/settings" },
+        { "wait": 500 },
+        { "eval": "(() => { if (!/Deal preferences/.test(document.body.innerText)) throw new Error('no preferences in settings'); if (!/Venture/.test(document.body.innerText)) throw new Error('no summary'); })()" }
+      ]
+    }
+  ]
+}

@@ -482,7 +482,24 @@ these classes; they do not invent their own colours, radii or type scales. Inlin
 genuinely needs new rules gets a CSS Module beside it (`components/deal/`,
 `components/spotbot/` and `components/invest/` all do), never a new global.
 
-### Two themes: Ember and Daylight
+### Three themes: Ember, Ice and Daylight
+
+**Ice** (2026-09-17) is the ember canvas with frosted, icy glass panes:
+`html[data-theme='ice']` restates only the glass tokens (fill, rim, lift,
+sheen, blur, the surface ladder), never type or accents, and
+`tests/theme.test.ts` holds that. **Daylight panes are clear glass with a
+thin, even light rim** (`--card-edge`), after the reference Tyler shared.
+
+**Explore and preferences** (2026-09-17). The dashboard's Explore section is
+quick-filter tiles (`lib/explore.ts`: asset class, who leads, stage,
+industry) that open the marketplace already filtered through the URL. Deal
+preferences (`lib/preferences.ts`, `/preferences`) are asked by a card at the
+top of the dashboard once the questionnaire is approved, until answered, and
+changed from Settings. "Show me everything" is one press. Preferences mark
+deals (For you) and decide what a member is told about; they never hide an
+offering.
+
+#### Ember and Daylight
 
 **Ember is the product. Daylight is a preference, and it is opt in.** `:root`
 is the ember canvas; `html[data-theme='light']` restates the token layer and
