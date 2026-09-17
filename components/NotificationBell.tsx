@@ -32,6 +32,7 @@ export default function NotificationBell({ items }: { items: NeedsYouItem[] }) {
         className={s.bell}
         data-live={count > 0}
         data-urgent={urgent}
+        data-tour="bell"
         onClick={() => setOpen(true)}
         aria-label={
           count === 0

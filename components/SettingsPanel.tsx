@@ -124,6 +124,18 @@ export default function SettingsPanel({
             </Link>
           </div>
 
+          {/* The first-run walkthrough, replayable from here. */}
+          <div className="card">
+            <h3 style={{ marginBottom: 4 }}>The walkthrough</h3>
+            <p className="small" style={{ marginBottom: 14 }}>
+              Two minutes on what each part of the platform is: the dashboard, the two lanes of
+              the marketplace, the watchlist, the bell, Spot, and your documents.
+            </p>
+            <Link className="btn btn-ghost btn-sm" href="/dashboard?tour=1">
+              Take the walkthrough again
+            </Link>
+          </div>
+
           {/* The invite link. Everyone who follows it lands on sign-up and
               the same investor questionnaire; nothing about the link opens
               a deal, and nobody is paid for an introduction. */}

@@ -1,0 +1,181 @@
+/* The walkthrough: a scrim, a ring on the thing described, one card. */
+
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim-modal);
+  backdrop-filter: blur(3px);
+  animation: tour-fade 0.4s ease both;
+}
+
+.ring {
+  position: absolute;
+  z-index: 1;
+  border-radius: var(--r-md);
+  box-shadow:
+    0 0 0 2px var(--as-gold),
+    0 0 0 6px rgba(199, 154, 75, 0.22),
+    0 0 40px rgba(243, 152, 7, 0.35);
+  pointer-events: none;
+  transition:
+    top 0.45s var(--ease-fluid),
+    left 0.45s var(--ease-fluid),
+    width 0.45s var(--ease-fluid),
+    height 0.45s var(--ease-fluid);
+}
+
+.card {
+  position: absolute;
+  z-index: 2;
+  width: min(420px, calc(100vw - 48px));
+  padding: 24px 26px 20px;
+  border-radius: var(--r-2xl);
+  background: var(--glass-solid);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift), var(--shadow-lg);
+  color: var(--as-text-body);
+  animation: tour-in 0.45s var(--ease-fluid) both;
+}
+.card[data-centered='true'] {
+  width: min(520px, calc(100vw - 48px));
+  padding: 30px 32px 24px;
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--as-text);
+  cursor: pointer;
+}
+.close:hover {
+  background: var(--surface-3);
+}
+
+.glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  box-shadow: var(--shadow-cta);
+}
+.glyph svg {
+  stroke: var(--fg-on-gold);
+}
+
+.count {
+  margin: 14px 0 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent-quiet);
+}
+
+.title {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+}
+.card[data-centered='true'] .title {
+  font-size: 28px;
+}
+
+.body {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--as-text-body);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+.spacer {
+  flex: 1;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.dots li {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  transition: background 0.3s ease, width 0.3s var(--ease-fluid);
+}
+.dots li[data-done='true'] {
+  background: var(--as-gold);
+}
+.dots li[data-on='true'] {
+  width: 18px;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+}
+
+@keyframes tour-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.card[data-centered='true'] {
+  animation-name: tour-in-centered;
+}
+@keyframes tour-in-centered {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 10px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes tour-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .scrim,
+  .ring {
+    animation: none;
+    transition: none;
+  }
+}

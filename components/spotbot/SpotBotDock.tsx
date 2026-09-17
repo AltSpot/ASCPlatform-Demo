@@ -556,6 +556,7 @@ export default function SpotBotDock() {
         aria-expanded={open}
         aria-controls="spotbot-panel"
         aria-label={open ? 'Close Spot' : 'Open Spot, the AltSpot guide'}
+        data-tour="spot"
       >
         <span className={`orb ${styles.launcherOrb}`} aria-hidden="true" />
         <span className={styles.launcherLabel}>Spot</span>

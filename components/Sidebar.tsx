@@ -329,6 +329,7 @@ export default function Sidebar({
                   className={active ? `${s.item} ${s.active}` : s.item}
                   aria-current={active ? 'page' : undefined}
                   title={entry.label}
+                  data-tour={`rail-${entry.id}`}
                 >
                   <Slot entry={entry} />
                   <span className={s.itemLabel}>{entry.label}</span>

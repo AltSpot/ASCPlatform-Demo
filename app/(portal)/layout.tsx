@@ -11,12 +11,16 @@
  */
 import { redirect } from 'next/navigation';
 
+import { Suspense } from 'react';
+
+import FirstRunTour from '@/components/FirstRunTour';
 import Sidebar from '@/components/Sidebar';
 import SpotBotDock from '@/components/spotbot/SpotBotDock';
 import { getSessionUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
 import { getWizardView } from '@/lib/repositories/investor';
 import { listNeedsYou } from '@/lib/repositories/needs-you';
+import { listSubscriptions } from '@/lib/repositories/subscriptions';
 
 export default async function PortalLayout({
   children,
@@ -31,9 +35,18 @@ export default async function PortalLayout({
      off means the questionnaire is approved and the wait is running;
      anything else is still in setup. */
   /* The bell on the rail reads the same list as the dashboard strip. */
-  const [wizard, needs] = await Promise.all([getWizardView(user.id), listNeedsYou(user.id)]);
+  const [wizard, needs, subscriptions] = await Promise.all([
+    getWizardView(user.id),
+    listNeedsYou(user.id),
+    listSubscriptions(user.id),
+  ]);
   const gate = evaluateInvestGate(wizard);
   const { stage } = wizard.relationship;
+  /* The walkthrough is offered once the questionnaire is approved and
+     before the first position: the moment the dashboard is emptiest. The
+     browser remembers a finished tour; ?tour=1 replays it. */
+  const offerTour =
+    subscriptions.length === 0 && (stage === 'eligible' || stage === 'cooling_off');
   const status = gate.ok
     ? 'approved'
     : stage === 'eligible'
@@ -49,6 +62,9 @@ export default async function PortalLayout({
       {/* The guide follows the investor: mounted once, so it persists
           across navigation and is present on every signed-in page. */}
       <SpotBotDock />
+      <Suspense fallback={null}>
+        <FirstRunTour offered={offerTour} />
+      </Suspense>
     </div>
   );
 }
