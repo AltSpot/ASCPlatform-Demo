@@ -1,0 +1,8 @@
+{
+  "out": "screenshots/phase2/00-glass",
+  "shots": [
+    { "name": "daylight-dashboard", "steps": [{ "go": "/reshoot?as=recent&to=/dashboard" }, { "eval": "localStorage.setItem('asc.theme','light')" }, { "go": "/dashboard" }] },
+    { "name": "daylight-marketplace", "steps": [{ "go": "/reshoot?as=recent&to=/marketplace" }, { "eval": "localStorage.setItem('asc.theme','light')" }, { "go": "/marketplace" }], "scroll": "#lane-vote" },
+    { "name": "ember-dashboard", "steps": [{ "go": "/reshoot?as=recent&to=/dashboard" }] }
+  ]
+}

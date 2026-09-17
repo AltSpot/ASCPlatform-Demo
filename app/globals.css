@@ -158,8 +158,8 @@
   --fill-card:rgba(255,255,255,.03);
   --fill-input:rgba(255,255,255,.05);
   --fill-gold-tint:rgba(243,152,7,.05);
-  --glass:rgba(10,8,6,.62);
-  --glass-solid:rgba(10,8,6,.86);
+  --glass:rgba(10,8,6,.50);
+  --glass-solid:rgba(10,8,6,.74);
 
   /* ============ THE DEPTH LADDER ============
      Every surface in the product is one of these six steps, so a theme
@@ -209,12 +209,14 @@
      themes want genuinely different amounts: the ember canvas is nearly
      uniform so there is little to refract, while the light canvas is
      built to be refracted and needs both turned up. */
-  --glass-blur:28px;
-  --glass-sat:140%;
+  /* Clearer glass (Tyler, 2026-09-17): less frost, more of the light
+     behind a pane coming through it. */
+  --glass-blur:18px;
+  --glass-sat:175%;
   /* Frost. Brightness is part of the material, not the tint: a pane
      that lifts what is behind it reads as ice, a pane that paints white
      over it reads as milk. Neutral on ember. */
-  --glass-bright:1;
+  --glass-bright:1.06;
   /* The grain of frosted glass: a fine white speckle, tiled, well under
      the threshold of reading as texture. None on ember, where the page
      already carries its own grain. */
@@ -244,7 +246,7 @@
      of white in the lit corner, gone by the middle. Enough that a panel
      over the ember bloom reads as smoked glass rather than a hole cut
      in the page; any more and it reads as a smudge. */
-  --card-sheen:var(--glass-grain),linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.015) 42%,rgba(255,255,255,0) 70%);
+  --card-sheen:var(--glass-grain),linear-gradient(165deg,rgba(255,255,255,.12),rgba(255,255,255,.02) 42%,rgba(255,255,255,0) 70%);
   /* How much of a deal's own artwork bleeds across the top of its
      hero. A dark banner blurred over a dark card is atmosphere; the
      same wash over glass is a grey cloud with type in it. */
@@ -1219,12 +1221,12 @@ html[data-theme='light']{
      Raised means adding white; recessed means adding warm shadow. The
      wells are brown rather than black: black on cream goes grey and
      drags the whole page toward newsprint. */
-  --fill-card:rgba(252,253,255,.30);   /* THE glass pane. Barely tinted, a cool white */
-  --fill-input:rgba(255,255,255,.44);
-  --panel-2:rgba(255,255,255,.50);
-  --surface-1:rgba(255,255,255,.34);   /* quiet fill inside a card */
-  --surface-2:rgba(255,255,255,.54);   /* raised: hover rows, chips */
-  --surface-3:rgba(255,255,255,.78);   /* present: thumbs, filled tracks, quiet pills */
+  --fill-card:rgba(252,253,255,.06);   /* THE glass pane. Nearly clear (Tyler, 2026-09-17): the light edge and the blur make it a pane, not the white */
+  --fill-input:rgba(255,255,255,.30);
+  --panel-2:rgba(255,255,255,.26);
+  --surface-1:rgba(255,255,255,.14);   /* quiet fill inside a card */
+  --surface-2:rgba(255,255,255,.28);   /* raised: hover rows, chips */
+  --surface-3:rgba(255,255,255,.55);   /* present: thumbs, filled tracks, quiet pills */
   --surface-well:rgba(110,70,28,.07);  /* recessed: inputs, inset panels */
   --track:rgba(110,70,28,.14);         /* the unfilled half of a meter */
   --surface-sunk:rgba(110,70,28,.11);  /* deepest: the rail foot */
@@ -1262,19 +1264,19 @@ html[data-theme='light']{
      neutral so warmth reads as light rather than colour, brightness
      lifts the pane the way frosted glass lifts what is behind it, and a
      fine grain gives the surface the tooth of real frost. */
-  --glass-blur:34px;
-  --glass-sat:112%;
-  --glass-bright:1.07;
+  --glass-blur:20px;
+  --glass-sat:175%;
+  --glass-bright:1;
   --glass-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23f)'/%3E%3C/svg%3E");
-  --glass:rgba(255,254,252,.52);
-  --glass-solid:rgba(255,254,251,.84);
+  --glass:rgba(255,254,252,.26);
+  --glass-solid:rgba(255,254,251,.58);
   --glass-tint-gold:linear-gradient(180deg,rgba(214,168,86,.16),rgba(214,168,86,.04));
   --glass-tint-ember:linear-gradient(180deg,rgba(229,102,26,.11),rgba(229,102,26,.02));
 
   /* Cards carry their own light. The sheen is a single soft diagonal,
      brightest at the top left, so a grid of them reads as panes under
      one light source rather than as swatches. */
-  --card-sheen:var(--glass-grain),linear-gradient(155deg,rgba(255,255,255,.30) 0%,rgba(244,249,255,.08) 34%,rgba(255,255,255,0) 58%,rgba(255,255,255,.08) 100%);
+  --card-sheen:var(--glass-grain),linear-gradient(155deg,rgba(255,255,255,.46) 0%,rgba(244,249,255,.10) 34%,rgba(255,255,255,0) 58%,rgba(255,255,255,.14) 100%);
   --hero-wash:.16;
   /* EDGES ARE LIGHT. A specular line along the top where light enters and
      a dimmer one along the bottom where it leaves, each offset only
@@ -1288,7 +1290,7 @@ html[data-theme='light']{
   --card-lift:
     inset 0 1px 1px rgba(255,255,255,.85),
     inset 0 -1px 1px rgba(255,255,255,.30),
-    inset 0 20px 28px -24px rgba(255,255,255,.70),
+    inset 0 20px 28px -24px rgba(255,255,255,.34),
     inset 0 -18px 26px -22px rgba(120,70,20,.08),
     0 1px 2px rgba(110,62,18,.06),
     0 12px 28px -12px rgba(130,72,20,.18),
