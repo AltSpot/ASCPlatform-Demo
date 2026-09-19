@@ -9,8 +9,8 @@
 import 'server-only';
 
 import { prisma } from '../db';
-import { ISOLATED_ALLOCATION } from '../config';
-import { escrowDeadline } from '../funding';
+import { ESCROW_WINDOW_DAYS, ISOLATED_ALLOCATION } from '../config';
+import { escrowDeadline, windowedDeadline } from '../funding';
 import { audit } from '../audit';
 import {
   assertTransition,
@@ -43,7 +43,11 @@ export function toSubscriptionView(row: Subscription): SubscriptionView {
     answers,
     signature: row.signature,
     signedAt: row.signedAt?.toISOString() ?? null,
-    fundingDeadline: row.fundingDeadline?.toISOString() ?? null,
+    /* The member's own ten days, even on a row that stored the deal's
+       cut-off before the window existed (lib/funding.ts). */
+    fundingDeadline: isoOrNull(
+      windowedDeadline(row.signedAt?.getTime() ?? null, row.fundingDeadline?.getTime() ?? null),
+    ),
     fundedAt: row.fundedAt?.toISOString() ?? null,
     fundingMethod: row.fundingMethod,
     acceptedAt: row.acceptedAt?.toISOString() ?? null,
@@ -53,6 +57,10 @@ export function toSubscriptionView(row: Subscription): SubscriptionView {
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
+}
+
+function isoOrNull(at: number | null): string | null {
+  return at === null ? null : new Date(at).toISOString();
 }
 
 /**
@@ -65,7 +73,12 @@ export async function expireSweep(userId: string): Promise<void> {
     where: {
       userId,
       state: SUBSCRIPTION_STATES.SIGNED,
-      fundingDeadline: { lt: new Date() },
+      /* Past its stored deadline, or past ten days from signing on a row
+         whose stored deadline is the deal's later cut-off. */
+      OR: [
+        { fundingDeadline: { lt: new Date() } },
+        { signedAt: { lt: new Date(Date.now() - ESCROW_WINDOW_DAYS * 86_400_000) } },
+      ],
     },
   });
   if (stale.length === 0) return;

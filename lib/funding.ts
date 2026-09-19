@@ -112,6 +112,47 @@ export function escrowDeadline(
   return cutoff === null ? byWindow : Math.min(byWindow, cutoff);
 }
 
+/**
+ * The deadline a member is actually held to, whatever the row says. A row
+ * signed before the ten-day window existed stored the deal's admission
+ * cut-off as its deadline; read through this, it is still ten days from
+ * signing. The earlier date always wins, so this can only shorten.
+ */
+export function windowedDeadline(
+  signedAt: number | null,
+  stored: number | null,
+  windowDays: number = ESCROW_WINDOW_DAYS,
+): number | null {
+  if (signedAt === null) return stored;
+  const byWindow = signedAt + windowDays * 24 * HOUR_MS;
+  return stored === null ? byWindow : Math.min(stored, byWindow);
+}
+
+export interface EscrowWindow {
+  signedAt: number;
+  dueAt: number;
+  /** Whole days left, floored at zero. Never more than the window. */
+  daysLeft: number;
+  /** The window this member got: ten days, or fewer if admissions closed first. */
+  windowDays: number;
+}
+
+/** The member's own clock to reach escrow: signed, due, days left of how many. */
+export function escrowWindow(
+  signedAt: string | number | null | undefined,
+  deadline: string | number | null | undefined,
+  now: number = Date.now(),
+): EscrowWindow | null {
+  if (!signedAt || !deadline) return null;
+  const signed = new Date(signedAt).getTime();
+  const due = new Date(deadline).getTime();
+  if (!Number.isFinite(signed) || !Number.isFinite(due) || due <= signed) return null;
+  const day = 24 * HOUR_MS;
+  const windowDays = Math.max(1, Math.min(ESCROW_WINDOW_DAYS, Math.round((due - signed) / day)));
+  const daysLeft = Math.min(windowDays, Math.max(0, Math.ceil((due - now) / day)));
+  return { signedAt: signed, dueAt: due, daysLeft, windowDays };
+}
+
 export function fundingView(deal: FundingInput, now: number = Date.now()): FundingView {
   const allocation = Math.max(0, deal.allocationTotal);
   const raised = Math.max(0, allocation - Math.max(0, deal.allocationRemaining));

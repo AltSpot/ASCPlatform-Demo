@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import EscrowClock from '@/components/EscrowClock';
 import FeeTable from '@/components/invest/FeeTable';
 import StationRail from '@/components/invest/StationRail';
 import { useToast } from '@/components/Toast';
@@ -41,7 +42,7 @@ export default function PaymentFlow({
   subscription: SubscriptionView;
   deal: DealView;
   bank: BankView | null;
-  /** Days until admissions close. Computed on the server. */
+  /** Days left in the member's own escrow window. Computed on the server. */
   daysRemaining: number;
 }) {
   const router = useRouter();
@@ -124,8 +125,12 @@ export default function PaymentFlow({
           <div className="eyebrow">Final step</div>
           <h1 className="display">Your allocation is reserved.</h1>
           <p className="sub">
-            Documents are signed and a copy is in your Docs. Send to escrow by{' '}
-            <b>{dateStr(cutoff)}</b> to be admitted when {deal.name} closes.
+            Documents are signed and a copy is in your Docs. Send{' '}
+            <b>{money(transfer)}</b> to escrow by <b>{dateStr(cutoff)}</b>
+            {daysRemaining > 0
+              ? `, ${daysRemaining} day${daysRemaining === 1 ? '' : 's'} from now,`
+              : ', today,'}{' '}
+            to be admitted when {deal.name} closes.
           </p>
         </div>
       </div>
@@ -203,28 +208,34 @@ export default function PaymentFlow({
             ) : null}
           </div>
 
+          {/* The member's own ten days, not the deal's closing calendar. */}
           <div className="card">
-            <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-              <div className="count">
-                <span className="n num">{daysRemaining}</span>
-                <span className="small">
-                  {daysRemaining === 1 ? 'day' : 'days'}
-                  <br />
-                  to go
-                </span>
-              </div>
-              <div style={{ flex: 1, minWidth: 220 }}>
-                <h3>Admissions close {dateStr(cutoff)}</h3>
+            <div
+              style={{
+                display: 'flex',
+                gap: 16,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                marginBottom: 16,
+              }}
+            >
+              <div>
+                <h3>Paying later? Your spot is held until {dateStr(cutoff)}</h3>
                 <p className="small" style={{ marginTop: 4 }}>
-                  Your allocation stays reserved until then. We&rsquo;ll remind you ahead of
-                  the cut-off. A subscription not in escrow by then lapses, with no
-                  penalty and no obligation.
+                  We&rsquo;ll remind you before then. No penalty and no obligation if it lapses.
                 </p>
               </div>
               <Link className="btn btn-quiet" href="/dashboard">
                 I&rsquo;ll send later
               </Link>
             </div>
+            <EscrowClock
+              signedAt={subscription.signedAt}
+              deadline={subscription.fundingDeadline}
+              admissionsClose={admissionCutoff(deal.targetClose)}
+              daysLeft={daysRemaining}
+            />
           </div>
         </div>
 

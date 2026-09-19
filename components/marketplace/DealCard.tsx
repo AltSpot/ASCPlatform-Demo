@@ -117,7 +117,7 @@ export default function DealCard({
         icon: CircleAlert,
         label: resume.state === 'docs_signed' ? 'Signed · complete it' : 'Started',
         title: resume.state === 'docs_signed'
-          ? 'You signed. Send your subscription to escrow before admissions close.'
+          ? 'You signed. You have ten days from signing to send your subscription to escrow.'
           : 'You started this investment. Finish signing to reserve your spot.',
       }
     : deal.youAreIn

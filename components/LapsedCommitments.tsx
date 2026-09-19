@@ -81,7 +81,7 @@ export default function PendingCommitments({
             </h3>
             <p className="small" style={{ marginTop: 4 }}>
               Documents signed {dateStr(p.signedAt)}. Send to escrow by{' '}
-              {dateStr(p.fundingDeadline)}, when admissions close, to be admitted at close.
+              {dateStr(p.fundingDeadline)}, ten days from signing, to be admitted at close.
               After that, your spot is released.
             </p>
           </div>

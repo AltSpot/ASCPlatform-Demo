@@ -28,6 +28,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import EscrowClock from '@/components/EscrowClock';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import { ESCROW_WINDOW_DAYS } from '@/lib/config';
@@ -53,9 +54,6 @@ export interface OpenPosition {
 /** Inside this many days the window stops being background information. */
 const URGENT_DAYS = 3;
 
-/** The bar's scale: the escrow window, signing to due. */
-const WINDOW_DAYS = ESCROW_WINDOW_DAYS;
-
 export default function PositionTimeline({ position }: { position: OpenPosition }) {
   const router = useRouter();
   const toast = useToast();
@@ -66,12 +64,6 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
   const funded = state === 'funded';
   const urgent = state === 'docs_signed' && position.daysRemaining <= URGENT_DAYS;
 
-  /* How much of the last ten days before admissions close is gone. The bar reads as the window
-     closing rather than as progress toward something good. */
-  const spent = Math.min(
-    100,
-    Math.max(0, ((WINDOW_DAYS - position.daysRemaining) / WINDOW_DAYS) * 100),
-  );
 
   async function cancel() {
     if (busy) return;
@@ -123,36 +115,19 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
                 Send <b>{money(position.amount)}</b> to escrow to keep your spot in{' '}
                 <b>{position.dealName}</b>.
               </p>
-              <div className={s.facts}>
-                <span className={s.fact}>
-                  <span className={s.factKey}>Due</span>
-                  <span className={s.factValue}>{dateStr(position.fundingDeadline)}</span>
-                </span>
-                <span className={s.fact} data-urgent={urgent}>
-                  <span className={s.factKey}>Time left</span>
-                  <span className={s.factValue}>
-                    {position.daysRemaining <= 0
-                      ? 'Due today'
-                      : `${position.daysRemaining} day${position.daysRemaining === 1 ? '' : 's'}`}
-                  </span>
-                </span>
-              </div>
             </div>
 
-            <div className={s.window}>
-              <div className={s.track}>
-                <div className={s.fill} style={{ width: `${spent}%` }} />
-              </div>
-              <div className={s.ends}>
-                <span>Signed {dateStr(position.signedAt)}</span>
-                <span>Due {dateStr(position.fundingDeadline)}</span>
-              </div>
-            </div>
+            <EscrowClock
+              signedAt={position.signedAt}
+              deadline={position.fundingDeadline}
+              daysLeft={position.daysRemaining}
+              compact
+            />
 
             <p className={s.rule}>
-              You have {ESCROW_WINDOW_DAYS} days from signing to send your money to escrow, or
-              until admissions close if that is sooner. After {dateStr(position.fundingDeadline)}{' '}
-              the subscription lapses and your spot goes to the next member. Nothing is charged.
+              Once you sign, you have {ESCROW_WINDOW_DAYS} days to send your money to escrow.
+              After {dateStr(position.fundingDeadline)} the subscription lapses and your spot goes
+              to the next member. Nothing is charged.
             </p>
 
             <div className={s.actions}>

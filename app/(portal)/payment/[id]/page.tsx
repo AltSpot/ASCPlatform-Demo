@@ -1,4 +1,4 @@
-/** Escrow: the last step. Send to escrow now, or before admissions close. */
+/** Escrow: the last step. Send to escrow now, or within ten days of signing. */
 import { notFound } from 'next/navigation';
 
 import PaymentFlow from '@/components/PaymentFlow';
