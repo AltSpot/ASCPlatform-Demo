@@ -35,6 +35,7 @@ import PortfolioChart, {
 import { type OpenPosition } from '@/components/PositionTimeline';
 import PositionsTable, { type PositionRow } from '@/components/PositionsTable';
 import RadarRows, { type RadarRow } from '@/components/RadarRows';
+import { joinedDealIds, stagesByDeal } from '@/lib/position-stage';
 import SetupBanner from '@/components/SetupBanner';
 import PreferencesPrompt from '@/components/PreferencesPrompt';
 import { getPreferences } from '@/lib/repositories/preferences';
@@ -92,10 +93,23 @@ export default async function DashboardPage() {
       countWatchers(),
     ]);
 
-  const [deals, watched] = await Promise.all([
+  /* A VOTE THAT BECAME A POSITION MOVES (Tyler, 2026-09-19). Once a voted
+     name is an open deal and the member has at least signed into it, the
+     vote has done its job: the name leaves Your votes and sits with the
+     deals they are tracking, where its row states the real stage (signed
+     and not yet sent, in escrow, closed) rather than "invested". */
+  const joined = new Set(joinedDealIds(subscriptions));
+  const votedAndJoined = radar
+    .filter((company) => company.yourAmount !== null && company.dealId && joined.has(company.dealId))
+    .map((company) => company.dealId as string);
+  const stages = stagesByDeal(subscriptions, new Date().getTime());
+
+  const [deals, watchedAll] = await Promise.all([
     getDealsByIds([...new Set(subscriptions.map((s) => s.dealId))]),
-    getDealsForViewer(watchlist, user.id),
+    getDealsForViewer([...new Set([...watchlist, ...votedAndJoined])], user.id),
   ]);
+  /* A deal that has closed is a position on Portfolio, not something to watch. */
+  const watched = watchedAll.filter((deal) => deal.redacted || deal.status !== 'closed');
   const gate = evaluateInvestGate(wizard);
   /* Deal preferences are asked once the questionnaire is approved: the
      cooling-off wait is the natural moment, and the answers are ready the
@@ -218,6 +232,8 @@ export default async function DashboardPage() {
 
   const radarRows: RadarRow[] = radar
     .filter((company) => company.yourAmount !== null)
+    /* Joined: it has moved to the watchlist, above. */
+    .filter((company) => !(company.dealId && joined.has(company.dealId)))
     .sort((a, b) => (a.yourRank ?? Infinity) - (b.yourRank ?? Infinity))
     .map((company) => {
       const deal = company.dealId ? shelfById.get(company.dealId) : undefined;
@@ -427,14 +443,7 @@ export default async function DashboardPage() {
           </Link>
         }
       >
-        <WatchlistBlock
-          deals={watched}
-          investedAmounts={Object.fromEntries(
-            subscriptions
-              .filter((sub) => HELD_STATES.includes(sub.state))
-              .map((sub) => [sub.dealId, sub.amount]),
-          )}
-        />
+        <WatchlistBlock deals={watched} stages={stages} />
       </CollapsibleSection>
 
       <CollapsibleSection id="radar" title="Your votes">

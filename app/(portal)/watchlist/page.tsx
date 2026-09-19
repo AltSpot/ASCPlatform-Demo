@@ -24,6 +24,7 @@ import { requireUser } from '@/lib/auth';
 import type { DealView } from '@/lib/domain';
 import { exploreGroups } from '@/lib/explore';
 import { canSeeOfferings } from '@/lib/relationship';
+import { joinedDealIds, stagesByDeal } from '@/lib/position-stage';
 import { listDealsForViewer } from '@/lib/repositories/deals';
 import { getRelationshipView } from '@/lib/repositories/investor';
 import { getRadarBoard } from '@/lib/repositories/radar';
@@ -66,6 +67,8 @@ export default async function WatchlistPage() {
       watched={watchlist}
       companies={companies}
       subscribed={[...new Set(subscriptions.map((s) => s.dealId))]}
+      stages={stagesByDeal(subscriptions, new Date().getTime())}
+      joined={joinedDealIds(subscriptions)}
       locked={!canSeeOfferings(relationship)}
       /* Explore, as on the dashboard (Tyler, 2026-09-17): the ways into
          the shelf, under the two lists, so an empty page has somewhere

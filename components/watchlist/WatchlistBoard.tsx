@@ -43,6 +43,7 @@ import { useToast } from '@/components/Toast';
 import { api, ApiError } from '@/lib/client/api';
 import type { DealView } from '@/lib/domain';
 import type { ExploreGroup } from '@/lib/explore';
+import type { PositionStageView } from '@/lib/position-stage';
 import { dateStr, daysLeft, money } from '@/lib/format';
 import { fundingView } from '@/lib/funding';
 
@@ -78,6 +79,8 @@ export default function WatchlistBoard({
   watched: initialWatched,
   companies,
   subscribed,
+  stages = {},
+  joined = [],
   locked,
   explore,
 }: {
@@ -89,6 +92,10 @@ export default function WatchlistBoard({
   companies: WatchCompany[];
   /** Deal ids the member already has a subscription into. */
   subscribed: string[];
+  /** Where the member stands in each deal they have started. */
+  stages?: Record<string, PositionStageView>;
+  /** Deal ids the member has at least signed into. */
+  joined?: string[];
   /** True until offerings open to this member. */
   locked: boolean;
   /** The Explore slices of the shelf (lib/explore.ts), for the foot of the page. */
@@ -111,13 +118,21 @@ export default function WatchlistBoard({
   const dealById = useMemo(() => new Map(deals.map((d) => [d.id, d])), [deals]);
   const inIt = useMemo(() => new Set(subscribed), [subscribed]);
 
-  const savedDeals = watched
+  /* A voted name the member has joined sits with the saved deals, where its
+     row states the real stage, and leaves the votes (same rule as the
+     dashboard). */
+  const joinedSet = useMemo(() => new Set(joined), [joined]);
+  const movedIds = companies
+    .filter((c) => c.yourAmount !== null && c.dealId && joinedSet.has(c.dealId))
+    .map((c) => c.dealId as string);
+  const savedDeals = [...new Set([...watched, ...movedIds])]
     .map((id) => dealById.get(id))
     .filter((deal): deal is DealView => deal !== undefined);
 
   /* The member's own ranked order first, then newest votes last. */
   const votedCompanies = companies
     .filter((c) => votes[c.slug] !== undefined)
+    .filter((c) => !(c.dealId && joinedSet.has(c.dealId)))
     .sort((a, b) => (a.yourRank ?? Infinity) - (b.yourRank ?? Infinity));
 
   async function save(deal: DealView) {
@@ -257,6 +272,7 @@ export default function WatchlistBoard({
                     key={deal.id}
                     deal={deal}
                     subscribed={inIt.has(deal.id)}
+                    stage={stages[deal.id]}
                     onRemove={() => unsave(deal)}
                     onView={() => setPeek(deal)}
                   />
@@ -547,11 +563,13 @@ function QuickVote({
 function DealRow({
   deal,
   subscribed,
+  stage,
   onRemove,
   onView,
 }: {
   deal: DealView;
   subscribed: boolean;
+  stage?: PositionStageView;
   onRemove: () => void;
   onView: () => void;
 }) {
@@ -561,14 +579,18 @@ function DealRow({
   const soon = days > 0 && days <= CLOSING_SOON_DAYS;
 
   return (
-    <li className={s.row} data-in={deal.youAreIn ? 'true' : undefined}>
+    <li className={s.row}>
       <CompanyMark name={deal.name} logoUrl={deal.logoUrl} size={36} />
 
       <div className={s.body}>
         <div className={s.top}>
           <b className={s.name}>{deal.name}</b>
           <AssetClassIcon assetClass={deal.assetClass} size={12} />
-          {deal.youAreIn ? <span className={s.invested}>You invested</span> : null}
+          {stage ? (
+            <span className={s.invested} title={stage.detail}>
+              {stage.label}
+            </span>
+          ) : null}
         </div>
         <div className={s.meter}>
           <div className={s.bar} aria-label={`${pct}% of the minimum raised`} role="img">
@@ -581,7 +603,7 @@ function DealRow({
       </div>
 
       <div className={s.actions}>
-        {subscribed ? <span className={s.inIt}>You are in</span> : null}
+        {subscribed && !stage ? <span className={s.inIt}>You are in</span> : null}
         <button type="button" className={s.go} onClick={onView}>
           View
           <ArrowRight size={12} strokeWidth={1.8} aria-hidden="true" />

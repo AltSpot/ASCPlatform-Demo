@@ -24,7 +24,7 @@
  * app/api/watchlist/order is the authority and ignores any id they have
  * not saved.
  */
-import { ArrowRight, CircleCheck, GripVertical } from 'lucide-react';
+import { ArrowRight, CircleCheck, Clock, GripVertical } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -36,7 +36,8 @@ import {
   type DealShelfItem,
   type DealView,
 } from '@/lib/domain';
-import { dateStr, daysLeft, money } from '@/lib/format';
+import { dateStr, daysLeft } from '@/lib/format';
+import type { PositionStageView } from '@/lib/position-stage';
 import { fundingView } from '@/lib/funding';
 import { ASSET_CLASSES, isAssetClass } from '@/lib/taxonomy';
 
@@ -63,11 +64,11 @@ function applyOrder(list: DealShelfItem[], ids: string[]): DealShelfItem[] {
 
 export default function WatchlistBlock({
   deals,
-  investedAmounts = {},
+  stages = {},
 }: {
   deals: DealShelfItem[];
-  /** What the member has in each watched deal they went on to join. */
-  investedAmounts?: Record<string, number>;
+  /** Where the member stands in each deal they have started (lib/position-stage.ts). */
+  stages?: Record<string, PositionStageView>;
 }) {
   const toast = useToast();
 
@@ -147,7 +148,7 @@ export default function WatchlistBlock({
             <div
               key={deal.id}
               className={w.row}
-              data-in={!deal.redacted && deal.youAreIn ? 'true' : undefined}
+              data-stage={stages[deal.id]?.stage}
               data-lifted={lifted === deal.id}
               style={klass ? { ['--tint' as string]: klass.tint } : undefined}
               draggable
@@ -199,14 +200,22 @@ export default function WatchlistBlock({
               <div className={w.body}>
                 <div className={w.top}>
                   <b className={w.name}>{deal.name}</b>
-                  {!deal.redacted && deal.youAreIn ? (
-                    <span className={w.invested}>
-                      <CircleCheck size={12} strokeWidth={2.1} aria-hidden="true" />
-                      You invested
-                      {investedAmounts[deal.id] ? ` ${money(investedAmounts[deal.id])}` : ''}
+                  {stages[deal.id] ? (
+                    <span
+                      className={w.invested}
+                      data-owed={stages[deal.id].actionNeeded ? 'true' : undefined}
+                      title={stages[deal.id].detail}
+                    >
+                      {stages[deal.id].moneyIn ? (
+                        <CircleCheck size={12} strokeWidth={2.1} aria-hidden="true" />
+                      ) : (
+                        <Clock size={12} strokeWidth={2.1} aria-hidden="true" />
+                      )}
+                      {stages[deal.id].label}
                     </span>
                   ) : null}
-                  {klass ? <span className={w.klass}>{klass.label}</span> : null}
+                  {/* The stage outranks the class: one chip a row, or the line wraps. */}
+                  {klass && !stages[deal.id] ? <span className={w.klass}>{klass.label}</span> : null}
                   {deal.redacted ? null : <Closes deal={deal} />}
                 </div>
 
@@ -218,6 +227,9 @@ export default function WatchlistBlock({
                 ) : (
                   <Figures deal={deal} />
                 )}
+                {/* What the chip means, in a sentence: what is owed and by when,
+                    or where the money is. Never "invested" before money moves. */}
+                {stages[deal.id] ? <p className={w.stageLine}>{stages[deal.id].detail}</p> : null}
               </div>
 
               {deal.redacted ? (
@@ -227,9 +239,13 @@ export default function WatchlistBlock({
                 >
                   Finish accreditation
                 </Link>
-              ) : !deal.redacted && deal.youAreIn ? (
-                <Link className={w.go} href="/portfolio">
-                  Your position
+              ) : stages[deal.id]?.actionNeeded ? (
+                <Link className="btn btn-action btn-sm" href={stages[deal.id].action.href}>
+                  {stages[deal.id].action.label}
+                </Link>
+              ) : stages[deal.id] ? (
+                <Link className={w.go} href={stages[deal.id].action.href}>
+                  {stages[deal.id].action.label}
                   <ArrowRight size={12} strokeWidth={1.8} aria-hidden="true" />
                 </Link>
               ) : (
