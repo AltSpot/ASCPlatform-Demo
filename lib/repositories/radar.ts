@@ -182,6 +182,31 @@ export async function reorderRadar(
  * refreshed row so the client can render the new tally without a second
  * round trip.
  */
+/**
+ * Take a vote back entirely. Returns the company as the member now sees it
+ * and what was withdrawn (null when there was no vote, so the caller can
+ * tell a real withdrawal from a repeat).
+ */
+export async function withdrawInterest(
+  userId: string,
+  companySlug: string,
+): Promise<{ view: RadarCompanyView; withdrawn: number | null }> {
+  const existing = await prisma.radarInterest.findUnique({
+    where: { userId_companySlug: { userId, companySlug } },
+    select: { amount: true },
+  });
+  if (existing) {
+    await prisma.radarInterest.delete({
+      where: { userId_companySlug: { userId, companySlug } },
+    });
+  }
+
+  const board = await getRadarBoard(userId);
+  const view = board.find((company) => company.slug === companySlug);
+  if (!view) throw new Error(`Radar company "${companySlug}" is not on the board`);
+  return { view, withdrawn: existing?.amount ?? null };
+}
+
 export async function indicateInterest(
   userId: string,
   companySlug: string,

@@ -196,6 +196,9 @@ export const api = {
   /** Demand signal, not a commitment. Amount is whole dollars. */
   indicateRadarInterest: (companySlug: string, amount: number) =>
     post<RadarCompanyView>('/radar/interest', { companySlug, amount }),
+  /** Take a vote back entirely. Idempotent. */
+  withdrawRadarInterest: (companySlug: string) =>
+    del<RadarCompanyView>(`/radar/interest/${companySlug}`),
   /** The member's own ordering for Your Radar. A preference, not a signal. */
   reorderRadar: (order: string[]) =>
     patch<RadarCompanyView[]>('/radar/order', { order }),

@@ -38,6 +38,7 @@ export default function RadarBoard({
   mineOnly = false,
   voted,
   onVoted,
+  onWithdrawn,
   daySeed = 0,
 }: {
   /** The day, from the server, which turns the Featured order's quiet seats. */
@@ -48,6 +49,7 @@ export default function RadarBoard({
   /** Slugs the member has voted for, kept live by the page. */
   voted?: string[];
   onVoted?: (slug: string) => void;
+  onWithdrawn?: (slug: string) => void;
   /** See DealShelf: the marketplace owns one row for both lanes. */
   filter?: TaxonomyFilterState;
 }) {
@@ -159,6 +161,7 @@ export default function RadarBoard({
             rank={ranked.indexOf(company) + 1}
             total={ranked.length}
             onVoted={onVoted}
+            onWithdrawn={onWithdrawn}
           />
         ))}
       </div>

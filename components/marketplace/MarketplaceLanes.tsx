@@ -65,6 +65,7 @@ export default function MarketplaceLanes({
   watched,
   fromRadar,
   votedAmounts = {},
+  investedAmounts = {},
   daySeed = 0,
   companies,
   radarSourced = [],
@@ -80,6 +81,8 @@ export default function MarketplaceLanes({
   fromRadar: string[];
   /** What the member voted for each of those deals, by deal id. */
   votedAmounts?: Record<string, number>;
+  /** What the member has in each deal they are in, by deal id. */
+  investedAmounts?: Record<string, number>;
   /** Days since the epoch, from the server: rotates the Radar's Featured order. */
   daySeed?: number;
   companies: RadarCompanyView[];
@@ -352,6 +355,7 @@ export default function MarketplaceLanes({
             watched={watched}
             fromRadar={fromRadar}
             votedAmounts={votedAmounts}
+            investedAmounts={investedAmounts}
             filter={filter}
             bridgeHref="#radar"
             radarSourced={radarSourced}
@@ -384,6 +388,7 @@ export default function MarketplaceLanes({
           onVoted={(slug) =>
             setVotedSlugs((slugs) => (slugs.includes(slug) ? slugs : [...slugs, slug]))
           }
+          onWithdrawn={(slug) => setVotedSlugs((slugs) => slugs.filter((s) => s !== slug))}
         />
       </section>
     </>

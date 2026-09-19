@@ -569,6 +569,13 @@
   text-transform: none;
   color: var(--as-text-muted);
 }
+/* Taking the vote back: at the far end of the row, away from Update. */
+.voteRemove {
+  margin-left: auto;
+}
+.voteRemove:hover {
+  color: var(--bad);
+}
 .voteSwitch:hover {
   color: var(--accent-hot);
 }

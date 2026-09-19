@@ -59,6 +59,7 @@ export default function RadarCard({
   rank,
   total,
   onVoted,
+  onWithdrawn,
 }: {
   company: RadarCompanyView;
   /** This company's share of the loudest demand on the board, 0 to 1. */
@@ -68,6 +69,8 @@ export default function RadarCard({
   total: number;
   /** Lets the page count this vote in Yours without a reload. */
   onVoted?: (slug: string) => void;
+  /** The member took their vote back. */
+  onWithdrawn?: (slug: string) => void;
 }) {
   const toast = useToast();
 
@@ -111,6 +114,31 @@ export default function RadarCard({
     }
   }
 
+  async function remove() {
+    if (busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const next = await api.withdrawRadarInterest(view.slug);
+      setView(next);
+      onWithdrawn?.(next.slug);
+      setEditing(false);
+      setVoting(false);
+      setPanelVoting(false);
+      toast(
+        <>
+          Vote removed. <b>{view.name}</b> no longer counts yours.
+        </>,
+      );
+    } catch (caught) {
+      setError(
+        caught instanceof ApiError ? caught.message : 'Could not remove that. Try again.',
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const plate = view.logoUrl ? (
     // eslint-disable-next-line @next/next/no-img-element
     <img className={s.logo} src={view.logoUrl} alt="" aria-hidden="true" />
@@ -135,6 +163,7 @@ export default function RadarCard({
       error={error}
       onVote={vote}
       onCancel={cancel}
+          onRemove={remove}
     />
   ) : voted ? (
     <div className={s.votedBand}>
@@ -235,6 +264,7 @@ export default function RadarCard({
           error={error}
           onVote={vote}
           onCancel={cancel}
+          onRemove={remove}
         />
       ) : (
         <button

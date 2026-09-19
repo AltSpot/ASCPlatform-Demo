@@ -40,6 +40,7 @@ export type AuditAction =
   | 'subscription.expired'
   | 'document.saved'
   | 'radar.interest_indicated'
+  | 'radar.interest_withdrawn'
   | 'watchlist.added'
   | 'watchlist.removed'
   /* Self-reported holdings. Not a securities transaction, but they

@@ -37,6 +37,7 @@ export default function VoteScale({
   error,
   onVote,
   onCancel,
+  onRemove,
 }: {
   /** Named in the label, so a screen reader knows what is being voted on. */
   company: string;
@@ -47,6 +48,8 @@ export default function VoteScale({
   onVote: (amount: number) => void;
   /** Present only while changing an existing vote. */
   onCancel?: () => void;
+  /** Takes the vote back entirely. Offered only when there is one. */
+  onRemove?: () => void;
 }) {
   const [index, setIndex] = useState(() =>
     voteIndexOf(current ?? VOTE_DEFAULT),
@@ -107,6 +110,17 @@ export default function VoteScale({
         {onCancel ? (
           <button type="button" className={s.voteSwitch} onClick={onCancel}>
             Cancel
+          </button>
+        ) : null}
+
+        {onRemove && current !== null ? (
+          <button
+            type="button"
+            className={`${s.voteSwitch} ${s.voteRemove}`}
+            onClick={onRemove}
+            disabled={busy}
+          >
+            Remove vote
           </button>
         ) : null}
       </div>
