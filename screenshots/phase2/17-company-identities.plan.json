@@ -1,0 +1,176 @@
+{
+  "out": "screenshots/phase2/17-company-identities",
+  "shots": [
+    {
+      "name": "01-marketplace-shelf",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const logos = document.querySelectorAll('.deal-card [data-kind]'); if (logos.length < 6) throw new Error('logos on cards: ' + logos.length); const kinds = new Set([...logos].map(l => l.getAttribute('data-kind'))); if (kinds.size < 3) throw new Error('only ' + kinds.size + ' kinds of logo on the shelf'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-marketplace-shelf-row-two",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const cards = document.querySelectorAll('.deal-card'); cards[Math.min(6, cards.length - 1)].scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "03-radar-board",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Featured'); if (!b) throw new Error('no radar sort'); b.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 700
+        }
+      ]
+    },
+    {
+      "name": "04-radar-board-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Featured'); if (!b) throw new Error('no radar sort'); b.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 700
+        }
+      ]
+    },
+    {
+      "name": "05-marketplace-shelf-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "06-dashboard-popular",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Most popular/i.test(x.textContent)); if (h) h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "07-deal-hero",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/loomline"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    {
+      "name": "08-portfolio-marks",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { document.getElementById('p-drivers').scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "09-watchlist-marks",
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        }
+      ]
+    }
+  ]
+}
