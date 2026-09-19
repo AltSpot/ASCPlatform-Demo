@@ -195,3 +195,14 @@
 .keyLoss {
   background: var(--as-ember);
 }
+
+/* Arrived from "Your position": the row that was asked for stands out, and
+   sits clear of the sticky bars when it is scrolled to. */
+.row {
+  scroll-margin-top: 140px;
+}
+.row:target,
+.row[data-arrived='true'] {
+  background: var(--surface-2);
+  box-shadow: inset 3px 0 0 var(--as-gold);
+}

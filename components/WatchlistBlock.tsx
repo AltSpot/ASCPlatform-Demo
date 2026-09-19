@@ -211,7 +211,7 @@ export default function WatchlistBlock({
                       ) : (
                         <Clock size={12} strokeWidth={2.1} aria-hidden="true" />
                       )}
-                      {stages[deal.id].label}
+                      {stages[deal.id].short}
                     </span>
                   ) : null}
                   {/* The stage outranks the class: one chip a row, or the line wraps. */}
@@ -227,9 +227,7 @@ export default function WatchlistBlock({
                 ) : (
                   <Figures deal={deal} />
                 )}
-                {/* What the chip means, in a sentence: what is owed and by when,
-                    or where the money is. Never "invested" before money moves. */}
-                {stages[deal.id] ? <p className={w.stageLine}>{stages[deal.id].detail}</p> : null}
+
               </div>
 
               {deal.redacted ? (

@@ -24,6 +24,7 @@ import Link from 'next/link';
 import CompanyMark from '@/components/CompanyMark';
 import { EMPTY, compact, percent } from '@/lib/format';
 
+import PositionTarget from './PositionTarget';
 import s from './Holdings.module.css';
 
 export interface Holding {
@@ -52,6 +53,7 @@ export default function Holdings({ rows }: { rows: Holding[] }) {
 
   return (
     <div className="card">
+      <PositionTarget />
       <div className={s.scroll}>
         <table className={s.table}>
           <thead>
@@ -74,7 +76,12 @@ export default function Holdings({ rows }: { rows: Holding[] }) {
               const up = totalValue >= row.cost;
 
               return (
-                <tr key={row.id} className={s.row} data-exited={row.exited}>
+                <tr
+                  key={row.id}
+                  id={`position-${row.dealId}`}
+                  className={s.row}
+                  data-exited={row.exited}
+                >
                   <td>
                     <Link className={s.who} href={`/deals/${row.dealId}`}>
                       <CompanyMark name={row.name} logoUrl={row.logoUrl} size={32} />

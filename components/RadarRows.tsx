@@ -192,6 +192,7 @@ export default function RadarRows({ rows: allRows }: { rows: RadarRow[] }) {
 
   const adjustable = rows.filter((row) => !row.live?.subscribed);
   const lit = hot ?? (openAll ? null : openSlug);
+  const litRow = lit ? rows.find((row) => row.slug === lit) ?? null : null;
 
   function nudge(row: RadarRow, direction: 1 | -1) {
     const current = latest.current[row.slug] ?? row.voted;
@@ -278,6 +279,8 @@ export default function RadarRows({ rows: allRows }: { rows: RadarRow[] }) {
               <span
                 key={row.slug}
                 className={s.slice}
+                role="img"
+                aria-label={`${row.name}: ${Math.round(share)}% of your votes`}
                 data-hot={lit === row.slug ? 'true' : undefined}
                 onPointerEnter={() => setHot(row.slug)}
                 onPointerLeave={() => setHot(null)}
@@ -287,18 +290,28 @@ export default function RadarRows({ rows: allRows }: { rows: RadarRow[] }) {
                 }}
               >
                 <span className={s.sliceBar} />
-                <span className={s.sliceLabel} data-narrow={share < 9 ? 'true' : undefined}>
-                  <b>{Math.round(share)}%</b>
-                  <span>{row.name.split(' ')[0]}</span>
-                </span>
               </span>
             );
           })}
         </div>
-        <p className={s.poolHint}>
-          {openAll || openSlug
-            ? 'Minus and plus move a vote one step. Changes save on their own.'
-            : 'Each colour is one name, as wide as its share of everything you have voted.'}
+        {/* One line under the bar, and only when there is something to say:
+            the name and share of the colour being pointed at, or, with the
+            levers out, that changes save themselves. Its height is held so
+            the rows below never jump. */}
+        <p className={s.readout} aria-live="off">
+          {litRow ? (
+            <>
+              <span
+                className={s.key}
+                style={{ ['--slice' as string]: brandOf(litRow.slug)?.hue ?? 'var(--as-gold)' }}
+                aria-hidden="true"
+              />
+              <b>{litRow.name}</b>
+              <span>{Math.round(shares.get(litRow.slug) ?? 0)}% of your votes</span>
+            </>
+          ) : openAll ? (
+            <span>Changes save on their own.</span>
+          ) : null}
         </p>
       </div>
 

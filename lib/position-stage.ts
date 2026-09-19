@@ -29,6 +29,11 @@ export interface PositionStageView {
   actionNeeded: boolean;
   /** What the row's button says and where it goes. */
   action: { label: string; href: string };
+  /**
+   * The chip on a compact row (the dashboard's watchlist): the stage, or
+   * for a signed subscription the one fact that matters, the date.
+   */
+  short: string;
   /** Has money actually moved? Only then may a surface say "invested". */
   moneyIn: boolean;
 }
@@ -38,6 +43,15 @@ export const JOINED_STATES: SubscriptionState[] = ['docs_signed', 'funded', 'acc
 
 export function hasJoined(state: SubscriptionState): boolean {
   return JOINED_STATES.includes(state);
+}
+
+/**
+ * A position's own row on Portfolio. "Your position" lands on the row and
+ * the row lights (the :target rule in Holdings.module.css), rather than at
+ * the top of a long page.
+ */
+export function positionHref(dealId: string): string {
+  return `/portfolio#position-${dealId}`;
 }
 
 export function positionStage(sub: {
@@ -57,6 +71,7 @@ export function positionStage(sub: {
         label: 'Started',
         detail: `You began a ${sub.amountLabel} investment. Nothing is signed yet.`,
         actionNeeded: true,
+        short: 'Started · not signed',
         action: { label: 'Finish signing', href: `/invest/${sub.dealId}` },
         moneyIn: false,
       };
@@ -70,6 +85,7 @@ export function positionStage(sub: {
             }.`
           : `Send ${sub.amountLabel} to escrow to keep your spot.`,
         actionNeeded: true,
+        short: sub.dueLabel ? `Send by ${sub.dueLabel}` : 'Signed · not yet sent',
         action: { label: 'Complete investment', href: `/payment/${sub.id}` },
         moneyIn: false,
       };
@@ -79,7 +95,8 @@ export function positionStage(sub: {
         label: 'In escrow',
         detail: `${sub.amountLabel} is in escrow until the deal closes.`,
         actionNeeded: false,
-        action: { label: 'Your position', href: '/portfolio' },
+        short: 'In escrow',
+        action: { label: 'Your position', href: positionHref(sub.dealId) },
         moneyIn: true,
       };
     case 'accepted':
@@ -89,7 +106,8 @@ export function positionStage(sub: {
         label: 'Invested',
         detail: `You invested ${sub.amountLabel}. The deal has closed.`,
         actionNeeded: false,
-        action: { label: 'Your position', href: '/portfolio' },
+        short: 'Invested',
+        action: { label: 'Your position', href: positionHref(sub.dealId) },
         moneyIn: true,
       };
     default:

@@ -39,6 +39,7 @@ import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
 import { compact, money } from '@/lib/format';
+import { positionHref } from '@/lib/position-stage';
 import { dealChip, isJustOpened } from '@/lib/funding';
 
 import s from './Marketplace.module.css';
@@ -104,7 +105,7 @@ export default function DealCard({
   const inDeal = deal.youAreIn && !resume;
 
   const primary = inDeal ? (
-    <Link className="btn btn-ghost btn-sm" href="/portfolio">
+    <Link className="btn btn-ghost btn-sm" href={positionHref(deal.id)}>
       Your position
     </Link>
   ) : resume ? (

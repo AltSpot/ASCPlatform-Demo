@@ -45,6 +45,7 @@ import WaitlistButton from '@/components/WaitlistButton';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
 import { money } from '@/lib/format';
+import { positionHref } from '@/lib/position-stage';
 import { getDealAccess, listDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getRadarBoard } from '@/lib/repositories/radar';
@@ -197,7 +198,7 @@ export default async function DealPage({
             <b>You invested {investedAmount > 0 ? money(investedAmount) : 'in this deal'}</b>
             <small>{deal.status === 'closed' ? 'This deal has closed' : 'In escrow until the deal closes'}</small>
           </span>
-          <Link className={s.investedLink} href="/portfolio">
+          <Link className={s.investedLink} href={positionHref(deal.id)}>
             Your position →
           </Link>
         </span>
