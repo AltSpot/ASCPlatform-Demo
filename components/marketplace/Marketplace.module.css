@@ -463,6 +463,14 @@
   flex: 1;
   justify-content: center;
 }
+/* A started deal: Quick look steps back to its own width and the action
+   takes the rest, so "Complete investment" sits on one line. */
+.cardActions:has(> :global(.btn-action)) > .peekButton {
+  flex: 0 0 auto;
+}
+.cardActions > :global(.btn-action) {
+  flex: 1 1 auto;
+}
 .peekButton {
   display: inline-flex;
   align-items: center;
@@ -576,12 +584,49 @@
 }
 
 /* Already a member: said in green, the colour of something settled. */
+/* You hold this one: a filled green, the loudest status after an
+   unfinished investment. Dark ink on the paint green, never green type. */
 .status[data-tone='in'] {
-  color: var(--on-media);
-  box-shadow: inset 0 0 0 1px var(--good-line);
+  background: var(--good-paint);
+  color: var(--fg-on-vote);
+  box-shadow: none;
 }
 .status[data-tone='in'] svg {
+  stroke: var(--fg-on-vote);
+}
+
+/* The card you are in, findable in a grid without reading. */
+:global(.deal-card)[data-in='true'] {
+  box-shadow: var(--card-lift), 0 0 0 1.5px var(--good-line);
+}
+.inBand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--good-fill);
+  box-shadow: inset 0 0 0 1px var(--good-line);
+  font-size: 13.5px;
+  color: var(--as-text);
+}
+.inBand svg {
+  flex: none;
   stroke: var(--good-paint);
+}
+.inBand b {
+  font-family: var(--font-mono);
+  font-weight: var(--w-medium);
+  font-variant-numeric: tabular-nums;
+}
+.inBand small {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  white-space: nowrap;
 }
 
 /* Your own unfinished investment: the status that outranks the rest. */

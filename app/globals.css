@@ -349,6 +349,7 @@
   --btn-primary-halo:rgba(239,233,220,.10);
   --btn-gold-halo:rgba(243,152,7,.16);
   --btn-action-halo:rgba(229,102,26,.18);
+  --btn-action-ring:rgba(240,122,30,.42);
   --tint-gold-faint:rgba(243,152,7,.02);
   --tint-ember:rgba(229,102,26,.08);
   --tint-ember-line:rgba(229,102,26,.45);
@@ -827,7 +828,10 @@ html[data-rail='mini']{--rail:74px}
    THE SIGNATURE is the orb, the same gold dot that ends the wordmark:
    .btn-primary ends in one, and .btn-orb adds it to a ghost. On hover it
    stretches toward the edge, which is the whole of the motion. */
-.btn{letter-spacing:-.006em}
+/* A label is one line. A button that wraps looks broken beside one that
+   does not; a full-width one may wrap on a phone. */
+.btn{letter-spacing:-.006em;white-space:nowrap}
+.btn-block{white-space:normal}
 .btn-gold,.btn-primary,.btn-ghost,.btn-quiet,.btn-action,.btn-vote{
   transition:background-color .16s ease,box-shadow .16s ease,color .16s ease,filter .16s ease;
 }
@@ -869,32 +873,38 @@ html[data-rail='mini']{--rail:74px}
 @media (prefers-reduced-motion:reduce){.btn-primary::after,.btn-orb::after{transition:none}}
 
 /* ACTION NEEDED. "You started this and it is waiting on you": finish
-   signing, or complete the investment. The heat ramp, flat, with a
-   pulsing dot. Never used for a first step. */
+   signing, or complete the investment. The heat ramp, flat. Redesigned
+   2026-09-19: the pulsing white dot in front of dark type read as a stray
+   pixel, so the cue moved off the label. The label is followed by an ink
+   arrow (a step to continue, which is what this is), and the attention
+   cue is a slow ring that breathes around the whole pill in its own
+   colour. Never wraps, never used for a first step. */
 .btn-action{
   position:relative;
   background:var(--as-ember);
   background-image:var(--action-fill);
   color:var(--fg-on-action);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);
+  animation:action-ring 2.6s ease-out infinite;
 }
-.btn-action::before{
-  content:'';width:7px;height:7px;border-radius:50%;flex:none;
-  background:var(--action-dot);
-  box-shadow:0 0 0 0 rgba(255,248,236,.6);
-  animation:action-pulse 2s ease-out infinite;
+.btn-action::after{
+  content:'→';flex:none;
+  font-weight:500;line-height:1;
+  transition:transform .2s cubic-bezier(.2,.7,.2,1);
 }
 .btn-action:hover{
   color:var(--fg-on-action);
   filter:brightness(1.06);
+  animation:none;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.26),0 0 0 4px var(--btn-action-halo);
 }
-@keyframes action-pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,248,236,.6)}
-  70%{box-shadow:0 0 0 6px transparent}
-  100%{box-shadow:0 0 0 0 transparent}
+.btn-action:hover::after{transform:translateX(3px)}
+@keyframes action-ring{
+  0%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 0 0 0 var(--btn-action-ring)}
+  60%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 0 0 7px transparent}
+  100%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 0 0 0 transparent}
 }
-@media (prefers-reduced-motion:reduce){.btn-action::before{animation:none}}
+@media (prefers-reduced-motion:reduce){.btn-action{animation:none}}
 
 /* Secondary buttons are FILLED pills with a hairline, and neutral. */
 .btn-ghost{
@@ -1730,8 +1740,7 @@ html[data-theme='light'] .btn-ghost.btn-orb:hover{
   background-color:var(--btn-primary-bg);color:var(--btn-primary-fg);
   box-shadow:inset 0 0 0 1.25px var(--btn-primary-bg);
 }
-html[data-theme='light'] .btn-gold,
-html[data-theme='light'] .btn-action{box-shadow:inset 0 0 0 1px rgba(122,72,8,.34)}
+html[data-theme='light'] .btn-gold{box-shadow:inset 0 0 0 1px rgba(122,72,8,.34)}
 html[data-theme='light'] .btn[disabled]{background:rgba(29,24,16,.06);color:var(--as-text-muted);box-shadow:inset 0 0 0 1px rgba(29,24,16,.12)}
 
 /* Inputs are the one place the ladder goes down rather than up: a field

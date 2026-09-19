@@ -38,7 +38,7 @@ import DealPeek from '@/components/marketplace/DealPeek';
 import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
-import { compact } from '@/lib/format';
+import { compact, money } from '@/lib/format';
 import { dealChip, isJustOpened } from '@/lib/funding';
 
 import s from './Marketplace.module.css';
@@ -49,6 +49,7 @@ export default function DealCard({
   watched,
   fromRadar = false,
   votedAmount,
+  investedAmount,
   radarSourced = false,
   onWatchChange,
 }: {
@@ -60,6 +61,8 @@ export default function DealCard({
   fromRadar?: boolean;
   /** What they voted, so the card can say it. */
   votedAmount?: number;
+  /** What the member has in this deal, once they are in it. */
+  investedAmount?: number;
   /** The deal came off the Radar (whoever voted). */
   radarSourced?: boolean;
   /** Lets a shelf that tracks saves hear about them. */
@@ -91,7 +94,20 @@ export default function DealCard({
 
   /* A deal the member started asks them to finish, in the one button
      style that out-ranks every View deal on the shelf. */
-  const primary = resume ? (
+  /* ALREADY IN (Tyler, 2026-09-19). A small chip on the art was the only
+     sign a member held a deal, and the card still asked them to "View
+     deal" like any other. A deal they are in now says so three ways: a
+     filled green status, a band across the body stating what they put in,
+     and a main button that goes to their position rather than the pitch.
+     The ring round the card is the same green, so it is findable in a
+     grid without reading. */
+  const inDeal = deal.youAreIn && !resume;
+
+  const primary = inDeal ? (
+    <Link className="btn btn-ghost btn-sm" href="/portfolio">
+      Your position
+    </Link>
+  ) : resume ? (
     resume.state === 'docs_signed' ? (
       <Link className="btn btn-action btn-sm" href={`/payment/${resume.id}`}>
         Complete investment
@@ -122,7 +138,7 @@ export default function DealCard({
           : 'You started this investment. Finish signing to reserve your spot.',
       }
     : deal.youAreIn
-    ? { tone: 'in', icon: CircleCheck, label: 'You are in', title: 'Your subscription is in this SPV' }
+    ? { tone: 'in', icon: CircleCheck, label: 'You invested', title: 'Your subscription is in this SPV' }
     : viewOnly
     ? { tone: 'quiet', icon: Eye, label: 'View only', title: 'Opened before you joined' }
     : full
@@ -137,6 +153,7 @@ export default function DealCard({
     <div
       className={full ? `card deal-card ${s.fullCard}` : 'card deal-card'}
       data-voted={fromRadar ? 'true' : undefined}
+      data-in={inDeal ? 'true' : undefined}
     >
       <div className={`thumb ${s.art}`} style={{ background: deal.art }}>
         {status ? (
@@ -185,6 +202,22 @@ export default function DealCard({
         </div>
 
         <p className={s.headline}>{deal.headline}</p>
+
+        {inDeal ? (
+          <p className={s.inBand}>
+            <CircleCheck size={15} strokeWidth={1.9} aria-hidden="true" />
+            <span>
+              {investedAmount ? (
+                <>
+                  You invested <b>{money(investedAmount)}</b>
+                </>
+              ) : (
+                'You are invested in this deal'
+              )}
+            </span>
+            <small>{deal.status === 'closed' ? 'Closed' : 'In escrow until close'}</small>
+          </p>
+        ) : null}
 
         <FundingProgress deal={deal} compact />
 
