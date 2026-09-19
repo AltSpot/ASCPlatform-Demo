@@ -176,6 +176,15 @@ export default async function DealPage({
           Finish signing
         </Link>
       )
+    ) : standing?.alreadyMember ? (
+      /* Already in: say so first. Adding to a position is still allowed. */
+      <>
+        <span className="chip good">
+          <span className="dot" />
+          You are in
+        </span>
+        <InvestButton dealId={deal.id} gate={gate} className={className} />
+      </>
     ) : (
       <InvestButton dealId={deal.id} gate={gate} className={className} />
     );
@@ -228,7 +237,7 @@ export default async function DealPage({
 
       <Outcomes outcomes={deal.outcomes} />
 
-      {scenarios ? <ReturnScenarios set={scenarios} /> : null}
+      {scenarios ? <ReturnScenarios set={scenarios} example={deal.minInvestment} /> : null}
 
       <RiskPanel risks={deal.risks} />
 

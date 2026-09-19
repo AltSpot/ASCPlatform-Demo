@@ -11,6 +11,8 @@
   "kestrel": { "hue": "#5AB0FF", "light": "#BFE2FF", "tile": "#08121D" },
   "northstar": { "hue": "#7C83FF", "light": "#C9CCFF", "tile": "#0C0D22" },
   "halyard": { "hue": "#4ED08A", "light": "#B6F2D1", "tile": "#08180F" },
+  "solenne": { "hue": "#F0A6CA", "light": "#FBD9E9", "tile": "#1D0B15" },
+  "tidewater": { "hue": "#5BC0EB", "light": "#C6ECFB", "tile": "#07161E" },
   "harborline": { "hue": "#60A5FA", "light": "#DBEAFE", "tile": "#0A1220" },
   "vantage": { "hue": "#F472B6", "light": "#FBCFE8", "tile": "#1F0A15" },
   "northwind": { "hue": "#34D3C7", "light": "#B5F5EE", "tile": "#081A19" },

@@ -56,7 +56,11 @@ import {
  *     whether it filters on it.
  */
 const SEED_POSITION = {
-  dealId: 'aurelia',
+  /* A CLOSED deal (2026-09-19). It was Aurelia, which is still open on
+     the shelf: a marked, countersigned position in a deal that is still
+     raising contradicted the marketplace, and the same account had voted
+     four times that amount for it on the Radar. */
+  dealId: 'solenne',
   amount: 25_000,
   currentValue: 29_600,
   signedDaysAgo: 210,
@@ -89,13 +93,14 @@ const SEED_POSITION = {
  */
 const SEED_BOOK = [
   {
-    dealId: 'growth-fund',
+    /* Closed. It was the Growth Fund, which is still raising. */
+    dealId: 'tidewater',
     amount: 50_000,
     currentValue: 58_400,
     signedDaysAgo: 300,
     /** Paid out of the fund's first realization. */
     distributions: [
-      { amount: 6_000, kind: 'return_of_capital', daysAgo: 75, note: 'First realization' },
+      { amount: 6_000, kind: 'return_of_capital', daysAgo: 75, note: 'Dividend recapitalization' },
     ],
   },
   {
@@ -391,6 +396,7 @@ async function seedOpeningPosition(userId: string): Promise<void> {
   );
 
   await seedPendingCommitment(userId, now);
+  await seedEscrowPosition(userId, now);
   await seedBook(userId, now);
   await seedTaxForms(userId, now);
   await seedRadarAndWatchlist(userId);
@@ -413,14 +419,22 @@ async function seedOpeningPosition(userId: string): Promise<void> {
  * Production contract: there is none. A new member has voted on
  * nothing and saved nothing. Delete this function and its call.
  */
+/* ONE STORY ACROSS THE THREE LISTS (Tyler, 2026-09-19). Aurelia is the
+   loop closed: voted $25,000 on the Radar, the deal opened, and the same
+   $25,000 is now in escrow (SEED_ESCROW). Ferrule is the loop waiting:
+   voted, now open, not yet joined, which is the row Needs you carries.
+   Orrery is still only a name on the Radar. */
 const SEED_VOTES = [
   { slug: 'ferrule', amount: 50_000, rank: 1 },
-  { slug: 'orrery', amount: 25_000, rank: 2 },
-  { slug: 'aurelia', amount: 100_000, rank: 3 },
+  { slug: 'aurelia', amount: 25_000, rank: 2 },
+  { slug: 'orrery', amount: 25_000, rank: 3 },
 ];
 
+/** The vote that became a position: in escrow, waiting for the close. */
+const SEED_ESCROW = { dealId: 'aurelia', amount: 25_000, signedDaysAgo: 9, fundedDaysAgo: 8 };
+
 /** Open deals the member has not committed to. Order is the list order. */
-const SEED_WATCHLIST = ['calder', 'growth-fund'];
+const SEED_WATCHLIST = ['calder', 'meridel'];
 
 /**
  * DEMO SEAM — a K-1 per position, per completed tax year.
@@ -687,6 +701,45 @@ async function seedPendingCommitment(userId: string, now: number): Promise<void>
       name: `Subscription Agreement: ${deal.entity}`,
       type: 'agreement',
       note: 'Signed · awaiting escrow',
+      savedAt: signedAt,
+    },
+  });
+}
+
+/**
+ * DEMO SEAM — the vote that became a position (SEED_ESCROW): signed and in
+ * escrow, waiting for the deal to close. No marks and no K-1, because the
+ * SPV has not closed yet. Written straight to the table like the rest of
+ * this seam.
+ */
+async function seedEscrowPosition(userId: string, now: number): Promise<void> {
+  const deal = await prisma.deal.findUnique({ where: { id: SEED_ESCROW.dealId } });
+  if (!deal) return;
+
+  const signedAt = new Date(now - SEED_ESCROW.signedDaysAgo * DAY_MS);
+  const subscription = await prisma.subscription.create({
+    data: {
+      userId,
+      dealId: deal.id,
+      amount: SEED_ESCROW.amount,
+      state: 'funded',
+      seeded: true,
+      signature: null,
+      signedAt,
+      fundedAt: new Date(now - SEED_ESCROW.fundedDaysAgo * DAY_MS),
+      fundingMethod: 'ACH · linked account',
+      createdAt: signedAt,
+    },
+  });
+
+  await prisma.document.create({
+    data: {
+      userId,
+      dealId: deal.id,
+      subscriptionId: subscription.id,
+      name: `Subscription Agreement: ${deal.entity}`,
+      type: 'agreement',
+      note: 'Signed · in escrow',
       savedAt: signedAt,
     },
   });

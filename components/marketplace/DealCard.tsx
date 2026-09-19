@@ -28,7 +28,7 @@
  *
  * No fee or carry figure anywhere on it.
  */
-import { CircleAlert, Eye, PanelRightOpen, Radar, Sparkles, Star, Users } from 'lucide-react';
+import { CircleAlert, CircleCheck, Eye, PanelRightOpen, Radar, Sparkles, Star, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -116,6 +116,8 @@ export default function DealCard({
           ? 'You signed. Send your subscription to escrow before admissions close.'
           : 'You started this investment. Finish signing to reserve your spot.',
       }
+    : deal.youAreIn
+    ? { tone: 'in', icon: CircleCheck, label: 'You are in', title: 'Your subscription is in this SPV' }
     : viewOnly
     ? { tone: 'quiet', icon: Eye, label: 'View only', title: 'Opened before you joined' }
     : full

@@ -575,6 +575,15 @@
   stroke: var(--fg-on-gold);
 }
 
+/* Already a member: said in green, the colour of something settled. */
+.status[data-tone='in'] {
+  color: var(--on-media);
+  box-shadow: inset 0 0 0 1px var(--good-line);
+}
+.status[data-tone='in'] svg {
+  stroke: var(--good-paint);
+}
+
 /* Your own unfinished investment: the status that outranks the rest. */
 .status[data-tone='action'] {
   background: var(--as-ember);

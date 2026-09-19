@@ -49,6 +49,10 @@ const GLYPHS = {
   // A sail on its line.
   halyard: `<path d="M44 24 L44 70 L72 70 Z" ${F}/><path d="M36 76 L74 76" ${S} opacity=".55"/><path d="M36 34 L36 70" ${S} opacity=".55"/>`,
   // A warehouse roofline.
+  // A pulse line: a heartbeat across the tile.
+  solenne: `<path d="M24 52 L38 52 L45 34 L55 68 L62 46 L66 52 L76 52" ${S}/>`,
+  // Two tide lines under a rising mark.
+  tidewater: `<path d="M26 58 C34 50 42 66 50 58 C58 50 66 66 74 58" ${S}/><path d="M26 72 C34 64 42 80 50 72 C58 64 66 80 74 72" ${S} opacity=".55"/><path d="M50 26 L50 46 M42 34 L50 26 L58 34" ${S5}/>`,
   harborline: `<path d="M24 46 L50 28 L76 46" ${S}/><path d="M30 50 L30 74 L70 74 L70 50" ${S} opacity=".6"/><rect x="43" y="56" width="14" height="18" rx="2" ${F}/>`,
   // A payment arrow through a card.
   vantage: `<rect x="24" y="32" width="52" height="36" rx="7" ${S} opacity=".5"/><path d="M34 50 L66 50 M56 40 L66 50 L56 60" ${S}/>`,
