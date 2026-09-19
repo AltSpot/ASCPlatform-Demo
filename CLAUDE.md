@@ -80,6 +80,30 @@ Concretely:
   never says "fund", "balance" or "allocate". A name the member is already
   invested in is settled and shows its figure without levers. A vote cannot
   be lowered below the Radar's minimum from here; there is no withdraw.
+  **Signing is not investing** (Tyler, 2026-09-19, `lib/position-stage.ts`,
+  pure, `tests/position-stage.test.ts`). A member's stage in a deal is
+  decided once from the subscription's state: Started, Signed · not yet
+  sent (with what is owed and by when), In escrow, Invested (the deal has
+  closed). **No surface says "invested" before money has moved.** The
+  dashboard's watchlist, the Watchlist page and the shelf read it.
+  **A vote that became a position moves**: once a voted name is an open
+  deal and the member has at least signed into it, it leaves Your votes and
+  sits in the dashboard's Watchlist (and the Watchlist page's saved deals)
+  with its real stage and the right button (Complete investment while
+  something is owed, Your position after). A voted name that is open but
+  not joined stays in Your votes with its Invest link. A closed deal is a
+  Portfolio position and is not on the watchlist. This is a view-level
+  union (watchlist ids plus voted-and-joined deal ids); nothing is written
+  to the watchlist table, so a member who stars and un-stars is not
+  overridden.
+  **A vote can be taken back** (`DELETE /api/radar/interest/:slug`,
+  idempotent, audited as `radar.interest_withdrawn`): Remove vote sits in
+  the Radar's own vote control (card and panel), inside the opened levers
+  on the dashboard (it asks once), and beside the pencil on the Watchlist
+  page. **Your votes' levers are closed at rest**: a pencil opens one name,
+  Adjust all opens every name, and a row pressed anywhere else opens the
+  Radar's overview of that company in the side panel. The spread's colours
+  are muted at rest and come up for the name being pointed at or changed.
   **Needs you is built once** (`lib/needs-you.ts`: a commitment with a
   clock, a document to sign, a Radar name that opened, a lapsed
   commitment) and read twice: the dashboard strip, which folds like every

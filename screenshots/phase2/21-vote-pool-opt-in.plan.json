@@ -20,7 +20,7 @@
           "wait": 400
         },
         {
-          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); if (s.querySelector('button[aria-label^=\"Raise your vote\"], button[aria-label^=\"Lower your vote\"]')) throw new Error('levers are out at rest'); if (s.querySelectorAll('button[aria-label^=\"Change your vote for\"]').length < 2) throw new Error('no pencils'); if (!/adjust all/i.test(s.innerText)) throw new Error('no Adjust all'); if (!/50%/.test(s.innerText)) throw new Error('bar is not labelled'); })()"
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); if (s.querySelector('button[aria-label^=\"Raise your vote\"], button[aria-label^=\"Lower your vote\"]')) throw new Error('levers are out at rest'); if (s.querySelectorAll('button[aria-label^=\"Change your vote for\"]').length < 2) throw new Error('no pencils'); if (!/adjust all/i.test(s.innerText)) throw new Error('no Adjust all'); if (!/67%/.test(s.innerText)) throw new Error('bar is not labelled'); })()"
         }
       ]
     },
@@ -55,7 +55,7 @@
           "wait": 1800
         },
         {
-          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (!t.includes('115,000')) throw new Error('total did not move: ' + t.slice(0, 80)); if (!/saved/i.test(t)) throw new Error('no Saved'); })()"
+          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (!t.includes('90,000')) throw new Error('total did not move: ' + t.slice(0, 80)); if (!/saved/i.test(t)) throw new Error('no Saved'); })()"
         }
       ]
     },
@@ -307,70 +307,6 @@
       ]
     },
     {
-      "name": "13-watchlist-invested-row",
-      "steps": [
-        {
-          "go": "/reshoot?to=/dashboard"
-        },
-        {
-          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
-        },
-        {
-          "wait": 1200
-        },
-        {
-          "eval": "fetch('/api/watchlist/aurelia', { method: 'PUT' }).then(r => { if (!r.ok) throw new Error('could not save Aurelia: ' + r.status); })"
-        },
-        {
-          "wait": 500
-        },
-        {
-          "go": "/dashboard"
-        },
-        {
-          "wait": 1500
-        },
-        {
-          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())); h.scrollIntoView({ block: 'start', behavior: 'instant' }); const s = h.closest('section'); const t = s.innerText; if (!/you invested/i.test(t)) throw new Error('watchlist row does not say You invested'); if (!t.includes('25,000')) throw new Error('no amount on the watchlist row'); if (!/your position/i.test(t)) throw new Error('no Your position link'); })()"
-        },
-        {
-          "wait": 500
-        }
-      ]
-    },
-    {
-      "name": "14-watchlist-invested-row-daylight",
-      "steps": [
-        {
-          "go": "/reshoot?to=/dashboard"
-        },
-        {
-          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
-        },
-        {
-          "wait": 1200
-        },
-        {
-          "eval": "fetch('/api/watchlist/aurelia', { method: 'PUT' }).then(r => { if (!r.ok) throw new Error('could not save Aurelia: ' + r.status); })"
-        },
-        {
-          "wait": 500
-        },
-        {
-          "go": "/dashboard"
-        },
-        {
-          "wait": 1500
-        },
-        {
-          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())); h.scrollIntoView({ block: 'start', behavior: 'instant' }); const s = h.closest('section'); const t = s.innerText; if (!/you invested/i.test(t)) throw new Error('watchlist row does not say You invested'); if (!t.includes('25,000')) throw new Error('no amount on the watchlist row'); if (!/your position/i.test(t)) throw new Error('no Your position link'); })()"
-        },
-        {
-          "wait": 500
-        }
-      ]
-    },
-    {
       "name": "15-deal-page-invested",
       "steps": [
         {
@@ -476,7 +412,7 @@
           "wait": 1600
         },
         {
-          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (/Orrery/.test(t)) throw new Error('the row is still there'); if (!t.includes('75,000')) throw new Error('the pool did not re-total to 75,000'); })()"
+          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (/Orrery/.test(t)) throw new Error('the row is still there'); if (!t.includes('50,000')) throw new Error('the pool did not re-total to 50,000'); })()"
         },
         {
           "eval": "fetch('/api/radar').then(r => r.json()).then(j => { const list = Array.isArray(j) ? j : (j.data ?? j.items ?? []); const c = list.find(x => x.slug === 'orrery'); const got = c ? c.yourAmount : 'missing'; if (got !== null) throw new Error('server has orrery = ' + got); })"
@@ -598,6 +534,128 @@
         },
         {
           "eval": "fetch('/api/radar/interest/orrery', { method: 'DELETE' }).then(r => { if (!r.ok) throw new Error('first ' + r.status); return fetch('/api/radar/interest/orrery', { method: 'DELETE' }); }).then(r => { if (!r.ok) throw new Error('second ' + r.status); return fetch('/api/radar/interest/not-a-company', { method: 'DELETE' }); }).then(r => { if (r.status !== 400 && r.status !== 422) throw new Error('an unknown slug was accepted: ' + r.status); })"
+        }
+      ]
+    },
+    {
+      "name": "24-voted-and-joined-moves-to-watchlist",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())).closest('section').scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const wl = [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())).closest('section').innerText; const votes = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (!/Aurelia/.test(wl)) throw new Error('Aurelia did not move to the watchlist'); if (/Aurelia/.test(votes)) throw new Error('Aurelia is still in Your votes'); if (!/in escrow/i.test(wl)) throw new Error('Aurelia does not say In escrow'); if (/you invested/i.test(wl)) throw new Error('the watchlist still says You invested'); if (!/Ferrule/.test(votes)) throw new Error('Ferrule (voted, open, not joined) should stay in Your votes'); })()"
+        }
+      ]
+    },
+    {
+      "name": "25-watchlist-shows-real-stage",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "fetch('/api/watchlist/tessellate', { method: 'PUT' }).then(r => { if (!r.ok) throw new Error('could not save Tessellate: ' + r.status); })"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "go": "/dashboard"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())).closest('section').scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())).closest('section').innerText; if (!/Tessellate/.test(t)) throw new Error('no Tessellate row'); if (!/signed/i.test(t) || !/not yet sent/i.test(t)) throw new Error('signed row does not say Signed, not yet sent'); if (!/send \\S*50,000 to escrow by/i.test(t.replace(/\\$/g, ''))) throw new Error('signed row does not say what is owed'); if (!/complete investment/i.test(t)) throw new Error('signed row has no Complete investment'); })()"
+        }
+      ]
+    },
+    {
+      "name": "26-watchlist-shows-real-stage-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "fetch('/api/watchlist/tessellate', { method: 'PUT' }).then(r => { if (!r.ok) throw new Error('could not save Tessellate: ' + r.status); })"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "go": "/dashboard"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())).closest('section').scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())).closest('section').innerText; if (!/Tessellate/.test(t)) throw new Error('no Tessellate row'); if (!/signed/i.test(t) || !/not yet sent/i.test(t)) throw new Error('signed row does not say Signed, not yet sent'); if (!/send \\S*50,000 to escrow by/i.test(t.replace(/\\$/g, ''))) throw new Error('signed row does not say what is owed'); if (!/complete investment/i.test(t)) throw new Error('signed row has no Complete investment'); })()"
+        }
+      ]
+    },
+    {
+      "name": "27-watchlist-page-stages",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "fetch('/api/watchlist/tessellate', { method: 'PUT' }).then(r => { if (!r.ok) throw new Error('could not save Tessellate: ' + r.status); })"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "go": "/watchlist"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/in escrow/i.test(t)) throw new Error('no In escrow on the Watchlist page'); if (!/not yet sent/i.test(t)) throw new Error('no signed stage on the Watchlist page'); if (/you invested/i.test(t)) throw new Error('the Watchlist page still says You invested'); })()"
         }
       ]
     }
