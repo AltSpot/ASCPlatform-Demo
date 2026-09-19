@@ -65,6 +65,21 @@ Concretely:
   `components/CollapsibleSection.tsx`, and the folded state is a
   per-device preference in localStorage via `useSyncExternalStore`, never
   a column.
+  **Your votes reads as one pool** (Tyler, 2026-09-19,
+  `components/RadarRows`, now a client island). The total leads ("You
+  have voted $100,000"), a share bar shows the spread with each name in its
+  own colour (a key, nothing else), and every row carries a minus and a
+  plus that move the vote one stop along the Radar's own ladder
+  (`lib/vote-pool.ts`, pure, `tests/vote-pool.test.ts`). A press changes
+  the figure at once and saves 650ms after the last press through the same
+  `/api/radar/interest` call the Radar makes, validated and audited; a
+  failed save puts the figure back and says so. The handler steps from a
+  ref, not from state, so two quick presses count twice. **It is not a
+  budget**: raising one vote takes nothing from another and there is no
+  cap, because a vote reserves nothing and moves no money, and the widget
+  never says "fund", "balance" or "allocate". A name the member is already
+  invested in is settled and shows its figure without levers. A vote cannot
+  be lowered below the Radar's minimum from here; there is no withdraw.
   **Needs you is built once** (`lib/needs-you.ts`: a commitment with a
   clock, a document to sign, a Radar name that opened, a lapsed
   commitment) and read twice: the dashboard strip, which folds like every
