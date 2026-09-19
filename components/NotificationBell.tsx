@@ -10,18 +10,58 @@
  * built from the same list (lib/needs-you.ts) with the same words
  * (components/NeedsYou), so the two never disagree. Quiet when nothing is
  * waiting: a bell with a zero on it is noise.
+ *
+ * IT KEEPS ITSELF CURRENT (Tyler, 2026-09-19). The bell is mounted in the
+ * portal shell, and Next keeps a shell across navigation, so the list it
+ * was rendered with went stale the moment the member signed, sent to
+ * escrow or voted: the dashboard said three things were waiting and the
+ * bell still said two. It now re-reads GET /api/needs-you whenever the
+ * page changes, the window regains focus, the panel is opened, or anything
+ * on the platform announces a change (NEEDS_YOU_EVENT). The list the shell
+ * rendered is what it shows until the first answer arrives, so there is no
+ * flash of an empty bell.
  */
 import { Bell, BellRing } from 'lucide-react';
-import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
 import { actionOf, lineOf } from '@/components/NeedsYou';
 import SidePanel from '@/components/SidePanel';
-import { keyOf, toneOf, type NeedsYouItem } from '@/lib/needs-you';
+import { api } from '@/lib/client/api';
+import { keyOf, NEEDS_YOU_EVENT, toneOf, type NeedsYouItem } from '@/lib/needs-you';
 
 import s from './NotificationBell.module.css';
 
-export default function NotificationBell({ items }: { items: NeedsYouItem[] }) {
+export default function NotificationBell({ items: rendered }: { items: NeedsYouItem[] }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  /* What the API last said; until it has answered, what the shell rendered. */
+  const [fetched, setFetched] = useState<NeedsYouItem[] | null>(null);
+  const items = fetched ?? rendered;
+
+  const refresh = useCallback(() => {
+    api
+      .needsYou()
+      .then(setFetched)
+      /* A failed read keeps the last good list: a bell that blanks on a
+         network blip is worse than one a moment behind. */
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    refresh();
+  }, [pathname, refresh]);
+
+  useEffect(() => {
+    const onFocus = () => refresh();
+    window.addEventListener('focus', onFocus);
+    window.addEventListener(NEEDS_YOU_EVENT, onFocus);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener(NEEDS_YOU_EVENT, onFocus);
+    };
+  }, [refresh]);
+
   const count = items.length;
   const urgent = items.some((item) => toneOf(item) === 'urgent');
 
@@ -33,7 +73,10 @@ export default function NotificationBell({ items }: { items: NeedsYouItem[] }) {
         data-live={count > 0}
         data-urgent={urgent}
         data-tour="bell"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          refresh();
+          setOpen(true);
+        }}
         aria-label={
           count === 0
             ? 'Notifications. Nothing needs you right now.'

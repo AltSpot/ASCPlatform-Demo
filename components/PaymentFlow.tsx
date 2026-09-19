@@ -27,6 +27,7 @@ import FeeTable from '@/components/invest/FeeTable';
 import StationRail from '@/components/invest/StationRail';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
+import { announceNeedsYouChanged } from '@/lib/needs-you';
 import { PARTNERS, SHOW_FEE_TERMS } from '@/lib/config';
 import type { BankView, DealView, SubscriptionView } from '@/lib/domain';
 import { feeBreakdown } from '@/lib/fees';
@@ -65,6 +66,7 @@ export default function PaymentFlow({
         bank ? 'ACH · linked account' : 'ACH · manual',
       );
       setState(next.state);
+      announceNeedsYouChanged();
       toast(
         <>
           <b>Sent to escrow.</b> The deal closes when the minimum is met.

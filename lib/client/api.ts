@@ -25,6 +25,7 @@ import type {
 } from '../repositories/external';
 import type { Preferences } from '../preferences';
 import type { QuestionnaireAnswers } from '../relationship';
+import type { NeedsYouItem } from '../needs-you';
 import type { RadarCompanyView } from '../terminal/radar';
 
 export class ApiError extends Error {
@@ -178,6 +179,10 @@ export const api = {
   // ---- deal preferences ----
   preferences: () => request<Preferences | null>('/preferences'),
   savePreferences: (prefs: Preferences) => put<Preferences>('/preferences', prefs),
+
+  // ---- what is waiting on the member ----
+  /** The bell's list, re-read as the member moves around (GET /api/needs-you). */
+  needsYou: () => request<NeedsYouItem[]>('/needs-you'),
 
   // ---- watchlist ----
   /** This investor's own saved deals. Not AltSpot Radar. */

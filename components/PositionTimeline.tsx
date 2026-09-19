@@ -31,6 +31,7 @@ import { useState } from 'react';
 import EscrowClock from '@/components/EscrowClock';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
+import { announceNeedsYouChanged } from '@/lib/needs-you';
 import { ESCROW_WINDOW_DAYS } from '@/lib/config';
 import { dateStr, money } from '@/lib/format';
 
@@ -70,6 +71,7 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
     setBusy(true);
     try {
       await api.cancelSubscription(position.id);
+      announceNeedsYouChanged();
       toast('Commitment cancelled. Allocation released.');
       router.refresh();
     } catch {

@@ -63,6 +63,7 @@ import RadarDetail, { RadarDetailHeader } from '@/components/radar/RadarDetail';
 import { brandOf } from '@/lib/brand';
 import { ApiError, api } from '@/lib/client/api';
 import { money } from '@/lib/format';
+import { announceNeedsYouChanged } from '@/lib/needs-you';
 import { ASSET_CLASSES, isAssetClass } from '@/lib/taxonomy';
 import type { RadarCompanyView } from '@/lib/terminal/radar';
 import { canStep, poolShares, poolTotal, stepVote } from '@/lib/vote-pool';
@@ -174,6 +175,7 @@ export default function RadarRows({ rows: allRows }: { rows: RadarRow[] }) {
     try {
       await api.withdrawRadarInterest(row.slug);
       setStatus('saved');
+      announceNeedsYouChanged();
       router.refresh();
     } catch (caught) {
       setGone((slugs) => slugs.filter((slug) => slug !== row.slug));
@@ -210,6 +212,7 @@ export default function RadarRows({ rows: allRows }: { rows: RadarRow[] }) {
         await api.indicateRadarInterest(row.slug, next);
         saved.current[row.slug] = next;
         setStatus('saved');
+        announceNeedsYouChanged();
         /* The rest of the dashboard quotes votes too (Needs you, the rail). */
         router.refresh();
       } catch (caught) {

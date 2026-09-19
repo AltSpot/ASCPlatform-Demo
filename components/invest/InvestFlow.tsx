@@ -25,6 +25,7 @@ import StationRail from '@/components/invest/StationRail';
 import LegalDocument from '@/components/invest/LegalDocument';
 import Term from '@/components/Term';
 import { explainMinimum } from '@/lib/minimums';
+import { announceNeedsYouChanged } from '@/lib/needs-you';
 
 import styles from './InvestFlow.module.css';
 import { useToast } from '@/components/Toast';
@@ -259,6 +260,7 @@ export default function InvestFlow({
           });
 
       setSubscription(next);
+      announceNeedsYouChanged();
       setPhase('docs');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {

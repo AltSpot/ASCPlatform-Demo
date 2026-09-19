@@ -34,6 +34,7 @@ import AssetClassIcon from '@/components/AssetClassIcon';
 import SidePanel from '@/components/SidePanel';
 import { useToast } from '@/components/Toast';
 import { brandOf } from '@/lib/brand';
+import { announceNeedsYouChanged } from '@/lib/needs-you';
 import { api, ApiError } from '@/lib/client/api';
 import { compact, money } from '@/lib/format';
 import type { RadarCompanyView } from '@/lib/terminal/radar';
@@ -95,6 +96,7 @@ export default function RadarCard({
 
     try {
       const next = await api.indicateRadarInterest(view.slug, amount);
+      announceNeedsYouChanged();
       setView(next);
       onVoted?.(next.slug);
       setEditing(false);
@@ -120,6 +122,7 @@ export default function RadarCard({
     setError(null);
     try {
       const next = await api.withdrawRadarInterest(view.slug);
+      announceNeedsYouChanged();
       setView(next);
       onWithdrawn?.(next.slug);
       setEditing(false);

@@ -107,3 +107,16 @@ export function keyOf(item: NeedsYouItem): string {
 export function shortDate(value: string): string {
   return value.split(',')[0].trim();
 }
+
+/**
+ * Something just changed that could add or clear a thing that needs the
+ * member: a vote, a signature, money sent to escrow, a cancellation. The
+ * bell (components/NotificationBell) listens and re-reads its list, so it
+ * is current without a page change. Safe to call on the server: it does
+ * nothing there.
+ */
+export const NEEDS_YOU_EVENT = 'asc:needs-you';
+
+export function announceNeedsYouChanged(): void {
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(NEEDS_YOU_EVENT));
+}
