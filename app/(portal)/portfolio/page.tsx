@@ -403,9 +403,14 @@ export default async function PortfolioPage() {
           <div className="eyebrow">Portfolio</div>
           <h1 className="display">What you are exposed to.</h1>
         </div>
-        <Link className="btn btn-ghost" href="/docs">
-          Statements and documents
-        </Link>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <Link className="btn btn-ghost" href="/docs">
+            Documents
+          </Link>
+          <Link className="btn btn-gold" href="/portfolio/statement">
+            Download statement
+          </Link>
+        </div>
       </div>
 
       {/* The whole page in one sentence, in the member's words, before the

@@ -248,9 +248,9 @@
      commitment, the close, the lead story, the strip of things that need
      them). Layered as a background-image over the ordinary pane, so the
      glass itself never changes, only the light inside it. */
-  --glass-tint-gold:linear-gradient(180deg,rgba(243,152,7,.10),rgba(243,152,7,.02));
+  --glass-tint-gold:linear-gradient(180deg,rgba(243,152,7,.07),rgba(243,152,7,.015));
   /* Amber, not ember: the red-brown cast on the warm panes is gone. */
-  --glass-tint-ember:linear-gradient(180deg,rgba(255,158,44,.085),rgba(255,158,44,.012));
+  --glass-tint-ember:linear-gradient(180deg,rgba(255,158,44,.06),rgba(255,158,44,.01));
   /* What a card adds on top of its fill. Nothing on the ember canvas,
      where a panel is defined by its hairline; on light it is the
      specular edge plus a warm cast shadow, and it is doing the whole
@@ -262,11 +262,11 @@
      enters at the top left and faint where it leaves, plus a hairline
      of reflection all round. This, not a fill, is what reads as glass. */
   --card-lift:
-    inset 1px 1px 0 rgba(255,255,255,.20),
-    inset -1px -1px 0 rgba(255,255,255,.06),
-    inset 0 1px 1px rgba(255,255,255,.12),
+    inset 1px 1px 0 rgba(255,255,255,.13),
+    inset -1px -1px 0 rgba(255,255,255,.05),
+    inset 0 1px 1px rgba(255,255,255,.07),
     inset 0 -1px 1px rgba(0,0,0,.22),
-    inset 0 18px 30px -22px rgba(255,255,255,.09),
+    inset 0 18px 30px -22px rgba(255,255,255,.045),
     inset 0 -18px 28px -22px rgba(0,0,0,.5),
     0 1px 1px rgba(0,0,0,.45),
     0 26px 56px -20px rgba(0,0,0,.8);
@@ -274,7 +274,7 @@
      of white in the lit corner, gone by the middle. Enough that a panel
      over the ember bloom reads as smoked glass rather than a hole cut
      in the page; any more and it reads as a smudge. */
-  --card-sheen:var(--glass-grain),linear-gradient(165deg,rgba(255,255,255,.12),rgba(255,255,255,.02) 42%,rgba(255,255,255,0) 70%);
+  --card-sheen:var(--glass-grain),linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.012) 42%,rgba(255,255,255,0) 70%);
   /* How much of a deal's own artwork bleeds across the top of its
      hero. A dark banner blurred over a dark card is atmosphere; the
      same wash over glass is a grey cloud with type in it. */
@@ -399,6 +399,10 @@
      states read in the gold family with everything else. */
   --accent-soft:#D9B679;
   --fg-on-gold:var(--as-ink);
+  /* A printed document (the capital account statement). Paper is paper in
+     every theme, like deal artwork, so no theme restates these. */
+  --paper-bg:#FBF9F4;--paper-ink:#1B1712;--paper-muted:#6A6156;--paper-rule:#DDD5C6;--paper-accent:#7A5B1E;
+  --shadow-paper:0 1px 2px rgba(0,0,0,.35),0 30px 70px -24px rgba(0,0,0,.7);
 
   /* Focus is a graphic, so it answers to the 3:1 non-text floor rather
      than 4.5:1, but it still has to clear it against whatever it rings.
@@ -425,7 +429,7 @@
   --shadow-lg:0 30px 80px rgba(0,0,0,.6);
   --shadow-cta:0 6px 24px rgba(243,152,7,.25);
   --shadow-cta-hover:0 10px 34px rgba(243,152,7,.38);
-  --shadow-card-hover:0 22px 54px rgba(0,0,0,.45),0 0 44px rgba(243,152,7,.22);
+  --shadow-card-hover:0 22px 54px rgba(0,0,0,.5),0 0 28px rgba(243,152,7,.09);
   --shadow-frame:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(243,152,7,.12);
   /* What seats a small control on the surface it slides along: a
      slider knob, a chart handle. Tight and dark on the ember canvas,
@@ -466,7 +470,7 @@
   --btn-rim:rgba(243,152,7,.22);
   --btn-rim-quiet:rgba(255,255,255,.10);
   --btn-sheen:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0) 58%);
-  --cta-sheen:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.04) 52%,rgba(0,0,0,.04) 100%);
+  --cta-sheen:linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,.03) 52%,rgba(0,0,0,.04) 100%);
   --w-light:300; --w-regular:400; --w-medium:500; --w-semi:600;
 
   /* ============ STATUS ============ */
@@ -1700,3 +1704,26 @@ html[data-theme='ice'] .deal-card{box-shadow:var(--card-lift)}
 html[data-theme='ice'] .deal-card:hover{box-shadow:var(--shadow-card-hover)}
 
 
+
+/* ---------- the portal footer (2026-09-19) ----------
+   One line under every signed-in page: who this is, what kind of offering
+   it is, who it is for, and where the disclosures are. */
+.portal-foot{margin-top:72px;padding-top:18px;border-top:1px solid var(--hair-neutral);display:flex;flex-wrap:wrap;gap:6px 22px;align-items:baseline;justify-content:space-between;font-size:var(--fs-label);line-height:1.6;color:var(--as-text-muted)}
+.portal-foot p{margin:0;max-width:96ch}
+.portal-foot b{font-weight:var(--w-medium);color:var(--as-text-body)}
+.portal-foot nav{display:flex;gap:18px;font-family:var(--font-mono);letter-spacing:var(--ls-text)}
+.portal-foot a{color:var(--accent-quiet);text-decoration:underline;text-decoration-color:var(--hair-neutral);text-underline-offset:3px}
+.portal-foot a:hover{color:var(--as-text)}
+
+/* ---------- print ----------
+   Printing is how a statement becomes a PDF. Only the page prints: no
+   rail, no Spot, no ground, no footer. */
+@media print{
+  html,body{background:#fff !important}
+  body::before,body::after{display:none !important}
+  .layout{display:block !important}
+  .layout > :not(main){display:none !important}
+  .main{padding:0 !important;max-width:none !important}
+  .portal-foot{display:none !important}
+  @page{margin:16mm 14mm}
+}

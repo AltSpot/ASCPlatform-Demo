@@ -14,6 +14,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import FirstRunTour from '@/components/FirstRunTour';
+import PortalFooter from '@/components/PortalFooter';
 import Sidebar from '@/components/Sidebar';
 import SpotBotDock from '@/components/spotbot/SpotBotDock';
 import { getSessionUser } from '@/lib/auth';
@@ -60,7 +61,10 @@ export default async function PortalLayout({
   return (
     <div className="layout">
       <Sidebar user={user} status={status} needs={needs} />
-      <main className="main">{children}</main>
+      <main className="main">
+        {children}
+        <PortalFooter />
+      </main>
       {/* The guide follows the investor: mounted once, so it persists
           across navigation and is present on every signed-in page. */}
       <SpotBotDock />

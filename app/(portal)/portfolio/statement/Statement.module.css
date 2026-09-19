@@ -1,0 +1,196 @@
+/* The statement is a sheet of paper in every theme: a document does not
+   invert. Its colours are the --paper-* tokens in globals.css. */
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sheet {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 54px 58px 44px;
+  border-radius: 6px;
+  background: var(--paper-bg);
+  color: var(--paper-ink);
+  box-shadow: var(--shadow-paper);
+  font-family: var(--font-sans);
+  font-weight: var(--w-regular);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--paper-ink);
+}
+
+.brand {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: var(--w-medium);
+  letter-spacing: -0.01em;
+  color: var(--paper-ink);
+}
+.brand span {
+  color: var(--paper-accent);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: var(--w-medium);
+  letter-spacing: -0.02em;
+  color: var(--paper-ink);
+}
+
+.meta {
+  display: flex;
+  gap: 30px;
+  margin: 0;
+}
+.meta dt,
+.cell span,
+.table th,
+.section {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--paper-muted);
+}
+.meta dd {
+  margin: 5px 0 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper-ink);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-bottom: 1px solid var(--paper-rule);
+}
+.pair {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 220px));
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 20px 14px 20px 0;
+}
+.cell b {
+  font-family: var(--font-figure);
+  font-size: 19px;
+  font-weight: var(--w-medium);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--paper-ink);
+}
+.cell[data-lead='true'] b {
+  color: var(--paper-accent);
+}
+
+.section {
+  margin: 30px 0 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.table th {
+  padding: 9px 10px 9px 0;
+  text-align: left;
+  border-top: 1px solid var(--paper-ink);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.table td {
+  padding: 11px 10px 11px 0;
+  border-bottom: 1px solid var(--paper-rule);
+  color: var(--paper-ink);
+  vertical-align: top;
+}
+.table td b {
+  display: block;
+  font-weight: var(--w-medium);
+}
+.table td small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--paper-muted);
+}
+.table .n {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.table tfoot td {
+  border-top: 1px solid var(--paper-ink);
+  border-bottom: 2px solid var(--paper-ink);
+  font-weight: var(--w-medium);
+}
+
+.empty {
+  margin: 30px 0;
+  color: var(--paper-muted);
+}
+
+.notes {
+  margin-top: 34px;
+  padding-top: 16px;
+  border-top: 1px solid var(--paper-rule);
+}
+.notes p {
+  margin: 0 0 10px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--paper-muted);
+}
+.notes b {
+  color: var(--paper-ink);
+  font-weight: var(--w-medium);
+}
+.sign {
+  font-family: var(--font-mono);
+  letter-spacing: var(--ls-text);
+}
+
+@media (max-width: 900px) {
+  .sheet {
+    padding: 30px 22px;
+    overflow-x: auto;
+  }
+  .summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media print {
+  .chrome {
+    display: none;
+  }
+  .sheet {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
