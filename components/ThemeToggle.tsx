@@ -95,10 +95,18 @@ const OPTIONS: { id: Theme; label: string; glyph: typeof Moon }[] = [
   { id: 'light', label: 'Daylight', glyph: Sun },
 ];
 
+/**
+ * The theme the page is wearing, for anything else that offers the choice
+ * (the Appearance card in Settings). The attribute is the truth; this reads it.
+ */
+export function useTheme(): Theme {
+  return useSyncExternalStore(subscribe, readTheme, () => 'dark' as Theme);
+}
+
 export default function ThemeToggle() {
   /* Dark on the server and on a browser with no stored preference,
      which is the product's own canvas and the safe default. */
-  const theme = useSyncExternalStore(subscribe, readTheme, () => 'dark' as Theme);
+  const theme = useTheme();
 
   return (
     <div className={s.wrap} role="group" aria-label="Appearance">

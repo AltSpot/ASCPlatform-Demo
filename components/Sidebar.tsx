@@ -48,7 +48,6 @@ import {
 import { useSyncExternalStore } from 'react';
 
 import NotificationBell from '@/components/NotificationBell';
-import ThemeToggle from '@/components/ThemeToggle';
 import { api } from '@/lib/client/api';
 import { initials } from '@/lib/format';
 import type { SessionUser } from '@/lib/domain';
@@ -351,7 +350,6 @@ export default function Sidebar({
       </nav>
 
       <div className={s.foot}>
-        <ThemeToggle />
 
         <div className={s.user}>
           <span className={s.avatar}>{initials(user.name)}</span>

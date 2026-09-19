@@ -1,0 +1,141 @@
+/* Appearance: three tiles, each a small drawing of its own theme. */
+
+.title {
+  margin-bottom: 4px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.option {
+  appearance: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 10px 14px;
+  border: none;
+  border-radius: var(--r-lg);
+  background: var(--control-fill);
+  box-shadow: inset 0 0 0 1px var(--control-rim);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.16s ease, background-color 0.16s ease;
+}
+.option:hover {
+  background: var(--control-fill-hover);
+  box-shadow: inset 0 0 0 1px var(--control-rim-hover);
+}
+/* Chosen: the line is information here, so it is gold and it is firm. */
+.option[data-on='true'] {
+  box-shadow: inset 0 0 0 2px var(--as-gold);
+}
+
+/* The drawing. Its colours are the tile's own (--pv-*), not the page's. */
+.preview {
+  display: block;
+  height: 96px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--pv-ground);
+  overflow: hidden;
+}
+.pvPane {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--pv-pane);
+  box-shadow: inset 0 0 0 1px var(--pv-edge);
+}
+.pvLine {
+  width: 72%;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--pv-quiet);
+}
+.pvLine[data-w='short'] {
+  width: 34%;
+}
+.pvFigure {
+  width: 52%;
+  height: 9px;
+  border-radius: var(--r-pill);
+  background: var(--pv-ink);
+}
+.pvButtons {
+  display: flex;
+  gap: 5px;
+  margin-top: auto;
+}
+.pvGold,
+.pvPrimary {
+  width: 34px;
+  height: 11px;
+  border-radius: var(--r-pill);
+}
+.pvGold {
+  background: var(--as-cta-gradient);
+}
+.pvPrimary {
+  background: var(--pv-primary-bg);
+  box-shadow: inset -9px 0 0 -5px var(--pv-primary-fg);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+.name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+}
+.default {
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.note {
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  color: var(--as-text-muted);
+}
+
+.tick {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: var(--fg-on-gold);
+}
+.option[data-on='true'] .tick {
+  background: var(--as-gold);
+}
+
+@media (max-width: 720px) {
+  .options {
+    grid-template-columns: 1fr;
+  }
+}

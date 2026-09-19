@@ -5,11 +5,12 @@
  * allocation their signed commitments were holding, so a walkthrough can
  * be run again from a clean slate.
  */
-import { Copy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useSyncExternalStore } from 'react';
 
+import AppearanceCard from '@/components/settings/AppearanceCard';
+import InviteCard from '@/components/settings/InviteCard';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import { PARTNERS } from '@/lib/config';
@@ -49,12 +50,14 @@ export default function SettingsPanel({
   );
   const inviteUrl = origin + invitePath;
 
-  async function copyInvite() {
+  async function copyInvite(): Promise<boolean> {
     try {
       await navigator.clipboard.writeText(inviteUrl);
       toast('Invite link copied.');
+      return true;
     } catch {
       toast('Could not copy. Select the link and copy it instead.');
+      return false;
     }
   }
 
@@ -84,6 +87,20 @@ export default function SettingsPanel({
           <div className="eyebrow">Settings</div>
           <h1 className="display">Account settings.</h1>
         </div>
+      </div>
+
+      {/* Appearance leads: it is the one setting that changes every page. */}
+      <div style={{ marginBottom: 24 }}>
+        <AppearanceCard />
+      </div>
+
+      {/* The invite, second only to Appearance (Tyler, 2026-09-19). What it may
+          promise is narrow by law; components/settings/InviteCard says why. */}
+      <div style={{ marginBottom: 24 }}>
+        <InviteCard
+          inviteUrl={inviteUrl}
+          onCopy={copyInvite}
+        />
       </div>
 
       <div className="grid c2" style={{ alignItems: 'start' }}>
@@ -134,35 +151,6 @@ export default function SettingsPanel({
             <Link className="btn btn-ghost btn-sm" href="/dashboard?tour=1">
               Take the walkthrough again
             </Link>
-          </div>
-
-          {/* The invite link. Everyone who follows it lands on sign-up and
-              the same investor questionnaire; nothing about the link opens
-              a deal, and nobody is paid for an introduction. */}
-          <div className="card">
-            <h3 style={{ marginBottom: 4 }}>Invite someone you know</h3>
-            <p className="small" style={{ marginBottom: 14 }}>
-              They join through the same investor questionnaire as every member.
-              Nobody is paid for an introduction.
-            </p>
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-              <input
-                className="input"
-                readOnly
-                value={inviteUrl}
-                aria-label="Your invite link"
-                onFocus={(e) => e.currentTarget.select()}
-              />
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                onClick={copyInvite}
-                aria-label="Copy invite link"
-                title="Copy invite link"
-              >
-                <Copy size={15} strokeWidth={1.6} aria-hidden="true" />
-              </button>
-            </div>
           </div>
 
           <div className="card">
