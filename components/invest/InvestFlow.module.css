@@ -84,3 +84,216 @@
   border: none;
   box-shadow: none;
 }
+
+/* ---------- step one: the amount (2026-09-19) ----------
+
+   One question, asked large; the sum and the button beside it. */
+
+.start {
+  max-width: 1080px;
+}
+.startHead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+.startMark {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+}
+.startTitle {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+}
+
+.startGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .startGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ask {
+  padding: 30px 30px 28px;
+}
+.sum {
+  position: sticky;
+  top: 24px;
+  padding: 26px 26px 24px;
+}
+
+.q {
+  display: block;
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 21px;
+  letter-spacing: -0.01em;
+  color: var(--as-text);
+}
+.q2 {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+/* The amount is the biggest type on the screen. */
+.ask .amountField {
+  border-radius: var(--r-lg);
+}
+.ask .amountUnit {
+  padding-left: 22px;
+  font-size: 34px;
+}
+.ask .amountInput {
+  padding: 18px 18px 18px 6px;
+  font-size: 40px;
+  font-weight: var(--w-medium);
+  letter-spacing: -0.01em;
+}
+
+.quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.quickPill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 9px 16px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  color: var(--as-text);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background 0.28s var(--ease-fluid),
+    box-shadow 0.28s var(--ease-fluid),
+    transform 0.28s var(--ease-fluid);
+}
+.quickPill small {
+  font-size: 11px;
+  color: var(--as-text-muted);
+}
+.quickPill:hover {
+  background: var(--surface-3);
+  transform: translateY(-1px);
+}
+.quickPill[data-on='true'] {
+  background: var(--surface-3);
+  box-shadow: inset 0 0 0 1.5px var(--as-gold);
+}
+.quickPill:focus-visible,
+.profilePill:focus-visible,
+.profileNew:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.help {
+  margin: 12px 0 0;
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  color: var(--as-text-muted);
+}
+
+.heldAs {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hair-neutral);
+}
+.profiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.profilePill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  color: var(--as-text);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 0.28s var(--ease-fluid),
+    box-shadow 0.28s var(--ease-fluid);
+}
+.profilePill b {
+  font-size: 14.5px;
+  font-weight: var(--w-medium);
+}
+.profilePill small {
+  font-size: var(--fs-label);
+  color: var(--as-text-muted);
+}
+.profilePill:hover {
+  background: var(--surface-2);
+}
+.profilePill[data-on='true'] {
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1.5px var(--as-gold);
+}
+.profileNew {
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--r-lg);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--hair-strong);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+}
+.profileNew:hover {
+  color: var(--as-text);
+}
+
+.assure {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--hair-soft);
+  list-style: none;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+.assure li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.assure svg {
+  flex: none;
+  stroke: var(--as-gold);
+}

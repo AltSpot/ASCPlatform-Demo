@@ -14,6 +14,7 @@
  * restatement of it, never a substitute, and lib/subscription-sections.ts
  * is where the clause mapping lives.
  */
+import { Clock, ShieldCheck, Undo2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -389,121 +390,74 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
       <StationRail at={phase === 'amount' ? 'amount' : onSignStep ? 'sign' : 'read'} />
 
       {phase === 'amount' ? (
-        <section>
-          <div className="page-head">
-            <div className="titles">
-              <div className="eyebrow">Begin investment</div>
-              <h1 className="display">{deal.name}</h1>
-              <p className="sub">
-                Choose the profile this investment is held under and the amount
-                you&rsquo;re committing. Everything else is already filled in.
-              </p>
+        /* STEP ONE, REBUILT AROUND THE ONE QUESTION (Tyler, 2026-09-19).
+           How much, in type large enough to read across a room, with the
+           minimum and two larger amounts one press away; who holds it, as
+           pills; and beside it the sum that goes to escrow and the one
+           button. Everything a member does not need in order to decide is
+           folded inside the sum. */
+        <section className={styles.start}>
+          <header className={styles.startHead}>
+            {deal.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className={styles.startMark} src={deal.logoUrl} alt="" aria-hidden="true" />
+            ) : null}
+            <div>
+              <div className="eyebrow">Invest</div>
+              <h1 className={styles.startTitle}>{deal.name}</h1>
             </div>
-          </div>
+          </header>
 
-          <div className="grid c2" style={{ alignItems: 'start' }}>
-            <div className="card">
-              <h3 style={{ marginBottom: 4 }}>Investment profile</h3>
-              <p className="small" style={{ marginBottom: 14 }}>
-                Documents are titled in this profile&rsquo;s name.
-              </p>
-
-              <div className="choice-grid" style={{ gridTemplateColumns: '1fr' }}>
-                {profiles.length === 0 ? (
-                  <p className="small">No profiles yet. Create your first below.</p>
-                ) : (
-                  profiles.map((p) => (
-                    <div
-                      key={p.id}
-                      className={selectedProfileId === p.id ? 'choice sel' : 'choice'}
-                      onClick={() => setSelectedProfileId(p.id)}
-                    >
-                      <b>{p.name}</b>
-                      <span>
-                        {p.type}
-                        {p.isDefault ? ' · default' : ''}
-                      </span>
-                    </div>
-                  ))
-                )}
+          <div className={styles.startGrid}>
+            <div className={`card ${styles.ask}`}>
+              <label className={styles.q} htmlFor="invest-amount">
+                How much do you want to invest?
+              </label>
+              <div className={styles.amountField}>
+                <span className={styles.amountUnit} aria-hidden="true">
+                  $
+                </span>
+                <input
+                  id="invest-amount"
+                  className={`input num ${styles.amountInput}`}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  aria-describedby="amount-help"
+                  value={grouped(amountInput)}
+                  onChange={(e) => handleAmountChange(e.target.value)}
+                  onBlur={() => {
+                    if (amountInput === '' || amount === 0) {
+                      setAmountInput(String(deal.minInvestment));
+                    }
+                  }}
+                />
               </div>
 
-              <button
-                className="btn btn-quiet btn-sm"
-                style={{ marginTop: 12 }}
-                onClick={() => setShowNewProfile((v) => !v)}
-              >
-                + New profile
-              </button>
+              <div className={styles.quick} role="group" aria-label="Quick amounts">
+                {[1, 2, 4].map((times) => {
+                  const value = deal.minInvestment * times;
+                  return (
+                    <button
+                      key={times}
+                      type="button"
+                      className={styles.quickPill}
+                      data-on={amount === value}
+                      onClick={() => setAmountInput(String(value))}
+                    >
+                      {money(value)}
+                      {times === 1 ? <small>minimum</small> : null}
+                    </button>
+                  );
+                })}
+              </div>
 
-              {showNewProfile && (
-                <div style={{ marginTop: 14 }}>
-                  <div className="form-row">
-                    <label className="field">
-                      <span>Type</span>
-                      <select
-                        className="input"
-                        value={newProfile.type}
-                        onChange={(e) =>
-                          setNewProfile((p) => ({ ...p, type: e.target.value }))
-                        }
-                      >
-                        <option>Personal</option>
-                        <option>Entity</option>
-                        <option>IRA / 401(k)</option>
-                      </select>
-                    </label>
-                    <label className="field">
-                      <span>Name</span>
-                      <input
-                        className="input"
-                        placeholder="e.g. Hale Family Trust"
-                        value={newProfile.name}
-                        onChange={(e) =>
-                          setNewProfile((p) => ({ ...p, name: e.target.value }))
-                        }
-                      />
-                    </label>
-                  </div>
-                  <button className="btn btn-ghost btn-sm" onClick={createProfile}>
-                    Create profile
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="card">
-              <h3 style={{ marginBottom: 4 }}>Amount</h3>
-              <p className="small" id="amount-help" style={{ marginBottom: 14 }}>
+              <p className={styles.help} id="amount-help">
                 <Term q="Why is the minimum what it is?" quiet>
                   Minimum {money(deal.minInvestment)}
                 </Term>
-                . {explainMinimum(deal.minInvestment, deal.allocationTotal)} Your money waits in
-                escrow until the deal closes, and comes back if it does not.
+                . {explainMinimum(deal.minInvestment, deal.allocationTotal)}
               </p>
-
-              <label className="field">
-                <span>Investment amount (USD)</span>
-                <div className={styles.amountField}>
-                  <span className={styles.amountUnit} aria-hidden="true">
-                    $
-                  </span>
-                  <input
-                    className={`input num ${styles.amountInput}`}
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="off"
-                    aria-describedby="amount-help"
-                    value={grouped(amountInput)}
-                    onChange={(e) => handleAmountChange(e.target.value)}
-                    onBlur={() => {
-                      if (amountInput === '' || amount === 0) {
-                        setAmountInput(String(deal.minInvestment));
-                      }
-                    }}
-                  />
-                </div>
-              </label>
 
               {amount > 0 && amount < deal.minInvestment && (
                 <div className="demo-note">
@@ -516,7 +470,6 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                   Anything above it may be cut back at close.
                 </div>
               )}
-
               {admission && !admission.ok ? (
                 <div className="demo-note" role="alert">
                   {admission.message}
@@ -525,26 +478,107 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 <div className="demo-note">{admission.warning}</div>
               ) : null}
 
-              <div className="hr" />
+              <div className={styles.heldAs}>
+                <span className={styles.q2}>Invest as</span>
+                <div className={styles.profiles} role="radiogroup" aria-label="Investment profile">
+                  {profiles.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={selectedProfileId === p.id}
+                      className={styles.profilePill}
+                      data-on={selectedProfileId === p.id}
+                      onClick={() => setSelectedProfileId(p.id)}
+                    >
+                      <b>{p.name}</b>
+                      <small>{p.type}</small>
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className={styles.profileNew}
+                    onClick={() => setShowNewProfile((v) => !v)}
+                  >
+                    + New profile
+                  </button>
+                </div>
+                {profiles.length === 0 ? (
+                  <p className="small">No profiles yet. Create your first to continue.</p>
+                ) : (
+                  <p className={styles.help}>Your documents are titled in this name.</p>
+                )}
 
-              <div className="small">
-                <FeeTable
-                  amount={amount}
-                  targetClose={deal.targetClose}
-                  minimumToClose={deal.minimumToClose}
-                  allocationTotal={deal.allocationTotal}
-                />
+                {showNewProfile && (
+                  <div style={{ marginTop: 14 }}>
+                    <div className="form-row">
+                      <label className="field">
+                        <span>Type</span>
+                        <select
+                          className="input"
+                          value={newProfile.type}
+                          onChange={(e) =>
+                            setNewProfile((p) => ({ ...p, type: e.target.value }))
+                          }
+                        >
+                          <option>Personal</option>
+                          <option>Entity</option>
+                          <option>IRA / 401(k)</option>
+                        </select>
+                      </label>
+                      <label className="field">
+                        <span>Name</span>
+                        <input
+                          className="input"
+                          placeholder="e.g. Hale Family Trust"
+                          value={newProfile.name}
+                          onChange={(e) =>
+                            setNewProfile((p) => ({ ...p, name: e.target.value }))
+                          }
+                        />
+                      </label>
+                    </div>
+                    <button className="btn btn-ghost btn-sm" onClick={createProfile}>
+                      Create profile
+                    </button>
+                  </div>
+                )}
               </div>
+            </div>
+
+            <aside className={`card gold ${styles.sum}`} aria-label="What you send">
+              <h2 className={styles.q}>What you send</h2>
+              <FeeTable
+                amount={amount}
+                targetClose={deal.targetClose}
+                minimumToClose={deal.minimumToClose}
+                allocationTotal={deal.allocationTotal}
+              />
 
               <button
                 className="btn btn-gold btn-block"
-                style={{ marginTop: 18 }}
+                style={{ marginTop: 16 }}
                 onClick={beginDocs}
                 disabled={busy || retirementBlocked}
               >
-                Continue to documents
+                {busy ? 'One moment…' : 'Continue to documents →'}
               </button>
-            </div>
+
+              <ul className={styles.assure}>
+                <li>
+                  <ShieldCheck size={14} strokeWidth={1.7} aria-hidden="true" />
+                  Waits in escrow, never in an AltSpot account
+                </li>
+                <li>
+                  <Undo2 size={14} strokeWidth={1.7} aria-hidden="true" />
+                  Comes back if the deal misses its minimum
+                </li>
+                <li>
+                  <Clock size={14} strokeWidth={1.7} aria-hidden="true" />
+                  About four minutes. Your details are already filled in
+                </li>
+              </ul>
+            </aside>
           </div>
         </section>
       ) : (
