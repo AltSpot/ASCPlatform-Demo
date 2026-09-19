@@ -616,3 +616,19 @@
 .fullCard .status {
   filter: none;
 }
+
+
+/* A deal the member voted for before it opened: the vote chip is gold and
+   says the amount, and the card wears a fine gold rim, so the loop (you
+   asked for it, it arrived) is visible from across the shelf. */
+:global(.deal-card[data-voted='true']) {
+  box-shadow: var(--card-lift), inset 0 0 0 1px var(--hair-gold);
+}
+.mineChip[data-kind='voted'] {
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  box-shadow: 0 4px 14px rgba(243, 152, 7, 0.28);
+}
+.mineChip[data-kind='voted'] svg {
+  stroke: var(--fg-on-gold);
+}

@@ -16,6 +16,7 @@
  */
 import {
   ADMISSION_CUTOFF_HOURS,
+  ESCROW_WINDOW_DAYS,
   MINIMUM_TO_CLOSE_FLOOR,
   MINIMUM_TO_CLOSE_SHARE,
 } from './config';
@@ -94,6 +95,21 @@ export function admissionCutoff(
 ): number | null {
   const close = closingTime(targetClose);
   return close === null ? null : close - hours * HOUR_MS;
+}
+
+/**
+ * When a signed subscription must be in escrow: ESCROW_WINDOW_DAYS after
+ * signing, or the admission cut-off, whichever comes first. Null only when
+ * the closing date cannot be read and no signing time is given.
+ */
+export function escrowDeadline(
+  signedAt: number,
+  targetClose: string,
+  windowDays: number = ESCROW_WINDOW_DAYS,
+): number {
+  const byWindow = signedAt + windowDays * 24 * HOUR_MS;
+  const cutoff = admissionCutoff(targetClose);
+  return cutoff === null ? byWindow : Math.min(byWindow, cutoff);
 }
 
 export function fundingView(deal: FundingInput, now: number = Date.now()): FundingView {

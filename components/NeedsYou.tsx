@@ -75,8 +75,8 @@ export function lineOf(item: NeedsYouItem) {
     case 'lapsed':
       return (
         <>
-          Your {money(item.amount)} commitment to <b>{item.dealName}</b> was not in escrow by the
-          admission cut-off, and the spot was released.
+          Your {money(item.amount)} commitment to <b>{item.dealName}</b> was not in escrow within
+          its window, and the spot was released.
         </>
       );
   }

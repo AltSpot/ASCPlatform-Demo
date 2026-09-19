@@ -25,6 +25,8 @@ import RadarCard from './RadarCard';
 import TaxonomyFilters, {
   type TaxonomyFilterState,
 } from '@/components/filters/TaxonomyFilters';
+import { RADAR_SORT_LABEL, rankRadar, type RadarSort } from '@/lib/radar-rank';
+
 import s from './Radar.module.css';
 
 /** Taxonomy order, so the controls do not reshuffle as names change. */
@@ -36,7 +38,10 @@ export default function RadarBoard({
   mineOnly = false,
   voted,
   onVoted,
+  daySeed = 0,
 }: {
+  /** The day, from the server, which turns the Featured order's quiet seats. */
+  daySeed?: number;
   companies: RadarCompanyView[];
   /** Show only the names the member voted for. */
   mineOnly?: boolean;
@@ -53,9 +58,14 @@ export default function RadarBoard({
   const filters = filter ?? own;
   const [legalOpen, setLegalOpen] = useState(false);
 
+  /* The order is lib/radar-rank.ts: Featured deals one proven name, one
+     moving name and one quiet name in turn, with the quiet seats rotating
+     by the day, so no name is stuck at the bottom. The other sorts are the
+     pools on their own. */
+  const [sort, setSort] = useState<RadarSort>('featured');
   const ranked = useMemo(
-    () => [...companies].sort((a, b) => b.interestDollars - a.interestDollars),
-    [companies],
+    () => rankRadar(companies, sort, daySeed),
+    [companies, sort, daySeed],
   );
 
   /* Class counts cover the whole taxonomy, including the classes with
@@ -98,7 +108,7 @@ export default function RadarBoard({
 
   if (companies.length === 0) return null;
 
-  const loudest = ranked[0].interestDollars || 1;
+  const loudest = Math.max(1, ...companies.map((c) => c.interestDollars));
 
   return (
     <>
@@ -115,6 +125,30 @@ export default function RadarBoard({
       {mineOnly && shown.length === 0 ? (
         <p className={s.mineEmpty}>No votes yet. Vote on any name to follow it.</p>
       ) : null}
+
+      <div className={s.sortRow} role="group" aria-label="Order the Radar">
+        <span className={s.sortKey}>Order</span>
+        {(Object.keys(RADAR_SORT_LABEL) as RadarSort[]).map((key) => (
+          <button
+            key={key}
+            type="button"
+            className={s.sortPill}
+            aria-pressed={sort === key}
+            onClick={() => setSort(key)}
+            title={
+              key === 'featured'
+                ? 'One leading name, one rising name and one you might have missed, in turn. The quiet names rotate daily.'
+                : key === 'top'
+                  ? 'By dollars voted'
+                  : key === 'rising'
+                    ? 'By the share of votes cast in the last two weeks'
+                    : 'Newest on the Radar first'
+            }
+          >
+            {RADAR_SORT_LABEL[key]}
+          </button>
+        ))}
+      </div>
 
       <div className={s.board}>
         {shown.map((company) => (

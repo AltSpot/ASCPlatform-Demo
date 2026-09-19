@@ -89,7 +89,7 @@ const EDITIONS: Record<'radar' | 'invest', Edition> = {
         body: 'When the minimum is met by the closing date, the SPV invests. If not, escrow returns your money.',
       },
     ],
-    note: 'Admissions close 24 hours before the wire. Private investments are illiquid and can lose all of their value.',
+    note: 'Once you sign you have ten days to send to escrow, and admissions close 24 hours before the wire. Private investments are illiquid and can lose all of their value.',
     ask: 'What happens after I send to escrow?',
   },
 };

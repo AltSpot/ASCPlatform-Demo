@@ -25,13 +25,14 @@
  */
 import type { ReactNode } from 'react';
 
-import { ShieldCheck, Users } from 'lucide-react';
+import { Radar, ShieldCheck, Users } from 'lucide-react';
 
 import BackerMark from '@/components/BackerMark';
 import FundingProgress from '@/components/FundingProgress';
 import Term from '@/components/Term';
 import { SHOW_SPONSOR_ALIGNMENT } from '@/lib/config';
 import type { DealView } from '@/lib/domain';
+import { money } from '@/lib/format';
 import { dealChip } from '@/lib/funding';
 
 import s from './Deal.module.css';
@@ -40,11 +41,14 @@ export default function DealHero({
   deal,
   cta,
   tools,
+  votedAmount = null,
 }: {
   deal: DealView;
   cta: ReactNode;
   /** Header controls, set hard right: the watchlist toggle today. */
   tools?: ReactNode;
+  /** What this member voted for the company on the Radar, if they did. */
+  votedAmount?: number | null;
 }) {
   return (
     <header className={s.hero}>
@@ -82,7 +86,15 @@ export default function DealHero({
             {tools}
           </div>
 
-          <span className="chip">{dealChip(deal)}</span>
+          <div className={s.heroChips}>
+            <span className="chip">{dealChip(deal)}</span>
+            {votedAmount ? (
+              <span className={s.votedChip}>
+                <Radar size={12} strokeWidth={2} aria-hidden="true" />
+                You voted {money(votedAmount)} for this on the Radar
+              </span>
+            ) : null}
+          </div>
 
           <h1 className={s.headline}>{deal.headline ?? deal.blurb}</h1>
 

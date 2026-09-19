@@ -84,7 +84,7 @@ const INVEST: PageContext = {
   key: 'invest',
   label: 'Subscription',
   brief:
-    'The document on the left fills in as you complete the three confirmations on the right. Each confirmation completes one section of representations. When all three are done you sign, your spot is reserved, and you have until admissions close to send to escrow.',
+    'The document on the left fills in as you complete the three confirmations on the right. Each confirmation completes one section of representations. When all three are done you sign, your spot is reserved, and you have ten days to send to escrow.',
   suggested: questionsFor(['confirmations', 'subscription-agreement', 'fees']),
   topics: [
     'confirmations',
@@ -101,7 +101,7 @@ const PAYMENT: PageContext = {
   key: 'payment',
   label: 'Escrow',
   brief:
-    'You have signed, so your spot is held until admissions close. Send to escrow by ACH from your linked account, or by wire. The money waits in escrow until the deal closes, and comes back if it does not reach its minimum.',
+    'You have signed, so your spot is held for ten days, or until admissions close if that is sooner. Send to escrow by ACH from your linked account, or by wire. The money waits in escrow until the deal closes, and comes back if it does not reach its minimum.',
   suggested: questionsFor(['funding-window', 'funding-methods', 'after-funding']),
   topics: ['funding-window', 'funding-methods', 'after-funding', 'expiry', 'cancel'],
 };

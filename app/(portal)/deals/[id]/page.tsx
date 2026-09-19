@@ -45,6 +45,7 @@ import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
 import { getDealAccess, listDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
+import { getRadarBoard } from '@/lib/repositories/radar';
 import { getResumable } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
 import { recordScenarioView } from '@/lib/repositories/scenario-views';
@@ -120,12 +121,16 @@ export default async function DealPage({
     />
   );
 
-  const [wizard, resume, standing, waiting] = await Promise.all([
+  const [wizard, resume, standing, waiting, radar] = await Promise.all([
     getWizardView(user.id),
     getResumable(user.id, deal.id),
     getStanding(deal.id, user.id),
     waitlistedDeals(user.id),
+    getRadarBoard(user.id),
   ]);
+  /* The loop, said at the top of the deal: this is the company the member
+     voted for on the Radar, and what they voted. */
+  const votedAmount = radar.find((c) => c.dealId === deal.id)?.yourAmount ?? null;
   /* Work order screens 12 and 13: past the cut-off there is nothing to
      ask for, and a full SPV asks for a place in line instead. A member
      already holding a spot is never turned away. */
@@ -206,7 +211,7 @@ export default async function DealPage({
         {step}
       </div>
 
-      <DealHero deal={deal} cta={cta} tools={watch} />
+      <DealHero deal={deal} cta={cta} tools={watch} votedAmount={votedAmount} />
 
       <DealNav
         cta={

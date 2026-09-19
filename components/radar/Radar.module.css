@@ -719,3 +719,49 @@
   overflow: hidden;
   min-height: 40px;
 }
+
+/* ---------- the order of the board (2026-09-19) ---------- */
+.sortRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 22px;
+}
+.sortKey {
+  margin-right: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+.sortPill {
+  padding: 7px 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  transition:
+    background 0.28s var(--ease-fluid),
+    color 0.2s ease,
+    box-shadow 0.28s var(--ease-fluid);
+}
+.sortPill:hover {
+  color: var(--as-text);
+  background: var(--surface-2);
+}
+.sortPill[aria-pressed='true'] {
+  background: var(--surface-3);
+  box-shadow: inset 0 0 0 1.5px var(--as-gold);
+  color: var(--as-text);
+}
+.sortPill:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}

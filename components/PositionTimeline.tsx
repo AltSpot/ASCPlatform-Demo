@@ -30,6 +30,7 @@ import { useState } from 'react';
 
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
+import { ESCROW_WINDOW_DAYS } from '@/lib/config';
 import { dateStr, money } from '@/lib/format';
 
 import s from './PositionTimeline.module.css';
@@ -45,13 +46,15 @@ export interface OpenPosition {
   fundedAt: string | null;
   fundingDeadline: string | null;
   daysRemaining: number;
+  /** The deal's closing date, for a subscription waiting in escrow. */
+  closes?: string | null;
 }
 
 /** Inside this many days the window stops being background information. */
 const URGENT_DAYS = 3;
 
-/** The bar's scale: the last this many days before admissions close. */
-const WINDOW_DAYS = 10;
+/** The bar's scale: the escrow window, signing to due. */
+const WINDOW_DAYS = ESCROW_WINDOW_DAYS;
 
 export default function PositionTimeline({ position }: { position: OpenPosition }) {
   const router = useRouter();
@@ -99,27 +102,62 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
           label="In escrow"
           detail={funded ? dateStr(position.fundedAt) : ''}
         />
-        <Step done={false} current={funded} label="Deal closes" detail="" />
+        <Step
+          done={false}
+          current={funded}
+          label="Deal closes"
+          detail={position.closes ? dateStr(position.closes) : ''}
+        />
       </ol>
 
+      {/* WHAT IS OWED, BY WHEN, IN ONE LOOK (Tyler, 2026-09-19: "what exactly
+          has 26 days left?"). The amount and the verb, then the due date and
+          the days left as two large facts, then a bar that runs from the day
+          it was signed to the day it is due with both dates written under
+          it, then one sentence on what happens if the date passes. */}
       <div className={s.now}>
         {state === 'docs_signed' ? (
           <>
-            <div className={s.track}>
-              <div className={s.fill} style={{ width: `${spent}%` }} />
+            <div className={s.owed}>
+              <p className={s.owedLine}>
+                Send <b>{money(position.amount)}</b> to escrow to keep your spot in{' '}
+                <b>{position.dealName}</b>.
+              </p>
+              <div className={s.facts}>
+                <span className={s.fact}>
+                  <span className={s.factKey}>Due</span>
+                  <span className={s.factValue}>{dateStr(position.fundingDeadline)}</span>
+                </span>
+                <span className={s.fact} data-urgent={urgent}>
+                  <span className={s.factKey}>Time left</span>
+                  <span className={s.factValue}>
+                    {position.daysRemaining <= 0
+                      ? 'Due today'
+                      : `${position.daysRemaining} day${position.daysRemaining === 1 ? '' : 's'}`}
+                  </span>
+                </span>
+              </div>
             </div>
-            <p className={s.line}>
-              <b className={s.left}>
-                {position.daysRemaining <= 0
-                  ? 'Due today'
-                  : `${position.daysRemaining} day${position.daysRemaining === 1 ? '' : 's'} left`}
-              </b>
-              {money(position.amount)} to escrow by {dateStr(position.fundingDeadline)},
-              when admissions close.
+
+            <div className={s.window}>
+              <div className={s.track}>
+                <div className={s.fill} style={{ width: `${spent}%` }} />
+              </div>
+              <div className={s.ends}>
+                <span>Signed {dateStr(position.signedAt)}</span>
+                <span>Due {dateStr(position.fundingDeadline)}</span>
+              </div>
+            </div>
+
+            <p className={s.rule}>
+              You have {ESCROW_WINDOW_DAYS} days from signing to send your money to escrow, or
+              until admissions close if that is sooner. After {dateStr(position.fundingDeadline)}{' '}
+              the subscription lapses and your spot goes to the next member. Nothing is charged.
             </p>
+
             <div className={s.actions}>
-              <Link className="btn btn-gold btn-sm" href={`/payment/${position.id}`}>
-                Send to escrow
+              <Link className="btn btn-action btn-sm" href={`/payment/${position.id}`}>
+                Complete investment
               </Link>
               <button
                 type="button"
@@ -133,21 +171,40 @@ export default function PositionTimeline({ position }: { position: OpenPosition 
           </>
         ) : state === 'started' ? (
           <>
-            <p className={s.line}>
-              <b className={s.left}>No clock yet</b>
-Your allocation is reserved when you sign.
+            <p className={s.owedLine}>
+              You started a <b>{money(position.amount)}</b> investment in{' '}
+              <b>{position.dealName}</b> and have not signed yet. Nothing is reserved, and no clock
+              is running, until you sign.
             </p>
             <div className={s.actions}>
-              <Link className="btn btn-gold btn-sm" href={`/invest/${position.dealId}`}>
-                Resume signing
+              <Link className="btn btn-action btn-sm" href={`/invest/${position.dealId}`}>
+                Finish signing
               </Link>
             </div>
           </>
         ) : (
           <>
-            <p className={s.line}>
-              <b className={s.left}>With AltSpot</b>
-Received {dateStr(position.fundedAt)}. Countersigning is ours to do.
+            <div className={s.owed}>
+              <p className={s.owedLine}>
+                Your <b>{money(position.amount)}</b> is in escrow. Nothing more is needed from you.
+              </p>
+              <div className={s.facts}>
+                <span className={s.fact}>
+                  <span className={s.factKey}>In escrow since</span>
+                  <span className={s.factValue}>{dateStr(position.fundedAt)}</span>
+                </span>
+                {position.closes ? (
+                  <span className={s.fact}>
+                    <span className={s.factKey}>Deal closes</span>
+                    <span className={s.factValue}>{dateStr(position.closes)}</span>
+                  </span>
+                ) : null}
+              </div>
+            </div>
+            <p className={s.rule}>
+              It waits there until the deal closes. If the deal reaches its minimum, the SPV is
+              funded and the position appears here at cost. If it does not, escrow returns all of
+              it to you.
             </p>
             <div className={s.actions}>
               <Link className="btn btn-quiet btn-sm" href={`/deals/${position.dealId}`}>

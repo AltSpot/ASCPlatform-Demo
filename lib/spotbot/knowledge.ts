@@ -16,6 +16,7 @@
 
 import {
   CARRY_PERCENT,
+  ESCROW_WINDOW_DAYS,
   INVESTOR_CAP_DEFAULT,
   INVESTOR_CAP_MAX,
   MIN_INVESTMENT_FLOOR,
@@ -540,7 +541,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'late',
     ],
     answer:
-      'Admissions close 24 hours before the deal\'s scheduled wire, and the date is on the deal page. Once you sign, send your subscription to escrow before then: by ACH from a linked bank in a click, or by wire. At the cut-off the member register locks and every member\'s share is frozen, which is what the SPV invests on. A signed subscription that is not in escrow by then lapses, with nothing charged.',
+      `Two clocks. Once you sign, you have ${ESCROW_WINDOW_DAYS} days to send your subscription to escrow, by ACH from a linked bank in a click or by wire; signing reserves your spot, and the window is what keeps a reserved spot from sitting unfunded while other members wait. Separately, admissions close 24 hours before the deal's scheduled wire, and if that comes sooner it is your deadline instead. At the cut-off the member register locks and every member's share is frozen, which is what the SPV invests on. A signed subscription not in escrow by its deadline lapses, with nothing charged, and the spot goes back to the deal.`,
     source: 'AltSpot platform guide, admissions and escrow',
     related: ['funding-methods', 'expiry', 'signing'],
   },
@@ -603,7 +604,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'what happens if i dont fund',
     ],
     answer:
-      'If your subscription is not in escrow by the cut-off, it lapses and the spot goes back to the deal. Nothing is charged and nothing is owed, and the lapsed subscription stays on your dashboard as a record. If the deal does not reach its minimum by the closing date, it does not close, and escrow returns your money. If you know a wire will be late, contact AltSpot before admissions close rather than after.',
+      'If your subscription is not in escrow within ten days of signing, or by the admission cut-off if that is sooner, it lapses and the spot goes back to the deal. Nothing is charged and nothing is owed, and the lapsed subscription stays on your dashboard as a record. If the deal does not reach its minimum by the closing date, it does not close, and escrow returns your money. If you know a wire will be late, contact AltSpot before admissions close rather than after.',
     source: 'AltSpot platform guide, admissions and escrow',
     related: ['funding-window', 'cancel', 'allocation'],
   },

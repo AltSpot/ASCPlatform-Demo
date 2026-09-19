@@ -16,6 +16,7 @@
 import 'server-only';
 
 import { prisma } from '../db';
+import { RECENT_DAYS } from '../radar-rank';
 import { canSeeOfferings } from '../relationship';
 import {
   listRadarCompanies,
@@ -29,6 +30,27 @@ export type { RadarCompanyView };
 interface Tally {
   investors: number;
   dollars: number;
+}
+
+/**
+ * DEMO SEAM — momentum and listing age for the seeded board.
+ *
+ * The board's Featured order (lib/radar-rank.ts) needs two facts the demo
+ * has no history for: how much of a name's demand is recent, and how long
+ * it has been listed. Both are drawn deterministically from the slug, so
+ * the same name always reads the same. Production: recent dollars are the
+ * real sum below, and the listing date is a column on the company.
+ */
+function slugHash(slug: string): number {
+  let h = 7;
+  for (const ch of slug) h = (h * 31 + ch.charCodeAt(0)) % 9973;
+  return h;
+}
+function seededRecentShare(slug: string): number {
+  return (slugHash(slug) % 34) / 100;
+}
+function seededListedDaysAgo(slug: string): number {
+  return 6 + (slugHash(slug + ':listed') % 170);
 }
 
 /** What one member has said about one company: their number and their order. */
@@ -52,13 +74,27 @@ async function tallies(): Promise<Map<string, Tally>> {
   );
 }
 
+/** Dollars voted per company inside the momentum window. */
+async function recentTallies(): Promise<Map<string, number>> {
+  const since = new Date(Date.now() - RECENT_DAYS * 86_400_000);
+  const rows = await prisma.radarInterest.groupBy({
+    by: ['companySlug'],
+    where: { updatedAt: { gte: since } },
+    _sum: { amount: true },
+  });
+  return new Map(rows.map((row) => [row.companySlug, row._sum.amount ?? 0]));
+}
+
 function merge(
   company: RadarCompany,
   tally: Tally | undefined,
   mine: Mine | undefined,
+  recent: number = 0,
 ): RadarCompanyView {
   return {
     ...company,
+    recentDollars: recent + Math.round(company.baselineDollars * seededRecentShare(company.slug)),
+    listedDaysAgo: seededListedDaysAgo(company.slug),
     interestInvestors: company.baselineInvestors + (tally?.investors ?? 0),
     interestDollars: company.baselineDollars + (tally?.dollars ?? 0),
     yourAmount: mine?.amount ?? null,
@@ -78,9 +114,10 @@ function merge(
  * reason the deal itself is.
  */
 export async function getRadarBoard(userId: string): Promise<RadarCompanyView[]> {
-  const [companies, counts, mine, relationship] = await Promise.all([
+  const [companies, counts, recent, mine, relationship] = await Promise.all([
     listRadarCompanies(),
     tallies(),
+    recentTallies(),
     prisma.radarInterest.findMany({
       where: { userId },
       select: { companySlug: true, amount: true, rank: true },
@@ -94,7 +131,12 @@ export async function getRadarBoard(userId: string): Promise<RadarCompanyView[]>
   );
 
   return companies.map((company) => {
-    const view = merge(company, counts.get(company.slug), yours.get(company.slug));
+    const view = merge(
+      company,
+      counts.get(company.slug),
+      yours.get(company.slug),
+      recent.get(company.slug) ?? 0,
+    );
     return offeringsVisible ? view : { ...view, dealId: undefined };
   });
 }

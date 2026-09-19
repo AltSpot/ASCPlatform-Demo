@@ -96,7 +96,7 @@ export default function RadarRows({ rows }: { rows: RadarRow[] }) {
               <span className={s.name}>{row.name}</span>
               {row.live ? (
                 <span className={s.statusLine} data-live="true">
-                  <span className={s.liveDot} aria-hidden="true" />
+                  <span className="live-dot" aria-hidden="true" />
                   {row.live.subscribed ? 'Open now · you are in' : `Open now · closes ${row.live.closes}`}
                 </span>
               ) : (

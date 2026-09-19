@@ -16,6 +16,7 @@ import {
   ADMISSION_CUTOFF_HOURS,
   CARRY_PERCENT,
   COOLING_OFF_DAYS,
+  ESCROW_WINDOW_DAYS,
   FEE_TERMS,
   INVESTOR_CAP_DEFAULT,
   INVESTOR_CAP_MAX,
@@ -43,7 +44,7 @@ function escrowPath(): SpotVisual {
     title: 'From signing to close',
     steps: [
       { label: 'You sign', note: 'Your spot in the SPV is reserved.' },
-      { label: 'You send to escrow', note: 'ACH or wire, to an account in the SPV\'s name.' },
+      { label: 'You send to escrow', note: `Within ${ESCROW_WINDOW_DAYS} days of signing. ACH or wire, to an account in the SPV's name.` },
       {
         label: 'Admissions close',
         note: `${ADMISSION_CUTOFF_HOURS} hours before the wire. The register locks.`,

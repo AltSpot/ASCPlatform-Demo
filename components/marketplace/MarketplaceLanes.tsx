@@ -64,6 +64,8 @@ export default function MarketplaceLanes({
   resumable,
   watched,
   fromRadar,
+  votedAmounts = {},
+  daySeed = 0,
   companies,
   radarSourced = [],
   forYou = null,
@@ -76,6 +78,10 @@ export default function MarketplaceLanes({
   watched: string[];
   /** Deal ids the member voted for on the Radar before they opened. */
   fromRadar: string[];
+  /** What the member voted for each of those deals, by deal id. */
+  votedAmounts?: Record<string, number>;
+  /** Days since the epoch, from the server: rotates the Radar's Featured order. */
+  daySeed?: number;
   companies: RadarCompanyView[];
   /** Deals that fit the member's preferences, or null when there are none to apply. */
   forYou?: string[] | null;
@@ -345,6 +351,7 @@ export default function MarketplaceLanes({
             resumable={resumable}
             watched={watched}
             fromRadar={fromRadar}
+            votedAmounts={votedAmounts}
             filter={filter}
             bridgeHref="#radar"
             radarSourced={radarSourced}
@@ -373,6 +380,7 @@ export default function MarketplaceLanes({
           filter={filter}
           mineOnly={mineOnly}
           voted={votedSlugs}
+          daySeed={daySeed}
           onVoted={(slug) =>
             setVotedSlugs((slugs) => (slugs.includes(slug) ? slugs : [...slugs, slug]))
           }

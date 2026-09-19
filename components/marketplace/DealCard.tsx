@@ -37,6 +37,7 @@ import DealPeek from '@/components/marketplace/DealPeek';
 import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
+import { compact } from '@/lib/format';
 import { dealChip, isJustOpened } from '@/lib/funding';
 
 import s from './Marketplace.module.css';
@@ -46,6 +47,7 @@ export default function DealCard({
   resume,
   watched,
   fromRadar = false,
+  votedAmount,
   radarSourced = false,
   onWatchChange,
 }: {
@@ -55,6 +57,8 @@ export default function DealCard({
   watched: boolean;
   /** The member voted for this company on the Radar before it opened. */
   fromRadar?: boolean;
+  /** What they voted, so the card can say it. */
+  votedAmount?: number;
   /** The deal came off the Radar (whoever voted). */
   radarSourced?: boolean;
   /** Lets a shelf that tracks saves hear about them. */
@@ -129,7 +133,10 @@ export default function DealCard({
         : null;
 
   return (
-    <div className={full ? `card deal-card ${s.fullCard}` : 'card deal-card'}>
+    <div
+      className={full ? `card deal-card ${s.fullCard}` : 'card deal-card'}
+      data-voted={fromRadar ? 'true' : undefined}
+    >
       <div className={`thumb ${s.art}`} style={{ background: deal.art }}>
         {status ? (
           <span className={s.status} data-tone={status.tone} title={status.title}>
@@ -164,7 +171,7 @@ export default function DealCard({
             {fromRadar ? (
               <span className={s.mineChip} data-kind="voted">
                 <Radar size={10} strokeWidth={2.2} aria-hidden="true" />
-                You voted
+                You voted{votedAmount ? ` ${compact(votedAmount)}` : ''}
               </span>
             ) : null}
           </span>

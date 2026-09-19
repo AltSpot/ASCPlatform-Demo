@@ -139,6 +139,17 @@ export const SHOW_RETURN_SCENARIOS = process.env.ASC_SHOW_RETURN_SCENARIOS === '
 export const ADMISSION_CUTOFF_HOURS = Number(process.env.ASC_ADMISSION_CUTOFF_HOURS ?? 24);
 
 /**
+ * Days a member has to send a signed subscription to escrow (Tyler,
+ * 2026-09-19). Signing reserves the spot, and a spot reserved until the
+ * admission cut-off lets a whole SPV sit signed and unfunded until its last
+ * day: across every deal at once, that is a platform that cannot tell
+ * whether its raises are real. So the reservation is ten days, or until
+ * admissions close, whichever comes first; after that the subscription
+ * lapses and the spot goes back to the deal for the next member.
+ */
+export const ESCROW_WINDOW_DAYS = Number(process.env.ASC_ESCROW_WINDOW_DAYS ?? 10);
+
+/**
  * Per-SPV investor cap. NOT a Rule 506(b) limit: 506(b) admits any number
  * of accredited investors. The cap comes from the Investment Company Act.
  * An SPV relies on section 3(c)(1), which allows at most 100 beneficial

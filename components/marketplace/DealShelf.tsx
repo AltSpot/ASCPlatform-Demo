@@ -38,6 +38,7 @@ export default function DealShelf({
   resumable,
   watched,
   fromRadar = [],
+  votedAmounts = {},
   filter,
   bridgeHref,
   mineOnly = false,
@@ -65,6 +66,7 @@ export default function DealShelf({
   watched: string[];
   /** Deal ids the member voted for on the Radar before they opened. */
   fromRadar?: string[];
+  votedAmounts?: Record<string, number>;
   /**
    * When the page owns the filter row (the marketplace, where one row
    * serves both lanes) the shelf takes its state from above and draws
@@ -158,6 +160,7 @@ export default function DealShelf({
             resume={byDeal.get(deal.id)}
             watched={saved.has(deal.id)}
             fromRadar={voted.has(deal.id)}
+            votedAmount={votedAmounts[deal.id]}
             radarSourced={radarSourced.includes(deal.id)}
             onWatchChange={(next) => {
               setSavedIds((ids) =>

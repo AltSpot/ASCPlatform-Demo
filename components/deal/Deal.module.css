@@ -2079,3 +2079,29 @@
   text-transform: uppercase;
   color: var(--as-text-muted);
 }
+
+
+/* The loop, at the top of the deal: what the member voted on the Radar. */
+.heroChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.votedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-semi);
+  letter-spacing: var(--ls-text);
+  box-shadow: var(--shadow-cta);
+}
+.votedChip svg {
+  stroke: var(--fg-on-gold);
+}

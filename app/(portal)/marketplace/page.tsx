@@ -50,6 +50,8 @@ export default async function MarketplacePage({
   /* A deal the member voted for on the Radar and that AltSpot then
      opened. Set on the company by hand (lib/terminal/radar.ts), so the
      card can prove the mechanic rather than claim it. */
+  /* The day, for the Radar board's rotating Featured order. */
+  const daySeed = Math.floor(new Date().getTime() / 86_400_000);
   const fromRadar = radar
     .filter((company) => company.dealId && company.yourAmount !== null)
     .map((company) => company.dealId as string);
@@ -80,6 +82,12 @@ export default async function MarketplacePage({
       resumable={resumable}
       watched={watchlist}
       fromRadar={fromRadar}
+      daySeed={daySeed}
+      votedAmounts={Object.fromEntries(
+        radar
+          .filter((c) => c.dealId && c.yourAmount !== null)
+          .map((c) => [c.dealId as string, c.yourAmount as number]),
+      )}
       companies={stillVoting}
       radarSourced={radarSourced}
       forYou={forYou}

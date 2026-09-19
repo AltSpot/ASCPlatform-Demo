@@ -17,7 +17,7 @@
 import { Clock, ShieldCheck, Undo2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import ConfirmPanel from '@/components/invest/ConfirmPanel';
 import FeeTable from '@/components/invest/FeeTable';
@@ -132,6 +132,11 @@ export default function InvestFlow({
   const [busy, setBusy] = useState(false);
 
   const docRef = useRef<HTMLDivElement | null>(null);
+  /* The guided track. Whenever the step changes (a confirmation lands, Back
+     or Next is pressed, the signature comes forward) the page glides back
+     to the top of it, so the next thing to do is always in front of the
+     member and never a scroll away (Tyler, 2026-09-19). */
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
   const selectedProfile = profiles.find((p) => p.id === selectedProfileId) ?? null;
 
@@ -192,6 +197,12 @@ export default function InvestFlow({
   const onSignStep = stepIndex === LAST_STEP;
   const currentSection = SUBSCRIPTION_SECTIONS[stepIndex] ?? null;
 
+  useEffect(() => {
+    if (phase !== 'docs') return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    trackRef.current?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  }, [stepIndex, phase]);
+
   const progressWidth = signed
     ? '100%'
     : allConfirmed
@@ -249,7 +260,7 @@ export default function InvestFlow({
 
       setSubscription(next);
       setPhase('docs');
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       toast(error instanceof Error ? error.message : 'Could not start that investment.');
     } finally {
@@ -614,7 +625,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
             </div>
 
             {/* ---- the guided track ---- */}
-            <div>
+            <div ref={trackRef} style={{ scrollMarginTop: 24 }}>
               {/* One panel at a time. Six stacked down the page buried the
                   signature block and made the flow feel endless. */}
               {currentSection && (

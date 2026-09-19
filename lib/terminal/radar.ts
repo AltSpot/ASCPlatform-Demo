@@ -641,6 +641,10 @@ export interface RadarCompanyView extends RadarCompany {
   interestInvestors: number;
   /** Dollars indicated, seeded baseline included. Integer dollars. */
   interestDollars: number;
+  /** Dollars indicated in the last RECENT_DAYS (lib/radar-rank.ts). */
+  recentDollars: number;
+  /** Days since the name was listed on the Radar. */
+  listedDaysAgo: number;
   /** This member's own indication, or null if they have not made one. */
   yourAmount: number | null;
   /**

@@ -10,7 +10,7 @@ import 'server-only';
 
 import { prisma } from '../db';
 import { ISOLATED_ALLOCATION } from '../config';
-import { admissionCutoff } from '../funding';
+import { escrowDeadline } from '../funding';
 import { audit } from '../audit';
 import {
   assertTransition,
@@ -266,7 +266,9 @@ export async function signSubscription(
     where: { id: current.dealId },
     select: { targetClose: true },
   });
-  const cutoff = deal ? admissionCutoff(deal.targetClose) : null;
+  /* Ten days to reach escrow, or the admission cut-off if that is sooner
+     (lib/funding.ts escrowDeadline). After it the spot is released. */
+  const deadline = deal ? escrowDeadline(now.getTime(), deal.targetClose) : null;
   const [row] = await prisma.$transaction([
     prisma.subscription.update({
       where: { id },
@@ -274,7 +276,7 @@ export async function signSubscription(
         state: SUBSCRIPTION_STATES.SIGNED,
         signature,
         signedAt: now,
-        fundingDeadline: cutoff === null ? null : new Date(cutoff),
+        fundingDeadline: deadline === null ? null : new Date(deadline),
       },
     }),
     // Under isolated allocation the deal row is never touched: each

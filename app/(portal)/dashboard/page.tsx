@@ -161,6 +161,7 @@ export default async function DashboardPage() {
         fundedAt: sub.fundedAt,
         fundingDeadline: sub.fundingDeadline,
         daysRemaining: daysLeft(sub.fundingDeadline),
+        closes: deals.get(sub.dealId)?.targetClose ?? null,
       },
     ]),
   );
