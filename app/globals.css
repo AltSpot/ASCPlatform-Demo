@@ -1650,13 +1650,20 @@ html[data-theme='light']{
    pools (below) so the frost has something cold to refract; the ember
    bloom is otherwise unchanged. */
 html[data-theme='ice']{
-  --fill-card:rgba(205,226,250,.065);
-  --card-edge:rgba(228,241,255,.30);
-  --edge-top:rgba(244,250,255,.44);
-  --glass-blur:28px;
-  --glass-sat:140%;
-  --glass-bright:1.36;
-  --card-sheen:linear-gradient(172deg,rgba(240,248,255,.15) 0%,rgba(236,246,255,.045) 38%,rgba(210,230,250,.015) 100%);
+  /* ICE, REBUILT (Tyler, 2026-09-19, the final sweep). It was grey glass
+     over Ember's warm bloom with a brown sweep behind it, so it read as
+     Ember with dust on it. Now the canvas itself is cold (see body::before
+     below) and the pane is BLUE glass: a blue tint rather than a white one,
+     a cold rim, far less brightness lift (1.36 made every pane milky), and
+     a little more saturation so the blue of the ground comes through.
+     Type, accents and the canvas ink are still Ember's, untouched. */
+  --fill-card:rgba(120,170,235,.085);
+  --card-edge:rgba(170,208,255,.24);
+  --edge-top:rgba(214,234,255,.40);
+  --glass-blur:26px;
+  --glass-sat:155%;
+  --glass-bright:1.12;
+  --card-sheen:linear-gradient(172deg,rgba(190,222,255,.11) 0%,rgba(170,208,255,.03) 40%,rgba(150,190,240,0) 100%);
   --card-lift:
     inset 0 1px 0 rgba(244,250,255,.40),
     inset 1px 0 0 rgba(240,248,255,.10),
@@ -1670,9 +1677,9 @@ html[data-theme='ice']{
     0 2px 3px rgba(0,0,0,.35),
     0 32px 66px -24px rgba(0,0,0,.84),
     0 0 48px rgba(200,225,255,.09);
-  --surface-1:rgba(225,238,255,.06);
-  --surface-2:rgba(225,238,255,.11);
-  --surface-3:rgba(225,238,255,.18);
+  --surface-1:rgba(170,205,250,.06);
+  --surface-2:rgba(170,205,250,.105);
+  --surface-3:rgba(170,205,250,.17);
   --track:rgba(225,238,255,.11);
   --track-faint:rgba(225,238,255,.045);
   --hair-neutral:rgba(220,236,255,.14);
@@ -1680,19 +1687,23 @@ html[data-theme='ice']{
   --panel-2:rgba(225,238,255,.06);
   --inset-edge:rgba(228,241,255,.16);
   --inset-lift:0 1px 1px rgba(0,0,0,.22);
-  --glass:rgba(18,22,30,.46);
-  --glass-solid:rgba(16,20,28,.74);
+  --glass:rgba(12,20,34,.52);
+  --glass-solid:rgba(10,16,28,.80);
   --glass-tint-gold:linear-gradient(180deg,rgba(243,152,7,.09),rgba(243,152,7,.015));
 }
 html[data-theme='ice'] body::before{
+  /* A cold canvas. A steel-blue flare top left, a glacier pool bottom
+     right, a breath of pale blue top of centre, and one small gold spark
+     top right so the brand is still in the room. Under them a cool wash
+     over Ember's warm ink, because a blue pool on a brown-black ground
+     mixes to mud. No warm bloom and no brown sweep. */
   background:
-    radial-gradient(62% 56% at 96% -4%,rgba(243,152,7,.15),rgba(255,158,44,.04) 46%,transparent 74%),
-    radial-gradient(40% 36% at 22% 18%,rgba(196,222,250,.07),transparent 70%),
-    radial-gradient(44% 40% at 70% 64%,rgba(190,216,246,.06),transparent 72%),
-    radial-gradient(52% 52% at 104% 92%,rgba(229,102,26,.065),transparent 70%),
-    radial-gradient(56% 52% at -4% 104%,rgba(199,154,75,.13),transparent 68%),
-    linear-gradient(135deg,rgba(40,26,12,0) 20%,rgba(84,46,10,.18) 100%),
-    radial-gradient(120% 120% at 50% 50%,transparent 60%,rgba(0,0,0,.42));
+    radial-gradient(46% 42% at -4% -6%,rgba(84,148,232,.30),rgba(84,148,232,.07) 46%,transparent 72%),
+    radial-gradient(42% 40% at 104% 104%,rgba(64,168,204,.20),rgba(64,168,204,.05) 48%,transparent 72%),
+    radial-gradient(32% 20% at 58% -8%,rgba(200,228,255,.09),transparent 72%),
+    radial-gradient(16% 14% at 100% 0%,rgba(243,152,7,.11),transparent 70%),
+    linear-gradient(180deg,rgba(9,16,30,.66),rgba(5,9,17,.74)),
+    radial-gradient(120% 120% at 50% 50%,transparent 58%,rgba(0,0,0,.5));
 }
 
 html[data-theme='light'] body::before{
@@ -1726,6 +1737,11 @@ html[data-theme='light'] body::after{opacity:.012}
 html[data-theme='light'] ::selection{background:rgba(243,152,7,.28);color:var(--as-text)}
 
 /* The quiet button is a tinted pane here, not a lighter hole. */
+/* Daylight fields. A white input on cream had the same problem the white
+   buttons did: nothing to find. An ink hairline, firmer on focus. */
+html[data-theme='light'] .input{box-shadow:inset 0 0 0 1px var(--control-rim)}
+html[data-theme='light'] .input:focus{box-shadow:inset 0 0 0 1.5px var(--control-rim-hover)}
+
 /* Daylight buttons. Quiet is an ink tint with no line; the orb ghost (View
    deal on every card) is a crisp ink outline over the card's own glass, so
    a grid of them is findable without being loud; gold gets a deeper edge
