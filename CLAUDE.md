@@ -484,7 +484,7 @@ existing markup keeps resolving. Prefer `--as-*` in new code.
 ### The primitives
 
 Buttons, cards and eyebrows are the global classes in `app/globals.css`:
-`.btn` (`.btn-gold`, `.btn-ghost`, `.btn-sm`), `.card` and `.eyebrow`
+`.btn` (`.btn-gold`, `.btn-primary`, `.btn-ghost`, `.btn-quiet`, `.btn-sm`), `.card` and `.eyebrow`
 (`.muted`, `.signal`). Every surface uses them, so a control built from
 them inherits pill geometry, the type ladder and accent discipline for
 free. Reach for these before writing a new one-off control. The only
@@ -702,6 +702,33 @@ are flat tints, because glass on glass reads as fog. **Shadows are warm brown,
 never black**, which on cream reads as dirt. Contrast was measured against the
 canvas for every text value and the ratio is written beside it in the light
 block.
+
+### Buttons are flat and ranked (Tyler, 2026-09-19)
+
+This supersedes the lit pills described under "The final pass": no sheen,
+no lit lip, no glow underneath, no shine sweep, no hover lift. A control
+that pretends to be a physical object is what made a shelf of them noisy.
+A button has a rank and one signature instead.
+
+| Class | Means | Looks like |
+|---|---|---|
+| `.btn-gold` | **Money moves**: Begin investment, Invest, sign, send to escrow. At most one on a screen, never on a card in a grid. | The gold ramp, laid flat. |
+| `.btn-primary` | The main action of a page or panel that is not money: continue, save, sign in, explore, download. | Paper on the dark canvas, ink on Daylight. Colourless on purpose, so it never competes with gold. Ends in the orb. |
+| `.btn-ghost` | The second action; with `.btn-orb`, the repeated action in a grid (View deal on every card, Invest on a dashboard row). | Neutral glass and a hairline. |
+| `.btn-quiet` | A row's own small action (Quick look, Cancel). | Glass, no line. |
+| `.btn-action` | A step already under way and waiting on the member. | The heat ramp, flat, with the pulsing dot. |
+| `.btn-vote` | The vote is cast. Never money. | Green, flat. |
+
+**The signature is the orb**, the gold dot that ends the wordmark: a
+primary ends in one, `.btn-orb` adds it to a ghost, and on hover it
+stretches toward the edge. That is the whole of the motion. Hover
+otherwise changes fill and adds a soft halo ring; press scales to .985.
+**No orange in a secondary's fill**: `--btn-fill` was a sixth of orange,
+which on a dark canvas is brown, and is now neutral glass on both
+canvases. `--cta-sheen` is a no-op kept so modules that layer it still
+resolve, and `--shadow-cta` is a whisper, so a selected nav pill sits on
+the page rather than floating over its own light. Before adding a gold
+button, ask whether pressing it moves money. If not, it is a primary.
 
 ### Institutional polish (Tyler, 2026-09-19)
 
