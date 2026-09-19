@@ -1,0 +1,228 @@
+{
+  "out": "screenshots/phase2/16-escrow-clock-and-polish",
+  "shots": [
+    {
+      "name": "01-dashboard-steps-escrow-clock",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); if (!row) throw new Error('no Tessellate row'); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); if (!b) throw new Error('no Steps button'); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/you signed/i.test(t)) throw new Error('no signed date'); if (!/of 10/i.test(t)) throw new Error('no days of ten'); if (!/send by/i.test(t)) throw new Error('no send by'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-allocation-reserved-ten-days",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); if (!row) throw new Error('no Tessellate row'); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); if (!b) throw new Error('no Steps button'); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const a = document.querySelector('a[href^=\"/payment/\"]'); if (!a) throw new Error('no payment link'); location.href = a.getAttribute('href'); })()"
+        },
+        {
+          "wait": 2200
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/allocation is reserved/i.test(t)) throw new Error('not the payment page'); if (/\bto go\b/i.test(t)) throw new Error('old countdown still there'); if (!/of 10/i.test(t)) throw new Error('no days of ten'); if (!/you signed/i.test(t)) throw new Error('no signed date'); if (/2[0-9] days/i.test(t)) throw new Error('a twenty-something day count is on the page'); if (!/keeps admitting members until/i.test(t)) throw new Error('the deal date is not explained as the deal date'); })()"
+        }
+      ]
+    },
+    {
+      "name": "03-allocation-reserved-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); if (!row) throw new Error('no Tessellate row'); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); if (!b) throw new Error('no Steps button'); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const a = document.querySelector('a[href^=\"/payment/\"]'); if (!a) throw new Error('no payment link'); location.href = a.getAttribute('href'); })()"
+        },
+        {
+          "wait": 2200
+        }
+      ]
+    },
+    {
+      "name": "04-portfolio-positions-with-invested",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const el = document.getElementById('p-drivers'); el.scrollIntoView({ block: 'start', behavior: 'instant' }); if (!/you put in/i.test(el.innerText)) throw new Error('no invested column'); if (!el.innerText.includes('50,000')) throw new Error('invested amount missing'); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "05-portfolio-head-statement-button",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { if (!document.querySelector('a[href=\"/portfolio/statement\"]')) throw new Error('no statement link'); })()"
+        }
+      ]
+    },
+    {
+      "name": "06-statement",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio/statement"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/capital account statement/i.test(t)) throw new Error('no statement'); if (!/Solenne Health/.test(t)) throw new Error('positions missing'); if (!/save as pdf/i.test(t)) throw new Error('no save button'); })()"
+        }
+      ]
+    },
+    {
+      "name": "07-terminal-library-denser",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2,h3')].find(x => /Media and content/i.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "08-disclosures",
+      "steps": [
+        {
+          "go": "/reshoot?to=/disclosures"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!t.includes('Rule 506(b)')) throw new Error('no 506(b)'); if (t.includes('—')) throw new Error('em dash in copy'); })()"
+        }
+      ]
+    },
+    {
+      "name": "09-portal-footer",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const f = document.querySelector('.portal-foot'); if (!f) throw new Error('no footer'); if (!f.querySelector('a[href=\"/disclosures\"]')) throw new Error('footer has no disclosures link'); f.scrollIntoView({ block: 'end', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "10-dashboard-ember-quieter",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        }
+      ]
+    },
+    {
+      "name": "11-marketplace-ember-quieter",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    }
+  ]
+}

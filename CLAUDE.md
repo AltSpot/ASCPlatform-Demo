@@ -235,8 +235,17 @@ Two behaviours that are easy to get wrong:
   the admission cut-off if that comes sooner (`escrowDeadline`). After that
   the subscription lapses and the allocation returns to the deal for the
   next member. Every surface that shows the clock says what is owed and by
-  when ("Send $50,000 to escrow by 22 Sep · 3 days left"), never a bare
-  count of days.
+  when, never a bare count of days. **The member's clock and the deal's
+  calendar are different dates and are never shown as one.** Admissions
+  close belongs to the deal; the escrow window belongs to the member.
+  `components/EscrowClock` is the one drawing of the member's clock (You
+  signed, Send by, Days left "3 of 10", ten segments), used by the
+  dashboard's Steps and by the "Your allocation is reserved" page, which
+  names the deal's admissions date once, in a sentence, as the deal's.
+  `windowedDeadline` in `lib/funding.ts` applies the window on READ as
+  well, so a row signed before the window existed (which stored the deal's
+  cut-off) is still ten days from signing, and the sweep lapses it the same
+  way. `tests/escrow-window.test.ts` pins both.
 - **The deadline is the admission cut-off** (`lib/funding.ts`,
   `ADMISSION_CUTOFF_HOURS`, 24 before the wire on the closing date). Signing
   sets `fundingDeadline` to it. From then admissions are closed: start, sign
@@ -320,7 +329,9 @@ bar dates the wire ("N stories filed today"), the library is titled **Media
 and content**, and tiles wear `components/terminal/TerminalArt`: an
 illustration drawn from the slug (sheets for an article, a chart for a
 report, a waveform for a podcast) over the piece's own gradient. No stock
-photography and no dependency; `art` is where a real image URL goes.
+photography and no dependency; `art` is where a real image URL goes. The
+library is dense on purpose: four cards across, a shallow picture, title and
+standfirst clamped to two lines, so most of it fits one screen.
 
 Every library piece carries a `sourceNote`, for the same reason every Spot
 answer carries a provenance line. No piece names a return, projects one, or
@@ -368,7 +379,10 @@ because it is outside every AltSpot figure. The methodology note is a folded
 `<details>`. `PositionReturns` replaced `Drivers`: one bar per position
 from a shared zero line, read as **Percent** (how well it did for its size)
 or **Dollars** (what it did to the total), gold up and ember down, exits
-labelled, losses never omitted. `ValueCurve` has a range (1Y, 2Y, All,
+labelled, losses never omitted, a position still at cost ("not yet marked")
+drawn flat rather than as a green zero, and **what went in beside what it is
+now** in its own column, because a bar is the difference between two amounts
+and the member should see both. `ValueCurve` has a range (1Y, 2Y, All,
 offered only when it would show less than everything), two layers that
 switch off (Invested, and Paid back as a green band at the foot of the
 area), guide lines, and three figures for the chosen window. **Change in
@@ -688,6 +702,33 @@ are flat tints, because glass on glass reads as fog. **Shadows are warm brown,
 never black**, which on cream reads as dirt. Contrast was measured against the
 canvas for every text value and the ratio is written beside it in the light
 block.
+
+### Institutional polish (Tyler, 2026-09-19)
+
+- **One footer under every signed-in page** (`components/PortalFooter`,
+  mounted in the portal shell inside `main`): the entity, Rule 506(b), who
+  it is for, the illiquidity line, and links to Disclosures and Documents.
+  It names no deal and no figure.
+- **`/disclosures`** gathers what the platform already says about risk,
+  fees, escrow, valuations, the Radar, Spot and the Terminal. It introduces
+  no new claim: fee wording is `feeSentence()`, so the fee and carry
+  switches decide what is named there exactly as everywhere else, and the
+  scenario notice appears only while `SHOW_RETURN_SCENARIOS` is on. Counsel
+  reviews the page as a whole before launch; it says so while in demo mode.
+- **The capital account statement** (`/portfolio/statement`, "Download
+  statement" on Portfolio): one dated page, totals from `ledgerBook`, set as
+  a sheet of paper in every theme (`--paper-*` tokens in `:root` only: a
+  document does not invert). "Save as PDF" is the browser's print dialog;
+  `@media print` in `globals.css` drops the rail, Spot, the ground and the
+  footer. No renderer, no dependency. Held elsewhere is never on it.
+- **Ember is quieter.** Card sheen, the lit lip, the warm-glass tints, the
+  CTA sheen and the hover glow were each cut by roughly a third to a half.
+  A pane should read as glass because of its edge, not its shine. When a
+  new surface looks flat, fix its edge or its spacing before adding light.
+- **`--inset-edge` is a colour, not a shadow.** Write
+  `box-shadow: inset 0 0 0 1px var(--inset-edge)`.
+- Owed, not yet built: named counterparties (administrator, escrow agent,
+  counsel) in a deal's terms, waiting on legal.
 
 ### Less is more
 
