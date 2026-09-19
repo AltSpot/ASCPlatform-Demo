@@ -84,6 +84,7 @@ export default function CollapsibleSection({
   note,
   action,
   handle,
+  anchor,
   children,
 }: {
   /** Stable key for the remembered state. Not the DOM id. */
@@ -95,6 +96,8 @@ export default function CollapsibleSection({
   note?: string;
   /** A link on the right of the rule, where the section's rest lives. */
   action?: React.ReactNode;
+  /** A DOM id for the section, when the page links to it. */
+  anchor?: string;
   /** Something rendered before the title. */
   handle?: React.ReactNode;
   children: React.ReactNode;
@@ -110,7 +113,7 @@ export default function CollapsibleSection({
   );
 
   return (
-    <section className={s.section}>
+    <section className={s.section} id={anchor}>
       <h2 className={s.head}>
         {handle}
         <button

@@ -166,3 +166,73 @@
 .stack {
   height: 14px;
 }
+
+/* ---------- the page in one sentence (2026-09-19) ---------- */
+
+.plain {
+  max-width: 60ch;
+  margin: 0 0 26px;
+  font-size: 19px;
+  font-weight: var(--w-light, 300);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+.plain b {
+  font-family: var(--font-figure);
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.plain b.up {
+  color: var(--good);
+}
+.plain b.down {
+  color: var(--bad);
+}
+
+/* Where everything on the page is, as one quiet row. */
+.jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -6px 0 6px;
+}
+.jump a {
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 7px 14px;
+  background: var(--surface-2);
+  box-shadow: var(--inset-edge);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  text-decoration: none;
+}
+.jump a:hover {
+  background: var(--surface-3);
+  color: var(--as-text);
+}
+
+/* The methodology, folded: there for whoever wants it. */
+.method {
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hair-neutral);
+}
+.method summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--accent-quiet);
+}
+.method summary:hover {
+  color: var(--as-text);
+}
+.method .note {
+  margin-top: 14px;
+}

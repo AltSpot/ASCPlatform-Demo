@@ -1,0 +1,199 @@
+/* Each position, up or down from a shared zero line, read in percent or
+   in dollars. */
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+
+.summary {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.net {
+  font-family: var(--font-figure);
+  font-weight: var(--w-medium);
+  font-size: 27px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--bad);
+  font-variant-numeric: tabular-nums;
+}
+.net[data-up='true'] {
+  color: var(--good);
+}
+.net small {
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.split {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+
+/* The two readings, as one segmented control. */
+.modes {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface-well);
+  box-shadow: var(--inset-edge);
+}
+
+.mode {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 7px 16px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+  cursor: pointer;
+}
+.mode:hover {
+  color: var(--as-text);
+}
+.mode[aria-pressed='true'] {
+  background: var(--surface-3);
+  color: var(--as-text);
+  box-shadow: var(--inset-edge);
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(170px, 1.1fr) minmax(0, 2.4fr) minmax(128px, auto);
+  align-items: center;
+  gap: 20px;
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--hair-neutral);
+}
+.row:last-child {
+  border-bottom: none;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--as-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.name small {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+
+/* The zero line runs down the middle of every row, so a bar's direction
+   is readable without looking at its colour. */
+.track {
+  position: relative;
+  display: block;
+  height: 22px;
+  border-radius: var(--r-md);
+  background: var(--track);
+}
+
+.zero {
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  bottom: -7px;
+  width: 1px;
+  background: var(--hair-gold-active);
+}
+
+.bar {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: linear-gradient(90deg, var(--as-gold-deep), var(--as-gold));
+  transition: width 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.bar[data-up='false'] {
+  border-radius: var(--r-md) 0 0 var(--r-md);
+  background: linear-gradient(270deg, var(--as-ember), var(--as-ember-soft));
+}
+
+.figures {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--good);
+}
+.figures[data-up='false'] {
+  color: var(--bad);
+}
+.figures b {
+  font-size: 15px;
+  font-weight: var(--w-medium);
+}
+.figures small {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+
+.foot {
+  margin: 16px 0 0;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 10px;
+  }
+  .track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}

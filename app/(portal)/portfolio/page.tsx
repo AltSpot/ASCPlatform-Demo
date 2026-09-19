@@ -29,10 +29,11 @@ import AllocationTabs, {
 import Holdings, { type Holding } from '@/components/portfolio/Holdings';
 import SleeveProgress from '@/components/portfolio/SleeveProgress';
 import CollapsibleSection from '@/components/CollapsibleSection';
+import Term from '@/components/Term';
 import CashFlow from '@/components/portfolio/CashFlow';
 import ExternalHoldings from '@/components/portfolio/ExternalHoldings';
 import DistributionLog from '@/components/portfolio/DistributionLog';
-import Drivers, { type Driver } from '@/components/portfolio/Drivers';
+import PositionReturns, { type PositionReturn } from '@/components/portfolio/PositionReturns';
 import ValueCurve from '@/components/portfolio/ValueCurve';
 import FeesPaid, { type FeeLine } from '@/components/portfolio/FeesPaid';
 import { requireUser } from '@/lib/auth';
@@ -341,11 +342,12 @@ export default async function PortfolioPage() {
 
   /* What each position has done to the number, in dollars. Realized
      positions count their proceeds; live ones count their mark. */
-  const drivers: Driver[] = holdings.map((holding) => ({
+  const drivers: PositionReturn[] = holdings.map((holding) => ({
     id: holding.id,
     name: holding.name,
     logoUrl: holding.logoUrl,
-    effect: holding.value + holding.returned - holding.cost,
+    cost: holding.cost,
+    totalValue: holding.value + holding.returned,
     exited: holding.exited,
   }));
 
@@ -403,6 +405,20 @@ export default async function PortfolioPage() {
         </Link>
       </div>
 
+      {/* The whole page in one sentence, in the member's words, before the
+          capital account says it again in an LP's. Same figures. */}
+      <p className={s.plain}>
+        You put in <b>{money(invested)}</b>. It is worth <b>{money(value)}</b> today
+        {returned > 0 ? (
+          <>
+            {' '}
+            and <b>{money(returned)}</b> has been paid back to you
+          </>
+        ) : null}
+        . Together that is{' '}
+        <b className={tvpi >= 1 ? s.up : s.down}>{tvpi.toFixed(2)} times</b> what you put in.
+      </p>
+
       {/* The capital account, in the order an LP statement states it:
           what went in, what it is marked at, what has come back, the
           two together as a multiple, the same thing annualized, and how
@@ -419,23 +435,27 @@ export default async function PortfolioPage() {
         />
         <Figure
           k="Fair value"
+          ask="How is the fair value of a position decided?"
           v={money(value)}
           d={`${unrealized >= 0 ? '+' : '−'}${money(Math.abs(unrealized))} unrealized`}
           tone={unrealized >= 0 ? 'up' : 'down'}
         />
         <Figure
           k="Realized"
+          ask="What does Realized and DPI mean on my portfolio page?"
           v={money(returned)}
           d={returned > 0 ? `DPI ${dpi.toFixed(2)}×` : 'Nothing distributed yet'}
         />
         <Figure
           k="TVPI"
+          ask="What does TVPI mean on my portfolio page?"
           v={`${tvpi.toFixed(2)}×`}
           d="Total value over invested"
           lead
         />
         <Figure
           k="Net IRR"
+          ask="What does Net IRR mean on my portfolio page?"
           v={percent(bookIrr, 1, { signed: true })}
           d="Annualized, money-weighted"
           tone={bookIrr === null ? undefined : bookIrr >= 0 ? 'up' : 'down'}
@@ -447,10 +467,22 @@ export default async function PortfolioPage() {
         />
       </div>
 
+      <nav className={s.jump} aria-label="On this page">
+        {series.length >= 2 ? <a href="#p-curve">Over time</a> : null}
+        <a href="#p-drivers">By position</a>
+        <a href="#p-holdings">Ledger</a>
+        <a href="#p-allocation">Exposure</a>
+        <a href="#p-sleeve">The sleeve</a>
+        <a href="#p-distributions">Cash back</a>
+        <a href="#p-fees">Fees</a>
+        <a href="#p-external">Held elsewhere</a>
+      </nav>
+
       {series.length >= 2 ? (
         <CollapsibleSection
           scope="portfolio"
           id="curve"
+        anchor="p-curve"
           title="Performance over time"
           note="Total value against invested, by quarter"
         >
@@ -468,15 +500,27 @@ export default async function PortfolioPage() {
       <CollapsibleSection
         scope="portfolio"
         id="drivers"
-        title="Contribution by position"
-        note="Gain and loss in dollars, not multiples"
+        anchor="p-drivers"
+        title="How each position is doing"
+        note="Up or down against what you put in, as a percent or in dollars"
       >
-        <Drivers rows={drivers} />
+        <PositionReturns rows={drivers} />
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        scope="portfolio"
+        id="holdings"
+        anchor="p-holdings"
+        title="Positions"
+        note="Held and realized, on AltSpot"
+      >
+        <Holdings rows={holdings} />
       </CollapsibleSection>
 
       <CollapsibleSection
         scope="portfolio"
         id="allocation"
+        anchor="p-allocation"
         title="Exposure"
         note="Weighted by invested capital"
       >
@@ -489,6 +533,7 @@ export default async function PortfolioPage() {
       <CollapsibleSection
         scope="portfolio"
         id="sleeve"
+        anchor="p-sleeve"
         title="Building the sleeve"
         note="Twenty positions, equal weight, over three years"
       >
@@ -497,25 +542,8 @@ export default async function PortfolioPage() {
 
       <CollapsibleSection
         scope="portfolio"
-        id="holdings"
-        title="Positions"
-        note="Held and realized, on AltSpot"
-      >
-        <Holdings rows={holdings} />
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        scope="portfolio"
-        id="external"
-        title="Held elsewhere"
-        note="Self-reported, kept out of AltSpot totals"
-      >
-        <ExternalHoldings initial={external} />
-      </CollapsibleSection>
-
-      <CollapsibleSection
-        scope="portfolio"
         id="distributions"
+        anchor="p-distributions"
         title="Distributions"
         note="Return of capital and gain, kept apart"
       >
@@ -547,14 +575,26 @@ export default async function PortfolioPage() {
       <CollapsibleSection
         scope="portfolio"
         id="fees"
+        anchor="p-fees"
         title="Fees charged"
         note="Every fee, against your own money"
       >
         <FeesPaid lines={feeLines} />
       </CollapsibleSection>
 
-      <p className={s.note}>
-        <b>How these figures are built.</b>{' '}
+      <CollapsibleSection
+        scope="portfolio"
+        id="external"
+        anchor="p-external"
+        title="Held elsewhere"
+        note="Self-reported, kept out of AltSpot totals"
+      >
+        <ExternalHoldings initial={external} />
+      </CollapsibleSection>
+
+      <details className={s.method}>
+        <summary>How these figures are built</summary>
+        <p className={s.note}>
         Invested is cost basis, including
         positions that have since realized: dropping an exit from the
         denominator would flatter every ratio above. Fair value is the latest
@@ -571,19 +611,23 @@ export default async function PortfolioPage() {
         self-reported, are not verified by AltSpot, and are excluded from every
         figure above. Demo environment: every AltSpot position here is seeded
         and no figure describes a real outcome.
-      </p>
+        </p>
+      </details>
     </>
   );
 }
 
 function Figure({
   k,
+  ask,
   v,
   d,
   tone,
   lead,
 }: {
   k: string;
+  /** The question Spot is opened with when the label is pressed. */
+  ask?: string;
   v: string;
   d: string;
   tone?: 'up' | 'down';
@@ -591,7 +635,15 @@ function Figure({
 }) {
   return (
     <div className={lead ? `${s.figure} ${s.figureLead}` : s.figure}>
-      <span className={s.figureKey}>{k}</span>
+      <span className={s.figureKey}>
+        {ask ? (
+          <Term q={ask} quiet>
+            {k}
+          </Term>
+        ) : (
+          k
+        )}
+      </span>
       <span className={s.figureValue}>{v}</span>
       <span className={tone ? `${s.figureNote} ${s[tone]}` : s.figureNote}>{d}</span>
     </div>
