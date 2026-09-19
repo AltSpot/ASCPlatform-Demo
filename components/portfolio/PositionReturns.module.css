@@ -165,6 +165,9 @@
 .figures[data-up='false'] {
   color: var(--bad);
 }
+.figures[data-flat='true'] {
+  color: var(--as-text-muted);
+}
 .figures b {
   font-size: 15px;
   font-weight: var(--w-medium);

@@ -236,3 +236,13 @@
 .method .note {
   margin-top: 14px;
 }
+
+.asOf {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}

@@ -274,7 +274,7 @@
 
 .guideLabel {
   position: absolute;
-  right: 0;
+  left: 0;
   transform: translateY(-115%);
   font-family: var(--font-mono);
   font-size: var(--fs-label);

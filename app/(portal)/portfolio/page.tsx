@@ -41,7 +41,7 @@ import { HELD_STATES, isLivePosition } from '@/lib/domain';
 import { CARRY_PERCENT, FEE_TERMS, SHOW_CARRY_TERMS, SHOW_FEE_TERMS } from '@/lib/config';
 import { carryOn, feeBreakdown, reservePercent } from '@/lib/fees';
 import { irr, ledgerBook, positionFlows } from '@/lib/portfolio-metrics';
-import { money, percent } from '@/lib/format';
+import { dateStr, money, percent } from '@/lib/format';
 import { getDealsByIds } from '@/lib/repositories/deals';
 import { getDistributions } from '@/lib/repositories/distributions';
 import { listExternal } from '@/lib/repositories/external';
@@ -356,6 +356,9 @@ export default async function PortfolioPage() {
    * the risk figure a private portfolio actually carries, and it is the
    * one nothing else on the platform states.
    */
+  /* Every institutional statement dates its figures. */
+  const asOfLabel = dateStr(asOf);
+
   const largest = live.reduce((max, sub) => Math.max(max, sub.amount), 0);
   const concentration = liveCost ? largest / liveCost : 0;
 
@@ -417,6 +420,9 @@ export default async function PortfolioPage() {
         ) : null}
         . Together that is{' '}
         <b className={tvpi >= 1 ? s.up : s.down}>{tvpi.toFixed(2)} times</b> what you put in.
+        <span className={s.asOf}>
+          As of {asOfLabel}. Marks are reported by each vehicle, quarterly, and are unaudited.
+        </span>
       </p>
 
       {/* The capital account, in the order an LP statement states it:
