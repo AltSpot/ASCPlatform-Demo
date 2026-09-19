@@ -13,7 +13,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) auto 76px;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
   padding: 17px 24px;
@@ -156,8 +156,9 @@
   background: transparent;
   border-color: transparent;
 }
-.plate:has(.logo) .logo {
-  border-radius: var(--r-md);
+/* The mark keeps the shape it was drawn with. */
+.plate:has(.logo) {
+  border-radius: 0;
 }
 
 /* ---------- the status line and the one action (2026-09-17) ---------- */
@@ -186,4 +187,177 @@
   padding: 0 14px;
   font-size: 12.5px;
   line-height: 1;
+}
+
+/* ---------- the pool and its levers (2026-09-19) ---------- */
+
+.pool {
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--hair-neutral);
+  background-image: var(--glass-tint-gold);
+}
+
+.poolHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.poolKey {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--accent-quiet);
+}
+.poolTotal {
+  display: block;
+  font-family: var(--font-figure);
+  font-size: 34px;
+  font-weight: var(--w-medium);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+.poolNote {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.savedTick {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--good);
+}
+
+/* The spread: one slice a name, as wide as its share. */
+.spread {
+  display: flex;
+  gap: 3px;
+  height: 10px;
+  margin-top: 16px;
+}
+.slice {
+  flex: 0 0 auto;
+  width: calc(var(--share) - 3px);
+  min-width: 4px;
+  border-radius: var(--r-pill);
+  background: var(--slice);
+  transition: width 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.poolHint {
+  margin: 12px 0 0;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+/* The same colour beside the name, so the bar has a key. */
+.key {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-right: 9px;
+  border-radius: 50%;
+  background: var(--slice);
+}
+.name {
+  display: flex;
+  align-items: center;
+}
+
+/* Minus, the figure, plus. Big enough to press without aiming. */
+.lever {
+  display: grid;
+  grid-template-columns: 34px minmax(112px, auto) 34px;
+  align-items: center;
+  gap: 8px;
+}
+.lever[data-settled='true'] {
+  grid-template-columns: minmax(112px, auto);
+  padding: 0 42px;
+}
+.figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.share {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.step {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: var(--control-fill);
+  box-shadow: inset 0 0 0 1px var(--control-rim);
+  color: var(--as-text);
+  cursor: pointer;
+  transition: background-color 0.14s ease, box-shadow 0.14s ease;
+}
+.step:hover:not(:disabled) {
+  background: var(--control-fill-hover);
+  box-shadow: inset 0 0 0 1px var(--control-rim-hover);
+}
+.step:active:not(:disabled) {
+  transform: scale(0.94);
+}
+.step:disabled {
+  color: var(--as-text-faint);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* The way in, beside the status it follows from. */
+.investLink {
+  margin-left: 6px;
+  font-weight: var(--w-medium);
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--hair-gold-active);
+  text-underline-offset: 3px;
+}
+.investLink:hover {
+  color: var(--accent-hot);
+}
+
+.error {
+  margin: 0;
+  padding: 12px 24px;
+  border-top: 1px solid var(--hair-neutral);
+  font-size: var(--fs-meta);
+  color: var(--bad);
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+  .lever {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    grid-template-columns: 38px 1fr 38px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slice {
+    transition: none;
+  }
 }
