@@ -51,7 +51,7 @@
   padding: 3px;
   border-radius: var(--r-pill);
   background: var(--surface-well);
-  box-shadow: var(--inset-edge);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
 }
 
 .mode {
@@ -74,7 +74,7 @@
 .mode[aria-pressed='true'] {
   background: var(--surface-3);
   color: var(--as-text);
-  box-shadow: var(--inset-edge);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
 }
 
 .rows {
@@ -85,7 +85,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: minmax(170px, 1.1fr) minmax(0, 2.4fr) minmax(128px, auto);
+  grid-template-columns: minmax(170px, 1.1fr) 124px minmax(0, 2.2fr) minmax(128px, auto);
   align-items: center;
   gap: 20px;
   padding: 14px 2px;
@@ -93,6 +93,48 @@
 }
 .row:last-child {
   border-bottom: none;
+}
+
+/* Column heads, on the same grid as the rows. */
+.cols {
+  display: grid;
+  grid-template-columns: minmax(170px, 1.1fr) 124px minmax(0, 2.2fr) minmax(128px, auto);
+  gap: 20px;
+  padding: 12px 2px 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+.cols > span:last-child {
+  text-align: right;
+}
+.colsPlot {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 25%;
+}
+
+/* What went in, and what it is now. */
+.money {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.money b {
+  font-size: 15px;
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+}
+.money small {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
 }
 
 .who {
@@ -195,8 +237,25 @@
     grid-template-columns: minmax(0, 1fr) auto;
     row-gap: 10px;
   }
+  .cols {
+    display: none;
+  }
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .money {
+    grid-column: 1;
+    grid-row: 2;
+    flex-direction: row;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .figures {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
   .track {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
   }
 }

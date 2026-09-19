@@ -203,7 +203,7 @@
   border-radius: var(--r-pill);
   padding: 7px 14px;
   background: var(--surface-2);
-  box-shadow: var(--inset-edge);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: var(--w-medium);

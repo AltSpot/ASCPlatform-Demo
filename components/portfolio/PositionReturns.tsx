@@ -96,6 +96,16 @@ export default function PositionReturns({ rows }: { rows: PositionReturn[] }) {
         </div>
       </div>
 
+      <div className={s.cols} aria-hidden="true">
+        <span>Position</span>
+        <span>You put in</span>
+        <span className={s.colsPlot}>
+          <span>Down</span>
+          <span>Up</span>
+        </span>
+        <span>{mode === 'percent' ? 'Return' : 'Gain or loss'}</span>
+      </div>
+
       <ul className={s.rows}>
         {ordered.map((row) => {
           const size = Math.abs(mode === "percent" ? row.pct : row.gain);
@@ -115,6 +125,16 @@ export default function PositionReturns({ rows }: { rows: PositionReturn[] }) {
                     <small>At cost, not yet marked</small>
                   ) : null}
                 </span>
+              </span>
+
+              {/* What went in, beside what it is now: the two amounts the bar
+                  is the difference between. */}
+              <span className={s.money}>
+                <b>{money(row.cost)}</b>
+                <small>
+                  {row.exited ? 'paid back ' : 'now '}
+                  {money(row.totalValue)}
+                </small>
               </span>
 
               <span
