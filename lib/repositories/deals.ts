@@ -291,10 +291,13 @@ export async function getDealsForViewer(
   const rows = await prisma.deal.findMany({ where: { id: { in: ids } } });
   const byId = new Map(rows.map((row) => [row.id, toDealView(row)]));
 
-  return ids
+  const found = ids
     .map((id) => byId.get(id))
-    .filter((deal): deal is DealView => deal !== undefined)
-    .map((deal) => withViewer(deal, relationship));
+    .filter((deal): deal is DealView => deal !== undefined);
+  /* Whether the member is already in each one, like the shelf: a saved deal
+     they went on to join has to be able to say so. */
+  const counted = await withMembers(found, userId);
+  return counted.map((deal) => withViewer(deal, relationship));
 }
 
 /**

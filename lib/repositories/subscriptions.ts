@@ -14,6 +14,7 @@ import { escrowDeadline, windowedDeadline } from '../funding';
 import { audit } from '../audit';
 import {
   assertTransition,
+  HELD_STATES,
   RESUMABLE_STATES,
   SUBSCRIPTION_STATES,
   type SubscriptionState,
@@ -137,6 +138,20 @@ export async function getResumable(
     orderBy: { createdAt: 'desc' },
   });
   return row ? toSubscriptionView(row) : null;
+}
+
+/**
+ * What the member has in one deal, across every held subscription into it.
+ * Zero when they are not in it. For the places that say "You invested $X"
+ * (the deal page, the shelf, the watchlist); a book is still totalled only
+ * by ledgerBook.
+ */
+export async function getHeldAmount(userId: string, dealId: string): Promise<number> {
+  const held = await prisma.subscription.aggregate({
+    where: { userId, dealId, state: { in: [...HELD_STATES] } },
+    _sum: { amount: true },
+  });
+  return held._sum.amount ?? 0;
 }
 
 export async function startSubscription(

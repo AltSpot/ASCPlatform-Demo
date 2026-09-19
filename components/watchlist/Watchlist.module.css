@@ -509,3 +509,38 @@
   background: var(--control-fill-hover);
   box-shadow: inset 0 0 0 1px var(--control-rim-hover);
 }
+
+/* ---------- a saved deal the member went on to join (2026-09-19) ---------- */
+.invested {
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--good-paint);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-semi);
+  letter-spacing: var(--ls-text);
+  color: var(--fg-on-vote);
+  white-space: nowrap;
+}
+.row[data-in='true'] {
+  background: var(--good-fill);
+  box-shadow: inset 0 0 0 1px var(--good-line);
+}
+
+/* ---------- quieter (Tyler, 2026-09-19): "that is too obvious" ----------
+   A green row beside a coloured vote bar was too much. Green is rationed:
+   the row is an ordinary row again, and the chip is neutral glass with one
+   small green mark, the same weight as the class chip beside it. */
+.row[data-in='true'] {
+  background: none;
+  box-shadow: none;
+}
+.invested {
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--control-rim);
+  color: var(--as-text);
+  font-weight: var(--w-medium);
+}
+.invested svg {
+  stroke: var(--good-paint);
+}

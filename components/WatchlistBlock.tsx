@@ -24,7 +24,7 @@
  * app/api/watchlist/order is the authority and ignores any id they have
  * not saved.
  */
-import { ArrowRight, GripVertical } from 'lucide-react';
+import { ArrowRight, CircleCheck, GripVertical } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -36,7 +36,7 @@ import {
   type DealShelfItem,
   type DealView,
 } from '@/lib/domain';
-import { dateStr, daysLeft } from '@/lib/format';
+import { dateStr, daysLeft, money } from '@/lib/format';
 import { fundingView } from '@/lib/funding';
 import { ASSET_CLASSES, isAssetClass } from '@/lib/taxonomy';
 
@@ -61,7 +61,14 @@ function applyOrder(list: DealShelfItem[], ids: string[]): DealShelfItem[] {
   return [...list].sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
 }
 
-export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
+export default function WatchlistBlock({
+  deals,
+  investedAmounts = {},
+}: {
+  deals: DealShelfItem[];
+  /** What the member has in each watched deal they went on to join. */
+  investedAmounts?: Record<string, number>;
+}) {
   const toast = useToast();
 
   const [rows, setRows] = useState(deals);
@@ -140,6 +147,7 @@ export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
             <div
               key={deal.id}
               className={w.row}
+              data-in={!deal.redacted && deal.youAreIn ? 'true' : undefined}
               data-lifted={lifted === deal.id}
               style={klass ? { ['--tint' as string]: klass.tint } : undefined}
               draggable
@@ -191,6 +199,13 @@ export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
               <div className={w.body}>
                 <div className={w.top}>
                   <b className={w.name}>{deal.name}</b>
+                  {!deal.redacted && deal.youAreIn ? (
+                    <span className={w.invested}>
+                      <CircleCheck size={12} strokeWidth={2.1} aria-hidden="true" />
+                      You invested
+                      {investedAmounts[deal.id] ? ` ${money(investedAmounts[deal.id])}` : ''}
+                    </span>
+                  ) : null}
                   {klass ? <span className={w.klass}>{klass.label}</span> : null}
                   {deal.redacted ? null : <Closes deal={deal} />}
                 </div>
@@ -211,6 +226,11 @@ export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
                   href={`/wizard?step=${ACCREDITATION_STEP}&then=${deal.id}`}
                 >
                   Finish accreditation
+                </Link>
+              ) : !deal.redacted && deal.youAreIn ? (
+                <Link className={w.go} href="/portfolio">
+                  Your position
+                  <ArrowRight size={12} strokeWidth={1.8} aria-hidden="true" />
                 </Link>
               ) : (
                 <Link className={w.go} href={`/deals/${deal.id}`}>

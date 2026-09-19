@@ -1,0 +1,605 @@
+{
+  "out": "screenshots/phase2/21-vote-pool-opt-in",
+  "shots": [
+    {
+      "name": "01-at-rest-no-levers",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); if (s.querySelector('button[aria-label^=\"Raise your vote\"], button[aria-label^=\"Lower your vote\"]')) throw new Error('levers are out at rest'); if (s.querySelectorAll('button[aria-label^=\"Change your vote for\"]').length < 2) throw new Error('no pencils'); if (!/adjust all/i.test(s.innerText)) throw new Error('no Adjust all'); if (!/50%/.test(s.innerText)) throw new Error('bar is not labelled'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-one-name-open",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); s.querySelector('button[aria-label^=\"Change your vote for Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); if (!s.querySelector('button[aria-label^=\"Raise your vote for Orrery\"]')) throw new Error('Orrery did not open'); if (s.querySelector('button[aria-label^=\"Raise your vote for Ferrule\"]')) throw new Error('another name opened too'); const b = s.querySelector('button[aria-label^=\"Raise your vote for Orrery\"]'); b.click(); b.click(); })()"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (!t.includes('115,000')) throw new Error('total did not move: ' + t.slice(0, 80)); if (!/saved/i.test(t)) throw new Error('no Saved'); })()"
+        }
+      ]
+    },
+    {
+      "name": "03-adjust-all",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); [...s.querySelectorAll('button')].find(b => /adjust all/i.test(b.textContent)).click(); })()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); if (s.querySelectorAll('button[aria-label^=\"Raise your vote\"]').length !== 2) throw new Error('not every adjustable name opened'); if (s.querySelector('button[aria-label^=\"Raise your vote for Aurelia\"]')) throw new Error('a settled vote has levers'); if (![...s.querySelectorAll('button')].some(b => /^done$/i.test(b.textContent.trim()))) throw new Error('no Done'); })()"
+        }
+      ]
+    },
+    {
+      "name": "04-closed-again",
+      "capture": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); const all = () => [...s.querySelectorAll('button')].find(b => /adjust all|^done$/i.test(b.textContent.trim())); all().click(); all().click(); })()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { if ([...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelector('button[aria-label^=\"Raise your vote\"]')) throw new Error('Done did not close the levers'); })()"
+        }
+      ]
+    },
+    {
+      "name": "05-daylight-one-open",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelector('button[aria-label^=\"Change your vote for Ferrule\"]').click(); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "06-card-complete-investment",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('.deal-card .btn-action')][0]; if (!b) throw new Error('no action button on a card'); b.closest('.deal-card').scrollIntoView({ block: 'center', behavior: 'instant' }); const h = b.getBoundingClientRect().height; if (h > 40) throw new Error('the action label wraps: ' + h + 'px tall'); const q = b.parentElement.querySelector('button'); if (Math.abs(q.getBoundingClientRect().height - h) > 1) throw new Error('the two buttons are different heights'); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "07-card-complete-investment-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('.deal-card .btn-action')][0]; if (!b) throw new Error('no action button on a card'); b.closest('.deal-card').scrollIntoView({ block: 'center', behavior: 'instant' }); const h = b.getBoundingClientRect().height; if (h > 40) throw new Error('the action label wraps: ' + h + 'px tall'); const q = b.parentElement.querySelector('button'); if (Math.abs(q.getBoundingClientRect().height - h) > 1) throw new Error('the two buttons are different heights'); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "08-needs-you-action",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    {
+      "name": "09-row-opens-overview",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const li = [...[...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelectorAll('li')].find(l => /Orrery/.test(l.textContent)); li.querySelector('img, span').click(); })()"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d) throw new Error('the row did not open the side panel'); if (!/Orrery/.test(d.innerText)) throw new Error('wrong company in the panel'); if (!/you voted/i.test(d.innerText)) throw new Error('panel does not say the vote'); })()"
+        }
+      ]
+    },
+    {
+      "name": "10-lever-does-not-open-panel",
+      "capture": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelector('button[aria-label^=\"Change your vote for Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelector('button[aria-label^=\"Raise your vote for Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { if (document.querySelector('dialog[open]')) throw new Error('pressing a lever opened the panel'); })()"
+        }
+      ]
+    },
+    {
+      "name": "11-invested-card",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const c = document.querySelector('.deal-card[data-in=\"true\"]'); if (!c) throw new Error('no card marked as invested'); const t = c.innerText; if (!/aurelia/i.test(t)) throw new Error('the invested card is not Aurelia'); if (!/you invested/i.test(t)) throw new Error('card does not say You invested'); if (!t.includes('25,000')) throw new Error('card does not say the amount'); if (!/your position/i.test(t)) throw new Error('button is not Your position'); if (/view deal/i.test(t)) throw new Error('still says View deal'); if (document.querySelectorAll('.deal-card[data-in=\"true\"]').length !== 1) throw new Error('more than one invested card'); })()"
+        }
+      ]
+    },
+    {
+      "name": "12-invested-card-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const c = document.querySelector('.deal-card[data-in=\"true\"]'); if (!c) throw new Error('no card marked as invested'); const t = c.innerText; if (!/aurelia/i.test(t)) throw new Error('the invested card is not Aurelia'); if (!/you invested/i.test(t)) throw new Error('card does not say You invested'); if (!t.includes('25,000')) throw new Error('card does not say the amount'); if (!/your position/i.test(t)) throw new Error('button is not Your position'); if (/view deal/i.test(t)) throw new Error('still says View deal'); if (document.querySelectorAll('.deal-card[data-in=\"true\"]').length !== 1) throw new Error('more than one invested card'); })()"
+        }
+      ]
+    },
+    {
+      "name": "13-watchlist-invested-row",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "fetch('/api/watchlist/aurelia', { method: 'PUT' }).then(r => { if (!r.ok) throw new Error('could not save Aurelia: ' + r.status); })"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "go": "/dashboard"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())); h.scrollIntoView({ block: 'start', behavior: 'instant' }); const s = h.closest('section'); const t = s.innerText; if (!/you invested/i.test(t)) throw new Error('watchlist row does not say You invested'); if (!t.includes('25,000')) throw new Error('no amount on the watchlist row'); if (!/your position/i.test(t)) throw new Error('no Your position link'); })()"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "14-watchlist-invested-row-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "fetch('/api/watchlist/aurelia', { method: 'PUT' }).then(r => { if (!r.ok) throw new Error('could not save Aurelia: ' + r.status); })"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "go": "/dashboard"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /^Watchlist/.test(x.textContent.trim())); h.scrollIntoView({ block: 'start', behavior: 'instant' }); const s = h.closest('section'); const t = s.innerText; if (!/you invested/i.test(t)) throw new Error('watchlist row does not say You invested'); if (!t.includes('25,000')) throw new Error('no amount on the watchlist row'); if (!/your position/i.test(t)) throw new Error('no Your position link'); })()"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "15-deal-page-invested",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/aurelia"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('you invested') || !t.includes('25,000')) throw new Error('deal page does not say what was invested'); if (!t.includes('add to your position')) throw new Error('no Add to your position'); if ([...document.querySelectorAll('.btn-gold')].some(b => b.getBoundingClientRect().width > 0)) throw new Error('a gold Begin investment is still showing'); })()"
+        }
+      ]
+    },
+    {
+      "name": "16-deal-page-invested-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/aurelia"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText.toLowerCase(); if (!t.includes('you invested') || !t.includes('25,000')) throw new Error('deal page does not say what was invested'); if (!t.includes('add to your position')) throw new Error('no Add to your position'); if ([...document.querySelectorAll('.btn-gold')].some(b => b.getBoundingClientRect().width > 0)) throw new Error('a gold Begin investment is still showing'); })()"
+        }
+      ]
+    },
+    {
+      "name": "17-dashboard-remove-asks-first",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); if (s.querySelector('button[aria-label^=\"Remove your vote\"]')) throw new Error('Remove is showing before the levers are opened'); s.querySelector('button[aria-label^=\"Change your vote for Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelector('button[aria-label^=\"Remove your vote for Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (!/remove\\?/i.test(t) || !/keep/i.test(t)) throw new Error('it did not ask first'); })()"
+        }
+      ]
+    },
+    {
+      "name": "18-dashboard-vote-removed",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelector('button[aria-label^=\"Change your vote for Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelector('button[aria-label^=\"Remove your vote for Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "eval": "(() => { [...[...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').querySelectorAll('button')].find(b => b.textContent.trim() === 'Yes').click(); })()"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const t = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section').innerText; if (/Orrery/.test(t)) throw new Error('the row is still there'); if (!t.includes('75,000')) throw new Error('the pool did not re-total to 75,000'); })()"
+        },
+        {
+          "eval": "fetch('/api/radar').then(r => r.json()).then(j => { const list = Array.isArray(j) ? j : (j.data ?? j.items ?? []); const c = list.find(x => x.slug === 'orrery'); const got = c ? c.yourAmount : 'missing'; if (got !== null) throw new Error('server has orrery = ' + got); })"
+        }
+      ]
+    },
+    {
+      "name": "19-radar-card-remove",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('article')].find(a => /Orrery/.test(a.textContent)); if (!card) throw new Error('no Orrery card'); card.scrollIntoView({ block: 'center', behavior: 'instant' }); card.querySelector('button[aria-label=\"Change your vote\"]').click(); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('article')].find(a => /Orrery/.test(a.textContent)); const b = [...card.querySelectorAll('button')].find(x => /remove vote/i.test(x.textContent)); if (!b) throw new Error('no Remove vote on the card'); })()"
+        }
+      ]
+    },
+    {
+      "name": "20-radar-card-removed",
+      "capture": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('article')].find(a => /Orrery/.test(a.textContent)); card.querySelector('button[aria-label=\"Change your vote\"]').click(); })()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('article')].find(a => /Orrery/.test(a.textContent)); [...card.querySelectorAll('button')].find(x => /remove vote/i.test(x.textContent)).click(); })()"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('article')].find(a => /Orrery/.test(a.textContent)); if (/you voted/i.test(card.innerText)) throw new Error('the card still says You voted'); })()"
+        },
+        {
+          "eval": "fetch('/api/radar').then(r => r.json()).then(j => { const list = Array.isArray(j) ? j : (j.data ?? j.items ?? []); const c = list.find(x => x.slug === 'orrery'); const got = c ? c.yourAmount : 'missing'; if (got !== null) throw new Error('server has orrery = ' + got); })"
+        }
+      ]
+    },
+    {
+      "name": "21-watchlist-page-remove",
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const b = document.querySelector('button[aria-label^=\"Remove your vote on Orrery\"]'); if (!b) throw new Error('no remove on the Watchlist page'); b.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        }
+      ]
+    },
+    {
+      "name": "22-watchlist-page-removed",
+      "capture": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { document.querySelector('button[aria-label^=\"Remove your vote on Orrery\"]').click(); })()"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { if (document.querySelector('button[aria-label^=\"Remove your vote on Orrery\"]')) throw new Error('the row is still there'); })()"
+        },
+        {
+          "eval": "fetch('/api/radar').then(r => r.json()).then(j => { const list = Array.isArray(j) ? j : (j.data ?? j.items ?? []); const c = list.find(x => x.slug === 'orrery'); const got = c ? c.yourAmount : 'missing'; if (got !== null) throw new Error('server has orrery = ' + got); })"
+        }
+      ]
+    },
+    {
+      "name": "23-removing-twice-is-safe",
+      "capture": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "fetch('/api/radar/interest/orrery', { method: 'DELETE' }).then(r => { if (!r.ok) throw new Error('first ' + r.status); return fetch('/api/radar/interest/orrery', { method: 'DELETE' }); }).then(r => { if (!r.ok) throw new Error('second ' + r.status); return fetch('/api/radar/interest/not-a-company', { method: 'DELETE' }); }).then(r => { if (r.status !== 400 && r.status !== 422) throw new Error('an unknown slug was accepted: ' + r.status); })"
+        }
+      ]
+    }
+  ]
+}

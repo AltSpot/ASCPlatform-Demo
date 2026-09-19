@@ -171,6 +171,27 @@ export default function WatchlistBoard({
     }
   }
 
+  async function withdraw(company: WatchCompany): Promise<void> {
+    const before = votes[company.slug];
+    if (before === undefined) return;
+    setVotes((all) => {
+      const next = { ...all };
+      delete next[company.slug];
+      return next;
+    });
+    try {
+      await api.withdrawRadarInterest(company.slug);
+      toast(
+        <>
+          Vote removed. <b>{company.name}</b> no longer counts yours.
+        </>,
+      );
+    } catch (caught) {
+      setVotes((all) => ({ ...all, [company.slug]: before }));
+      toast(caught instanceof ApiError ? caught.message : 'That did not save. Try again.');
+    }
+  }
+
   const empty = savedDeals.length === 0 && votedCompanies.length === 0;
 
   return (
@@ -264,6 +285,7 @@ export default function WatchlistBoard({
                     amount={votes[company.slug]}
                     deal={company.dealId ? dealById.get(company.dealId) : undefined}
                     onVote={(amount) => vote(company, amount)}
+                    onRemove={() => withdraw(company)}
                     onView={(deal) => setPeek(deal)}
                   />
                 ))}
@@ -539,13 +561,14 @@ function DealRow({
   const soon = days > 0 && days <= CLOSING_SOON_DAYS;
 
   return (
-    <li className={s.row}>
+    <li className={s.row} data-in={deal.youAreIn ? 'true' : undefined}>
       <CompanyMark name={deal.name} logoUrl={deal.logoUrl} size={36} />
 
       <div className={s.body}>
         <div className={s.top}>
           <b className={s.name}>{deal.name}</b>
           <AssetClassIcon assetClass={deal.assetClass} size={12} />
+          {deal.youAreIn ? <span className={s.invested}>You invested</span> : null}
         </div>
         <div className={s.meter}>
           <div className={s.bar} aria-label={`${pct}% of the minimum raised`} role="img">
@@ -582,10 +605,13 @@ function VoteRow({
   amount,
   deal,
   onVote,
+  onRemove,
   onView,
 }: {
   company: WatchCompany;
   amount: number;
+  /** Takes the vote back entirely. */
+  onRemove: () => void;
   /** The open deal this name became, when the member may see it. */
   deal?: DealView;
   onVote: (amount: number) => Promise<boolean>;
@@ -644,6 +670,15 @@ function VoteRow({
               title="Change your vote"
             >
               <Pencil size={14} strokeWidth={1.6} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className={s.iconButton}
+              onClick={onRemove}
+              aria-label={`Remove your vote on ${company.name}`}
+              title="Remove your vote"
+            >
+              <X size={15} strokeWidth={1.6} aria-hidden="true" />
             </button>
           </>
         )}

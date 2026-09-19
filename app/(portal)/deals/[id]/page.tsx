@@ -17,6 +17,7 @@
  * only where the member stands, so the branch below is not hiding
  * anything: there is nothing to hide, including the deal's name.
  */
+import { CircleCheck } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -43,10 +44,11 @@ import InvestButton from '@/components/InvestButton';
 import WaitlistButton from '@/components/WaitlistButton';
 import { requireUser } from '@/lib/auth';
 import { evaluateInvestGate } from '@/lib/domain';
+import { money } from '@/lib/format';
 import { getDealAccess, listDealsForViewer } from '@/lib/repositories/deals';
 import { getWizardView } from '@/lib/repositories/investor';
 import { getRadarBoard } from '@/lib/repositories/radar';
-import { getResumable } from '@/lib/repositories/subscriptions';
+import { getHeldAmount, getResumable } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
 import { recordScenarioView } from '@/lib/repositories/scenario-views';
 import { getStanding, waitlistedDeals } from '@/lib/repositories/spv';
@@ -121,12 +123,13 @@ export default async function DealPage({
     />
   );
 
-  const [wizard, resume, standing, waiting, radar] = await Promise.all([
+  const [wizard, resume, standing, waiting, radar, investedAmount] = await Promise.all([
     getWizardView(user.id),
     getResumable(user.id, deal.id),
     getStanding(deal.id, user.id),
     waitlistedDeals(user.id),
     getRadarBoard(user.id),
+    getHeldAmount(user.id, deal.id),
   ]);
   /* The loop, said at the top of the deal: this is the company the member
      voted for on the Radar, and what they voted. */
@@ -182,13 +185,28 @@ export default async function DealPage({
         </Link>
       )
     ) : standing?.alreadyMember ? (
-      /* Already in: say so first. Adding to a position is still allowed. */
+      /* ALREADY IN (Tyler, 2026-09-19): say so first, and loudly. A small chip
+         beside a gold "Begin investment" read as a deal the member had not
+         joined. The band states what they put in and where it stands, with
+         the way to their position; adding to it is still allowed, as the
+         second action, not the gold one. */
       <>
-        <span className="chip good">
-          <span className="dot" />
-          You are in
+        <span className={s.investedBand}>
+          <CircleCheck size={17} strokeWidth={1.9} aria-hidden="true" />
+          <span className={s.investedText}>
+            <b>You invested {investedAmount > 0 ? money(investedAmount) : 'in this deal'}</b>
+            <small>{deal.status === 'closed' ? 'This deal has closed' : 'In escrow until the deal closes'}</small>
+          </span>
+          <Link className={s.investedLink} href="/portfolio">
+            Your position →
+          </Link>
         </span>
-        <InvestButton dealId={deal.id} gate={gate} className={className} />
+        <InvestButton
+          dealId={deal.id}
+          gate={gate}
+          label="Add to your position"
+          className={className.replace('btn-gold', 'btn-ghost')}
+        />
       </>
     ) : (
       <InvestButton dealId={deal.id} gate={gate} className={className} />

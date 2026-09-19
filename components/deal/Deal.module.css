@@ -182,6 +182,48 @@
   background: linear-gradient(180deg, rgba(10, 8, 6, 0.15), rgba(10, 8, 6, 0.6));
 }
 
+/* The member already holds this deal. */
+.investedBand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--r-md);
+  background: var(--good-fill);
+  box-shadow: inset 0 0 0 1px var(--good-line);
+}
+.investedBand svg {
+  flex: none;
+  stroke: var(--good-paint);
+}
+.investedText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.investedText b {
+  font-size: 15.5px;
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+.investedText small {
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+.investedLink {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.investedLink:hover {
+  color: var(--accent-hot);
+}
+
 .filmMark {
   position: relative;
   z-index: 1;

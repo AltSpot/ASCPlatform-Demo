@@ -13,7 +13,7 @@
  */
 import MarketplaceLanes from '@/components/marketplace/MarketplaceLanes';
 import { requireUser } from '@/lib/auth';
-import { RESUMABLE_STATES } from '@/lib/domain';
+import { HELD_STATES, RESUMABLE_STATES } from '@/lib/domain';
 import { listDealsForViewer } from '@/lib/repositories/deals';
 import { getRelationshipView } from '@/lib/repositories/investor';
 import { canSeeOfferings } from '@/lib/relationship';
@@ -83,6 +83,11 @@ export default async function MarketplacePage({
       watched={watchlist}
       fromRadar={fromRadar}
       daySeed={daySeed}
+      investedAmounts={Object.fromEntries(
+        subscriptions
+          .filter((s) => HELD_STATES.includes(s.state))
+          .map((s) => [s.dealId, s.amount]),
+      )}
       votedAmounts={Object.fromEntries(
         radar
           .filter((c) => c.dealId && c.yourAmount !== null)
