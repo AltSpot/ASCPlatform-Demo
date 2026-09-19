@@ -36,6 +36,9 @@
   background: transparent;
   border-color: transparent;
 }
-.plate:has(.logo) .logo {
-  border-radius: var(--r-md);
+/* The mark keeps the shape it was drawn with (a circle, a square, a soft
+   tile), so the plate does not round or clip it. */
+.plate:has(.logo) {
+  border-radius: 0;
+  overflow: visible;
 }

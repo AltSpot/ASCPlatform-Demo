@@ -3,12 +3,15 @@
  *
  *   node scripts/make-marks.mjs
  *
- * One family, so a board of thirty reads as one product: the same
- * rounded tile, the same stroke weight, the same two-stop gradient and
- * the same inner light. What differs is the hue (lib/brand-hues.json)
- * and the glyph, and those two are enough to tell any two apart at
- * 32px. The output is committed; run this again only when a company or
- * a glyph changes. Real companies bring their own marks and this goes.
+ * NOT one family (Tyler, 2026-09-19). Thirty marks sharing a tile, a
+ * stroke, a gradient and an inner glow read as a game's inventory. Real
+ * companies do not share a designer, so each entry in
+ * lib/brand-hues.json decides its own: the shape of the mark (rounded,
+ * circle, square, soft), its ground (the brand colour, a light paper or a
+ * dark tile), one flat ink with no gradient and no glow, the weight and
+ * the terminals of the drawing, and for a few a letter instead of a
+ * picture. The output is committed; run this again only when a company
+ * or a glyph changes. Real companies bring their own marks and this goes.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -18,9 +21,28 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const hues = JSON.parse(readFileSync(path.join(root, 'lib', 'brand-hues.json'), 'utf8'));
 
 /* Every glyph is drawn on a 100 unit tile, inside roughly 24..76. `S`
-   strokes with the gradient, `F` fills with it. */
+   strokes with the ink, `F` fills with it. Both are rewritten per company
+   below: the colour, the weight and the terminals are the company's. */
 const S = 'stroke="url(#g)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"';
 const F = 'fill="url(#g)"';
+
+/* Letter marks are set in system faces, the same stacks lib/brand.ts uses
+   for the logos, so a company's letter and its word agree. */
+const FONTS = {
+  serif: "Georgia, 'Times New Roman', serif",
+  didone: "'Bodoni MT', Didot, 'Palatino Linotype', Georgia, serif",
+  geo: "'Century Gothic', Futura, 'Trebuchet MS', sans-serif",
+  black: "'Arial Black', 'Segoe UI Black', Arial, sans-serif",
+  grotesk: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+};
+
+const RADIUS = { rounded: 22, square: 5, soft: 36 };
+
+function isLight(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 170;
+}
 const S5 = S.replace('stroke-width="7"', 'stroke-width="5"');
 
 const GLYPHS = {
@@ -95,24 +117,33 @@ const GLYPHS = {
 };
 
 let written = 0;
-for (const [slug, glyph] of Object.entries(GLYPHS)) {
-  const hue = hues[slug];
-  if (!hue) throw new Error(`No hue for ${slug} in lib/brand-hues.json`);
+for (const [slug, drawn] of Object.entries(GLYPHS)) {
+  const brand = hues[slug];
+  if (!brand) throw new Error(`No identity for ${slug} in lib/brand-hues.json`);
+  const { tile, ink, shape = 'rounded', stroke = 7, cap = 'round', mono } = brand;
+  const join = cap === 'round' ? 'round' : 'miter';
+
+  const glyph = mono
+    ? `<text x="50" y="52" text-anchor="middle" dominant-baseline="central" font-family="${FONTS[mono.font] ?? FONTS.serif}" font-size="${mono.size}" font-weight="${mono.weight}"${mono.italic ? ' font-style="italic"' : ''} fill="${ink}">${mono.text}</text>`
+    : drawn
+        .replaceAll('url(#g)', ink)
+        .replaceAll('stroke-width="7"', `stroke-width="${stroke}"`)
+        .replaceAll('stroke-width="5"', `stroke-width="${Math.max(3, stroke - 2)}"`)
+        .replaceAll('stroke-linecap="round"', `stroke-linecap="${cap}"`)
+        .replaceAll('stroke-linejoin="round"', `stroke-linejoin="${join}"`);
+
+  /* A light ground needs an edge or it dissolves into a light page. */
+  const edge = isLight(tile) ? 'stroke="#000000" stroke-opacity=".10"' : 'stroke="#FFFFFF" stroke-opacity=".07"';
+  const ground =
+    shape === 'circle'
+      ? `<circle cx="50" cy="50" r="49.25" fill="${tile}" ${edge} stroke-width="1.5"/>`
+      : `<rect x=".75" y=".75" width="98.5" height="98.5" rx="${RADIUS[shape] ?? 22}" fill="${tile}" ${edge} stroke-width="1.5"/>`;
+  /* A circle is a smaller room than a square: bring the drawing in. */
+  const body = shape === 'circle' && !mono ? `<g transform="translate(50 50) scale(.84) translate(-50 -50)">${glyph}</g>` : glyph;
+
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <defs>
-    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="22" y1="22" x2="78" y2="78">
-      <stop offset="0" stop-color="${hue.light}"/>
-      <stop offset="1" stop-color="${hue.hue}"/>
-    </linearGradient>
-    <radialGradient id="glow" cx=".3" cy=".2" r=".9">
-      <stop offset="0" stop-color="${hue.hue}" stop-opacity=".28"/>
-      <stop offset="1" stop-color="${hue.hue}" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="100" height="100" rx="22" fill="${hue.tile}"/>
-  <rect width="100" height="100" rx="22" fill="url(#glow)"/>
-  <rect x=".75" y=".75" width="98.5" height="98.5" rx="21.25" fill="none" stroke="#FFFFFF" stroke-opacity=".08" stroke-width="1.5"/>
-  ${glyph}
+  ${ground}
+  ${body}
 </svg>
 `;
   writeFileSync(path.join(root, 'private', 'marks', `${slug}.svg`), svg);
