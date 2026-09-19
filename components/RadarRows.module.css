@@ -237,25 +237,118 @@
   color: var(--good);
 }
 
-/* The spread: one slice a name, as wide as its share. */
+/* THE SPREAD. One segment a name, as wide as its share of everything
+   voted, with the share written under it. flex-grow carries the share, so
+   the segments always fill the bar exactly whatever the rounding. */
 .spread {
   display: flex;
   gap: 3px;
-  height: 10px;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 .slice {
-  flex: 0 0 auto;
-  width: calc(var(--share) - 3px);
-  min-width: 4px;
-  border-radius: var(--r-pill);
-  background: var(--slice);
-  transition: width 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  flex: var(--share) 1 0px;
+  min-width: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: default;
+  transition: flex-grow 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+.sliceBar {
+  display: block;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--slice);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  transition: height 0.18s ease, filter 0.18s ease, margin 0.18s ease;
+}
+.slice:first-child .sliceBar {
+  border-radius: var(--r-pill) 3px 3px var(--r-pill);
+}
+.slice:last-child .sliceBar {
+  border-radius: 3px var(--r-pill) var(--r-pill) 3px;
+}
+.slice:only-child .sliceBar {
+  border-radius: var(--r-pill);
+}
+
+/* One name is being pointed at or changed: it stands up, the rest step back. */
+.spread[data-lit='true'] .sliceBar {
+  filter: saturate(0.35) brightness(0.7);
+}
+.spread[data-lit='true'] .slice[data-hot='true'] .sliceBar {
+  filter: none;
+  height: 18px;
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+
+.sliceLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  white-space: nowrap;
+}
+.sliceLabel b {
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+  font-variant-numeric: tabular-nums;
+}
+.sliceLabel span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Too narrow to carry words: the row below says it. */
+.sliceLabel[data-narrow='true'] {
+  visibility: hidden;
+}
+.slice[data-hot='true'] .sliceLabel span {
+  color: var(--as-text);
+}
+
 .poolHint {
-  margin: 12px 0 0;
+  margin: 14px 0 0;
   font-size: var(--fs-meta);
   color: var(--as-text-muted);
+}
+
+.poolSide {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+/* Opens every name's levers at once. */
+.adjust {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--control-fill);
+  box-shadow: inset 0 0 0 1px var(--control-rim);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-semi);
+  color: var(--as-text);
+  cursor: pointer;
+  transition: background-color 0.14s ease, box-shadow 0.14s ease;
+}
+.adjust:hover {
+  background: var(--control-fill-hover);
+  box-shadow: inset 0 0 0 1px var(--control-rim-hover);
+}
+.adjust[aria-pressed='true'] {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  box-shadow: none;
 }
 
 /* The same colour beside the name, so the bar has a key. */
@@ -274,15 +367,69 @@
 }
 
 /* Minus, the figure, plus. Big enough to press without aiming. */
+/* Four fixed slots (minus, the figure, plus, the pencil) whether or not
+   the levers are out, so no figure moves when a row opens. */
 .lever {
   display: grid;
-  grid-template-columns: 34px minmax(112px, auto) 34px;
+  grid-template-columns: 34px minmax(112px, auto) 34px 34px;
   align-items: center;
   gap: 8px;
 }
-.lever[data-settled='true'] {
-  grid-template-columns: minmax(112px, auto);
-  padding: 0 42px;
+.slot {
+  width: 34px;
+  height: 34px;
+}
+
+.row {
+  transition: background-color 0.16s ease;
+}
+.row[data-clickable='true'] {
+  cursor: pointer;
+}
+/* The name is the keyboard's way in; it looks like the name. */
+.nameButton {
+  appearance: none;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nameButton:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--hair-gold-active);
+  text-underline-offset: 4px;
+}
+.row[data-hot='true'],
+.row[data-open='true'] {
+  background: var(--surface-1);
+}
+
+/* The pencil that opens one name, and the tick that closes it. */
+.edit {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--as-text-muted);
+  cursor: pointer;
+  transition: background-color 0.14s ease, color 0.14s ease;
+}
+.edit:hover {
+  background: var(--control-fill-hover);
+  color: var(--as-text);
+}
+.edit[data-on='true'] {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
 }
 .figure {
   display: flex;
@@ -353,11 +500,67 @@
   .lever {
     grid-column: 1 / -1;
     justify-content: space-between;
-    grid-template-columns: 38px 1fr 38px;
+    grid-template-columns: 38px 1fr 38px 38px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .slice {
     transition: none;
   }
+}
+
+/* ---------- removing a vote (2026-09-19) ---------- */
+.removeVote,
+.askYes,
+.askNo {
+  appearance: none;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--hair-neutral);
+  text-underline-offset: 3px;
+}
+.removeVote:hover,
+.askYes:hover {
+  color: var(--bad);
+}
+.askNo:hover {
+  color: var(--as-text);
+}
+.ask {
+  display: inline-flex;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text);
+  white-space: nowrap;
+}
+
+/* ---------- less colour (Tyler, 2026-09-19) ----------
+   Eight saturated hues in a bar beside a green watchlist was a lot for one
+   row of the dashboard. At rest the spread and its keys are muted, close
+   to tints of one another; the name being pointed at or changed comes up
+   to its full colour, which is when the colour is doing a job. The warm
+   wash behind the total goes too. */
+.pool {
+  background-image: none;
+}
+.sliceBar,
+.key {
+  filter: saturate(0.42) brightness(0.92);
+}
+.spread[data-lit='true'] .sliceBar {
+  filter: saturate(0.2) brightness(0.7);
+}
+.spread[data-lit='true'] .slice[data-hot='true'] .sliceBar,
+.row[data-hot='true'] .key,
+.row[data-open='true'] .key {
+  filter: none;
 }

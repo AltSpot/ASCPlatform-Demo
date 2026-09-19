@@ -211,6 +211,11 @@ export default async function DashboardPage() {
   const subscribedDeals = new Set(subscriptions.map((s) => s.dealId));
 
 
+  /* Where each name stands on the board, for the overview a vote row opens:
+     the same three figures the Radar's own Details panel is given. */
+  const byDollars = [...radar].sort((a, b) => b.interestDollars - a.interestDollars);
+  const loudest = Math.max(1, byDollars[0]?.interestDollars ?? 1);
+
   const radarRows: RadarRow[] = radar
     .filter((company) => company.yourAmount !== null)
     .sort((a, b) => (a.yourRank ?? Infinity) - (b.yourRank ?? Infinity))
@@ -222,6 +227,12 @@ export default async function DashboardPage() {
         logoUrl: company.logoUrl,
         assetClass: company.assetClass,
         voted: company.yourAmount ?? 0,
+        detail: {
+          view: company,
+          rank: byDollars.indexOf(company) + 1,
+          total: byDollars.length,
+          demandShare: company.interestDollars / loudest,
+        },
         live: deal
           ? {
               dealId: deal.id,
@@ -416,7 +427,14 @@ export default async function DashboardPage() {
           </Link>
         }
       >
-        <WatchlistBlock deals={watched} />
+        <WatchlistBlock
+          deals={watched}
+          investedAmounts={Object.fromEntries(
+            subscriptions
+              .filter((sub) => HELD_STATES.includes(sub.state))
+              .map((sub) => [sub.dealId, sub.amount]),
+          )}
+        />
       </CollapsibleSection>
 
       <CollapsibleSection id="radar" title="Your votes">
