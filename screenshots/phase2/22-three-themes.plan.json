@@ -1,0 +1,335 @@
+{
+  "out": "screenshots/phase2/22-three-themes",
+  "shots": [
+    {
+      "name": "01-dashboard-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "02-dashboard-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "03-dashboard-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "04-marketplace-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "05-marketplace-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "06-marketplace-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "07-radar-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Featured'); b.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "08-radar-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Featured'); b.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "09-radar-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Featured'); b.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "10-deal-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "11-deal-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "12-deal-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "13-portfolio-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "14-portfolio-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "15-portfolio-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "16-terminal-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "17-terminal-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "18-terminal-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "19-settings-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/settings"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "20-settings-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/settings"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "21-settings-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/settings"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    }
+  ]
+}

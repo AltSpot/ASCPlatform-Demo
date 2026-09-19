@@ -104,6 +104,17 @@ Concretely:
   Adjust all opens every name, and a row pressed anywhere else opens the
   Radar's overview of that company in the side panel. The spread's colours
   are muted at rest and come up for the name being pointed at or changed.
+  **The bell keeps itself current** (Tyler, 2026-09-19). It is mounted in the
+  portal shell, which Next keeps across navigation, so the list it was
+  rendered with went stale the moment a member signed, sent to escrow or
+  voted: the strip said three and the bell said two. It re-reads
+  `GET /api/needs-you` (the same builder) when the page changes, the window
+  regains focus, the panel opens, or anything calls
+  `announceNeedsYouChanged()` from `lib/needs-you.ts`, which every mutation
+  that can add or clear something owed now does. **The deal quick look
+  opens on the member's stage** (`stage` on `DealPeek`): in escrow, signed
+  and not yet sent, or nothing when they are not in it, and its button is
+  the next real step, never a gold Invest to a member already in.
   **Needs you is built once** (`lib/needs-you.ts`: a commitment with a
   clock, a document to sign, a Radar name that opened, a lapsed
   commitment) and read twice: the dashboard strip, which folds like every
@@ -597,6 +608,23 @@ genuinely needs new rules gets a CSS Module beside it (`components/deal/`,
 
 ### Three themes: Ember, Ice and Daylight
 
+**Chosen in Settings, Ember by default** (Tyler, 2026-09-19).
+`components/settings/AppearanceCard` is three tiles, each a small drawing
+of its own theme in its own colours, calling the same `setTheme` and
+reading the same `useTheme` as `ThemeToggle`, so there is one stored
+preference. **The switch is no longer on the rail**; it stays on the login
+page, where a walkthrough starts. A new member, or a browser with nothing
+stored, is on Ember: it is `:root`, and nothing reads the operating
+system's colour scheme. **Ice was rebuilt in the final sweep**: it had been
+grey glass over Ember's warm bloom with a brown sweep behind it. Its canvas
+is now cold (a steel-blue flare, a glacier pool, one small gold spark, a
+cool wash over the warm ink) and its pane is blue glass with a cold rim and
+far less brightness lift. It still restates only the glass and the ground,
+never type or accents, and `tests/theme.test.ts` holds that. Daylight's
+fields carry an ink hairline like its buttons.
+`screenshots/phase2/22-three-themes.plan.json` walks seven pages in all
+three.
+
 **Ice** (2026-09-17) is the ember canvas with frosted, icy glass panes:
 `html[data-theme='ice']` restates only the glass tokens (fill, rim, lift,
 sheen, blur, the surface ladder), never type or accents, and
@@ -1089,6 +1117,15 @@ These are the claims the product makes. Do not let a change quietly break them.
   defaults to false and only the viewer-aware reads in `lib/repositories/deals.ts`
   set it. `POST /api/subscriptions` refuses with a 403 and the invest page
   redirects to the deal, so the UI is the explanation, not the control
+- **An invitation promises nothing of value** (Tyler, 2026-09-19,
+  `components/settings/InviteCard`, second on Settings). Under 506(b) there
+  is no general solicitation and a member is not a registered broker, so:
+  no cash, credit, fee discount, carry share, allocation priority or gift
+  for an introduction, to either side, at sign-up or when anyone invests;
+  and the link is for people the member knows, sent one to one, never
+  posted. The benefit the card shows is the platform's own mechanic (more
+  members voting means wanted names are sourced sooner), not a reward.
+  Anything more waits for counsel and is added in that component only.
 - **Referral links are a way to the gate, never past it** (work order screen 3).
   A partner or member shares `/r/<code>` (`app/r/[code]/route.ts`). It sets a
   short-lived cookie and lands on Create account, whatever else is on the URL;

@@ -716,6 +716,142 @@
           "eval": "(() => { if (!location.pathname.startsWith('/portfolio')) throw new Error('did not reach Portfolio'); const row = document.getElementById('position-aurelia'); if (!row) throw new Error('no row for the position'); if (row.getAttribute('data-arrived') !== 'true') throw new Error('the row is not marked'); const r = row.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) throw new Error('the row is not on screen: ' + Math.round(r.top)); })()"
         }
       ]
+    },
+    {
+      "name": "30-quick-look-in-escrow",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('.deal-card')].find(c => c.querySelector('h3') && c.querySelector('h3').textContent.includes('Aurelia')); if (!card) throw new Error('no Aurelia card'); card.scrollIntoView({ block: 'center', behavior: 'instant' }); card.querySelector('button[aria-label^=\"Quick look\"]').click(); })()"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); if (!d) throw new Error('panel did not open'); const t = d.innerText; if (!/in escrow/i.test(t)) throw new Error('panel does not say In escrow'); if (!t.includes('25,000')) throw new Error('panel does not say the amount'); if (!/your position/i.test(t)) throw new Error('no Your position'); if (d.querySelector('.btn-gold')) throw new Error('a gold Invest is offered to a member already in escrow'); })()"
+        }
+      ]
+    },
+    {
+      "name": "31-quick-look-signed-not-sent",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('.deal-card')].find(c => c.querySelector('h3') && c.querySelector('h3').textContent.includes('Tessellate')); if (!card) throw new Error('no Tessellate card'); card.scrollIntoView({ block: 'center', behavior: 'instant' }); card.querySelector('button[aria-label^=\"Quick look\"]').click(); })()"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); const t = d.innerText; if (!/signed/i.test(t) || !/not yet sent/i.test(t)) throw new Error('panel does not say Signed, not yet sent'); if (!/to escrow by/i.test(t)) throw new Error('panel does not say what is owed and by when'); if (!/complete investment/i.test(t)) throw new Error('no Complete investment'); if (/you invested/i.test(t)) throw new Error('says invested before money moved'); })()"
+        }
+      ]
+    },
+    {
+      "name": "32-quick-look-not-joined",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('.deal-card')].find(c => c.querySelector('h3') && c.querySelector('h3').textContent.includes('Calder')); if (!card) throw new Error('no Calder card'); card.scrollIntoView({ block: 'center', behavior: 'instant' }); card.querySelector('button[aria-label^=\"Quick look\"]').click(); })()"
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const d = document.querySelector('dialog[open]'); const t = d.innerText; if (/is in escrow until|not yet sent|your position/i.test(t)) throw new Error('a deal the member is not in shows a stage'); if (!d.querySelector('.btn-gold')) throw new Error('no Invest on a deal the member can join'); })()"
+        }
+      ]
+    },
+    {
+      "name": "33-bell-matches-needs-you",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Needs you/.test(x.textContent)); const m = h.closest('section').innerText.match(/([0-9]+) waiting/); if (!m) throw new Error('could not read the strip count'); const waiting = Number(m[1]); const bell = document.querySelector('[data-tour=\"bell\"]'); const shown = Number((bell.textContent.match(/[0-9]+/) || [0])[0]); if (shown !== waiting) throw new Error('bell says ' + shown + ', Needs you says ' + waiting); })()"
+        }
+      ]
+    },
+    {
+      "name": "34-bell-follows-a-change",
+      "capture": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { window.__before = Number((document.querySelector('[data-tour=\"bell\"]').textContent.match(/[0-9]+/) || [0])[0]); })()"
+        },
+        {
+          "eval": "fetch('/api/subscriptions').then(r => r.json()).then(j => { const list = Array.isArray(j) ? j : (j.data ?? j.items ?? []); const sub = list.find(s => s.state === 'docs_signed'); if (!sub) throw new Error('no signed subscription to cancel'); return fetch('/api/subscriptions/' + sub.id, { method: 'DELETE' }); }).then(r => { if (!r.ok) throw new Error('cancel failed ' + r.status); window.dispatchEvent(new Event('asc:needs-you')); })"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const now = Number((document.querySelector('[data-tour=\"bell\"]').textContent.match(/[0-9]+/) || [0])[0]); if (now !== window.__before - 1) throw new Error('bell went from ' + window.__before + ' to ' + now + ' without a page change'); })()"
+        }
+      ]
+    },
+    {
+      "name": "35-settings-appearance",
+      "steps": [
+        {
+          "go": "/reshoot?to=/settings"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { if (document.querySelector('aside [role=\"group\"][aria-label=\"Appearance\"]')) throw new Error('the theme switch is still on the rail'); const t = document.body.innerText; if (!/bring someone into the room/i.test(t)) throw new Error('no invite card'); if (!/nobody is paid or rewarded/i.test(t)) throw new Error('the invite does not say nobody is paid'); const inv = [...document.querySelectorAll('h3')].find(h => /bring someone/i.test(h.textContent)); const acct = [...document.querySelectorAll('h3')].find(h => /^Account$/.test(h.textContent.trim())); if (inv.getBoundingClientRect().top > acct.getBoundingClientRect().top) throw new Error('the invite is not above Account'); })()"
+        },
+        {
+          "eval": "(() => { const g = document.querySelector('[role=\"radiogroup\"][aria-label=\"Appearance\"]'); if (!g) throw new Error('no Appearance in Settings'); const opts = [...g.querySelectorAll('[role=\"radio\"]')]; if (opts.length !== 3) throw new Error('themes offered: ' + opts.length); if (opts[0].getAttribute('aria-checked') !== 'true' || !/Ember/.test(opts[0].textContent)) throw new Error('a new member is not on Ember'); if (document.documentElement.dataset.theme) throw new Error('a new member has a theme attribute: ' + document.documentElement.dataset.theme); opts[2].click(); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { if (document.documentElement.dataset.theme !== 'light') throw new Error('choosing Daylight did not change the page'); if (localStorage.getItem('asc.theme') !== 'light') throw new Error('the choice was not kept'); const opts = [...document.querySelectorAll('[role=\"radio\"]')]; opts[1].click(); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { if (document.documentElement.dataset.theme !== 'ice') throw new Error('choosing Ice did not change the page'); })()"
+        }
+      ]
     }
   ]
 }
