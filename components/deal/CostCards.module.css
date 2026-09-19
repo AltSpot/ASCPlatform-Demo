@@ -1,0 +1,76 @@
+/* What it costs: a card per cost, nothing to scroll sideways. */
+
+.wrap {
+  margin-top: 30px;
+}
+
+.heading {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 2px;
+  align-items: center;
+  padding: 18px 18px 16px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  box-shadow:
+    inset 0 0 0 1px var(--inset-edge),
+    var(--inset-lift);
+}
+
+.glyph {
+  grid-row: 1 / span 2;
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+}
+.glyph svg {
+  stroke: var(--as-gold);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+
+.short {
+  font-size: 16px;
+  font-weight: var(--w-medium);
+  line-height: 1.25;
+  color: var(--as-text);
+}
+
+.detail {
+  grid-column: 1 / -1;
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair-soft);
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}

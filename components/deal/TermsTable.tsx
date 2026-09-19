@@ -1,19 +1,22 @@
 /**
- * Deal terms, in two tables.
+ * Deal terms.
  *
- * The first is the economics of the round: what the security is, what it
- * is priced at, how big the round is, and the price per share. The second
- * is the preferred terms that attach to it.
+ * Two tables for the economics of the round (what the security is, what
+ * it is priced at, how big the round is, the price per share) and the
+ * preferred terms that attach to it.
  *
- * The third is what it costs (work order screens 6 and 7), from
- * lib/fees.ts: with SHOW_FEE_TERMS off, one row that names the management
- * fee and points at the memorandum, and no figure; with SHOW_CARRY_TERMS
- * off, no carry row at all. Under it, always, no capital calls.
+ * Then WHAT IT COSTS, which is not a table (Tyler, 2026-09-19: a member
+ * should never scroll sideways to read a fee). Each cost is a card: a
+ * glyph, the name, the figure a member reads first, and one or two plain
+ * sentences under it, the name pressable to ask Spot. The words and the
+ * figures are lib/fees.ts's: with SHOW_FEE_TERMS off, one card that names
+ * the fee and points at the memorandum; with SHOW_CARRY_TERMS off, no
+ * carry card at all. Under them, always, no capital calls.
  *
  * Deliberately absent: minimum to close, closing date and escrow status,
  * which are the hero's funding picture.
  */
-import type { ReactNode } from 'react';
+import { Building2, CalendarClock, Landmark, Percent, Receipt, type LucideIcon } from 'lucide-react';
 
 import Term from '@/components/Term';
 import type { DealView } from '@/lib/domain';
@@ -21,12 +24,15 @@ import { NO_CAPITAL_CALLS, dealFeeRows } from '@/lib/fees';
 
 import Section from './Section';
 import s from './Deal.module.css';
+import c from './CostCards.module.css';
 
-/** The cost rows a member might stop on, each wired to Spot's answer. */
-const COST_QUESTIONS: Record<string, string> = {
-  'Management fee': 'What are the fees?',
-  'SPV fee': 'What are the fees?',
-  'Carried interest': 'How does carried interest actually work?',
+/** The cost cards: a glyph each, and the question Spot is asked. */
+const COST_META: Record<string, { icon: LucideIcon; q: string }> = {
+  'Management fee': { icon: CalendarClock, q: 'What are the fees?' },
+  'Formation and administration fee': { icon: Building2, q: 'What are the fees?' },
+  'SPV expenses': { icon: Receipt, q: 'What are the fees?' },
+  'Escrow interest': { icon: Landmark, q: 'What happens after I send to escrow?' },
+  'Carried interest': { icon: Percent, q: 'How does carried interest actually work?' },
 };
 
 export default function TermsTable({ deal }: { deal: DealView }) {
@@ -35,15 +41,7 @@ export default function TermsTable({ deal }: { deal: DealView }) {
     ...(deal.pricePerShare ? [{ k: 'Price per share', v: deal.pricePerShare }] : []),
   ];
 
-  const costs = dealFeeRows().map((row) => ({
-    k: COST_QUESTIONS[row.label] ? (
-      <Term q={COST_QUESTIONS[row.label]}>{row.label}</Term>
-    ) : (
-      row.label
-    ),
-    key: row.label,
-    v: row.detail,
-  }));
+  const costs = dealFeeRows();
 
   return (
     <Section eyebrow="Terms" title="What you are agreeing to." id="terms">
@@ -55,8 +53,26 @@ export default function TermsTable({ deal }: { deal: DealView }) {
         </div>
       )}
 
-      <div style={{ marginTop: 26 }}>
-        <Table rows={costs} caption="What it costs" />
+      <div className={c.wrap}>
+        <h3 className={c.heading}>What it costs</h3>
+        <ul className={c.cards}>
+          {costs.map((row) => {
+            const meta = COST_META[row.label];
+            const Icon = meta?.icon ?? Receipt;
+            return (
+              <li className={c.card} key={row.label}>
+                <span className={c.glyph} aria-hidden="true">
+                  <Icon size={17} strokeWidth={1.6} />
+                </span>
+                <span className={c.label}>
+                  {meta ? <Term q={meta.q} quiet>{row.label}</Term> : row.label}
+                </span>
+                <span className={c.short}>{row.short}</span>
+                <p className={c.detail}>{row.detail}</p>
+              </li>
+            );
+          })}
+        </ul>
         <p className={s.costNote}>
           <Term q="Will I be asked for more money later?" quiet>
             {NO_CAPITAL_CALLS}
@@ -71,7 +87,7 @@ function Table({
   rows,
   caption,
 }: {
-  rows: { k: ReactNode; key?: string; v: string }[];
+  rows: { k: string; v: string }[];
   caption: string;
 }) {
   return (
@@ -85,7 +101,7 @@ function Table({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key ?? String(row.k)}>
+            <tr key={row.k}>
               <td>{row.k}</td>
               <td className="num">{row.v}</td>
             </tr>

@@ -140,6 +140,8 @@ export const NOT_A_PERCENT_OF_RAISE =
 
 export interface FeeRow {
   label: string;
+  /** The figure or the two words a member reads first. No sentence. */
+  short: string;
   detail: string;
 }
 
@@ -157,18 +159,21 @@ export function dealFeeRows(
     ? [
         {
           label: 'Management fee',
+          short: `${terms.annualPercent}% a year, ${terms.termYears} years funded at close`,
           detail: `${terms.annualPercent}% per year of committed capital, ${terms.termYears} years funded once at closing (${reservePercent(terms)}% of your subscription). ${halves}`,
         },
         {
           label: 'Formation and administration fee',
+          short: `${money(terms.flatPerSpv)} per SPV, shared pro rata`,
           detail: `A flat ${money(terms.flatPerSpv)} per SPV, disclosed in the memorandum. The SPV pays it once; your share is pro rata to your capital committed, settled at close.`,
         },
-        { label: 'SPV expenses', detail: PASS_THROUGH_LINE },
-        { label: 'Escrow interest', detail: ESCROW_INTEREST_LINE },
+        { label: 'SPV expenses', short: 'At cost', detail: PASS_THROUGH_LINE },
+        { label: 'Escrow interest', short: 'Yours', detail: ESCROW_INTEREST_LINE },
       ]
     : [
         {
           label: 'Management fee',
+          short: 'In the memorandum',
           detail: `Funded once at close, disclosed in the memorandum. ${halves} ${PASS_THROUGH_LINE}`,
         },
       ];
@@ -180,7 +185,7 @@ export function dealFeeRows(
 /** The carry row (work order screen 7), or nothing at all when off. */
 export function carryRow(show: boolean = SHOW_CARRY_TERMS): FeeRow | null {
   return show
-    ? { label: 'Carried interest', detail: `${CARRY_PERCENT}% of profits at exit` }
+    ? { label: 'Carried interest', short: `${CARRY_PERCENT}% of profits`, detail: `${CARRY_PERCENT}% of profits at exit` }
     : null;
 }
 
