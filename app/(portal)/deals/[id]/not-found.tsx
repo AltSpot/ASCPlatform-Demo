@@ -19,7 +19,7 @@ export default function DealNotFound() {
         It may have closed and been taken down, or the link is out of date.
         Everything currently open is on the marketplace.
       </p>
-      <Link className="btn btn-gold" href="/marketplace">
+      <Link className="btn btn-primary" href="/marketplace">
         Open the marketplace →
       </Link>
     </div>

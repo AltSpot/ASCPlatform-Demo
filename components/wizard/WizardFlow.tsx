@@ -218,7 +218,7 @@ export default function WizardFlow({
                 : 'Your profile is saved and your documents will pre-fill themselves. Offerings open once your questionnaire is approved.'}
           </p>
           <button
-            className="btn btn-gold"
+            className="btn btn-primary"
             onClick={async () => {
               try {
                 const { api } = await import('@/lib/client/api');

@@ -127,7 +127,7 @@ export default function StepBank({
           marginBottom: 18,
         }}
       >
-        <button className="btn btn-gold" onClick={() => setLinkOpen(true)}>
+        <button className="btn btn-primary" onClick={() => setLinkOpen(true)}>
           Link with {PARTNERS.banking}
         </button>
         <span className="demo-tag">
@@ -151,7 +151,7 @@ export default function StepBank({
 
       <div className="wiz-actions">
         <button
-          className="btn btn-gold"
+          className="btn btn-primary"
           disabled={linked.length === 0 || busy}
           onClick={finish}
         >

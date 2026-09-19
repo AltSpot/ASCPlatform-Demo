@@ -149,7 +149,7 @@ export default function RadarCard({
   ) : (
     <button
       type="button"
-      className={`btn btn-gold btn-sm btn-block ${s.voteButton}`}
+      className={`btn btn-primary btn-sm btn-block ${s.voteButton}`}
       onClick={() => setPanelVoting(true)}
     >
       <Vote size={15} strokeWidth={1.6} aria-hidden="true" />

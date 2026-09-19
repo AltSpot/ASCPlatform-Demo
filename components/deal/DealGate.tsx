@@ -38,7 +38,7 @@ export default function DealGate({ relationship }: { relationship: RelationshipV
           <p className={s.gateText}>{copy.body}</p>
         </div>
         {copy.action ? (
-          <Link className="btn btn-gold" href={copy.action.href}>
+          <Link className="btn btn-primary" href={copy.action.href}>
             {copy.action.label}
           </Link>
         ) : (

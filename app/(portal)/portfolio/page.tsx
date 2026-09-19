@@ -407,7 +407,7 @@ export default async function PortfolioPage() {
           <Link className="btn btn-ghost" href="/docs">
             Documents
           </Link>
-          <Link className="btn btn-gold" href="/portfolio/statement">
+          <Link className="btn btn-primary" href="/portfolio/statement">
             Download statement
           </Link>
         </div>

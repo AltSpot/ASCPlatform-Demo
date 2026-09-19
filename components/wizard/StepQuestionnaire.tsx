@@ -230,7 +230,7 @@ export default function StepQuestionnaire({
       <div className="wiz-actions">
         {answering ? (
           <>
-            <button className="btn btn-gold" disabled={!complete || busy} onClick={submit}>
+            <button className="btn btn-primary" disabled={!complete || busy} onClick={submit}>
               {busy ? 'Saving…' : 'Submit questionnaire'}
             </button>
             <span className="tiny">
@@ -238,7 +238,7 @@ export default function StepQuestionnaire({
             </span>
           </>
         ) : (
-          <button className="btn btn-gold" onClick={() => onComplete(view)}>
+          <button className="btn btn-primary" onClick={() => onComplete(view)}>
             Continue setup
           </button>
         )}

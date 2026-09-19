@@ -567,7 +567,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
               />
 
               <button
-                className="btn btn-gold btn-block"
+                className="btn btn-primary btn-block"
                 style={{ marginTop: 16 }}
                 onClick={beginDocs}
                 disabled={busy || retirementBlocked}

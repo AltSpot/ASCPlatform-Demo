@@ -98,7 +98,7 @@ export function actionOf(item: NeedsYouItem) {
       );
     case 'live':
       return (
-        <Link className="btn btn-gold btn-sm" href={`/deals/${item.dealId}`}>
+        <Link className="btn btn-ghost btn-orb btn-sm" href={`/deals/${item.dealId}`}>
           See the deal
         </Link>
       );

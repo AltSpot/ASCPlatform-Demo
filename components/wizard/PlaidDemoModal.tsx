@@ -221,7 +221,7 @@ export default function PlaidDemoModal({
             <div className={styles.actions}>
               <button
                 type="button"
-                className="btn btn-gold btn-block"
+                className="btn btn-primary btn-block"
                 data-autofocus
                 onClick={() => setStage('connecting')}
               >
@@ -290,7 +290,7 @@ export default function PlaidDemoModal({
             <div className={styles.actions}>
               <button
                 type="button"
-                className="btn btn-gold btn-block"
+                className="btn btn-primary btn-block"
                 data-autofocus
                 disabled={selected.length === 0 || stage === 'linking'}
                 onClick={connect}

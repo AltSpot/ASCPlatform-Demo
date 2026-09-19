@@ -102,7 +102,7 @@ export default function DealCard({
       </Link>
     )
   ) : (
-    <Link className="btn btn-gold btn-sm" href={`/deals/${deal.id}`}>
+    <Link className="btn btn-ghost btn-orb btn-sm" href={`/deals/${deal.id}`}>
       View deal
     </Link>
   );

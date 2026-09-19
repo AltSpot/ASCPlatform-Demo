@@ -5,7 +5,7 @@ import { Download } from 'lucide-react';
 
 export default function PrintButton({ label }: { label: string }) {
   return (
-    <button type="button" className="btn btn-gold" onClick={() => window.print()}>
+    <button type="button" className="btn btn-primary" onClick={() => window.print()}>
       <Download size={16} strokeWidth={1.6} aria-hidden="true" />
       {label}
     </button>

@@ -168,7 +168,7 @@ export default function LoginForm({ initialMode = 'signin' }: { initialMode?: Mo
           />
         </label>
 
-        <button className={`btn btn-gold btn-block ${s.go}`} type="submit" disabled={busy}>
+        <button className={`btn btn-primary btn-block ${s.go}`} type="submit" disabled={busy}>
           {busy
             ? creating
               ? 'Creating account…'

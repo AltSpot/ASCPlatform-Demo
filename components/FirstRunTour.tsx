@@ -290,11 +290,11 @@ export default function FirstRunTour({ offered }: { offered: boolean }) {
             </button>
           ) : null}
           {last ? (
-            <button type="button" className="btn btn-gold btn-sm" onClick={close}>
+            <button type="button" className="btn btn-primary btn-sm" onClick={close}>
               Done
             </button>
           ) : (
-            <button type="button" className="btn btn-gold btn-sm" onClick={advance}>
+            <button type="button" className="btn btn-primary btn-sm" onClick={advance}>
               {at === 0 ? 'Show me' : 'Next'}
               <ArrowRight size={14} strokeWidth={1.8} aria-hidden="true" />
             </button>

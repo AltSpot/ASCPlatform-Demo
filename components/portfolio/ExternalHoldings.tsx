@@ -300,7 +300,7 @@ export default function ExternalHoldings({
           </div>
 
           <div className={s.actions}>
-            <button className="btn btn-gold btn-sm" onClick={save} disabled={busy}>
+            <button className="btn btn-primary btn-sm" onClick={save} disabled={busy}>
               {busy ? 'Saving…' : editing ? 'Save changes' : 'Add holding'}
             </button>
             <span className={s.actionNote}>

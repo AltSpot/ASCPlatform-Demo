@@ -14,7 +14,7 @@ import { api, ApiError } from '@/lib/client/api';
 
 export default function WaitlistButton({
   dealId,
-  className = 'btn btn-gold',
+  className = 'btn btn-primary',
   initiallyJoined = false,
 }: {
   dealId: string;

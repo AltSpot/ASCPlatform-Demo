@@ -207,7 +207,7 @@ export default function WatchlistBoard({
             Save a deal you are weighing, or vote for a company you want AltSpot to go
             after. Both land here.
           </p>
-          <Link className="btn btn-gold btn-sm" href="/marketplace">
+          <Link className="btn btn-primary btn-sm" href="/marketplace">
             Explore investments
             <ArrowRight size={14} strokeWidth={1.8} aria-hidden="true" />
           </Link>

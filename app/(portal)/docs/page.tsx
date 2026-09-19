@@ -58,7 +58,7 @@ export default async function DocsPage() {
             </span>
             <br />
             <br />
-            <Link className="btn btn-gold btn-sm" href="/marketplace">
+            <Link className="btn btn-primary btn-sm" href="/marketplace">
               Open the marketplace
             </Link>
           </div>

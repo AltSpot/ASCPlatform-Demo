@@ -113,7 +113,7 @@ export default function RadarRows({ rows }: { rows: RadarRow[] }) {
 
             <span className={s.action}>
               {row.live && !row.live.subscribed ? (
-                <Link className={`btn btn-gold btn-sm ${s.invest}`} href={`/deals/${row.live.dealId}`}>
+                <Link className={`btn btn-ghost btn-orb btn-sm ${s.invest}`} href={`/deals/${row.live.dealId}`}>
                   Invest
                 </Link>
               ) : null}

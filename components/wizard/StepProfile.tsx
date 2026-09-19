@@ -105,7 +105,7 @@ export default function StepProfile({
       )}
 
       <div className="wiz-actions">
-        <button className="btn btn-gold" disabled={!selected || busy} onClick={create}>
+        <button className="btn btn-primary" disabled={!selected || busy} onClick={create}>
           Create profile &amp; continue
         </button>
         <button className="skip" onClick={onSkip}>

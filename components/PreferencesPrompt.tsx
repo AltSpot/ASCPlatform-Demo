@@ -51,7 +51,7 @@ export default function PreferencesPrompt() {
         </p>
       </div>
       <div className={s.actions}>
-        <Link className="btn btn-gold btn-sm" href="/preferences">
+        <Link className="btn btn-primary btn-sm" href="/preferences">
           Set preferences
         </Link>
         <button type="button" className="btn btn-ghost btn-sm" onClick={everything} disabled={busy}>

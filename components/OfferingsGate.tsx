@@ -26,7 +26,7 @@ export default function OfferingsGate({ relationship }: { relationship: Relation
         {copy.body}
       </p>
       {copy.action && (
-        <Link className="btn btn-gold" style={{ marginTop: 18 }} href={copy.action.href}>
+        <Link className="btn btn-primary" style={{ marginTop: 18 }} href={copy.action.href}>
           {copy.action.label}
         </Link>
       )}

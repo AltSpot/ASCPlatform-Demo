@@ -86,7 +86,7 @@ export default function SetupBanner({
         </div>
 
         {actionable.length > 0 && (
-          <Link className="btn btn-gold" href={`/wizard?step=${actionable[0].step}`}>
+          <Link className="btn btn-primary" href={`/wizard?step=${actionable[0].step}`}>
             {blocking ? 'Continue setup' : 'Finish setup'}
           </Link>
         )}

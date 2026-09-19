@@ -179,7 +179,7 @@ export default function StepInfo({
         </div>
 
         <div className="wiz-actions">
-          <button className="btn btn-gold" type="submit" disabled={busy}>
+          <button className="btn btn-primary" type="submit" disabled={busy}>
             {busy ? 'Saving…' : 'Save & continue'}
           </button>
         </div>

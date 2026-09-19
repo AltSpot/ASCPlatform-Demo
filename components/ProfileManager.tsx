@@ -116,7 +116,7 @@ export default function ProfileManager({
                 />
               </label>
             </div>
-            <button className="btn btn-gold btn-sm" onClick={create} disabled={busy}>
+            <button className="btn btn-primary btn-sm" onClick={create} disabled={busy}>
               Create profile
             </button>
           </div>

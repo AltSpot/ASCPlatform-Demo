@@ -212,7 +212,7 @@ export default function PreferencesForm({
             : `You asked for: ${words(saved)} Every deal you are eligible for stays on the marketplace; the ones that fit carry a For you mark, and ${saved.notifyMatches ? 'you will hear when one opens' : 'you chose not to be told when one opens'}.`}
         </p>
         <div className={s.savedActions}>
-          <Link className="btn btn-gold" href="/marketplace">
+          <Link className="btn btn-primary" href="/marketplace">
             See the marketplace →
           </Link>
           <Link className="btn btn-ghost" href={returnTo}>
@@ -388,7 +388,7 @@ export default function PreferencesForm({
             </span>
             <button
               type="button"
-              className="btn btn-gold"
+              className="btn btn-primary"
               onClick={() => save({ ...prefs, showEverything: false })}
               disabled={busy}
             >

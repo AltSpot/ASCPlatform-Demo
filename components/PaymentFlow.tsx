@@ -99,7 +99,7 @@ export default function PaymentFlow({
           after close.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link className="btn btn-gold" href="/dashboard">
+          <Link className="btn btn-primary" href="/dashboard">
             Back to dashboard
           </Link>
           <Link className="btn btn-ghost" href="/marketplace">

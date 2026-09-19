@@ -241,7 +241,7 @@ export default function StepKyc({
               Start camera
             </button>
             <button
-              className="btn btn-gold btn-sm"
+              className="btn btn-primary btn-sm"
               onClick={capture}
               disabled={!cameraLive}
             >
@@ -255,7 +255,7 @@ export default function StepKyc({
       </div>
 
       <div className="wiz-actions">
-        <button className="btn btn-gold" disabled={!ready || busy} onClick={submit}>
+        <button className="btn btn-primary" disabled={!ready || busy} onClick={submit}>
           Submit for screening &amp; continue
         </button>
         <span className="tiny">
