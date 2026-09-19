@@ -444,19 +444,19 @@
   height: 136px;
 }
 
+/* The company's own logo (components/CompanyLogo), centred on its band.
+   It keeps the shape it was drawn with: no radius and no box shadow here,
+   or a circle gets a square's shadow. */
 .cardMark {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
   z-index: 1;
-  width: 54px;
-  height: 54px;
-  margin: auto;
-  border-radius: 15px;
-  box-shadow: var(--shadow-lg);
+  transform: translate(-50%, -50%);
   transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 :global(.deal-card):hover .cardMark {
-  transform: scale(1.06);
+  transform: translate(-50%, -50%) scale(1.04);
 }
 
 .cardActions > * {

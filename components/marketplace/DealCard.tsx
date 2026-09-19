@@ -32,6 +32,7 @@ import { CircleAlert, CircleCheck, Eye, PanelRightOpen, Radar, Sparkles, Star, U
 import Link from 'next/link';
 import { useState } from 'react';
 
+import CompanyLogo from '@/components/CompanyLogo';
 import FundingProgress from '@/components/FundingProgress';
 import DealPeek from '@/components/marketplace/DealPeek';
 import WatchStar from '@/components/marketplace/WatchStar';
@@ -156,8 +157,7 @@ export default function DealCard({
         />
 
         {deal.logoUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img className={s.cardMark} src={deal.logoUrl} alt="" aria-hidden="true" />
+          <CompanyLogo className={s.cardMark} slug={deal.id} logoUrl={deal.logoUrl} />
         )}
 
         {watched || fromRadar ? (

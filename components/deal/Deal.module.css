@@ -185,10 +185,6 @@
 .filmMark {
   position: relative;
   z-index: 1;
-  width: min(38%, 190px);
-  height: auto;
-  opacity: 0.9;
-  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.55));
 }
 
 .filmPlay {

@@ -27,6 +27,7 @@ import type { ReactNode } from 'react';
 
 import { Radar, ShieldCheck, Users } from 'lucide-react';
 
+import CompanyLogo from '@/components/CompanyLogo';
 import BackerMark from '@/components/BackerMark';
 import FundingProgress from '@/components/FundingProgress';
 import Term from '@/components/Term';
@@ -61,8 +62,7 @@ export default function DealHero({
           ) : (
             <div className={s.filmEmpty} style={{ background: deal.art }}>
               {deal.logoUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img className={s.filmMark} src={deal.logoUrl} alt="" aria-hidden="true" />
+                <CompanyLogo className={s.filmMark} slug={deal.id} logoUrl={deal.logoUrl} scale={2.1} />
               )}
               {/* No play control and no "film to come" tag while the slot
                   is empty. A dead play button on the lead deal reads as an

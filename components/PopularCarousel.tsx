@@ -22,6 +22,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
+import CompanyLogo from '@/components/CompanyLogo';
+
 import s from './PopularCarousel.module.css';
 
 export interface PopularItem {
@@ -84,8 +86,7 @@ export default function PopularCarousel({ items }: { items: PopularItem[] }) {
           >
             <span className={s.art} style={{ background: item.art }} aria-hidden="true">
               {item.logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img className={s.mark} src={item.logoUrl} alt="" />
+                <CompanyLogo className={s.mark} slug={item.id} logoUrl={item.logoUrl} scale={0.68} />
               ) : (
                 <span className={s.monogram}>{item.name.slice(0, 1)}</span>
               )}
