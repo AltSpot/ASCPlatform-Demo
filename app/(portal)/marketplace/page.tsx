@@ -18,6 +18,7 @@ import { listDealsForViewer } from '@/lib/repositories/deals';
 import { getRelationshipView } from '@/lib/repositories/investor';
 import { canSeeOfferings } from '@/lib/relationship';
 import { getRadarBoard } from '@/lib/repositories/radar';
+import { stagesByDeal } from '@/lib/position-stage';
 import { listSubscriptions } from '@/lib/repositories/subscriptions';
 import { listWatchlist } from '@/lib/repositories/watchlist';
 import { parseQuickFilter } from '@/lib/explore';
@@ -83,6 +84,7 @@ export default async function MarketplacePage({
       watched={watchlist}
       fromRadar={fromRadar}
       daySeed={daySeed}
+      stages={stagesByDeal(subscriptions, new Date().getTime())}
       investedAmounts={Object.fromEntries(
         subscriptions
           .filter((s) => HELD_STATES.includes(s.state))

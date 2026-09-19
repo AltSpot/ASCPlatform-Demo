@@ -331,7 +331,7 @@ export default function WatchlistBoard({
       ) : null}
 
       {peek ? (
-        <DealPeek deal={peek} open onClose={() => setPeek(null)} />
+        <DealPeek deal={peek} stage={stages[peek.id]} open onClose={() => setPeek(null)} />
       ) : null}
     </>
   );

@@ -44,6 +44,7 @@ import OfferingsGate from '@/components/OfferingsGate';
 import RadarBoard from '@/components/radar/RadarBoard';
 import HowItWorks from '@/components/HowItWorks';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
+import type { PositionStageView } from '@/lib/position-stage';
 import {
   LEAD_FILTER_LABEL,
   NO_QUICK_FILTER,
@@ -66,6 +67,7 @@ export default function MarketplaceLanes({
   fromRadar,
   votedAmounts = {},
   investedAmounts = {},
+  stages = {},
   daySeed = 0,
   companies,
   radarSourced = [],
@@ -83,6 +85,8 @@ export default function MarketplaceLanes({
   votedAmounts?: Record<string, number>;
   /** What the member has in each deal they are in, by deal id. */
   investedAmounts?: Record<string, number>;
+  /** Where the member stands in each deal they have started. */
+  stages?: Record<string, PositionStageView>;
   /** Days since the epoch, from the server: rotates the Radar's Featured order. */
   daySeed?: number;
   companies: RadarCompanyView[];
@@ -356,6 +360,7 @@ export default function MarketplaceLanes({
             fromRadar={fromRadar}
             votedAmounts={votedAmounts}
             investedAmounts={investedAmounts}
+            stages={stages}
             filter={filter}
             bridgeHref="#radar"
             radarSourced={radarSourced}

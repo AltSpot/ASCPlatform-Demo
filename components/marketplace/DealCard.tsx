@@ -39,7 +39,7 @@ import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
 import { compact, money } from '@/lib/format';
-import { positionHref } from '@/lib/position-stage';
+import { positionHref, type PositionStageView } from '@/lib/position-stage';
 import { dealChip, isJustOpened } from '@/lib/funding';
 
 import s from './Marketplace.module.css';
@@ -51,6 +51,7 @@ export default function DealCard({
   fromRadar = false,
   votedAmount,
   investedAmount,
+  stage,
   radarSourced = false,
   onWatchChange,
 }: {
@@ -64,6 +65,8 @@ export default function DealCard({
   votedAmount?: number;
   /** What the member has in this deal, once they are in it. */
   investedAmount?: number;
+  /** Where the member stands in this deal, for the quick look. */
+  stage?: PositionStageView;
   /** The deal came off the Radar (whoever voted). */
   radarSourced?: boolean;
   /** Lets a shelf that tracks saves hear about them. */
@@ -236,7 +239,13 @@ export default function DealCard({
         </div>
       </div>
 
-      <DealPeek deal={deal} resume={resume} open={peek} onClose={() => setPeek(false)} />
+      <DealPeek
+        deal={deal}
+        resume={resume}
+        stage={stage}
+        open={peek}
+        onClose={() => setPeek(false)}
+      />
     </div>
   );
 }

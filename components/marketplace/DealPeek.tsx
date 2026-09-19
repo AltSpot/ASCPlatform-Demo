@@ -26,7 +26,9 @@
 import {
   ArrowRight,
   Building2,
+  CircleCheck,
   CircleDollarSign,
+  Clock,
   Eye,
   Layers,
   ShieldCheck,
@@ -45,6 +47,7 @@ import WaitlistButton from '@/components/WaitlistButton';
 import { SHOW_SPONSOR_ALIGNMENT } from '@/lib/config';
 import type { DealView, SubscriptionView } from '@/lib/domain';
 import { money } from '@/lib/format';
+import type { PositionStageView } from '@/lib/position-stage';
 import { dealChip } from '@/lib/funding';
 import { ASSET_CLASSES, industryLabel, isAssetClass } from '@/lib/taxonomy';
 
@@ -58,18 +61,35 @@ function firstSentence(text: string): string {
 export default function DealPeek({
   deal,
   resume,
+  stage,
   open,
   onClose,
 }: {
   deal: DealView;
   resume?: SubscriptionView;
+  /**
+   * Where this member stands in this deal (lib/position-stage.ts). The
+   * quick look used to offer a gold Invest to a member whose money was
+   * already in escrow, and said nothing to one who had signed and not
+   * sent. With a stage the panel opens on it, and its button is the next
+   * real step: finish signing, complete the investment, or the position.
+   */
+  stage?: PositionStageView;
   open: boolean;
   onClose: () => void;
 }) {
   const likes = (deal.whatWeLike.length > 0 ? deal.whatWeLike : deal.thesis).slice(0, 3);
   const klass = isAssetClass(deal.assetClass) ? ASSET_CLASSES[deal.assetClass].label : null;
 
-  const invest = resume ? (
+  const invest = stage?.actionNeeded ? (
+    <Link className="btn btn-action" href={stage.action.href}>
+      {stage.action.label}
+    </Link>
+  ) : stage ? (
+    <Link className="btn btn-primary" href={stage.action.href}>
+      {stage.action.label}
+    </Link>
+  ) : resume ? (
     resume.state === 'docs_signed' ? (
       <Link className="btn btn-action" href={`/payment/${resume.id}`}>
         Complete investment
@@ -150,6 +170,20 @@ export default function DealPeek({
       }
     >
       <div className={s.body}>
+        {stage ? (
+          <p className={s.stage} data-owed={stage.actionNeeded ? 'true' : undefined}>
+            {stage.moneyIn ? (
+              <CircleCheck size={17} strokeWidth={1.8} aria-hidden="true" />
+            ) : (
+              <Clock size={17} strokeWidth={1.8} aria-hidden="true" />
+            )}
+            <span>
+              <b>{stage.label}</b>
+              {stage.detail}
+            </span>
+          </p>
+        ) : null}
+
         {!deal.subscribable && !resume ? (
           <p className={s.viewOnly}>
             <Eye size={15} strokeWidth={1.7} aria-hidden="true" />

@@ -22,6 +22,7 @@ import TaxonomyFilters, {
 } from '@/components/filters/TaxonomyFilters';
 import DealCard from '@/components/marketplace/DealCard';
 import { stageBucket, type StageBucket } from '@/lib/explore';
+import type { PositionStageView } from '@/lib/position-stage';
 import type { LeadType } from '@/lib/funding';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import {
@@ -40,6 +41,7 @@ export default function DealShelf({
   fromRadar = [],
   votedAmounts = {},
   investedAmounts = {},
+  stages = {},
   filter,
   bridgeHref,
   mineOnly = false,
@@ -69,6 +71,7 @@ export default function DealShelf({
   fromRadar?: string[];
   votedAmounts?: Record<string, number>;
   investedAmounts?: Record<string, number>;
+  stages?: Record<string, PositionStageView>;
   /**
    * When the page owns the filter row (the marketplace, where one row
    * serves both lanes) the shelf takes its state from above and draws
@@ -164,6 +167,7 @@ export default function DealShelf({
             fromRadar={voted.has(deal.id)}
             votedAmount={votedAmounts[deal.id]}
             investedAmount={investedAmounts[deal.id]}
+            stage={stages[deal.id]}
             radarSourced={radarSourced.includes(deal.id)}
             onWatchChange={(next) => {
               setSavedIds((ids) =>
