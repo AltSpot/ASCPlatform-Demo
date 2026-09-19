@@ -955,8 +955,18 @@ survives any display and any colour vision.
 `ensureInvestorRecords` seeds every new investor. All of it is behind DEMO
 SEAM comments in `lib/repositories/investor.ts` and deletes together.
 
-- Six positions with quarterly `PositionMark` history and distributions, one
-  marked below cost and one realized. A book of one line says nothing.
+- **One story across positions, votes and the watchlist** (Tyler,
+  2026-09-19). Every position the seeded member HOLDS is in an SPV that has
+  closed (Solenne, Tidewater, Harborline, Vantage, and Northwind, exited),
+  with quarterly `PositionMark` history and distributions, one marked below
+  cost and one realized: nobody holds a marked position in a deal that is
+  still raising. Two subscriptions are in flight: **Aurelia is the loop
+  closed** (voted $25,000 on the Radar, the deal opened, the same $25,000
+  is now in escrow; the card says You are in) and **Tessellate is signed
+  and waiting to go to escrow** (Needs you). Votes: Ferrule (open, not yet
+  joined, the other Needs you row), Aurelia, and Orrery, still only a Radar
+  name. A vote never exceeds what was then invested. The watchlist holds
+  only open deals the member is not in (Calder, Meridel).
 - A signed-but-unfunded Calder commitment **with its agreement filed in
   Docs**, because the dashboard timeline says the documents were signed and
   the two surfaces have to agree.
