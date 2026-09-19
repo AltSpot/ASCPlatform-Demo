@@ -338,8 +338,17 @@
   --tint-gold:rgba(243,152,7,.07);
   --tint-gold-hover:rgba(243,152,7,.08);
   /* The filled secondary pill. Warmer than a tint, quieter than a CTA. */
-  --btn-fill:rgba(243,152,7,.16);
-  --btn-fill-hover:rgba(243,152,7,.24);
+  /* Neutral glass. These were a sixth of orange, which on a dark canvas is
+     brown (Tyler, 2026-09-19). */
+  --btn-fill:rgba(255,255,255,.055);
+  --btn-fill-hover:rgba(255,255,255,.10);
+  /* The primary: paper on the dark canvas. Colourless on purpose. */
+  --btn-primary-bg:#EFE9DC;
+  --btn-primary-bg-hover:#FFFFFF;
+  --btn-primary-fg:#15110A;
+  --btn-primary-halo:rgba(239,233,220,.10);
+  --btn-gold-halo:rgba(243,152,7,.16);
+  --btn-action-halo:rgba(229,102,26,.18);
   --tint-gold-faint:rgba(243,152,7,.02);
   --tint-ember:rgba(229,102,26,.08);
   --tint-ember-line:rgba(229,102,26,.45);
@@ -427,8 +436,10 @@
   --shadow-sm:0 10px 30px rgba(0,0,0,.5);
   --shadow-md:0 14px 44px rgba(0,0,0,.5);
   --shadow-lg:0 30px 80px rgba(0,0,0,.6);
-  --shadow-cta:0 6px 24px rgba(243,152,7,.25);
-  --shadow-cta-hover:0 10px 34px rgba(243,152,7,.38);
+  /* Flat since 2026-09-19: a selected pill sits on the page, it does not
+     float over a pool of its own light. */
+  --shadow-cta:0 1px 6px rgba(243,152,7,.10);
+  --shadow-cta-hover:0 2px 10px rgba(243,152,7,.16);
   --shadow-card-hover:0 22px 54px rgba(0,0,0,.5),0 0 28px rgba(243,152,7,.09);
   --shadow-frame:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(243,152,7,.12);
   /* What seats a small control on the surface it slides along: a
@@ -462,15 +473,18 @@
   --action-line:rgba(229,102,26,.55);
   --action-dot:rgba(255,248,236,.95);
   --fg-on-action:#1A0E04;
-  --shadow-action:0 8px 24px rgba(229,102,26,.32);
-  --shadow-action-hover:0 12px 32px rgba(229,102,26,.46);
+  --shadow-action:0 1px 6px rgba(229,102,26,.14);
+  --shadow-action-hover:0 2px 10px rgba(229,102,26,.20);
   /* The rim and the light on a secondary pill: a filled pill with a lit
      top edge and a faint gold rim reads as glass; a flat single-colour
      pill reads as a sticker (Tyler, 2026-09-17). */
-  --btn-rim:rgba(243,152,7,.22);
+  --btn-rim:rgba(255,255,255,.14);
+  --btn-rim-hover:rgba(255,255,255,.30);
   --btn-rim-quiet:rgba(255,255,255,.10);
   --btn-sheen:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0) 58%);
-  --cta-sheen:linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,.03) 52%,rgba(0,0,0,.04) 100%);
+  /* No sheen: the gold ramp is laid flat. Kept as a token so the modules
+     that layer it keep resolving. */
+  --cta-sheen:linear-gradient(transparent,transparent);
   --w-light:300; --w-regular:400; --w-medium:500; --w-semi:600;
 
   /* ============ STATUS ============ */
@@ -783,37 +797,78 @@ html[data-rail='mini']{--rail:74px}
   transition:transform .12s ease,box-shadow .12s ease,background .12s;
   text-decoration:none!important;font-family:var(--fb);
 }
-.btn:active{transform:translateY(1px)}
-/* THE BUTTONS (final pass, 2026-09-17). Every pill is built the same
-   way: a fill, a sheen falling from the top edge, a lit top lip, and a
-   rim of light or gold, so a control reads as a small pane and not as a
-   flat sticker. The primary rides the canonical gold to orange ramp and
-   is the loudest thing on any screen; the heat ramp is reserved for a
-   step already under way; the secondaries are tinted glass. */
+/* THE BUTTONS (Tyler, 2026-09-19, replacing the lit pills of 09-17).
+   Flat, and ranked. The sheen, the lit lip, the glow underneath, the
+   shine sweep and the hover lift are gone: a control that pretends to be
+   a physical object is what made a shelf of them noisy. What a button has
+   instead is a clear rank and one signature.
+
+   THE RANKS, and a screen uses as few as it can:
+     .btn-gold     MONEY MOVES. Begin investment, sign, send to escrow,
+                   invest. The gold ramp, flat. At most one on a screen,
+                   and never on a card in a grid.
+     .btn-primary  The main action of a page or a panel that is not money:
+                   continue, save, sign in, explore. Ink on paper (paper on
+                   ink in Daylight), the highest contrast on the canvas
+                   without any colour, so it never competes with gold.
+     .btn-ghost    The second action, and the repeated action in a grid
+                   (View deal on every card). Neutral glass and a hairline.
+                   No orange in its fill: that tint is what read as brown.
+     .btn-quiet    A row's own small action. Glass, no line.
+     .btn-action   A step already under way and waiting on the member.
+     .btn-vote     The vote is cast. Green, never money.
+
+   THE SIGNATURE is the orb, the same gold dot that ends the wordmark:
+   .btn-primary ends in one, and .btn-orb adds it to a ghost. On hover it
+   stretches toward the edge, which is the whole of the motion. */
+.btn{letter-spacing:-.006em}
+.btn-gold,.btn-primary,.btn-ghost,.btn-quiet,.btn-action,.btn-vote{
+  transition:background-color .16s ease,box-shadow .16s ease,color .16s ease,filter .16s ease;
+}
+.btn:active{transform:scale(.985)}
+
 .btn-gold{
-  position:relative;overflow:hidden;
   background:var(--as-gold);
-  background-image:var(--cta-sheen),var(--as-cta-gradient);
+  background-image:var(--as-cta-gradient);
   color:var(--fg-on-gold);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1px 0 rgba(0,0,0,.14),var(--shadow-cta);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);
 }
 .btn-gold:hover{
-  transform:translateY(-2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -1px 0 rgba(0,0,0,.14),var(--shadow-cta-hover);
   color:var(--fg-on-gold);
-  filter:saturate(1.08) brightness(1.04);
+  filter:brightness(1.07) saturate(1.04);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.26),0 0 0 4px var(--btn-gold-halo);
 }
-/* ACTION NEEDED (2026-09-17). The one button that means "you started
-   this and it is waiting on you": finish signing, or complete the
-   investment. It must out-rank every gold "View deal" on the shelf, so
-   it wears the heat ramp, hot amber into ember, with a light pulsing dot.
-   Never used for a first step. */
+
+.btn-primary{
+  background:var(--btn-primary-bg);
+  color:var(--btn-primary-fg);
+}
+.btn-primary:hover{
+  background:var(--btn-primary-bg-hover);
+  color:var(--btn-primary-fg);
+  box-shadow:0 0 0 4px var(--btn-primary-halo);
+}
+
+/* The orb. A dot at rest, a short bar on hover. */
+.btn-primary::after,.btn-orb::after{
+  content:'';flex:none;width:6px;height:6px;border-radius:var(--r-pill);
+  background:var(--as-cta-gradient);
+  margin-left:2px;
+  transition:width .22s cubic-bezier(.2,.7,.2,1);
+}
+.btn-primary:hover::after,.btn-orb:hover::after{width:16px}
+.btn-primary[disabled]::after,.btn-orb[disabled]::after{background:var(--as-text-muted)}
+@media (prefers-reduced-motion:reduce){.btn-primary::after,.btn-orb::after{transition:none}}
+
+/* ACTION NEEDED. "You started this and it is waiting on you": finish
+   signing, or complete the investment. The heat ramp, flat, with a
+   pulsing dot. Never used for a first step. */
 .btn-action{
   position:relative;
   background:var(--as-ember);
-  background-image:var(--cta-sheen),var(--action-fill);
+  background-image:var(--action-fill);
   color:var(--fg-on-action);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),inset 0 -1px 0 rgba(0,0,0,.16),0 0 0 1px var(--action-line),var(--shadow-action);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);
 }
 .btn-action::before{
   content:'';width:7px;height:7px;border-radius:50%;flex:none;
@@ -822,9 +877,9 @@ html[data-rail='mini']{--rail:74px}
   animation:action-pulse 2s ease-out infinite;
 }
 .btn-action:hover{
-  transform:translateY(-2px);
   color:var(--fg-on-action);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(0,0,0,.16),0 0 0 1px var(--action-line),var(--shadow-action-hover);
+  filter:brightness(1.06);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.26),0 0 0 4px var(--btn-action-halo);
 }
 @keyframes action-pulse{
   0%{box-shadow:0 0 0 0 rgba(255,248,236,.6)}
@@ -833,40 +888,29 @@ html[data-rail='mini']{--rail:74px}
 }
 @media (prefers-reduced-motion:reduce){.btn-action::before{animation:none}}
 
-/* The shine sweep from the marketing site, on the same clock. */
-.btn-gold::after{
-  content:'';position:absolute;top:0;bottom:0;left:0;width:55%;pointer-events:none;
-  background:linear-gradient(105deg,transparent,rgba(255,255,255,.34),transparent);
-  transform:translateX(-130%);animation:cta-shine 4.6s ease-in-out infinite;
-}
-@keyframes cta-shine{0%,72%{transform:translateX(-130%)}88%,100%{transform:translateX(300%)}}
-/* Secondary buttons are FILLED pills, not outlines (Tyler, 2026-09-16).
-   Ghost is the warm second action beside a gold primary; quiet is the
-   neutral one on a row. Neither draws a line: on glass an outlined
-   pill reads as a hole. */
+/* Secondary buttons are FILLED pills with a hairline, and neutral. */
 .btn-ghost{
-  background-color:var(--btn-fill);background-image:var(--btn-sheen);
+  background-color:var(--btn-fill);
   border-color:transparent;color:var(--ink);
-  box-shadow:inset 0 0 0 1px var(--btn-rim),inset 0 1px 0 rgba(255,255,255,.10),var(--inset-lift);
+  box-shadow:inset 0 0 0 1px var(--btn-rim);
 }
 .btn-ghost:hover{
-  background-color:var(--btn-fill-hover);border-color:transparent;color:var(--accent-hot);
-  transform:translateY(-1px);
-  box-shadow:inset 0 0 0 1px var(--btn-rim),inset 0 1px 0 rgba(255,255,255,.14),var(--inset-lift),0 8px 20px -10px rgba(243,152,7,.35);
+  background-color:var(--btn-fill-hover);border-color:transparent;color:var(--ink);
+  box-shadow:inset 0 0 0 1px var(--btn-rim-hover);
 }
 .btn-quiet{
-  background-color:var(--surface-3);background-image:var(--btn-sheen);
+  background-color:var(--surface-2);
   border-color:transparent;color:var(--as-text);
-  box-shadow:inset 0 0 0 1px var(--btn-rim-quiet),inset 0 1px 0 rgba(255,255,255,.08),var(--inset-lift);
+  box-shadow:none;
 }
 /* The vote. Green, because on this platform green is demand growing,
    and a vote is demand the member is adding. Never used for money. */
 .btn-vote{
   background:var(--vote-gradient);color:var(--fg-on-vote);
-  border-color:transparent;box-shadow:var(--shadow-vote);
+  border-color:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
 }
-.btn-vote:hover{transform:translateY(-2px);box-shadow:var(--shadow-vote-hover);color:var(--fg-on-vote)}
-.btn-quiet:hover{background-color:var(--btn-fill);color:var(--accent-hot);transform:translateY(-1px)}
+.btn-vote:hover{filter:brightness(1.06);color:var(--fg-on-vote)}
+.btn-quiet:hover{background-color:var(--surface-3);color:var(--as-text)}
 /* Disabled is a colour, not an opacity: the label still has to be read. */
 .btn[disabled]{background:var(--panel-2);color:var(--as-text-muted);border-color:var(--hair);cursor:not-allowed;box-shadow:none}
 .btn-block{width:100%}
@@ -1470,9 +1514,16 @@ html[data-theme='light']{
   --tint-gold:rgba(243,152,7,.16);
   --tint-gold-hover:rgba(243,152,7,.24);
   /* A real gold pill, not a beige one. */
-  --btn-fill:rgba(243,152,7,.30);
-  --btn-fill-hover:rgba(243,152,7,.44);
-  --btn-rim:rgba(255,255,255,.85);
+  --btn-fill:rgba(255,255,255,.58);
+  --btn-fill-hover:rgba(255,255,255,.86);
+  --btn-rim:rgba(84,58,22,.20);
+  --btn-rim-hover:rgba(84,58,22,.42);
+  /* The primary inverts: ink on the light canvas. */
+  --btn-primary-bg:#1D1810;
+  --btn-primary-bg-hover:#000000;
+  --btn-primary-fg:#F8F3E9;
+  --btn-primary-halo:rgba(29,24,16,.12);
+  --btn-gold-halo:rgba(196,120,30,.22);
   --btn-rim-quiet:rgba(255,255,255,.90);
   --btn-sheen:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.06) 60%);
   --shadow-action:0 8px 22px rgba(229,102,26,.30);
@@ -1492,8 +1543,8 @@ html[data-theme='light']{
   --shadow-md:0 2px 6px rgba(110,62,18,.06),0 14px 36px rgba(130,72,20,.11);
   --shadow-lg:0 6px 18px rgba(110,62,18,.07),0 30px 70px rgba(130,72,20,.16);
   --shadow:0 10px 34px rgba(130,72,20,.13);
-  --shadow-cta:0 6px 20px rgba(243,152,7,.42);
-  --shadow-cta-hover:0 10px 30px rgba(243,152,7,.55);
+  --shadow-cta:0 1px 6px rgba(196,120,30,.18);
+  --shadow-cta-hover:0 2px 10px rgba(196,120,30,.26);
   --shadow-card-hover:
     inset 0 1px 0 rgba(255,255,255,1),
     0 2px 4px rgba(110,62,18,.07),
@@ -1651,7 +1702,6 @@ html[data-theme='light'] ::selection{background:rgba(243,152,7,.28);color:var(--
 
 /* The quiet button is a tinted pane here, not a lighter hole. */
 html[data-theme='light'] .btn-quiet{background:var(--surface-2)}
-html[data-theme='light'] .btn-ghost:hover{color:var(--accent-hot)}
 
 /* Inputs are the one place the ladder goes down rather than up: a field
    is a recess you type into, and on glass that has to be a warm inset
