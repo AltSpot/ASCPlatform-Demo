@@ -4,98 +4,190 @@
     {
       "name": "01-dashboard-one-story",
       "steps": [
-        { "go": "/reshoot?to=/dashboard" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1200 },
-        { "eval": "(() => { const t = document.body.innerText; if (/\\$100,000/.test(t)) throw new Error('a $100,000 vote is still on the dashboard'); if (!/Aurelia Labs/.test(t)) throw new Error('Aurelia missing'); })()" }
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/Aurelia Labs/.test(t)) throw new Error('Aurelia missing'); })()"
+        }
       ]
     },
     {
       "name": "02-book-is-coherent",
       "capture": false,
       "steps": [
-        { "go": "/reshoot?to=/portfolio" },
-        { "wait": 1200 },
-        { "eval": "(() => { const t = document.body.innerText; for (const n of ['Solenne Health', 'Tidewater Industrial', 'Harborline', 'Vantage']) if (!t.includes(n)) throw new Error('position missing: ' + n); if (/AltSpot Growth Fund/.test(document.querySelector('table')?.innerText ?? '')) throw new Error('still holding the open Growth Fund'); })()" },
-        { "eval": "fetch('/api/watchlist').then(r => r.json()).then(w => { const ids = Array.isArray(w) ? w : (w.items ?? w.data ?? []); if (ids.includes('growth-fund')) throw new Error('watchlist still holds a deal the member is in'); })" }
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; for (const n of ['Solenne Health', 'Tidewater Industrial', 'Harborline', 'Vantage']) if (!t.includes(n)) throw new Error('position missing: ' + n); if (/AltSpot Growth Fund/.test(document.querySelector('table')?.innerText ?? '')) throw new Error('still holding the open Growth Fund'); })()"
+        },
+        {
+          "eval": "fetch('/api/watchlist').then(r => r.json()).then(w => { const ids = Array.isArray(w) ? w : (w.items ?? w.data ?? []); if (ids.includes('growth-fund')) throw new Error('watchlist still holds a deal the member is in'); })"
+        }
       ]
     },
     {
       "name": "03-dashboard-votes-and-watchlist",
       "steps": [
-        { "go": "/reshoot?to=/dashboard" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1200 },
-        { "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'center' }); const sec = h.closest('section'); if (!/you are in/i.test(sec.innerText)) throw new Error('Aurelia vote row does not say you are in'); if (!/\\$25,000/.test(sec.innerText)) throw new Error('Aurelia vote is not $25,000'); })()" },
-        { "wait": 500 }
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); h.scrollIntoView({ block: 'center' }); const sec = h.closest('section'); if (!/you are in/i.test(sec.innerText)) throw new Error('Aurelia vote row does not say you are in'); if (!/\\$25,000/.test(sec.innerText)) throw new Error('Aurelia vote is not $25,000'); })()"
+        },
+        {
+          "wait": 500
+        }
       ]
     },
     {
       "name": "04-marketplace-ember-darker",
       "steps": [
-        { "go": "/reshoot?to=/marketplace" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1200 },
-        { "eval": "(() => { const card = [...document.querySelectorAll('.deal-card')].find(c => /Aurelia/.test(c.textContent)); if (!/you are in/i.test(card.innerText)) throw new Error('Aurelia card does not say You are in'); })()" },
-        { "scroll": "#open-now" },
-        { "wait": 500 }
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const card = [...document.querySelectorAll('.deal-card')].find(c => /Aurelia/.test(c.textContent)); if (!/you are in/i.test(card.innerText)) throw new Error('Aurelia card does not say You are in'); })()"
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
       ]
     },
     {
       "name": "05-deal-cost-cards",
       "steps": [
-        { "go": "/reshoot?to=/deals/calder" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1200 },
-        { "eval": "(() => { const sec = document.querySelector('#terms'); if (!/What it costs/i.test(sec.innerText)) throw new Error('no cost cards'); const over = [...sec.querySelectorAll('*')].find(el => el.scrollWidth > el.clientWidth + 2 && getComputedStyle(el).overflowX !== 'visible' && /fee/i.test(el.innerText || '')); if (over) throw new Error('a cost element still scrolls sideways'); [...sec.querySelectorAll('h3')].find(h => /What it costs/i.test(h.textContent)).scrollIntoView({ block: 'start' }); })()" },
-        { "wait": 500 }
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const sec = document.querySelector('#terms'); if (!/What it costs/i.test(sec.innerText)) throw new Error('no cost cards'); const over = [...sec.querySelectorAll('*')].find(el => el.scrollWidth > el.clientWidth + 2 && getComputedStyle(el).overflowX !== 'visible' && /fee/i.test(el.innerText || '')); if (over) throw new Error('a cost element still scrolls sideways'); [...sec.querySelectorAll('h3')].find(h => /What it costs/i.test(h.textContent)).scrollIntoView({ block: 'start' }); })()"
+        },
+        {
+          "wait": 500
+        }
       ]
     },
     {
       "name": "06-scenarios-in-dollars",
       "steps": [
-        { "go": "/reshoot?to=/deals/calder" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1200 },
-        { "eval": "(() => { const sec = document.querySelector('#scenarios'); const t = sec.innerText; if (!/Nothing comes back/.test(t)) throw new Error('no total loss'); if (!/comes back/.test(t)) throw new Error('no dollar outcome'); if (!/net/i.test(t)) throw new Error('not net'); if (!/Illustrative only/.test(t)) throw new Error('disclaimer missing'); if (!/No scenario is more likely/i.test(t)) throw new Error('no-likelihood line missing'); const first = sec.querySelector('ol li'); if (!/Scenario A/.test(first.innerText)) throw new Error('downside not first'); })()" },
-        { "scroll": "#scenarios" },
-        { "wait": 500 }
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const sec = document.querySelector('#scenarios'); const t = sec.innerText; if (!/Nothing comes back/.test(t)) throw new Error('no total loss'); if (!/comes back/.test(t)) throw new Error('no dollar outcome'); if (!/net/i.test(t)) throw new Error('not net'); if (!/Illustrative only/.test(t)) throw new Error('disclaimer missing'); if (!/No scenario is more likely/i.test(t)) throw new Error('no-likelihood line missing'); const first = sec.querySelector('ol li'); if (!/Scenario A/.test(first.innerText)) throw new Error('downside not first'); })()"
+        },
+        {
+          "scroll": "#scenarios"
+        },
+        {
+          "wait": 500
+        }
       ]
     },
     {
       "name": "07-checkout-amount",
       "steps": [
-        { "go": "/reshoot?to=/invest/calder" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1400 },
-        { "eval": "(() => { const t = document.body.innerText; if (!/How much do you want to invest\\?/.test(t)) throw new Error('no amount question'); if (!/You send to escrow/.test(t)) throw new Error('no total'); if (!/How the fees work/.test(t)) throw new Error('no fee fold'); })()" }
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/How much do you want to invest\\?/.test(t)) throw new Error('no amount question'); if (!/You send to escrow/.test(t)) throw new Error('no total'); if (!/How the fees work/.test(t)) throw new Error('no fee fold'); })()"
+        }
       ]
     },
     {
       "name": "08-checkout-fees-open",
       "steps": [
-        { "go": "/reshoot?to=/invest/calder" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1400 },
-        { "eval": "(() => { const pills = [...document.querySelectorAll('button')].filter(b => /^\\$50,000/.test(b.textContent.trim())); pills[0].click(); document.querySelector('details summary').click(); })()" },
-        { "wait": 600 },
-        { "eval": "(() => { const t = document.body.innerText; if (!/\\$52,500/.test(t)) throw new Error('quick amount did not update the total'); if (!/ends early/.test(t) || !/runs longer/.test(t)) throw new Error('both halves missing in the fold'); if (!/pro rata/.test(t)) throw new Error('pro rata missing'); })()" }
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const pills = [...document.querySelectorAll('button')].filter(b => /^\\$50,000/.test(b.textContent.trim())); pills[0].click(); document.querySelector('details summary').click(); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/\\$52,500/.test(t)) throw new Error('quick amount did not update the total'); if (!/ends early/.test(t) || !/runs longer/.test(t)) throw new Error('both halves missing in the fold'); if (!/pro rata/.test(t)) throw new Error('pro rata missing'); })()"
+        }
       ]
     },
     {
       "name": "09-checkout-daylight",
       "steps": [
-        { "go": "/reshoot?to=/invest/meridel" },
-        { "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'" },
-        { "wait": 1400 }
+        {
+          "go": "/reshoot?to=/invest/meridel"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.dataset.theme='light'"
+        },
+        {
+          "wait": 1400
+        }
       ]
     },
     {
       "name": "10-portfolio-ember",
       "steps": [
-        { "go": "/reshoot?to=/portfolio" },
-        { "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')" },
-        { "wait": 1200 }
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        }
       ]
     }
   ]

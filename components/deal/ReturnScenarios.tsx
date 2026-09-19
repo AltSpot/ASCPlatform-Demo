@@ -26,8 +26,8 @@
  */
 import { CircleAlert } from 'lucide-react';
 
-import { SHOW_CARRY_TERMS, SHOW_FEE_TERMS } from '@/lib/config';
-import { feeBreakdown, feeSentence } from '@/lib/fees';
+import { CARRY_PERCENT, FEE_TERMS, SHOW_CARRY_TERMS, SHOW_FEE_TERMS } from '@/lib/config';
+import { feeBreakdown } from '@/lib/fees';
 import { dateStr, money } from '@/lib/format';
 import {
   evaluateScenarios,
@@ -73,11 +73,11 @@ export default function ReturnScenarios({
   const rows = results.map((r) => ({ ...r, back: roundHundred(sent * r.netMultiple) }));
   const scale = Math.max(sent, ...rows.map((r) => r.back));
 
-  const sentence = feeSentence();
-  const netOf =
-    SHOW_FEE_TERMS || SHOW_CARRY_TERMS
-      ? `${sentence.charAt(0).toLowerCase()}${sentence.slice(1)}`
-      : 'the platform fee, the management fee reserve and carried interest, each as described in the offering documents.';
+  /* One sentence: what net is after. The full fee wording is on the Terms
+     cards and in checkout; here it would bury the bars. */
+  const netOf = SHOW_FEE_TERMS
+    ? `the ${FEE_TERMS.annualPercent}% a year management fee (${FEE_TERMS.termYears} years), the ${money(FEE_TERMS.flatPerSpv)} formation and administration fee per SPV, and ${SHOW_CARRY_TERMS ? `${CARRY_PERCENT}% ` : ''}carried interest, as the offering documents describe them.`
+    : 'the platform fee, the management fee reserve and carried interest, each as described in the offering documents.';
 
   const tiles: { k: string; v: string; note?: string }[] = [
     { k: 'Entry', v: `${compactMoney(inputs.entryPreMoney)} pre`, note: `${compactMoney(post)} post` },
