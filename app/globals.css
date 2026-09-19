@@ -480,6 +480,12 @@
      pill reads as a sticker (Tyler, 2026-09-17). */
   --btn-rim:rgba(255,255,255,.14);
   --btn-rim-hover:rgba(255,255,255,.30);
+  /* A small control (a filter chip, a sort pill, Details). On the dark
+     canvases it is the ordinary raised step; Daylight restates it. */
+  --control-fill:var(--surface-2);
+  --control-fill-hover:var(--surface-3);
+  --control-rim:var(--inset-edge);
+  --control-rim-hover:var(--btn-rim-hover);
   --btn-rim-quiet:rgba(255,255,255,.10);
   --btn-sheen:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0) 58%);
   /* No sheen: the gold ramp is laid flat. Kept as a token so the modules
@@ -857,6 +863,8 @@ html[data-rail='mini']{--rail:74px}
   transition:width .22s cubic-bezier(.2,.7,.2,1);
 }
 .btn-primary:hover::after,.btn-orb:hover::after{width:16px}
+/* A button that already ends in an icon does not also end in the orb. */
+.btn-primary:has(> svg:last-child)::after,.btn-orb:has(> svg:last-child)::after{display:none}
 .btn-primary[disabled]::after,.btn-orb[disabled]::after{background:var(--as-text-muted)}
 @media (prefers-reduced-motion:reduce){.btn-primary::after,.btn-orb::after{transition:none}}
 
@@ -1514,10 +1522,17 @@ html[data-theme='light']{
   --tint-gold:rgba(243,152,7,.16);
   --tint-gold-hover:rgba(243,152,7,.24);
   /* A real gold pill, not a beige one. */
-  --btn-fill:rgba(255,255,255,.58);
-  --btn-fill-hover:rgba(255,255,255,.86);
-  --btn-rim:rgba(84,58,22,.20);
-  --btn-rim-hover:rgba(84,58,22,.42);
+  /* ON A LIGHT PAGE A BUTTON IS INK, NOT WHITE (Tyler, 2026-09-19). White
+     glass with a white rim on cream could not be found. A secondary is an
+     ink tint with a firm ink hairline; hover deepens both. */
+  --btn-fill:rgba(29,24,16,.055);
+  --btn-fill-hover:rgba(29,24,16,.105);
+  --btn-rim:rgba(29,24,16,.34);
+  --btn-rim-hover:rgba(29,24,16,.72);
+  --control-fill:rgba(29,24,16,.05);
+  --control-fill-hover:rgba(29,24,16,.10);
+  --control-rim:rgba(29,24,16,.20);
+  --control-rim-hover:rgba(29,24,16,.46);
   /* The primary inverts: ink on the light canvas. */
   --btn-primary-bg:#1D1810;
   --btn-primary-bg-hover:#000000;
@@ -1701,7 +1716,23 @@ html[data-theme='light'] body::after{opacity:.012}
 html[data-theme='light'] ::selection{background:rgba(243,152,7,.28);color:var(--as-text)}
 
 /* The quiet button is a tinted pane here, not a lighter hole. */
-html[data-theme='light'] .btn-quiet{background:var(--surface-2)}
+/* Daylight buttons. Quiet is an ink tint with no line; the orb ghost (View
+   deal on every card) is a crisp ink outline over the card's own glass, so
+   a grid of them is findable without being loud; gold gets a deeper edge
+   so it holds against the apricot ground. */
+html[data-theme='light'] .btn-quiet{background-color:rgba(29,24,16,.075);color:var(--as-text)}
+html[data-theme='light'] .btn-quiet:hover{background-color:rgba(29,24,16,.13)}
+html[data-theme='light'] .btn-ghost.btn-orb{
+  background-color:rgba(255,255,255,.62);
+  box-shadow:inset 0 0 0 1.25px rgba(29,24,16,.62);
+}
+html[data-theme='light'] .btn-ghost.btn-orb:hover{
+  background-color:var(--btn-primary-bg);color:var(--btn-primary-fg);
+  box-shadow:inset 0 0 0 1.25px var(--btn-primary-bg);
+}
+html[data-theme='light'] .btn-gold,
+html[data-theme='light'] .btn-action{box-shadow:inset 0 0 0 1px rgba(122,72,8,.34)}
+html[data-theme='light'] .btn[disabled]{background:rgba(29,24,16,.06);color:var(--as-text-muted);box-shadow:inset 0 0 0 1px rgba(29,24,16,.12)}
 
 /* Inputs are the one place the ladder goes down rather than up: a field
    is a recess you type into, and on glass that has to be a warm inset
