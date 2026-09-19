@@ -1,0 +1,288 @@
+{
+  "out": "screenshots/phase2/15-portfolio-terminal-radar",
+  "shots": [
+    {
+      "name": "01-dashboard-steps-with-deadline",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); if (!row) throw new Error('no Tessellate row'); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); if (!b) throw new Error('no Steps button'); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/to escrow to keep your spot/i.test(t)) throw new Error('timeline does not say what is owed'); if (!/time left/i.test(t)) throw new Error('no Time left fact'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-your-votes-green-dot-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)); if (!h) throw new Error('no section: Your votes'); h.scrollIntoView({ block: 'start', behavior: 'instant' }); const sec = h.closest('section'); if (!sec.querySelector('.live-dot')) throw new Error('Open now has no live dot'); })()"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "03-radar-order-featured",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const pills = [...document.querySelectorAll('button[aria-pressed]')].filter(b => /^(Featured|Most voted|Rising|New)$/.test(b.textContent.trim())); if (pills.length !== 4) throw new Error('sort pills: ' + pills.length); if (!/you voted .?[0-9]/i.test(document.body.innerText)) throw new Error('no voted amount on a card'); pills[0].scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "04-radar-order-rising",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const pills = [...document.querySelectorAll('button[aria-pressed]')].filter(b => /^(Featured|Most voted|Rising|New)$/.test(b.textContent.trim())); if (pills.length !== 4) throw new Error('sort pills: ' + pills.length); if (!/you voted .?[0-9]/i.test(document.body.innerText)) throw new Error('no voted amount on a card'); pills[0].scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Rising'); b.click(); })()"
+        },
+        {
+          "wait": 700
+        }
+      ]
+    },
+    {
+      "name": "05-deal-hero-voted-amount",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/aurelia"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "eval": "(() => { if (!/you voted .?25/i.test(document.body.innerText)) throw new Error('hero does not show the vote'); })()"
+        }
+      ]
+    },
+    {
+      "name": "06-portfolio-top",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/You put in/.test(t)) throw new Error('no plain sentence'); if (!/times/.test(t)) throw new Error('no multiple in words'); if (document.querySelectorAll('nav[aria-label=\"On this page\"] a').length < 7) throw new Error('jump row short'); })()"
+        }
+      ]
+    },
+    {
+      "name": "07-portfolio-curve-1y",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === '1Y'); if (!b) throw new Error('no 1Y range'); b.click(); document.getElementById('p-curve').scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { if (!/Change in value/.test(document.body.innerText)) throw new Error('no window figures'); })()"
+        }
+      ]
+    },
+    {
+      "name": "08-portfolio-by-position-percent",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const el = document.getElementById('p-drivers'); el.scrollIntoView({ block: 'start', behavior: 'instant' }); if (!/Percent/i.test(el.innerText) || !/Dollars/i.test(el.innerText)) throw new Error('no mode toggle'); if (!/Exited/.test(el.innerText)) throw new Error('exit not labelled'); if (!/−/.test(el.innerText)) throw new Error('the loss is missing'); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "09-portfolio-by-position-dollars",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const el = document.getElementById('p-drivers'); el.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "eval": "(() => { const el = document.getElementById('p-drivers'); [...el.querySelectorAll('button')].find(b => /^dollars$/i.test(b.textContent.trim())).click(); })()"
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "10-portfolio-ledger-and-exposure",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { document.getElementById('p-holdings').scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "11-portfolio-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { document.getElementById('p-curve').scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "12-terminal-for-you",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!/start here/i.test(t)) throw new Error('no For you'); if (!/filed today/i.test(t)) throw new Error('no live bar'); if (/What we are writing/i.test(t)) throw new Error('old library title'); if (!/Media and content/i.test(t)) throw new Error('no Media and content'); })()"
+        }
+      ]
+    },
+    {
+      "name": "13-terminal-media-and-content",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2,h3')].find(x => /Media and content/i.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "14-terminal-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1500
+        }
+      ]
+    }
+  ]
+}
