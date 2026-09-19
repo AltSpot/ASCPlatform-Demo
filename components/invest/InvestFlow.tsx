@@ -572,7 +572,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 onClick={beginDocs}
                 disabled={busy || retirementBlocked}
               >
-                {busy ? 'One moment…' : 'Continue to documents →'}
+                {busy ? 'One moment…' : 'Continue to documents'}
               </button>
 
               <ul className={styles.assure}>

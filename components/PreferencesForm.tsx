@@ -213,7 +213,7 @@ export default function PreferencesForm({
         </p>
         <div className={s.savedActions}>
           <Link className="btn btn-primary" href="/marketplace">
-            See the marketplace →
+            See the marketplace
           </Link>
           <Link className="btn btn-ghost" href={returnTo}>
             {returnTo === '/settings' ? 'Back to Settings' : 'Back to your dashboard'}

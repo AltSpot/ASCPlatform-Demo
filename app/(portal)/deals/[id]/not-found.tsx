@@ -20,7 +20,7 @@ export default function DealNotFound() {
         Everything currently open is on the marketplace.
       </p>
       <Link className="btn btn-primary" href="/marketplace">
-        Open the marketplace →
+        Open the marketplace
       </Link>
     </div>
   );

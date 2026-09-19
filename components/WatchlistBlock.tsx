@@ -90,7 +90,7 @@ export default function WatchlistBlock({ deals }: { deals: DealShelfItem[] }) {
           Save the deals you are weighing and they collect here.
         </p>
         <Link className="btn btn-primary btn-sm" href="/marketplace">
-          Explore investments →
+          Explore investments
         </Link>
       </div>
     );

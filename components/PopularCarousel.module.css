@@ -243,3 +243,15 @@
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
+
+/* ---------- Daylight controls (2026-09-19) ----------
+   The arrow floats over tiles, so it stays solid, but it takes the primary's
+   ink so it can be found on a light row. */
+:global(html[data-theme='light']) .navBtn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  box-shadow: none;
+}
+:global(html[data-theme='light']) .navBtn:hover {
+  background: var(--btn-primary-bg-hover);
+}
