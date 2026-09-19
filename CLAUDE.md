@@ -230,6 +230,13 @@ Two behaviours that are easy to get wrong:
 - **Expiry is swept on read**, not by a scheduler. Any authenticated read of a
   user's subscriptions lapses overdue commitments first. In production, move this
   to a job and keep the read-side sweep as a backstop.
+- **Ten days to reach escrow** (Tyler, 2026-09-19). Signing reserves the
+  spot; the member then has `ESCROW_WINDOW_DAYS` (10) to send the money, or
+  the admission cut-off if that comes sooner (`escrowDeadline`). After that
+  the subscription lapses and the allocation returns to the deal for the
+  next member. Every surface that shows the clock says what is owed and by
+  when ("Send $50,000 to escrow by 22 Sep · 3 days left"), never a bare
+  count of days.
 - **The deadline is the admission cut-off** (`lib/funding.ts`,
   `ADMISSION_CUTOFF_HOURS`, 24 before the wire on the closing date). Signing
   sets `fundingDeadline` to it. From then admissions are closed: start, sign
@@ -303,6 +310,18 @@ The wire (`lib/terminal/news.ts`) is different: those are other people's
 stories, and a wire item with a `url` links to its own source. That is correct
 and is not the thing being brought in-house.
 
+**The Terminal opens on For you** (Tyler, 2026-09-19).
+`lib/terminal/for-you.ts` picks three library pieces from what the platform
+already knows (votes, positions held against twenty, a subscription waiting
+on escrow or in it), each with its reason in words, and the wire stories in
+the categories the member follows. Rules, not a model, pure and tested
+(`tests/for-you.test.ts`). It curates education, never an offering. A live
+bar dates the wire ("N stories filed today"), the library is titled **Media
+and content**, and tiles wear `components/terminal/TerminalArt`: an
+illustration drawn from the slug (sheets for an article, a chart for a
+report, a waveform for a podcast) over the piece's own gradient. No stock
+photography and no dependency; `art` is where a real image URL goes.
+
 Every library piece carries a `sourceNote`, for the same reason every Spot
 answer carries a provenance line. No piece names a return, projects one, or
 recommends an action, and deal writing belongs on the deal page where the
@@ -336,9 +355,26 @@ occupancy) does not exist yet and should not be faked into these columns.
 ### Portfolio
 
 **The page is chart-led.** The value curve (`components/portfolio/ValueCurve`),
-the driver bars (`Drivers`), the two-bar allocation (`AllocationBreakdown`) and
+the per-position bars (`PositionReturns`), the two-bar allocation (`AllocationBreakdown`) and
 the cash-flow chart (`CashFlow`) all read the same figures the ledger table
 does, so a chart and a number on this page cannot disagree.
+
+**The page reads top to bottom as one argument** (Tyler, 2026-09-19): the
+book in one plain sentence, the capital account (its jargon labels open Spot
+through `Term`), a jump row, Performance over time, How each position is
+doing, the Positions ledger directly under the chart of the same positions,
+Exposure, Building the sleeve, Distributions, Fees, and Held elsewhere last
+because it is outside every AltSpot figure. The methodology note is a folded
+`<details>`. `PositionReturns` replaced `Drivers`: one bar per position
+from a shared zero line, read as **Percent** (how well it did for its size)
+or **Dollars** (what it did to the total), gold up and ember down, exits
+labelled, losses never omitted. `ValueCurve` has a range (1Y, 2Y, All,
+offered only when it would show less than everything), two layers that
+switch off (Invested, and Paid back as a green band at the foot of the
+area), guide lines, and three figures for the chosen window. **Change in
+value leaves out money the member added**, so a new position never reads as
+a gain. The floor stays zero in every range. `CollapsibleSection` takes an
+`anchor` when a page links to it.
 
 `PositionMark` is the history behind the curves. Marks arrive per reporting
 period and do not move between them, so `buildPortfolioSeries` in
@@ -754,6 +790,19 @@ the shelf and on the dashboard's Open now, because that is the mechanic proven
 rather than sloganed. `?view=radar` scrolls to the board so old links and
 Spot's page context keep working. The dashboard's rows are titled **Your
 votes** so the verb is the same at both zoom levels.
+
+**The Radar's order** (Tyler, 2026-09-19, `lib/radar-rank.ts`, pure and
+tested). Sorting by total dollars alone is a rich-get-richer loop: the top
+row collects the votes because it is the top row. The default, **Featured**,
+interleaves three pools: leaders by dollars, risers by momentum (dollars in
+the last `RECENT_DAYS` against the total, so a small name moving fast
+ranks) and a discovery slot for names with the fewest votes, rotated by a
+day seed so every name gets a turn near the top and the board is the same
+for every member on a given day. **Most voted**, **Rising** and **New** are
+one press away. `recentDollars` and `listedDaysAgo` are a DEMO SEAM hash in
+`lib/repositories/radar.ts` until vote timestamps are aggregated. A card
+the member voted on says the amount ("You voted $25K"), on the shelf, the
+Radar and the deal hero.
 
 **Yours, and the Watchlist page** (Tyler, 2026-09-17). A deal the member
 saved or voted for before it opened, and a Radar card they voted on, wear a
