@@ -730,6 +730,23 @@ resolve, and `--shadow-cta` is a whisper, so a selected nav pill sits on
 the page rather than floating over its own light. Before adding a gold
 button, ask whether pressing it moves money. If not, it is a primary.
 
+**On a light page a control is ink, not white** (Tyler, 2026-09-19). White
+glass with a white rim on Daylight's cream could not be found. In Daylight
+`.btn-ghost` is an ink tint with a firm ink hairline, `.btn-quiet` an ink
+tint with no line, the orb ghost (View deal on every card) a crisp ink
+outline that fills with ink on hover, gold and action carry a deeper edge,
+and disabled is an ink wash. Small module controls (filter chips, sort
+pills, Details, How it works, quick amounts, layer toggles, the jump row,
+close buttons, the watchlist's View pills) read `--control-fill` and
+`--control-rim` through a `:global(html[data-theme='light'])` block at the
+foot of their module; each block excludes the control's own selected
+state, which keeps the fill it paints for itself. On the dark canvases
+those tokens are the ordinary raised step, so Ember and Ice did not move.
+A new interactive pill gets the same block. A primary that ends in an icon
+drops the orb, and a primary's label never also carries a text arrow.
+`screenshots/phase2/19-daylight-buttons.plan.json` walks fourteen pages in
+Daylight and fails if any secondary is still white.
+
 ### Institutional polish (Tyler, 2026-09-19)
 
 - **One footer under every signed-in page** (`components/PortalFooter`,

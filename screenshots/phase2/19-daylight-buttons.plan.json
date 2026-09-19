@@ -1,0 +1,282 @@
+{
+  "out": "screenshots/phase2/19-daylight-buttons",
+  "shots": [
+    {
+      "name": "01-dashboard",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-dashboard-positions",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "03-marketplace-shelf",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "04-radar-board",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Featured'); b.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "05-deal-page",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "06-checkout-amount",
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "07-allocation-reserved",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1300
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const a = document.querySelector('a[href^=\"/payment/\"]'); location.href = a.getAttribute('href'); })()"
+        },
+        {
+          "wait": 2200
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "08-portfolio",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "09-portfolio-positions",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "document.getElementById('p-drivers').scrollIntoView({ block: 'start', behavior: 'instant' })"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "10-watchlist",
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "11-terminal",
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "12-preferences",
+      "steps": [
+        {
+          "go": "/reshoot?to=/preferences"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "13-settings",
+      "steps": [
+        {
+          "go": "/reshoot?to=/settings"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    },
+    {
+      "name": "14-docs",
+      "steps": [
+        {
+          "go": "/reshoot?to=/docs"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "(() => { const bad = []; for (const b of document.querySelectorAll('.btn-ghost, .btn-quiet')) { const r = b.getBoundingClientRect(); if (r.width === 0) continue; const cs = getComputedStyle(b); const line = /rgba?\\(29, 24, 16/.test(cs.boxShadow); const fill = /rgba?\\(29, 24, 16/.test(cs.backgroundColor); if (!line && !fill) bad.push(b.textContent.trim().slice(0, 24)); } if (bad.length) throw new Error('white secondaries: ' + bad.join(' | ')); })()"
+        }
+      ]
+    }
+  ]
+}
