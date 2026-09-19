@@ -1,31 +1,33 @@
 /**
- * Illustrative return scenarios (counsel's build spec, 2026-09-17),
- * simplified to what the spec requires and no more (Tyler: "way more
- * digestible").
+ * Illustrative return scenarios (counsel's build spec, 2026-09-17), drawn
+ * for someone who has never read a term sheet (Tyler, 2026-09-19).
  *
- * Renders only when SHOW_RETURN_SCENARIOS is on AND the deal carries a
- * set that passed every check in lib/scenarios.ts. Inside the memo, never
- * in the hero, a share card, an email or a public page. On one screen:
+ * The question a member actually has is "what happens to my money", so
+ * the section answers it in dollars: one example investment (the deal's
+ * minimum), and for each case a bar showing what went in (grey), what is
+ * lost (ember) or gained (gold), and the amount that comes back, net. The
+ * cases run downside first and the total loss is among them. Everything
+ * the spec requires is still on the screen:
  *
  *   - ILLUSTRATIVE, the as-of date, and that no scenario is more likely;
- *   - every input as a row of small tiles, and whose numbers they are;
- *   - the cases, downside first, the total loss among them, with the NET
- *     multiple and IRR (the spec allows net alone where one number fits;
- *     gross is one press away under Methodology, never without net);
+ *   - every input, as one row of small tiles, and whose numbers they are;
+ *   - NET figures (the spec allows net alone where one number fits; gross
+ *     sits beside net under Methodology, never without it);
  *   - what net is after, and that nothing assumes a tax treatment;
  *   - comparables with source, date and criteria, when any were used;
- *   - the methodology, the gross figures and the limits, folded;
+ *   - the methodology and the limits, folded;
  *   - counsel's disclaimer, adjacent.
  *
- * Nothing here reads the diligence score, names AltSpot's past deals, or
- * assumes any tax treatment. Server component; the page records the
- * showing (lib/repositories/scenario-views.ts).
+ * Renders only when SHOW_RETURN_SCENARIOS is on AND the deal's set passed
+ * every check in lib/scenarios.ts. Never in the hero, a share card, an
+ * email or a public page. Nothing here reads the diligence score, names
+ * AltSpot's past deals, or assumes any tax treatment. Server component;
+ * the page records the showing (lib/repositories/scenario-views.ts).
  */
 import { CircleAlert } from 'lucide-react';
 
-import Term from '@/components/Term';
 import { SHOW_CARRY_TERMS, SHOW_FEE_TERMS } from '@/lib/config';
-import { feeSentence } from '@/lib/fees';
+import { feeBreakdown, feeSentence } from '@/lib/fees';
 import { dateStr, money } from '@/lib/format';
 import {
   evaluateScenarios,
@@ -50,10 +52,26 @@ function compactMoney(x: number): string {
   return money(x);
 }
 
-export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
+/** To the nearest hundred: an illustration is not a quote to the dollar. */
+function roundHundred(x: number): number {
+  return Math.round(x / 100) * 100;
+}
+
+export default function ReturnScenarios({
+  set,
+  example,
+}: {
+  set: ScenarioSet;
+  /** The example investment the bars are drawn on: the deal's minimum. */
+  example: number;
+}) {
   const results = evaluateScenarios(set);
   const { inputs } = set;
   const post = inputs.entryPreMoney + inputs.roundSize;
+
+  const sent = feeBreakdown(example).allIn;
+  const rows = results.map((r) => ({ ...r, back: roundHundred(sent * r.netMultiple) }));
+  const scale = Math.max(sent, ...rows.map((r) => r.back));
 
   const sentence = feeSentence();
   const netOf =
@@ -65,28 +83,85 @@ export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
     { k: 'Entry', v: `${compactMoney(inputs.entryPreMoney)} pre`, note: `${compactMoney(post)} post` },
     ...(inputs.roundSize > 0 ? [{ k: 'Round', v: compactMoney(inputs.roundSize) }] : []),
     { k: 'SPV invests', v: compactMoney(inputs.spvInvestment), note: `${pct(ownershipAtClose(inputs))} at close` },
-    {
-      k: 'Dilution to exit',
-      v: `${inputs.dilutionToExitPercent}%`,
-      note: `${pct(ownershipAtExit(inputs))} at exit`,
-    },
+    { k: 'Dilution to exit', v: `${inputs.dilutionToExitPercent}%`, note: `${pct(ownershipAtExit(inputs))} at exit` },
     { k: 'Assumed exit', v: `Year ${inputs.exitYear}` },
-    { k: 'Exit figure', v: inputs.basis },
     ...(inputs.metric
       ? [{ k: inputs.metric.label, v: inputs.metric.value, note: inputs.metric.source }]
       : []),
   ];
 
   return (
-    <Section eyebrow="Illustrative scenarios" title="Three ways it could go, and the loss." id="scenarios">
+    <Section
+      eyebrow="Illustrative scenarios"
+      title={`Four illustrative outcomes for a ${money(example)} investment.`}
+      id="scenarios"
+    >
       <p className={s.banner} role="note">
         <CircleAlert size={15} strokeWidth={1.8} aria-hidden="true" />
         <span>
-          <b>Illustrative, not a projection.</b> Hypothetical figures from the assumptions below,
-          as of {dateStr(set.asOf)}. No scenario is more likely than any other.
+          <b>Illustrative, not a projection.</b> Hypothetical, as of {dateStr(set.asOf)}. No
+          scenario is more likely than any other, and one of them is losing everything.
         </span>
       </p>
 
+      <div className={s.start}>
+        <span className={s.startKey}>You send to escrow</span>
+        <span className={s.startValue}>{money(sent)}</span>
+        <span className={s.startNote}>
+          {money(example)} investment plus the management fee reserve
+        </span>
+      </div>
+
+      <ol className={s.cases}>
+        {rows.map((r) => {
+          const kept = Math.min(r.back, sent);
+          const gain = Math.max(0, r.back - sent);
+          const lost = Math.max(0, sent - r.back);
+          return (
+            <li className={s.case} key={r.label} data-loss={r.totalLoss}>
+              <div className={s.caseHead}>
+                <b>{r.label}</b>
+                <span>
+                  {r.totalLoss
+                    ? r.note
+                    : `${r.note} Company value at exit: ${compactMoney(r.exitValuation)}.`}
+                </span>
+              </div>
+              <div
+                className={s.bar}
+                role="img"
+                aria-label={`${r.label}: ${money(r.back)} back on ${money(sent)} sent`}
+              >
+                {kept > 0 ? <span className={s.kept} style={{ width: `${(kept / scale) * 100}%` }} /> : null}
+                {lost > 0 ? <span className={s.lost} style={{ width: `${(lost / scale) * 100}%` }} /> : null}
+                {gain > 0 ? <span className={s.gain} style={{ width: `${(gain / scale) * 100}%` }} /> : null}
+              </div>
+              <div className={s.caseFoot}>
+                <span className={s.back}>
+                  {r.totalLoss ? 'Nothing comes back' : `${money(r.back)} comes back`}
+                </span>
+                <span className={s.rate}>
+                  {r.totalLoss
+                    ? 'Total loss'
+                    : `${formatMultiple(r.netMultiple)} net · ${formatIrr(r.netIrr)} a year, net`}
+                </span>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+
+      <ul className={s.legend} aria-hidden="true">
+        <li data-tone="kept">What you sent</li>
+        <li data-tone="gain">Gain</li>
+        <li data-tone="lost">Loss</li>
+      </ul>
+
+      <p className={s.netNote}>
+        <b>Net</b> means after {netOf} Before tax; no scenario assumes any tax treatment.
+      </p>
+
+      <h3 className={s.key}>The assumptions behind the bars</h3>
       <dl className={s.tiles}>
         {tiles.map((t) => (
           <div className={s.tile} key={t.k}>
@@ -99,41 +174,8 @@ export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
         ))}
       </dl>
       <p className={s.whose}>
-        <b>Whose numbers.</b> {set.numbersFrom} Model built by {set.preparedBy}.
-      </p>
-
-      <div className={s.tableWrap}>
-        <table className={`tbl ${s.table}`}>
-          <thead>
-            <tr>
-              <th>Scenario</th>
-              <th className="num">Exit value</th>
-              <th className="num">
-                <Term q="What are the fees?" quiet>
-                  Net multiple
-                </Term>
-              </th>
-              <th className="num">Net IRR</th>
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((r) => (
-              <tr key={r.label} data-loss={r.totalLoss}>
-                <td>
-                  <b>{r.label}</b>
-                  <span className={s.note}>{r.note}</span>
-                </td>
-                <td className="num">{r.totalLoss ? 'Nothing recovered' : compactMoney(r.exitValuation)}</td>
-                <td className={`num ${s.net}`}>{formatMultiple(r.netMultiple)}</td>
-                <td className={`num ${s.net}`}>{formatIrr(r.netIrr)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className={s.netNote}>
-        <b>Net</b> is after {netOf} Before tax; no scenario assumes any tax treatment. Gross
-        figures are under Methodology.
+        <b>Whose numbers.</b> {set.numbersFrom} The exit figure is the {inputs.basis.charAt(0).toLowerCase()}
+        {inputs.basis.slice(1)}. Model built by {set.preparedBy}.
       </p>
 
       {set.comparables.length > 0 ? (
@@ -188,7 +230,8 @@ export default function ReturnScenarios({ set }: { set: ScenarioSet }) {
               Net figures deduct the formation and administration fee from what the SPV deploys,
               apply carried interest only to proceeds above the SPV&apos;s raise, and count the
               management fee reserve in what you paid in, returning any part unearned at the
-              assumed exit.
+              assumed exit. The dollar amounts apply the net multiple to what you send to escrow
+              and are rounded to the nearest hundred.
             </li>
           </ol>
           <h4>Limits of hypothetical figures</h4>

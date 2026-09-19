@@ -1,12 +1,12 @@
-/* Illustrative scenarios, the digestible edition: one line of warning, a
-   row of assumption tiles, one four-column table, the method folded, the
-   disclaimer adjacent. */
+/* Illustrative scenarios, in dollars: what went in, and for each case a
+   bar of what comes back. Grey is the money sent, gold is gain, ember is
+   loss, the same rule as every two-amount bar on the platform. */
 
 .banner {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   font-size: 14px;
   line-height: 1.5;
   color: var(--as-text-body);
@@ -25,11 +25,177 @@
   color: var(--as-text);
 }
 
+/* ---------- what went in ---------- */
+
+.start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-bottom: 18px;
+}
+.startKey {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
+.startValue {
+  font-family: var(--font-figure);
+  font-size: 26px;
+  font-weight: var(--w-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--as-text);
+}
+.startNote {
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+/* ---------- the cases ---------- */
+
+.cases {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.case {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  box-shadow:
+    inset 0 0 0 1px var(--inset-edge),
+    var(--inset-lift);
+}
+.caseHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  font-size: var(--fs-meta);
+  line-height: 1.45;
+  color: var(--as-text-muted);
+}
+.caseHead b {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 17px;
+  color: var(--as-text);
+}
+
+.bar {
+  display: flex;
+  height: 16px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+}
+.kept,
+.gain,
+.lost {
+  display: block;
+  height: 100%;
+}
+.kept {
+  background: var(--as-bar-base);
+}
+.gain {
+  background: var(--as-cta-gradient);
+  box-shadow: inset 2px 0 0 var(--as-bar-divide);
+}
+.lost {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--as-ember) 0 6px,
+    color-mix(in srgb, var(--as-ember) 62%, transparent) 6px 12px
+  );
+  box-shadow: inset 2px 0 0 var(--as-bar-divide);
+}
+
+.caseFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.back {
+  font-family: var(--font-figure);
+  font-size: 18px;
+  font-weight: var(--w-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--as-text);
+}
+.case[data-loss='true'] .back {
+  color: var(--bad);
+}
+.rate {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.legend li::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--as-bar-base);
+}
+.legend li[data-tone='gain']::before {
+  background: var(--as-gold);
+}
+.legend li[data-tone='lost']::before {
+  background: var(--as-ember);
+}
+
+.netNote,
+.criteria {
+  margin: 14px 0 0;
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
 /* ---------- assumptions ---------- */
 
+.key {
+  margin: 26px 0 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text-muted);
+}
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
   margin: 0;
 }
@@ -38,10 +204,10 @@
   flex-direction: column;
   gap: 3px;
   min-width: 0;
-  padding: 12px 14px;
+  padding: 11px 13px;
   border-radius: var(--r-md);
-  background: var(--surface-1);
-  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  background: var(--surface-well);
+  box-shadow: inset 0 0 0 1px var(--hair-soft);
 }
 .tile dt {
   font-family: var(--font-mono);
@@ -54,7 +220,7 @@
   flex-direction: column;
   gap: 1px;
   margin: 0;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: var(--w-medium);
   color: var(--as-text);
 }
@@ -63,63 +229,17 @@
   font-weight: var(--w-regular);
   color: var(--as-text-muted);
 }
-
 .whose {
-  margin: 12px 0 22px;
-  font-size: var(--fs-meta);
-  line-height: 1.5;
-  color: var(--as-text-muted);
-}
-
-/* ---------- the cases ---------- */
-
-.tableWrap {
-  min-width: 0;
-  overflow-x: auto;
-}
-.table td b {
-  display: block;
-  font-weight: var(--w-medium);
-  color: var(--as-text);
-}
-.note {
-  display: block;
-  margin-top: 2px;
-  max-width: 44ch;
-  font-size: var(--fs-label);
-  line-height: 1.4;
-  color: var(--as-text-muted);
-}
-.net {
-  font-weight: var(--w-semi);
-  font-size: 15px;
-  color: var(--as-text);
-}
-.table tr[data-loss='true'] td {
-  color: var(--as-text-muted);
-}
-
-.netNote,
-.criteria {
   margin: 12px 0 0;
   font-size: var(--fs-meta);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--as-text-muted);
 }
 
 /* ---------- comparables ---------- */
 
 .comps {
-  margin-top: 22px;
-}
-.key {
-  margin: 0 0 8px;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--as-text-muted);
+  margin-top: 4px;
 }
 .compList {
   display: flex;
@@ -177,6 +297,9 @@
   margin: 12px 0 0;
   font-size: var(--fs-meta);
   color: var(--as-text-muted);
+}
+.table td {
+  white-space: nowrap;
 }
 
 .disclaimer {
