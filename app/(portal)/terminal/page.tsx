@@ -18,27 +18,40 @@
 import Link from 'next/link';
 
 import Section from '@/components/deal/Section';
+import ForYou, { type ForYouCard } from '@/components/terminal/ForYou';
 import LibraryRail from '@/components/terminal/LibraryRail';
 import MonitorBoard from '@/components/terminal/MonitorBoard';
 import Tape from '@/components/terminal/Tape';
 import WireBoard from '@/components/terminal/WireBoard';
 import { requireUser } from '@/lib/auth';
+import { HELD_STATES } from '@/lib/domain';
+import { dateStr } from '@/lib/format';
+import { SLEEVE } from '@/lib/portfolio-plan';
+import { getPreferences } from '@/lib/repositories/preferences';
+import { getRadarBoard } from '@/lib/repositories/radar';
+import { listSubscriptions } from '@/lib/repositories/subscriptions';
+import { pickLibrary, pickWire, type ForYouSignals } from '@/lib/terminal/for-you';
 import { listLibrary, toCard } from '@/lib/terminal/library';
 import { getMarketMonitor } from '@/lib/terminal/monitor';
 import { getMarketNews } from '@/lib/terminal/news';
 
+import t from '@/components/terminal/Terminal.module.css';
+
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Terminal · AltSpot',
+  title: 'AltSpot Terminal',
 };
 
 export default async function TerminalPage() {
-  await requireUser();
+  const user = await requireUser();
 
-  const [news, indicators] = await Promise.all([
+  const [news, indicators, subscriptions, radar, preferences] = await Promise.all([
     getMarketNews({ limit: 13 }),
     getMarketMonitor(),
+    listSubscriptions(user.id),
+    getRadarBoard(user.id),
+    getPreferences(user.id),
   ]);
 
   /* Hosted here, not linked to. Only the card fields cross to the
@@ -46,14 +59,40 @@ export default async function TerminalPage() {
      own page. */
   const library = listLibrary().map(toCard);
 
+  /* What the page leads with for this member (lib/terminal/for-you.ts):
+     education chosen from what they voted for, hold and have in flight. */
+  const held = subscriptions.filter(
+    (sub) => HELD_STATES.includes(sub.state) && sub.state !== 'funded' && !sub.realizedAt,
+  );
+  const signals: ForYouSignals = {
+    classes: [
+      ...new Set([
+        ...radar.filter((c) => c.yourAmount !== null).map((c) => c.assetClass as string),
+        ...(preferences?.assetClasses ?? []),
+      ]),
+    ],
+    heldCount: held.length,
+    awaitingEscrow: subscriptions.some((sub) => sub.state === 'docs_signed'),
+    inEscrow: subscriptions.some((sub) => sub.state === 'funded'),
+    newToInvesting: subscriptions.length === 0,
+    targetPositions: SLEEVE.targetPositions,
+  };
+  const bySlug = new Map(library.map((card) => [card.slug, card]));
+  const picks: ForYouCard[] = pickLibrary(signals, library.map((c) => c.slug)).flatMap((pick) => {
+    const card = bySlug.get(pick.slug);
+    return card ? [{ ...card, reason: pick.reason }] : [];
+  });
+  const wireForYou = pickWire(signals, news, 3);
+  const newest = news[0]?.age ?? null;
+
   return (
     <>
       <div className="page-head">
         <div className="titles">
-          <div className="eyebrow">Terminal</div>
+          <div className="eyebrow">AltSpot Terminal</div>
           <h1 className="display">What is moving in private markets.</h1>
           <p className="sub">
-            The wire, our own writing, and the numbers underneath both. Read it
+            A live wire, our media and content, and the numbers underneath both. Read it
             before you open a deal, not after.
           </p>
         </div>
@@ -64,11 +103,25 @@ export default async function TerminalPage() {
 
       <Tape indicators={indicators} />
 
+      <ForYou name={user.name.split(' ')[0]} picks={picks} wire={wireForYou} />
+
       <Section
         eyebrow="The wire"
         title="Filed today."
-        lede="Private-markets headlines, newest first. Structure, pricing and process, not stock tips."
+        lede="Private-markets headlines as they file, newest first. Structure, pricing and process, not stock tips."
       >
+        {/* Say it is live, and when: a pulsing mark, today's date, how many
+            have filed and how long ago the last one landed. */}
+        <div className={t.liveBar} role="status">
+          <span className="live-pill">
+            <span className="live-dot" aria-hidden="true" />
+            Live
+          </span>
+          <span className={t.liveDate}>{dateStr(new Date().toISOString())}</span>
+          <span className={t.liveMeta}>
+            {news.length} stories filed today{newest ? ` · latest ${newest}` : ''}
+          </span>
+        </div>
         <WireBoard items={news} />
         <p className="tiny" style={{ marginTop: 18, maxWidth: '80ch' }}>
           Demo environment. This wire is simulated: the desks are invented and
@@ -79,7 +132,7 @@ export default async function TerminalPage() {
 
       <Section
         eyebrow="The library"
-        title="What we are writing."
+        title="Media and content."
         lede="Everything we publish, read here. Explainers on how these structures actually work, quarterly research, and the podcast. No piece is a recommendation and none of it is about a live deal."
       >
         <LibraryRail items={library} />

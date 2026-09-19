@@ -841,3 +841,240 @@
   color: var(--accent-hot);
   border-color: var(--hair-gold-active);
 }
+
+
+/* ============================================================
+   For you, and the live bar (2026-09-19).
+   ============================================================ */
+
+.forYou {
+  margin: 34px 0 56px;
+  padding: 28px 30px 30px;
+  border: 1px solid var(--card-edge);
+  border-radius: var(--r-xl);
+  background-color: var(--fill-card);
+  background-image: var(--glass-tint-gold), var(--card-sheen);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--card-lift);
+}
+.fyHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+  margin-bottom: 22px;
+}
+.fyKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+  color: var(--fg-on-gold);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-semi);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+}
+.fyKicker svg {
+  stroke: var(--fg-on-gold);
+}
+.fyTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+}
+.fySub {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+}
+
+.fyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+@media (max-width: 1040px) {
+  .fyGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fyLead {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge), var(--inset-lift);
+  text-decoration: none;
+  transition: transform 0.35s var(--ease-fluid), box-shadow 0.35s var(--ease-fluid);
+}
+.fyLead:hover {
+  transform: translateY(-3px);
+  box-shadow: inset 0 0 0 1px var(--inset-edge), var(--shadow-card-hover);
+  text-decoration: none;
+}
+.fyLeadArt {
+  aspect-ratio: 16 / 8;
+  width: 100%;
+}
+.fyReason {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  background: var(--scrim-media-strong);
+  box-shadow: inset 0 0 0 1px rgba(199, 154, 75, 0.55);
+  color: var(--on-media);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+}
+.fyLeadBody {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 20px 22px 22px;
+}
+.fyLeadTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 24px;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--as-text);
+}
+.fyLeadDek {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--as-text-muted);
+}
+
+.fySide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fyRow {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 10px;
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  text-decoration: none;
+  transition: background 0.28s var(--ease-fluid), transform 0.28s var(--ease-fluid);
+}
+.fyRow:hover {
+  background: var(--surface-2);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.fyRowArt {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-md);
+}
+.fyRowBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.fyRowReason {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--ls-text);
+  color: var(--accent);
+}
+.fyRowTitle {
+  font-family: var(--font-display);
+  font-weight: var(--w-medium);
+  font-size: 16.5px;
+  line-height: 1.2;
+  color: var(--as-text);
+}
+.fyRowMeta {
+  font-size: var(--fs-label);
+  color: var(--as-text-muted);
+}
+
+.fyWire {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  background: var(--surface-well);
+  box-shadow: inset 0 0 0 1px var(--hair-soft);
+}
+.fyWireKey {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--good);
+}
+.fyWire ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fyWire li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fyWire li b {
+  font-weight: var(--w-medium);
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--as-text);
+}
+.fyWire li span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}
+
+/* The wire says it is live, and when. */
+.liveBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+}
+.liveDate {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  color: var(--as-text);
+}
+.liveMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+}

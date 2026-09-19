@@ -23,6 +23,8 @@ import { useState } from 'react';
 import { dateStr } from '@/lib/format';
 import type { LibraryCard, LibraryKind } from '@/lib/terminal/library';
 
+import TerminalArt from './TerminalArt';
+
 import s from './Terminal.module.css';
 
 const TABS: { key: 'all' | LibraryKind; label: string }[] = [
@@ -84,9 +86,9 @@ export default function LibraryRail({ items }: { items: LibraryCard[] }) {
 
       {latest ? (
         <Link className={s.feature} href={`/terminal/${latest.slug}`}>
-          <span className={s.featureArt} style={{ background: latest.art }}>
+          <TerminalArt className={s.featureArt} slug={latest.slug} kind={latest.kind} art={latest.art}>
             <span className={s.artMark}>AltSpot Terminal</span>
-          </span>
+          </TerminalArt>
 
           <div className={s.featureBody}>
             <span className={s.featureKey}>
@@ -116,9 +118,9 @@ export default function LibraryRail({ items }: { items: LibraryCard[] }) {
                 className={s.post}
                 href={`/terminal/${card.slug}`}
               >
-                <span className={s.postArt} style={{ background: card.art }}>
+                <TerminalArt className={s.postArt} slug={card.slug} kind={card.kind} art={card.art}>
                   <span className={s.artMark}>{card.topic}</span>
-                </span>
+                </TerminalArt>
 
                 <div className={s.postBody}>
                   <span className={s.cardKind} data-kind={card.kind}>
