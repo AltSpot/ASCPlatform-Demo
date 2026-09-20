@@ -1,0 +1,74 @@
+{
+  "out": "screenshots/phase2/23-stage-pill",
+  "shots": [
+    {
+      "name": "01-shelf-stage-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const cards = [...document.querySelectorAll('.deal-card')].filter(c => c.querySelector('h3')); const pills = cards.map(c => [...c.querySelectorAll('span[title]')].find(s => /stage [1-5] of 5|^Fund|^Secondary|^Real/i.test(s.getAttribute('title') || ''))); const withPill = pills.filter(Boolean).length; if (withPill < 8) throw new Error('cards with a stage pill: ' + withPill + ' of ' + cards.length); const calder = cards.find(c => /Calder/.test(c.querySelector('h3').textContent)); if (!/series a/i.test(calder.innerText)) throw new Error('Calder does not say Series A'); const lit = calder.querySelectorAll('[data-on=\"true\"]').length; if (lit !== 2) throw new Error('Calder (Series A) lights ' + lit + ' rungs, expected 2'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-shelf-stage-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const cards = [...document.querySelectorAll('.deal-card')].filter(c => c.querySelector('h3')); const pills = cards.map(c => [...c.querySelectorAll('span[title]')].find(s => /stage [1-5] of 5|^Fund|^Secondary|^Real/i.test(s.getAttribute('title') || ''))); const withPill = pills.filter(Boolean).length; if (withPill < 8) throw new Error('cards with a stage pill: ' + withPill + ' of ' + cards.length); const calder = cards.find(c => /Calder/.test(c.querySelector('h3').textContent)); if (!/series a/i.test(calder.innerText)) throw new Error('Calder does not say Series A'); const lit = calder.querySelectorAll('[data-on=\"true\"]').length; if (lit !== 2) throw new Error('Calder (Series A) lights ' + lit + ' rungs, expected 2'); })()"
+        }
+      ]
+    },
+    {
+      "name": "03-shelf-stage-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const cards = [...document.querySelectorAll('.deal-card')].filter(c => c.querySelector('h3')); const pills = cards.map(c => [...c.querySelectorAll('span[title]')].find(s => /stage [1-5] of 5|^Fund|^Secondary|^Real/i.test(s.getAttribute('title') || ''))); const withPill = pills.filter(Boolean).length; if (withPill < 8) throw new Error('cards with a stage pill: ' + withPill + ' of ' + cards.length); const calder = cards.find(c => /Calder/.test(c.querySelector('h3').textContent)); if (!/series a/i.test(calder.innerText)) throw new Error('Calder does not say Series A'); const lit = calder.querySelectorAll('[data-on=\"true\"]').length; if (lit !== 2) throw new Error('Calder (Series A) lights ' + lit + ' rungs, expected 2'); })()"
+        }
+      ]
+    }
+  ]
+}

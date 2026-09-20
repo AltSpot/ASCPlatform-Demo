@@ -902,6 +902,15 @@ keep voting. Concretely (`components/marketplace/MarketplaceLanes.tsx`,
   and a quiet Vote button; once voted, a gold band reads "You voted
   $50K". Labels become icons wherever an icon carries the meaning, except
   the member's own state and Details, which are said in words.
+- **The stage is a pill of its own** (Tyler, 2026-09-19). On a shelf card the
+  round ("Series A", "Secondary", "Fund I") sits under the name in ink on a
+  filled pill, with a five-step meter from seed to late stage lit up to
+  where the round sits (`stageRung` in `lib/funding.ts`, tested: Seed 1,
+  Series A 2, B 3, C and later 4, growth and secondaries 5). A fund, a real
+  asset or an exit has no rung and shows the word alone. Who leads stays
+  beside it as the quiet word. The meter describes maturity only, never
+  risk or return. `dealChip` still composes the two for the hero and the
+  quick look.
 - **Company identities** (Tyler, 2026-09-19, replacing the one-family
   marks of 09-17). Thirty marks sharing a tile, a stroke, a neon gradient
   and an inner glow read as a game's inventory, not a market: real
