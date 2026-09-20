@@ -690,3 +690,58 @@
   background: var(--control-fill-hover);
   box-shadow: inset 0 0 0 1px var(--control-rim-hover);
 }
+
+/* ---------- the stage, on its own (2026-09-19) ---------- */
+.stageRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-top: 4px;
+}
+.stagePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 5px 11px 5px 9px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  box-shadow: inset 0 0 0 1px var(--control-rim);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-semi);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--as-text);
+  white-space: nowrap;
+}
+/* Five rising bars, lit up to where the round sits. */
+.rungs {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 11px;
+}
+.rungs span {
+  width: 3px;
+  border-radius: 1px;
+  background: var(--track);
+}
+.rungs span:nth-child(1) { height: 35%; }
+.rungs span:nth-child(2) { height: 50%; }
+.rungs span:nth-child(3) { height: 66%; }
+.rungs span:nth-child(4) { height: 83%; }
+.rungs span:nth-child(5) { height: 100%; }
+.rungs span[data-on='true'] {
+  background: var(--as-gold);
+}
+:global(html[data-theme='light']) .stagePill {
+  background: var(--control-fill-hover);
+}
+:global(html[data-theme='light']) .rungs span {
+  background: var(--control-rim);
+}
+:global(html[data-theme='light']) .rungs span[data-on='true'] {
+  background: var(--as-gold-deep);
+}

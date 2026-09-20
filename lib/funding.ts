@@ -233,10 +233,41 @@ const LEAD_PREFIX = /^(AltSpot-led|Partner-led|Co-invest|AltSpot fund)\s*·\s*/i
  * is. "AltSpot-led · Series A", "Partner-led · Series C".
  */
 export function dealChip(deal: { leadType: string; tag: string }): string {
-  const lead = isLeadType(deal.leadType) ? LEAD_LABEL[deal.leadType] : LEAD_LABEL.altspot;
-  const round = deal.tag
+  const lead = dealLead(deal);
+  const round = dealRound(deal);
+  return round ? `${lead} · ${round}` : lead;
+}
+
+/** Who leads: "AltSpot-led", "Partner-led". */
+export function dealLead(deal: { leadType: string }): string {
+  return isLeadType(deal.leadType) ? LEAD_LABEL[deal.leadType] : LEAD_LABEL.altspot;
+}
+
+/** The round on its own: "Series A", "Secondary", "Fund I". Empty when unknown. */
+export function dealRound(deal: { tag: string }): string {
+  return deal.tag
     .replace(LEAD_PREFIX, '')
     .replace(/^late-stage secondary$/i, 'Secondary')
     .trim();
-  return round ? `${lead} · ${round}` : lead;
+}
+
+/** How many steps the maturity meter has. */
+export const STAGE_RUNGS = 5;
+
+/**
+ * Where a round sits from earliest to latest, 1 to STAGE_RUNGS, for the
+ * small meter beside the stage on a card (Tyler, 2026-09-19: the stage was
+ * a grey word in a line of grey words). Seed is 1, Series A 2, Series B 3,
+ * Series C and later letters 4, growth equity and late-stage secondaries 5.
+ * A fund, a real asset or an exit is not a point on that ladder and has no
+ * rung: the pill shows the word alone rather than invent a position.
+ * It describes maturity only. It says nothing about risk or return.
+ */
+export function stageRung(round: string): number | null {
+  const r = round.trim().toLowerCase();
+  if (/^(pre-?seed|seed)\b/.test(r)) return 1;
+  const series = r.match(/^series ([a-z])\b/);
+  if (series) return Math.min(4, series[1].charCodeAt(0) - 95);
+  if (/^growth\b/.test(r) || /secondary/.test(r) || /^late/.test(r)) return 5;
+  return null;
 }

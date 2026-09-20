@@ -40,7 +40,7 @@ import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
 import { compact, money } from '@/lib/format';
 import { positionHref, type PositionStageView } from '@/lib/position-stage';
-import { dealChip, isJustOpened } from '@/lib/funding';
+import { dealLead, dealRound, isJustOpened, STAGE_RUNGS, stageRung } from '@/lib/funding';
 
 import s from './Marketplace.module.css';
 
@@ -127,6 +127,9 @@ export default function DealCard({
     </Link>
   );
 
+  const round = dealRound(deal);
+  const rung = stageRung(round);
+
   const viewOnly = !deal.subscribable && !resume;
   const full = !resume && !deal.youAreIn && deal.members > 0 && deal.members >= deal.investorCap;
   const justOpened = isJustOpened(deal.launchedAt);
@@ -202,7 +205,29 @@ export default function DealCard({
       <div className="deal-body">
         <div className={s.title}>
           <h3>{deal.name}</h3>
-          <span className={s.meta}>{dealChip(deal)}</span>
+          {/* THE STAGE, ON ITS OWN (Tyler, 2026-09-19). It was the second half
+              of a grey line. Now it is a pill in ink with a five-step meter
+              from seed to late stage, so a member scanning the shelf can
+              tell a Series A from a secondary without reading; who leads
+              stays beside it as the quiet word. */}
+          <span className={s.stageRow}>
+            {round ? (
+              <span
+                className={s.stagePill}
+                title={rung ? `${round}: stage ${rung} of ${STAGE_RUNGS}, earliest to latest` : round}
+              >
+                {rung ? (
+                  <span className={s.rungs} aria-hidden="true">
+                    {Array.from({ length: STAGE_RUNGS }, (_, i) => (
+                      <span key={i} data-on={i < rung} />
+                    ))}
+                  </span>
+                ) : null}
+                {round}
+              </span>
+            ) : null}
+            <span className={s.meta}>{dealLead(deal)}</span>
+          </span>
         </div>
 
         <p className={s.headline}>{deal.headline}</p>
