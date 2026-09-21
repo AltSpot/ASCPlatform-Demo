@@ -1,0 +1,190 @@
+{
+  "out": "screenshots/phase2/25-icons",
+  "sizes": [
+    [
+      1600,
+      1000
+    ]
+  ],
+  "shots": [
+    {
+      "name": "01-rail-dashboard-ember",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const nav = document.querySelector('nav[aria-label=\"Investor portal\"]'); const a = nav.querySelector('[aria-current=\"page\"]'); if (!a) throw new Error('no lit row'); const slot = a.querySelector('span'); const cs = getComputedStyle(slot); if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') throw new Error('the icon still sits on a tile: ' + cs.backgroundColor); if (getComputedStyle(a).borderRadius === '100px') throw new Error('the row is still a pill'); })()"
+        }
+      ]
+    },
+    {
+      "name": "01-rail-dashboard-ice",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const nav = document.querySelector('nav[aria-label=\"Investor portal\"]'); const a = nav.querySelector('[aria-current=\"page\"]'); if (!a) throw new Error('no lit row'); const slot = a.querySelector('span'); const cs = getComputedStyle(slot); if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') throw new Error('the icon still sits on a tile: ' + cs.backgroundColor); if (getComputedStyle(a).borderRadius === '100px') throw new Error('the row is still a pill'); })()"
+        }
+      ]
+    },
+    {
+      "name": "01-rail-dashboard-daylight",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "(() => { const nav = document.querySelector('nav[aria-label=\"Investor portal\"]'); const a = nav.querySelector('[aria-current=\"page\"]'); if (!a) throw new Error('no lit row'); const slot = a.querySelector('span'); const cs = getComputedStyle(slot); if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') throw new Error('the icon still sits on a tile: ' + cs.backgroundColor); if (getComputedStyle(a).borderRadius === '100px') throw new Error('the row is still a pill'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-rail-collapsed",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "document.querySelector('button[aria-label=\"Close the sidebar\"]').click()"
+        },
+        {
+          "wait": 900
+        }
+      ]
+    },
+    {
+      "name": "03-explore-tiles",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "[...document.querySelectorAll('h2')].find(x => /^Explore/.test(x.textContent.trim())).scrollIntoView({ block: 'start', behavior: 'instant' })"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "04-radar-cards",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1900
+        },
+        {
+          "eval": "[...document.querySelectorAll('button[aria-pressed]')].find(x => x.textContent.trim() === 'Featured').scrollIntoView({ block: 'start', behavior: 'instant' })"
+        },
+        {
+          "wait": 600
+        }
+      ]
+    },
+    {
+      "name": "05-deal-cost-and-spv",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2, h3')].find(x => /what it costs/i.test(x.textContent)); h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "06-how-it-works",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        },
+        {
+          "eval": "[...document.querySelectorAll('button')].find(b => /how it works/i.test(b.textContent)).click()"
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "07-settings-invite",
+      "steps": [
+        {
+          "go": "/reshoot?to=/settings"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        }
+      ]
+    },
+    {
+      "name": "08-preferences",
+      "steps": [
+        {
+          "go": "/reshoot?to=/preferences"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1600
+        }
+      ]
+    }
+  ]
+}

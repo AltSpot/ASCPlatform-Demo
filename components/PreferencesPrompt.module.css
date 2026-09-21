@@ -40,3 +40,20 @@
   gap: 10px;
   flex-wrap: wrap;
 }
+
+/* ---------- minimal by design: a bare icon (2026-09-21) ----------
+   An icon in a tinted bubble is decoration around a decoration. The icon
+   stands on its own: no fill, no ring, the accent as a line. */
+.icon {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  background-image: none;
+  box-shadow: none;
+  color: var(--accent);
+}
+.icon svg {
+  stroke-width: 1.75;
+}

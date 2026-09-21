@@ -145,3 +145,20 @@
   line-height: 1.55;
   color: var(--as-text-muted);
 }
+
+/* ---------- minimal by design: a bare icon (2026-09-21) ----------
+   An icon in a tinted bubble is decoration around a decoration. The icon
+   stands on its own: no fill, no ring, the accent as a line. */
+.glyph {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  background-image: none;
+  box-shadow: none;
+  color: var(--accent);
+}
+.glyph svg {
+  stroke-width: 1.75;
+}

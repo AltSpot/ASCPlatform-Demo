@@ -521,7 +521,22 @@ existing markup keeps resolving. Prefer `--as-*` in new code.
   cards 22px, modals `--r-2xl` 24px, inputs `--r-md` 10px, media frames
   `--r-frame` 18px. **Nothing between 24px and pill.**
 - **The wordmark period is the orb** (`--as-orb-period`), not a square.
-- **Icons are Lucide**, 1.5px stroke, `currentColor`. No emoji, no unicode
+- **Icons stand bare** (Tyler, 2026-09-21: the rail "looks a bit childish").
+  No icon sits in a tile, a bubble or a tinted circle, anywhere. **The rail**
+  is a bare 18px line icon and a word on a soft-rectangle row (not a pill:
+  a rail is a list you read); the lit row is a quiet neutral fill, a slim
+  gold bar inside its left edge and a gold icon, with no orange wash. The
+  Marketplace and Terminal marks stay AltSpot's own artwork, bare, at 78%
+  until lit or pointed at (opacity, never a `filter`, which would rasterise
+  them). Rail glyphs: LayoutGrid, Star, ChartNoAxesColumn, FileText,
+  UserRound, Settings2, ArrowLeftRight for Secondaries. **Platform-wide**,
+  the nine icon bubbles (What it costs, The SPV today, Explore, How it
+  works, the walkthrough, Building the sleeve, preferences, the invite) are
+  bare icons in `--accent`, and `AssetClassIcon` is a bare glyph in the
+  quiet ink: no tinted bubble, no category tint, and **no rocket** (venture
+  is Sprout, secondary is ArrowLeftRight). A bare icon is drawn a hair
+  heavier, 1.75, so it holds its own without the box.
+- **Icons are Lucide**, 1.5px stroke (1.75 where an icon stands bare), `currentColor`. No emoji, no unicode
   glyph icons. The → arrow in buttons and links is text, not an icon.
 - **No em dashes in copy.** Commas, periods, or restructure. En dash is
   fine for numeric ranges. `EMPTY` in `lib/format.ts` is an en dash so a

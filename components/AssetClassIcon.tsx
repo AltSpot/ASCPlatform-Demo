@@ -10,14 +10,14 @@
  * Tint is applied to the stroke and to a faint plate behind it, never to
  * a fill or a border, so a board of mixed classes stays quiet.
  */
-import { Building2, Layers, Repeat2, Rocket, TrendingUp, type LucideIcon } from 'lucide-react';
+import { ArrowLeftRight, Building2, Layers, Sprout, TrendingUp, type LucideIcon } from 'lucide-react';
 
 import { ASSET_CLASSES, isAssetClass, type AssetClass } from '@/lib/taxonomy';
 
 const GLYPH: Record<AssetClass, LucideIcon> = {
-  venture: Rocket,
+  venture: Sprout,
   growth: TrendingUp,
-  secondary: Repeat2,
+  secondary: ArrowLeftRight,
   'real-asset': Building2,
   fund: Layers,
 };
@@ -33,7 +33,7 @@ export default function AssetClassIcon({
 }) {
   if (!isAssetClass(assetClass)) return null;
   const Glyph = GLYPH[assetClass];
-  const { label, tint } = ASSET_CLASSES[assetClass];
+  const { label } = ASSET_CLASSES[assetClass];
 
   return (
     <span
@@ -44,15 +44,17 @@ export default function AssetClassIcon({
       style={{
         display: 'inline-grid',
         placeItems: 'center',
-        width: size + 15,
-        height: size + 15,
-        borderRadius: 'var(--r-pill)',
-        color: tint,
-        background: `color-mix(in srgb, ${tint} 13%, transparent)`,
+        /* MINIMAL BY DESIGN (Tyler, 2026-09-21). This was a tinted glyph in a
+           tinted bubble, a rocket for venture among them. A bare line icon
+           in the quiet ink says the same thing and looks like a finance
+           product. Category colour is for slices of a chart, not icons. */
+        width: size + 4,
+        height: size + 4,
+        color: 'var(--as-text-muted)',
         flex: 'none',
       }}
     >
-      <Glyph size={size} strokeWidth={1.6} aria-hidden="true" />
+      <Glyph size={size + 2} strokeWidth={1.75} aria-hidden="true" />
     </span>
   );
 }
