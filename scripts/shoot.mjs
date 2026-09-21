@@ -28,11 +28,16 @@ import os from 'node:os';
 import path from 'node:path';
 
 const BASE = process.env.SHOOT_BASE ?? 'http://localhost:4000';
-const SIZES = [
+const DEFAULT_SIZES = [
   [1600, 1000],
   [1440, 780],
   [1280, 720],
 ];
+/* A plan may name its own sizes ("sizes": [[1600, 1000]]), for a sweep of
+   every page where three sizes of each would be hundreds of files. */
+let SIZES = DEFAULT_SIZES;
+/* The tallest page a full-length capture will take, in CSS pixels. */
+const FULL_MAX = 14000;
 const CANDIDATES = [
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -46,7 +51,11 @@ if (!planPath) {
   process.exit(2);
 }
 const outIndex = rest.indexOf('--out');
+/* --resume skips a shot whose files are already on disk, so a sweep that
+   lost its browser picks up at the shot it lost it on. */
+const RESUME = rest.includes('--resume');
 const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
+if (Array.isArray(plan.sizes) && plan.sizes.length > 0) SIZES = plan.sizes;
 const outDir = outIndex >= 0 ? rest[outIndex + 1] : plan.out;
 if (!outDir) throw new Error('no output directory: pass --out or set "out" in the plan');
 fs.mkdirSync(outDir, { recursive: true });
@@ -100,6 +109,15 @@ function connect(url) {
     }
   });
   const ready = new Promise((resolve) => ws.addEventListener('open', resolve));
+  /* If the browser dies (it runs out of memory on a very tall frosted page)
+     every pending call would hang and Node would exit 0 with half a sweep.
+     Say so, and exit 3 so a caller can run again with --resume. */
+  let closing = false;
+  ws.addEventListener('close', () => {
+    if (closing) return;
+    console.error('  the browser went away; run again with --resume to carry on');
+    process.exit(3);
+  });
   return {
     ready,
     send(method, params = {}, sessionId) {
@@ -111,6 +129,7 @@ function connect(url) {
       listeners.push(fn);
     },
     close() {
+      closing = true;
       ws.close();
     },
   };
@@ -120,7 +139,23 @@ async function run() {
   const cdp = connect(await endpoint());
   await cdp.ready;
 
-  for (const shot of plan.shots) {
+  /* "keepGoing": true on a plan logs a failed shot and carries on, for a
+     sweep of every page where one broken selector should not cost the
+     other hundred. A plan that checks behaviour leaves it off and stops. */
+  const failures = [];
+  const wantsFull = (shot) => Boolean(shot.full ?? plan.full) && shot.capture !== false;
+  const done = (shot) => {
+    if (shot.capture === false) return false;
+    const [w0, h0] = SIZES[0];
+    if (!fs.existsSync(path.join(outDir, `${shot.name}-${w0}x${h0}.png`))) return false;
+    if (!wantsFull(shot)) return true;
+    return (
+      fs.existsSync(path.join(outDir, `${shot.name}-full.png`)) ||
+      fs.existsSync(path.join(outDir, `${shot.name}-full.skipped`))
+    );
+  };
+
+  const shootOne = async (shot) => {
     const { browserContextId } = await cdp.send('Target.createBrowserContext');
     const { targetId } = await cdp.send('Target.createTarget', {
       url: 'about:blank',
@@ -210,10 +245,52 @@ async function run() {
         fs.writeFileSync(file, Buffer.from(data, 'base64'));
         console.log(`  wrote ${file}`);
       }
+
+      /* "full": true on a shot (or on the plan) also takes the whole page,
+         top to bottom, at the first size's width. The viewport is made as
+         tall as the page rather than stitched, so the fixed ground and the
+         rail run the full length and nothing repeats. */
+      if ((shot.full ?? plan.full) && !fs.existsSync(path.join(outDir, `${shot.name}-full.png`))) {
+        const [w, h] = SIZES[0];
+        /* A marker first: if this capture takes the browser down, the next
+           --resume run will not walk into the same wall. It is removed the
+           moment the capture succeeds. */
+        const marker = path.join(outDir, `${shot.name}-full.skipped`);
+        fs.writeFileSync(marker, 'The full-length capture of this page took the browser down. The on-arrival shot stands.');
+        await evaluate(`window.scrollTo({ top: 0, behavior: 'instant' })`);
+        const tall = await evaluate(
+          `Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)`,
+        );
+        const height = Math.max(h, Math.min(FULL_MAX, Math.ceil(Number(tall) || h)));
+        await send('Emulation.setDeviceMetricsOverride', {
+          width: w,
+          height,
+          deviceScaleFactor: 1,
+          mobile: false,
+        });
+        await sleep(900);
+        const { data } = await send('Page.captureScreenshot', { format: 'png' });
+        const file = path.join(outDir, `${shot.name}-full.png`);
+        fs.writeFileSync(file, Buffer.from(data, 'base64'));
+        fs.rmSync(marker, { force: true });
+        console.log(`  wrote ${file}`);
+      }
     }
 
     await cdp.send('Target.disposeBrowserContext', { browserContextId });
+  };
+
+  for (const shot of plan.shots) {
+    if (RESUME && done(shot)) continue;
+    try {
+      await shootOne(shot);
+    } catch (error) {
+      if (!plan.keepGoing) throw error;
+      failures.push(shot.name);
+      console.error(`  FAILED ${error.message}`);
+    }
   }
+  if (failures.length > 0) console.error(`${failures.length} shot(s) failed: ${failures.join(', ')}`);
 
   cdp.close();
 }

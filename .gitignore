@@ -63,3 +63,9 @@ next-env.d.ts
 
 # Phase 2 review captures. Regenerate with node scripts/shoot.mjs <plan>.
 screenshots/phase2/**/*.png
+
+# The full reference sweep is 300MB of images. The plans and the scripts are
+# committed; retake with scripts/shoot-reference.sh.
+screenshots/demo-reference/ember/
+screenshots/demo-reference/ice/
+screenshots/demo-reference/daylight/

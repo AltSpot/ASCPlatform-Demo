@@ -1,0 +1,852 @@
+{
+  "out": "screenshots/demo-reference/ember",
+  "sizes": [
+    [
+      1600,
+      1000
+    ]
+  ],
+  "keepGoing": true,
+  "shots": [
+    {
+      "name": "01-login",
+      "full": false,
+      "steps": [
+        {
+          "go": "/"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "02-setup-step-1",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?as=new"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "03-setup-step-2",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?as=new"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "location.href = '/wizard?step=2'"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "04-setup-step-3",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?as=new"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "location.href = '/wizard?step=3'"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "05-setup-step-4",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?as=new"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "location.href = '/wizard?step=4'"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "06-setup-step-5",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?as=new"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "location.href = '/wizard?step=5'"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "07-marketplace-before-approval",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?as=new&to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "08-dashboard-new-member-no-book",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?as=recent&to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "10-dashboard",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "11-marketplace-shelf",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "12-marketplace-radar",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "wait": 900
+        }
+      ]
+    },
+    {
+      "name": "13-deal-calder",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "14-deal-aurelia-already-in-escrow",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/aurelia"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "15-deal-kestrel-partner-led",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/kestrel"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "16-checkout-1-amount",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "17-checkout-2-read-and-sign",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const b = [...document.querySelectorAll('button')].find(x => /continue to documents/i.test(x.textContent)); if (!b) throw new Error('no Continue to documents'); b.click(); })()"
+        },
+        {
+          "wait": 2600
+        }
+      ]
+    },
+    {
+      "name": "18-checkout-4-allocation-reserved",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "eval": "(() => { const a = document.querySelector('a[href^=\"/payment/\"]'); location.href = a.getAttribute('href'); })()"
+        },
+        {
+          "wait": 2400
+        }
+      ]
+    },
+    {
+      "name": "19-portfolio",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "20-portfolio-statement",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio/statement"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "21-watchlist",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "22-terminal",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "23-terminal-article",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal/how-altspot-is-paid"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "24-terminal-report",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal/private-markets-q3-2026"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "25-terminal-podcast",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal/inside-a-data-room"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "26-docs",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/docs"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "27-profiles",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/profiles"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "28-preferences",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/preferences"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "29-settings",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/settings"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "30-disclosures",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/disclosures"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "31-member-register-internal",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/ops/register/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "40-bell-panel",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "document.querySelector('[data-tour=\"bell\"]').click()"
+        },
+        {
+          "wait": 900
+        }
+      ]
+    },
+    {
+      "name": "41-dashboard-steps-ten-day-clock",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); const b = [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())); b.click(); row.scrollIntoView({ block: 'center', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "42-your-votes-adjust-all",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => x.textContent.trim().startsWith(\"Your votes\")).closest('section'); s.scrollIntoView({ block: 'start', behavior: 'instant' }); [...s.querySelectorAll('button')].find(b => /adjust all/i.test(b.textContent)).click(); })()"
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "43-your-votes-company-overview",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => x.textContent.trim().startsWith(\"Your votes\")).closest('section'); s.scrollIntoView({ block: 'start', behavior: 'instant' }); s.querySelector('button[aria-label$=\"open the overview\"]').click(); })()"
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "44-quick-look-not-joined",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const c = [...document.querySelectorAll('.deal-card')].find(c => c.querySelector('h3') && c.querySelector('h3').textContent.includes(\"Calder\")); c.scrollIntoView({ block: 'center', behavior: 'instant' }); c.querySelector('button[aria-label^=\"Quick look\"]').click(); })()"
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "45-quick-look-in-escrow",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const c = [...document.querySelectorAll('.deal-card')].find(c => c.querySelector('h3') && c.querySelector('h3').textContent.includes(\"Aurelia\")); c.scrollIntoView({ block: 'center', behavior: 'instant' }); c.querySelector('button[aria-label^=\"Quick look\"]').click(); })()"
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "46-quick-look-signed-not-sent",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const c = [...document.querySelectorAll('.deal-card')].find(c => c.querySelector('h3') && c.querySelector('h3').textContent.includes(\"Tessellate\")); c.scrollIntoView({ block: 'center', behavior: 'instant' }); c.querySelector('button[aria-label^=\"Quick look\"]').click(); })()"
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "47-radar-details-panel",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const a = [...document.querySelectorAll('article')].find(x => /Orrery/.test(x.textContent)); a.scrollIntoView({ block: 'center', behavior: 'instant' }); [...a.querySelectorAll('button')].find(b => /details/i.test(b.textContent)).click(); })()"
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "48-radar-vote-scale",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "wait": 900
+        },
+        {
+          "eval": "(() => { const a = [...document.querySelectorAll('article')].find(x => /Pellucid/.test(x.textContent)); a.scrollIntoView({ block: 'center', behavior: 'instant' }); [...a.querySelectorAll('button')].find(b => /^vote$/i.test(b.textContent.trim())).click(); })()"
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "49-how-it-works-panel",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { [...document.querySelectorAll('button')].find(b => /how it works/i.test(b.textContent)).click(); })()"
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "50-spot-answers-with-a-picture",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: { question: 'What are the fees?' } }))"
+        },
+        {
+          "wait": 2600
+        }
+      ]
+    },
+    {
+      "name": "51-spot-declines-advice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: { question: 'How much should I invest in this deal?' } }))"
+        },
+        {
+          "wait": 2600
+        }
+      ]
+    },
+    {
+      "name": "52-first-run-walkthrough",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=%2Fdashboard%3Ftour%3D1"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "wait": 1200
+        }
+      ]
+    },
+    {
+      "name": "53-portfolio-position-chart-dollars",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const el = document.getElementById('p-drivers'); el.scrollIntoView({ block: 'start', behavior: 'instant' }); [...el.querySelectorAll('button')].find(b => /^dollars$/i.test(b.textContent.trim())).click(); })()"
+        },
+        {
+          "wait": 900
+        }
+      ]
+    },
+    {
+      "name": "54-deal-scenarios",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2, h3')].find(x => /illustrative scenarios/i.test(x.textContent)); if (h) h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 900
+        }
+      ]
+    },
+    {
+      "name": "55-deal-what-it-costs",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2, h3')].find(x => /what it costs/i.test(x.textContent)); if (h) h.scrollIntoView({ block: 'start', behavior: 'instant' }); })()"
+        },
+        {
+          "wait": 900
+        }
+      ]
+    }
+  ]
+}
