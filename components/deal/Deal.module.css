@@ -46,7 +46,12 @@
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .section {
-      animation: sectionRise linear both;
+      /* `backwards`, not `both` (2026-09-21). Filling forwards holds the last
+         keyframe for good, and a held transform, even an identity one, keeps
+         the section on its own layer with every word in it re-sampled. With
+         no forward fill the animation lets go the moment the section has
+         arrived, and the text goes back to being ordinary sharp text. */
+      animation: sectionRise linear backwards;
       animation-timeline: view();
       /*
        * A FIXED SCROLL DISTANCE, NOT A PERCENTAGE OF THE ELEMENT.
@@ -72,9 +77,14 @@
     opacity: 0;
     transform: perspective(1400px) rotateX(10deg) scale(0.94) translateY(26px);
   }
+  /* CRISP AT REST (Tyler, 2026-09-21). This used to end on
+     perspective(...) rotateX(0) scale(1), which looks like nothing and is
+     not: the section kept a 3D transform for good, so the browser kept it
+     on its own layer and re-sampled every word in it. `none` hands the
+     text back to the page. */
   to {
     opacity: 1;
-    transform: perspective(1400px) rotateX(0) scale(1) translateY(0);
+    transform: none;
   }
 }
 

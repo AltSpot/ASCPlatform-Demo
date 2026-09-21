@@ -25,7 +25,8 @@
   width: calc(36px * var(--logo-scale));
   height: calc(36px * var(--logo-scale));
   object-fit: contain;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+  /* No drop-shadow filter: a filter turns the vector into a bitmap and the
+     mark loses its edge. It sits on a flat band and needs no shadow. */
 }
 .logo[data-kind='symbol'] .symbol {
   width: calc(56px * var(--logo-scale));

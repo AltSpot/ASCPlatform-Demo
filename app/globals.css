@@ -43,9 +43,13 @@
   --as-ink:#060504;            /* Dark Ember, THE canvas. Never neutral #000 */
   --as-ink-2:#090706;
   --as-ink-3:#0D0A08;
-  --as-text:#F6F2E9;           /* headings */
-  --as-text-body:#DAD4C8;      /* body */
-  --as-text-muted:#9A9184;     /* muted, axis labels */
+  /* CRISPER (Tyler, 2026-09-21). Text inside a translucent pane is drawn
+     without subpixel smoothing, so it is only as sharp as its contrast.
+     Each step of the ladder came up: headings to near paper, body well
+     clear of grey, and the two quiet steps off the floor. */
+  --as-text:#FBF8F1;           /* headings */
+  --as-text-body:#E8E2D6;      /* body */
+  --as-text-muted:#B0A799;     /* muted, axis labels */
   /* Fine print and sources. Was #6C6459, which measured about 3.4:1
      against the canvas: legible as a shape, not as a sentence, and on a
      10px mono numeral not legible at all. #8A8276 is about 5.1:1, which
@@ -53,7 +57,7 @@
      a fighting chance. Still clearly the quietest grey of the four.
      Rule: faint is permitted at 13px and above only. Anything smaller
      (labels, eyebrows, table headers, source lines) uses --as-text-muted. */
-  --as-text-faint:#8A8276;
+  --as-text-faint:#9C9386;
 
   /* ============ TYPE FLOOR ============
      The smallest type on the platform, as tokens, so a label cannot be
@@ -149,7 +153,7 @@
   --as-cream-muted:#6B645B;
 
   /* ============ HAIRLINES ============ */
-  --hair-neutral:rgba(255,255,255,.10);
+  --hair-neutral:rgba(255,255,255,.13);
   --hair-gold:rgba(199,154,75,.30);      /* resting gold hairline */
   --hair-gold-active:rgba(243,152,7,.30);
   --hair-ember:rgba(229,102,26,.26);
@@ -162,7 +166,7 @@
      the ground still shows through it, but what comes through is held
      back, so a card reads as a darker pane over the warm bloom instead of
      a lighter one, and type sits on something calmer. */
-  --fill-card:rgba(4,4,5,.56);
+  --fill-card:rgba(5,4,4,.66);
   --fill-input:rgba(255,255,255,.05);
   --fill-gold-tint:rgba(243,152,7,.05);
   --glass:rgba(10,8,6,.50);
@@ -216,7 +220,7 @@
      drowning in the ground, brown on brown). Still not a drawn line: the
      lift below does the lifting, this only stops a pane's edge dissolving
      into the bloom behind it. */
-  --card-edge:rgba(255,255,255,.075);
+  --card-edge:rgba(255,255,255,.105);
   /* THE RIM OF A SURFACE INSIDE A PANE (2026-09-17): a chip, an Explore
      tile, a menu item lit on a card. On ember it is a breath of light, so
      a tile is told from the card by depth as much as by line; on the
@@ -248,9 +252,9 @@
      commitment, the close, the lead story, the strip of things that need
      them). Layered as a background-image over the ordinary pane, so the
      glass itself never changes, only the light inside it. */
-  --glass-tint-gold:linear-gradient(180deg,rgba(243,152,7,.07),rgba(243,152,7,.015));
+  --glass-tint-gold:linear-gradient(180deg,rgba(243,152,7,.095),rgba(243,152,7,.02));
   /* Amber, not ember: the red-brown cast on the warm panes is gone. */
-  --glass-tint-ember:linear-gradient(180deg,rgba(255,158,44,.06),rgba(255,158,44,.01));
+  --glass-tint-ember:linear-gradient(180deg,rgba(255,140,40,.085),rgba(255,140,40,.015));
   /* What a card adds on top of its fill. Nothing on the ember canvas,
      where a panel is defined by its hairline; on light it is the
      specular edge plus a warm cast shadow, and it is doing the whole
@@ -353,7 +357,7 @@
   --tint-gold-faint:rgba(243,152,7,.02);
   --tint-ember:rgba(229,102,26,.08);
   --tint-ember-line:rgba(229,102,26,.45);
-  --hair-soft:rgba(255,255,255,.05);   /* the inner rule between table rows */
+  --hair-soft:rgba(255,255,255,.075);   /* the inner rule between table rows */
   --focus-glow:0 0 0 3px rgba(243,152,7,.12);
   --surface-toast:#161210;
 
@@ -623,14 +627,15 @@ body::before{
      most of the canvas left as near-black. No ember pool and no brown
      sweep: the colour pops where it is, and nowhere else. */
   background:
-    radial-gradient(40% 36% at 100% -4%,rgba(243,152,7,.30),rgba(255,174,69,.08) 42%,transparent 70%),
-    radial-gradient(36% 34% at -2% 104%,rgba(214,172,98,.22),rgba(214,172,98,.05) 46%,transparent 70%),
-    radial-gradient(30% 18% at 46% -6%,rgba(230,199,122,.08),transparent 72%),
-    radial-gradient(26% 24% at 104% 100%,rgba(243,152,7,.10),transparent 70%),
+    radial-gradient(44% 40% at 100% -4%,rgba(243,152,7,.38),rgba(255,166,56,.11) 42%,transparent 70%),
+    radial-gradient(22% 30% at 103% 46%,rgba(229,102,26,.13),transparent 70%),
+    radial-gradient(38% 36% at -2% 104%,rgba(214,172,98,.27),rgba(214,172,98,.07) 46%,transparent 70%),
+    radial-gradient(30% 18% at 46% -6%,rgba(230,199,122,.10),transparent 72%),
+    radial-gradient(30% 28% at 104% 102%,rgba(240,122,30,.17),rgba(240,122,30,.04) 50%,transparent 72%),
     radial-gradient(120% 120% at 50% 50%,transparent 58%,rgba(0,0,0,.5));
 }
 body::after{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.018;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 /* Keep real content above the atmosphere layers. */
@@ -1499,7 +1504,7 @@ html[data-theme='light']{
   --glass-blur:26px;
   --glass-sat:150%;
   --glass-bright:1;
-  --glass-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23f)'/%3E%3C/svg%3E");
+  --glass-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .4 -.18'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23f)'/%3E%3C/svg%3E");
   --glass:rgba(255,254,252,.26);
   --glass-solid:rgba(255,254,251,.58);
   --glass-tint-gold:linear-gradient(180deg,rgba(214,168,86,.16),rgba(214,168,86,.04));

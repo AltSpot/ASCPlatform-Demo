@@ -592,6 +592,25 @@ clears 4.5:1 on both canvases; `--good-paint` is the brighter green for
 dots, bars, fills and the vote slider, and is never type. Same split as
 gold: the colour that pops is the one you cannot read a word in.
 
+**Crisp at rest** (Tyler, 2026-09-21). Text inside a translucent pane is
+drawn without subpixel smoothing, so it is only as sharp as its contrast
+and only if nothing is re-sampling it. Three rules came out of the pass:
+(1) **an animation must let go of the element when it finishes.** The deal
+page's scroll reveal filled forwards, so every arrived section held a
+transform for good (an identity matrix, invisible, and still enough to put
+the section on its own layer and re-sample every word). It is
+`backwards` now and ends on `transform: none`;
+`screenshots/phase2/24-crisp.plan.json` fails if an arrived section carries
+a transform. (2) **Nothing with text in it moves at rest.** The dashboard
+carousel's perpetual drift is gone; tiles lift on hover only. (3) **No
+`filter` on artwork**: a drop-shadow filter turns a vector logo into a
+bitmap. Alongside: Ember's text ladder came up a step at every level,
+hairlines and the pane edge are firmer, the pane is a little denser
+(`--fill-card` .66), and the grain (the page's, and Daylight's card grain,
+which sits directly under type) is halved. Ember's ground is a touch
+hotter in the same small saturated pools plus one ember pool on the right
+edge; still no wide wash, because low-alpha orange over black is brown.
+
 **The type floor.** `--fs-label` 12px (with `--ls-label` 0.10em) is the
 smallest text in the product, for eyebrows, table headers, chips and
 source lines. `--fs-meta` 13px is for secondary lines and legal copy.

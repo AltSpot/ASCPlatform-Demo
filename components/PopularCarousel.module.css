@@ -58,8 +58,9 @@
   box-shadow: var(--card-lift);
   text-decoration: none;
   color: var(--as-text);
-  animation: drift 5.2s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * -0.85s);
+  /* No perpetual drift (Tyler, 2026-09-21). A tile that floats forever is
+     re-drawn at a fraction of a pixel on every frame, and its name and
+     figure are never sharp. It lifts on hover and is still otherwise. */
   transition:
     transform var(--dur-1) var(--ease-out),
     box-shadow var(--dur-1) ease;
