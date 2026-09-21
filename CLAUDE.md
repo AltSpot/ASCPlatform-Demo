@@ -607,6 +607,27 @@ clears 4.5:1 on both canvases; `--good-paint` is the brighter green for
 dots, bars, fills and the vote slider, and is never type. Same split as
 gold: the colour that pops is the one you cannot read a word in.
 
+**Balance: the final pass** (Tyler, 2026-09-21). (1) **One emphasis.** The
+platform had a designed 600 and the browser's own 700 on every `<b>` and
+`<strong>` fighting each other, which is what made names, amounts and table
+rows look heavy. `--w-semi` is 560 (both faces are variable), `b, strong`
+mean it, buttons and card headings use the token, table names are 500, and
+nothing is bolder except the legal document. Never write a literal
+`font-weight: 600/700`. (2) **A lead figure is champagne on the dark
+canvases and deep bronze on Daylight** (`--figure-hot`), not hot amber:
+amber numerals at 30px read as a scoreboard. Amber stays for hover and for
+what is urgent. (3) **No gradient clipped through type** inside the portal
+(the marketplace engine strip's numerals are ink): clipped text is louder
+and softer than plain text. (4) **One green per card.** A deal the member
+holds says so in the band in its body; the status chip on the art is the
+quiet dark chip with a green mark. (5) **A quiet `Term` is a dotted
+hairline in the quiet ink**, so a row of labels where some are pressable
+still reads as one row. (6) **A kicker is not a button**: "For you" is a
+neutral chip with a gold glyph; filled gold pills are for what is chosen or
+pressed. (7) **An illustration has air round it**: `TerminalArt` draws its
+motif at three quarters with one hot ink at most. (8) A description is not
+a gain: only a number takes the up or down colour.
+
 **Crisp at rest** (Tyler, 2026-09-21). Text inside a translucent pane is
 drawn without subpixel smoothing, so it is only as sharp as its contrast
 and only if nothing is re-sampling it. Three rules came out of the pass:

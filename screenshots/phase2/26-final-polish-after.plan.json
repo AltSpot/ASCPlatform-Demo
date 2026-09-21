@@ -1,0 +1,372 @@
+{
+  "out": "screenshots/phase2/26-final-polish-after",
+  "sizes": [
+    [
+      1600,
+      1000
+    ]
+  ],
+  "keepGoing": true,
+  "shots": [
+    {
+      "name": "dashboard-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "dashboard-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "dashboard-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "marketplace-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "marketplace-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "marketplace-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "deal-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "deal-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "deal-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "portfolio-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "portfolio-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "portfolio-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "terminal-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "terminal-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "terminal-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/terminal"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "checkout-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "checkout-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "checkout-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "watchlist-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "watchlist-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "watchlist-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/watchlist"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "docs-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/docs"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "docs-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/docs"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    },
+    {
+      "name": "docs-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/docs"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        }
+      ]
+    }
+  ]
+}

@@ -53,3 +53,16 @@
   color: var(--fg-on-gold);
   box-shadow: none;
 }
+
+/* ---------- the final pass (2026-09-21) ----------
+   On a row of labels, some pressable and some not, a gold underline made
+   half of them look like a different kind of label. A quiet term is a fine
+   dotted line in the quiet ink: discoverable, not decorative. */
+.quiet {
+  text-decoration-style: dotted;
+  text-decoration-color: var(--as-text-faint);
+  text-underline-offset: 0.28em;
+}
+.quiet:hover {
+  text-decoration-style: solid;
+}

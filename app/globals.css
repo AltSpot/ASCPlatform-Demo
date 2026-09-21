@@ -365,7 +365,10 @@
   --as-cta-gradient:linear-gradient(135deg,#C79A4B,#F39807);
   --as-tri-gradient:linear-gradient(90deg,#C79A4B,#F39807,#E5661A);
   --as-em-gradient:linear-gradient(100deg,#E6C77A,#FF9E2C 45%,#E5661A);
-  --figure-hot:var(--as-amber);
+  /* A lead figure is set in champagne, not hot amber (2026-09-21). Amber
+     numerals at 30px read as a scoreboard; champagne reads as the one
+     number the page is about. Amber stays for hover and for what is urgent. */
+  --figure-hot:var(--as-champagne);
   /* The vote. Gold means invest; green means vote, on both canvases. */
   --vote-gradient:linear-gradient(135deg,#5CF09A,#22C55E);
   --fg-on-vote:#06301A;
@@ -496,7 +499,14 @@
   /* No sheen: the gold ramp is laid flat. Kept as a token so the modules
      that layer it keep resolving. */
   --cta-sheen:linear-gradient(transparent,transparent);
-  --w-light:300; --w-regular:400; --w-medium:500; --w-semi:600;
+  /* THE FINAL PASS (Tyler, 2026-09-21): balance. The platform had two
+     emphases fighting each other: a designed 600, and the browser's own
+     700 on every <b> and <strong>, which is what made names, amounts and
+     table rows look heavy beside everything else. There is now one
+     emphasis. It is 560 (both faces are variable, so the step exists), it
+     is what `b` and `strong` mean, and nothing on the platform is bolder
+     except the legal document, which is a document. */
+  --w-light:300; --w-regular:400; --w-medium:500; --w-semi:560;
 
   /* ============ STATUS ============ */
   /* Green is the one color on the platform that is neither brand nor
@@ -794,7 +804,8 @@ html[data-rail='mini']{--rail:74px}
 .card.gold{
   background-image:var(--glass-tint-gold),var(--card-sheen);
 }
-.card h3{font-size:16px;font-weight:600;margin-bottom:6px;color:var(--ink);letter-spacing:-.005em}
+b,strong{font-weight:var(--w-semi)}
+.card h3{font-size:16px;font-weight:var(--w-semi);margin-bottom:6px;color:var(--ink);letter-spacing:-.008em}
 .hr{border:none;border-top:1px solid var(--hair);margin:24px 0}
 .grid{display:grid;gap:24px}
 .grid.c2{grid-template-columns:1fr 1fr}
@@ -804,7 +815,7 @@ html[data-rail='mini']{--rail:74px}
 /* ---------- buttons ---------- */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:11px 20px;border-radius:var(--r-pill);font-weight:600;font-size:14px;
+  padding:11px 20px;border-radius:var(--r-pill);font-weight:var(--w-semi);font-size:14px;
   cursor:pointer;border:1px solid transparent;
   transition:transform .12s ease,box-shadow .12s ease,background .12s;
   text-decoration:none!important;font-family:var(--fb);
@@ -1084,7 +1095,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-figure)}
 .tbl td{padding:16px 14px;border-bottom:1px solid var(--hair-soft);vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
 .tbl td.num,.tbl th.num{text-align:right}
-.tbl td b{color:var(--ink);font-weight:600}
+.tbl td b{color:var(--ink);font-weight:var(--w-medium)}
 
 /* ---------- toast ---------- */
 .toast{
@@ -1123,7 +1134,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-figure)}
 .wiz-step.done .mark{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--fg-on-gold);border-color:transparent;font-weight:600}
 .wiz-step.now{color:var(--ink)}
 .wiz-step.now .mark{border-color:var(--accent-signal);color:var(--accent-hot);box-shadow:0 0 14px rgba(243,152,7,.35)}
-.wiz-step .st b{display:block;font-size:14px;font-weight:600}
+.wiz-step .st b{display:block;font-size:14px;font-weight:var(--w-semi)}
 .wiz-step .st span{font-size: var(--fs-meta)}
 /* Centred in the space left of the rail, not pinned to its left edge.
    The column is capped for line length, and on a wide monitor that cap
@@ -1182,7 +1193,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-figure)}
 .fee-row .l{color:var(--soft)}
 .fee-row .r{font-family:var(--fm);color:var(--ink)}
 .fee-row.total{border-top:1px solid var(--hairg);margin-top:4px;padding-top:13px}
-.fee-row.total .l,.fee-row.total .r{color:var(--accent-hot);font-weight:600}
+.fee-row.total .l,.fee-row.total .r{color:var(--accent-hot);font-weight:var(--w-semi)}
 .fee-sub{font-size: var(--fs-meta);color:var(--faint);padding:2px 0 8px 14px}
 
 /* countdown */
@@ -1622,7 +1633,7 @@ html[data-theme='light']{
   --as-dot-field:radial-gradient(circle at 1px 1px,rgba(120,96,48,.16) 1px,transparent 0);
   --as-scan-line:linear-gradient(90deg,rgba(120,96,48,.10) 40%,rgba(229,102,26,.55) 50%,rgba(120,96,48,.10) 60%);
   --as-em-gradient:linear-gradient(100deg,#E8890C,#E5661A 55%,#C9470F);
-  --figure-hot:#DC6410;     /* 3.1:1 — large figures only, 24px and up */
+  --figure-hot:#84601C;     /* 5.6:1. Deep bronze, the lead figure. Was a hot orange (#DC6410): a scoreboard on a light page. */
   --vote-gradient:linear-gradient(135deg,#3DE585,#16A34A);
   --shadow-vote:0 6px 20px rgba(34,197,94,.36);
   --shadow-vote-hover:0 10px 30px rgba(34,197,94,.5);

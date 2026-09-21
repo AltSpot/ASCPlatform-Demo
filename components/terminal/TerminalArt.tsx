@@ -33,7 +33,10 @@ function rng(seed: number): () => number {
   };
 }
 
-const INKS = ['#F3E8BC', '#E6C77A', '#C79A4B', '#F39807', '#F08A4B'];
+/* Champagne, gold and bronze, and one signal orange for a headline bar.
+   The second orange went (2026-09-21): two hot inks in a small picture
+   read as a sticker. */
+const INKS = ['#F3E8BC', '#E6C77A', '#C79A4B', '#D9B56A', '#F39807'];
 
 export default function TerminalArt({
   slug,
@@ -135,7 +138,11 @@ export default function TerminalArt({
           </linearGradient>
         </defs>
         <rect width="320" height="180" fill={`url(#${id}-light)`} />
-        {motif}
+        {/* Drawn at three quarters, with air round it: an illustration that
+            fills its frame edge to edge reads as clip art. */}
+        <g transform="translate(160 90) scale(0.74) translate(-160 -90)" opacity="0.9">
+          {motif}
+        </g>
         <rect width="320" height="180" fill={`url(#${id}-shade)`} />
       </svg>
       {children}

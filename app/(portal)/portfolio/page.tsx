@@ -469,7 +469,6 @@ export default async function PortfolioPage() {
           ask="What does Net IRR mean on my portfolio page?"
           v={percent(bookIrr, 1, { signed: true })}
           d="Annualized, money-weighted"
-          tone={bookIrr === null ? undefined : bookIrr >= 0 ? 'up' : 'down'}
         />
         <Figure
           k="Largest position"
