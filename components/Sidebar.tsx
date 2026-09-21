@@ -33,15 +33,15 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  ChartPie,
+  ArrowLeftRight,
+  ChartNoAxesColumn,
   FileText,
-  LayoutDashboard,
+  LayoutGrid,
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
-  Settings,
+  Settings2,
   Star,
-  TrendingUp,
   UserRound,
   type LucideIcon,
 } from 'lucide-react';
@@ -87,7 +87,7 @@ const GROUPS: NavGroup[] = [
         id: 'dashboard',
         label: 'Dashboard',
         href: '/dashboard',
-        icon: LayoutDashboard,
+        icon: LayoutGrid,
         match: ['/dashboard', '/payment'],
       },
       {
@@ -108,7 +108,7 @@ const GROUPS: NavGroup[] = [
         id: 'portfolio',
         label: 'Portfolio',
         href: '/portfolio',
-        icon: ChartPie,
+        icon: ChartNoAxesColumn,
         match: ['/portfolio'],
       },
       {
@@ -141,7 +141,7 @@ const GROUPS: NavGroup[] = [
         id: 'settings',
         label: 'Settings',
         href: '/settings',
-        icon: Settings,
+        icon: Settings2,
         match: ['/settings'],
       },
     ],
@@ -216,8 +216,11 @@ function setCollapsed(next: boolean): void {
  * calibrates that weight at 24px; portal chrome is denser than the
  * marketing surface, so nav sits at 17px and keeps the stroke.
  */
+/* One size, one weight, no tile (Tyler, 2026-09-21). 18px at 1.75: a hair
+   heavier than the platform's 1.5 so the glyph holds its own bare, without
+   the box it used to sit in. */
 function Icon({ glyph: Glyph }: { glyph: LucideIcon }) {
-  return <Glyph size={17} strokeWidth={1.5} aria-hidden="true" />;
+  return <Glyph size={18} strokeWidth={1.75} aria-hidden="true" />;
 }
 
 /**
@@ -339,7 +342,7 @@ export default function Sidebar({
             {group.label === 'Investing' ? (
               <div className={`${s.item} ${s.soon}`} title="Phase 2. Select positions may become eligible for an organized annual liquidity window; participation and execution are not guaranteed.">
                 <span className={s.slot}>
-                  <Icon glyph={TrendingUp} />
+                  <Icon glyph={ArrowLeftRight} />
                 </span>
                 <span className={s.itemLabel}>Secondaries</span>
                 <span className={s.badge}>Soon</span>

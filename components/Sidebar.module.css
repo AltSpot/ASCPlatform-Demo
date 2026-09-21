@@ -179,7 +179,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 0 10px 8px;
+  padding: 0 12px 10px;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: var(--w-medium);
@@ -191,9 +191,7 @@
 /* A short rule that stops at the text, so the label reads as a
    section marker rather than a heading. */
 .groupRule {
-  flex: 1;
-  height: 1px;
-  background: var(--hair-neutral);
+  display: none;
 }
 
 /* ---------- one row ---------- */
@@ -204,17 +202,26 @@
   overflow: hidden;
 }
 
+/* THE RAIL, REBUILT (Tyler, 2026-09-21: "the icon style looks a bit
+   childish"). It was a glyph in a rounded tile inside a rounded pill with
+   an orange gradient behind the lit one: three shapes and a wash to say
+   one thing. Now a row is a bare line icon and a word. The lit row is a
+   quiet neutral fill, a slim gold bar at its left edge and a gold icon.
+   Nothing else. Rows are soft rectangles, not pills: a pill is a control
+   you press once, a rail is a list you read. */
 .item {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 12px;
-  border-radius: var(--r-pill);
+  gap: 13px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--r-md);
   border: 1px solid transparent;
   color: var(--as-text-muted);
   font-size: 14px;
   font-weight: var(--w-medium);
+  letter-spacing: -0.003em;
   text-decoration: none;
   cursor: pointer;
   transition:
@@ -247,42 +254,47 @@
 .slot {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   flex: none;
-  border-radius: var(--r-sm);
-  background: var(--slot-tile);
-  box-shadow: inset 0 0 0 1px var(--slot-edge);
-  color: var(--slot-ink);
-  transition:
-    color var(--dur-micro) ease,
-    background var(--dur-micro) ease,
-    box-shadow var(--dur-micro) ease;
-}
-
-.item:hover .slot {
-  color: var(--slot-ink-strong);
-  background: var(--slot-tile-strong);
-  box-shadow: inset 0 0 0 1px var(--hair-champagne);
+  color: currentColor;
+  transition: color var(--dur-micro) ease;
 }
 
 .active {
   color: var(--as-text);
-  background: linear-gradient(90deg, rgba(243, 152, 7, 0.17), rgba(243, 152, 7, 0.02));
+  background: var(--surface-2);
   border-color: transparent;
-  box-shadow: 0 1px 0 var(--edge-top) inset;
 }
-
-/* The lit row marks itself on the glyph, not on the tile. */
+/* The one mark of where you are: a slim gold bar inside the row's own
+   left edge (inside, so the scroller cannot clip it). */
+.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  bottom: 11px;
+  width: 2.5px;
+  border-radius: var(--r-pill);
+  background: var(--as-cta-gradient);
+}
 .active .slot {
-  color: var(--slot-ink-active);
-  background: var(--slot-tile-strong);
-  box-shadow: inset 0 0 0 1px var(--hair-champagne);
+  color: var(--accent);
 }
 
 /* A mark needs the breathing room a stroked glyph does not. */
+/* A product mark is artwork, not a glyph: a touch larger than the line
+   icons so it carries the same visual weight, and quiet until its row is
+   lit or pointed at. */
 .slot[data-mark='true'] {
-  padding: 5px;
+  width: 22px;
+  height: 22px;
+  margin: 0 -1px;
+  opacity: 0.78;
+}
+.item:hover .slot[data-mark='true'],
+.active .slot[data-mark='true'] {
+  opacity: 1;
 }
 
 /* Contain rather than cover: the Terminal mark is nearly two to one and
@@ -313,9 +325,7 @@
 /* Nothing to hover into: the row is disabled, so its tile does not
    answer the pointer. */
 .soon:hover .slot {
-  background: var(--slot-tile);
-  box-shadow: inset 0 0 0 1px var(--slot-edge);
-  color: var(--slot-ink);
+  color: currentColor;
 }
 
 .badge {
@@ -469,4 +479,14 @@
    an outline without tinting it: the mark stays the mark. */
 :global(html[data-theme='light']) .mark {
   filter: drop-shadow(0 0 0.6px rgba(74, 56, 26, 0.85));
+}
+
+/* ---------- collapsed, after the rebuild ---------- */
+:global(html[data-rail='mini']) .item {
+  width: 40px;
+  padding: 0;
+  justify-content: center;
+}
+:global(html[data-rail='mini']) .active::before {
+  left: -1px;
 }
