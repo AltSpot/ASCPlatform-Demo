@@ -355,3 +355,27 @@
   line-height: 1.55;
   color: var(--as-text-muted);
 }
+
+/* ---------- the round picture, for a primary (2026-09-21) ---------- */
+.roundRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+.roundCell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.roundValue {
+  font-family: var(--font-figure);
+  font-size: 17px;
+  font-weight: var(--w-medium);
+  letter-spacing: -0.01em;
+  color: var(--as-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

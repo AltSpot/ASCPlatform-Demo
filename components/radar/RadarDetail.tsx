@@ -7,7 +7,9 @@
  * as few words as will carry it:
  *
  *   How loud is it?      demand in dollars, members, rank, and a bar
- *   Where would we buy?  a price strip: the target band and the market
+ *   Where is it?         a secondary: the price strip, target band and
+ *                        market; a primary: the round picture, last round,
+ *                        valuation and the round we would source into
  *   What is it?          the one-line description
  *   Why, and why not?    the first sentence of each case, as two lists
  *   Why is it here?      one line
@@ -34,6 +36,7 @@ import { compact } from '@/lib/format';
 import {
   ASSET_CLASSES,
   INDUSTRIES,
+  nextRoundLabel,
   priceFromCents,
   valuationShort,
   type RadarCompanyView,
@@ -139,7 +142,13 @@ export default function RadarDetail({
         </div>
       </section>
 
-      {/* Where would we buy. */}
+      {/* Where is it. A SHARE PRICE IS A SECONDARY'S FACT (Tyler, 2026-09-21).
+          A target band and a market price only mean something where there
+          is a market: a block of existing shares changing hands. For a
+          venture or growth name, which AltSpot would join in its next
+          round, the picture is the ladder: last round, what it said the
+          company was worth, and the round we would source into. */}
+      {company.assetClass === 'secondary' ? (
       <section className={s.block} aria-label="Price picture">
         <div className={s.blockKey}>
           <Crosshair size={13} strokeWidth={1.7} aria-hidden="true" />
@@ -176,6 +185,36 @@ export default function RadarDetail({
           {company.backing ? <BackerMark backing={company.backing} className={s.backer} /> : null}
         </div>
       </section>
+      ) : (
+      <section className={s.block} aria-label="Round picture">
+        <div className={s.blockKey}>
+          <Crosshair size={13} strokeWidth={1.7} aria-hidden="true" />
+          The round
+        </div>
+        <div className={s.roundRow}>
+          <div className={s.roundCell}>
+            <span className={s.roundValue}>{company.lastRoundLabel}</span>
+            <span className={s.bigKey}>last round</span>
+          </div>
+          <div className={s.roundCell}>
+            <span className={s.roundValue}>{valuationShort(company.lastRoundValuation)}</span>
+            <span className={s.bigKey}>post-money, last round</span>
+          </div>
+          <div className={s.roundCell}>
+            <span className={s.roundValue}>{nextRoundLabel(company.lastRoundLabel) ?? 'Next round'}</span>
+            <span className={s.bigKey}>what we would source</span>
+          </div>
+        </div>
+        <div className={s.facts}>
+          <span>
+            <b>{ASSET_CLASSES[company.assetClass]?.label ?? company.assetClass}</b>
+            {' · '}
+            {INDUSTRIES[company.industry] ?? company.industry}
+          </span>
+          {company.backing ? <BackerMark backing={company.backing} className={s.backer} /> : null}
+        </div>
+      </section>
+      )}
 
       {/* Why, and why not. */}
       <section className={s.cases} aria-label="The two cases">

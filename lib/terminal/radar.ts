@@ -795,3 +795,22 @@ export function priceCompact(cents: number): string {
 export function valuationShort(dollars: number): string {
   return compact(dollars);
 }
+
+/**
+ * The round AltSpot would be sourcing a primary name into, read from its
+ * last one (Tyler, 2026-09-21). A share price belongs to a secondary; for a
+ * venture or growth name the useful picture is where the company is on
+ * the ladder, what its last round said it was worth, and what comes next.
+ * "Pre-seed" leads to Seed, Seed to Series A, a lettered round to the next
+ * letter, and anything called Growth or later to a growth round. Returns
+ * null when the last round does not read as a point on the ladder.
+ */
+export function nextRoundLabel(lastRound: string): string | null {
+  const r = lastRound.trim().toLowerCase();
+  if (/^pre-?seed$/.test(r)) return 'Seed';
+  if (/^seed$/.test(r)) return 'Series A';
+  const m = r.match(/^series ([a-z])$/);
+  if (m) return `Series ${String.fromCharCode(m[1].charCodeAt(0) + 1).toUpperCase()}`;
+  if (/^growth$/.test(r)) return 'Growth';
+  return null;
+}
