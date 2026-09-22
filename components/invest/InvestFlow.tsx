@@ -25,12 +25,12 @@ import StationRail from '@/components/invest/StationRail';
 import LegalDocument from '@/components/invest/LegalDocument';
 import Term from '@/components/Term';
 import { explainMinimum } from '@/lib/minimums';
+import { partyFor } from '@/lib/documents/personalize';
 import { announceNeedsYouChanged } from '@/lib/needs-you';
 
 import styles from './InvestFlow.module.css';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
-import { PARTNERS } from '@/lib/config';
 import type {
   DealView,
   ProfileView,
@@ -622,7 +622,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 values={mergeValues}
                 confirmedPanels={SUBSCRIPTION_SECTIONS.filter((x) => done(x.id)).map((x) => x.id)}
                 focusPanel={focusPanel}
-                party={{ entity: deal.entity, company: deal.name }}
+                party={partyFor(deal)}
               />
             </div>
 
@@ -634,7 +634,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 <ConfirmPanel
                   key={currentSection.id}
                   section={currentSection}
-                  party={{ entity: deal.entity, company: deal.name }}
+                  party={partyFor(deal)}
                   index={stepIndex + 1}
                   total={SUBSCRIPTION_SECTION_COUNT + 1}
                   confirmed={done(currentSection.id)}
@@ -751,7 +751,7 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                   </button>
                   <p className="tiny" style={{ marginTop: 12 }}>
                     A copy saves to your Docs automatically. Production signing runs
-                    through {PARTNERS.esign} e-sign; this demo simulates it.
+                    through a regulated e-signature provider; this demo simulates it.
                   </p>
                 </div>
               )}

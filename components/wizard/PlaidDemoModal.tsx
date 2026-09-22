@@ -38,14 +38,14 @@ export interface PlaidDemoAccount {
 const DEMO_ACCOUNTS: PlaidDemoAccount[] = [
   {
     id: 'plaid_checking',
-    name: 'Plaid Checking',
+    name: 'Everyday Checking',
     type: 'Checking',
     mask: '0000',
     balance: 12_480,
   },
   {
     id: 'plaid_saving',
-    name: 'Plaid Saving',
+    name: 'High-yield Savings',
     type: 'Savings',
     mask: '1111',
     balance: 43_115,
@@ -187,7 +187,7 @@ export default function PlaidDemoModal({
       >
         <div className={styles.head}>
           <span className="demo-tag">
-            <span className="dot" /> Demo · simulated Plaid
+            <span className="dot" /> Demo · simulated bank link
           </span>
           <button
             type="button"
@@ -205,8 +205,8 @@ export default function PlaidDemoModal({
               Sign in to {institution}
             </h3>
             <p className="small">
-              Plaid connects your account to AltSpot. Your credentials are never shared
-              with us. Nothing to type here: the fields are filled in for you.
+              A secure bank link connects your account to AltSpot. Your credentials are
+              never shared with us. Nothing to type here: the fields are filled in for you.
             </p>
 
             <div className={styles.field}>
@@ -231,8 +231,8 @@ export default function PlaidDemoModal({
 
             <div className={styles.foot}>
               <p className="tiny">
-                Demo item, removed for production. The real flow opens Plaid Link and
-                returns a public token the server exchanges for accounts.
+                Demo item, removed for production. The real flow opens the bank-link
+                provider and returns a token the server exchanges for accounts.
               </p>
             </div>
           </>

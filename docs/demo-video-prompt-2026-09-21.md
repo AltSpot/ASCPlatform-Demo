@@ -9,7 +9,7 @@ You wrote the brief, narration and scene list for the AltSpot product demo video
 **Your sources, in order of authority**
 
 1. The attached screenshots. They are the platform as it is right now, taken from the build we will record from, straight after a data reset, so every screen shows the exact demo account the film will use. There are three folders, one per theme (`ember`, `ice`, `daylight`), with identical file names in each; `NAME-1600x1000.png` is the first screen on arrival and `NAME-full.png` is the whole page top to bottom. **Work from the `ember` folder.** Ember is the default theme and the one we record in. Open the other two only for the short theme-switch beat.
-2. The attached document `demo-brief-update-2026-09-21.md`. Section 1 is a list of eleven things the old brief now gets wrong, several of them legal. Fix every one of them first. Section 2 is what the film may and may not show or say. Section 3 is the demo account: the cast, the numbers and the dates on screen. Section 4 is every new feature with why it matters and a narration angle. Sections 6 and 7 are a suggested scene spine with click paths and the recording checklist. Section 8 lists what is still pending counsel and must stay cuttable.
+2. The attached document `demo-brief-update-2026-09-21.md`. Section 1 is a list of seventeen things the old brief now gets wrong, several of them legal. Fix every one of them first. Section 2 is what the film may and may not show or say. Section 3 is the demo account: the cast, the numbers and the dates on screen. Section 4 is every new feature with why it matters and a narration angle. Sections 6 and 7 are a suggested scene spine with click paths and the recording checklist. Section 8 lists what is still pending counsel and must stay cuttable.
 3. Your existing brief, for whatever still holds. Where it disagrees with the two sources above, the sources win.
 
 **What I want back, in this order**
@@ -32,11 +32,14 @@ You wrote the brief, narration and scene list for the AltSpot product demo video
 - No calendar dates in narration. Dates on screen are relative to recording day. Say "three days left", not a date.
 - The illustrative scenarios scene and the disclosures page must each be a single scene that can be cut without breaking the flow, because both are pending counsel.
 - Do not script a partner console, a referral reward, "verified" accreditation, a waiting period, a liquidity window or a trading screen. None of those exist.
+- Never name a real vendor, bank or custodian. The platform now says "an escrow account in the SPV's own name at a U.S. bank" and "a secure bank link".
+- Portfolio's "invested" is $143,000 of positions in closed deals. The $25,000 in escrow is a separate line and must never be added into it in narration.
+- The Read step: frame the right-hand confirmation panel. The document body still carries the specimen's economics under a specimen notice.
 
 **Things to look at closely in the screenshots, because they are new since your brief**
 
 - `10-dashboard`: Needs you at the top, the vote pool ("You have voted $75,000") with Adjust all, and the Watchlist showing real stages ("Send by", "In escrow").
-- `11-marketplace-shelf`: every company has its own logo and a stage pill with a five-bar maturity meter; the Aurelia card says "You invested $25,000, in escrow until close".
+- `11-marketplace-shelf`: every company has its own logo and a stage pill with a five-bar maturity meter; the Aurelia card says "In escrow", with a band "$25,000 in escrow, until the deal closes". It says "You invested" only once a deal has closed.
 - `12-marketplace-radar` and `47`, `48`: the Radar sort (Featured, Most voted, Rising, New), Details, the vote scale, Remove vote.
 - `13-deal-calder` and `55`: the funding header and "What it costs" as four cards. `54` is the scenarios scene (cuttable). `14-deal-aurelia`: what a deal looks like when you are already in it.
 - `16` to `18`: checkout. `18` is "Your allocation is reserved" with the ten-day clock (You signed, Send by, 3 of 10 days).

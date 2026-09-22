@@ -896,6 +896,17 @@ export function topic(id: string): KnowledgeTopic | undefined {
 }
 
 /** Canonical phrasings for a set of ids, used to build follow-up chips. */
+/**
+ * Topics Spot answers when asked but never offers as a suggestion while
+ * their figures are switched off: a suggested question is the platform
+ * raising the subject. Carry stays out of the suggestions until
+ * SHOW_CARRY_TERMS is on (Tyler, 2026-09-21).
+ */
+const UNSUGGESTED: ReadonlySet<string> = new Set(SHOW_CARRY_TERMS ? [] : ['carry-mechanics']);
+
 export function questionsFor(ids: readonly string[]): string[] {
-  return ids.map((id) => BY_ID.get(id)?.question).filter((q): q is string => Boolean(q));
+  return ids
+    .filter((id) => !UNSUGGESTED.has(id))
+    .map((id) => BY_ID.get(id)?.question)
+    .filter((q): q is string => Boolean(q));
 }

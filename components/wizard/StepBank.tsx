@@ -9,19 +9,19 @@ import { useState } from 'react';
 
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
-import { PARTNERS } from '@/lib/config';
 import type { BankView, WizardView } from '@/lib/domain';
 
 import PlaidDemoModal from './PlaidDemoModal';
 import type { PlaidDemoAccount } from './PlaidDemoModal';
 
 const BANKS = [
-  { name: 'Chase', blurb: 'Checking · savings' },
-  { name: 'Bank of America', blurb: 'Checking · savings' },
-  { name: 'Wells Fargo', blurb: 'Checking · savings' },
-  { name: 'Charles Schwab', blurb: 'Brokerage-linked' },
-  { name: 'Mercury', blurb: 'Business checking' },
-  { name: 'Other bank', blurb: '11,000+ institutions' },
+  /* Kinds of institution, never a real bank's name (2026-09-21). */
+  { name: 'National bank', blurb: 'Checking · savings' },
+  { name: 'Regional bank', blurb: 'Checking · savings' },
+  { name: 'Credit union', blurb: 'Checking · savings' },
+  { name: 'Brokerage', blurb: 'Cash sweep account' },
+  { name: 'Business bank', blurb: 'Business checking' },
+  { name: 'Other institution', blurb: '11,000+ supported' },
 ];
 
 export default function StepBank({
@@ -88,9 +88,8 @@ export default function StepBank({
       </h2>
       <p className="sub" style={{ marginBottom: 24 }}>
         Connect the account you&rsquo;ll send to escrow from. Saved once, reused on
-        every deal, so sending a subscription to escrow later takes one click. This runs through{' '}
-        <b style={{ color: 'var(--orange-b)' }}>{PARTNERS.banking}</b>; credentials never
-        touch AltSpot.
+        every deal, so sending a subscription to escrow later takes one click. This runs through a
+        secure bank link; your credentials never touch AltSpot.
       </p>
 
       <div className="kicker" style={{ marginBottom: 10 }}>
@@ -128,10 +127,10 @@ export default function StepBank({
         }}
       >
         <button className="btn btn-primary" onClick={() => setLinkOpen(true)}>
-          Link with {PARTNERS.banking}
+          Link your bank
         </button>
         <span className="demo-tag">
-          <span className="dot" /> Demo · simulated Plaid
+          <span className="dot" /> Demo · simulated bank link
         </span>
       </div>
 

@@ -28,6 +28,7 @@
  *     that gets filed change.
  */
 import { requireUser } from '@/lib/auth';
+import { partyFor } from '@/lib/documents/personalize';
 import { AdmissionError } from '@/lib/domain';
 import {
   NotFoundError,
@@ -121,7 +122,7 @@ export const POST = route(
         {
           investorName: user.name,
           dealName: deal.name,
-          party: { entity: deal.entity, company: deal.name },
+          party: partyFor(deal),
         },
       );
 

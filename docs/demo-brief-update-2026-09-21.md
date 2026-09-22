@@ -37,6 +37,12 @@ House rules for any copy you write: no em dashes (use commas, periods, colons), 
 | 9 | Secondaries as a working feature. | Still **"Secondaries · Soon"** on the rail, disabled. Two invented late-stage secondary deals stay on the shelf as a picture of later. No trading screen, no liquidity window, no broker. |
 | 10 | The theme switch is on the side rail. | It moved to **Settings, Appearance**. Three themes: Ember (default), Ice, Daylight. |
 | 11 | A position says "You invested" as soon as a subscription exists. | **Signing is not investing.** The platform now says Started, Signed and not yet sent, In escrow, or Invested (deal closed). Narration must follow the same words. |
+| 12 | Portfolio's "invested" includes money in escrow. | **Fixed 2026-09-21.** Portfolio, the dashboard and the statement total only positions in deals that have closed ($143,000 across five). Money in escrow ($25,000, Aurelia) is shown beside the book as its own line, never inside it. |
+| 13 | The escrow and bank screens name real companies (a payments provider, a custodian bank, a bank-link provider, the member's bank). | **Removed 2026-09-21.** Copy now says "an escrow account in the SPV's own name at a U.S. bank" and "verified through a secure bank link"; the member's bank shows as "National bank · Checking ····8021", and the setup step offers kinds of institution, not bank names. A test fails if a vendor or bank name appears in any component. |
+| 14 | A Radar name's details show "Our target $X to $Y, Market $Z". | **Secondaries only, 2026-09-21.** A share price belongs to a secondary. A venture or growth name's details show **The round**: last round, post-money at the last round, and the round AltSpot would source ("Series B · $640M · Series C" for Orrery), with the class, the industry and who led the last round. |
+| 15 | The approval gate mentions a cooling-off period. | **Removed.** It reads "Offerings open the moment your questionnaire is approved." |
+| 16 | Spot suggests "How does carried interest actually work?" after a fee answer. | **Removed** while carry is switched off. Spot still answers it if asked directly. |
+| 17 | The memorandum's cover says "Series Seed Preferred Stock Financing" and "Up to $588,235". | **Bound to the deal.** On Calder the cover and every reference now read **Series A** and **$2,000,000**. The body still carries the specimen's economics (share price, share count, the specimen's round size) under the specimen notice, so **frame the Read step on the right-hand confirmation panel**, not the document body. "Managed by AltSpot Capital, LLC" is unchanged: the manager subsidiary's legal name is counsel's to confirm (see section 8). |
 
 ---
 
@@ -78,7 +84,7 @@ Sign in with any email and any password. A fresh account is minted with one cohe
 - Solenne Health, $25,000 in, worth $29,600 (up 18.4%)
 - Harborline Storage, $20,000 in, worth $23,200 (up 16.0%)
 - Northwind Grid, $18,000 in, **exited**, paid back $43,200 (up 140%)
-- Book: **invested $168,000, fair value $159,300, realized $51,000, total value $210,300, TVPI 1.25x, DPI 0.30x, net IRR about +25.8%**. These are seeded and describe no real outcome. Treat them as UI, not claims.
+- Book: **invested $143,000, fair value $134,300, realized $51,000, total value $185,300, TVPI 1.30x, DPI 0.36x, net IRR about +25.9%, largest position 40%**, plus **$25,000 in escrow shown beside the book, never in it** (Aurelia, below). These are seeded and describe no real outcome. Treat them as UI, not claims. The dashboard hero reads "$185,300, up $42,300 (+29.6%) on $143,000 you put in", with "In escrow $25,000" as its own figure.
 
 **In flight**
 - **Aurelia Labs**: the loop closed. Voted $25,000 on the Radar, the deal opened, the same $25,000 is **in escrow** awaiting close.
@@ -116,7 +122,7 @@ The order is fixed for every member: greeting, Needs you, Most popular, Watchlis
 - **The engine strip** opens the page: open now, closing soon, on the Radar, members voting. All counted live, each a button.
 - **Company identities. New and very visible.** Every invented company now has its own logo in its own style: wordmarks in different typefaces (a serif *Loomline*, a monospace `tessellate_`, spaced capitals MERIDEL), symbol-plus-word lockups (calder, aurelia, FERRULE, KESTREL), letter marks, circles, squares, light and dark grounds, on flat deep brand colours. *Why: it reads as a market of real companies, not thirty skins of one icon.* This is a big visual upgrade from the last film.
 - **The stage pill. New.** Under each name, the round sits on its own pill ("SERIES A", "SECONDARY", "FUND I") with a five-bar meter from seed to late stage. *Why: tell an early deal from a late one without reading.* It describes maturity only, never risk or return.
-- **Card states.** One status per card: Just opened, You invested (filled green, with a band "You invested $25,000 · In escrow until close" and a **Your position** button), Signed · complete it (with the orange **Complete investment →** button), View only, SPV full. Chips for Saved and "You voted $25K".
+- **Card states.** One status per card: Just opened; **In escrow** for a deal the member has funded that has not closed (a quiet chip, and a band "$25,000 in escrow · until the deal closes" with a **Your position** button); **You invested** only once a deal has closed; Signed · complete it (with the orange **Complete investment →** button); View only; SPV full. Chips for Saved and "You voted $25K".
 - **Quick look.** A side panel on any card: the raise, four facts, three reasons, who is behind it, the risk line, Ask Spot. It now opens on the member's own stage in that deal and its button is the next real step.
 - **The Radar lane.** Sort by **Featured** (default), Most voted, Rising, New. Featured deliberately rotates quiet names to the top each day so nothing is stuck at the bottom. Each card: demand in dollars, voter count, **Details** panel, **Vote**. Once voted, a gold band "You voted $25K" with a pencil; **Remove vote** is in the edit control.
 - **Yours** and **For you** filters on the sticky bar, plus class and industry filters.
@@ -131,7 +137,7 @@ Angle for the whole page: "Members vote. We source what the votes point at. By t
 - **The minimum, explained** by the rule that set it.
 - **The SPV today**: members against the investor cap, retirement money against the 20% and 25% marks, live.
 - **Underlined terms open Spot** with that exact question.
-- **If the member is already in**: a green band leads, "You invested $25,000 · In escrow until the deal closes · Your position", and the button becomes **Add to your position**. There is no gold Begin investment for someone already in.
+- **If the member is already in**: a green band leads, "$25,000 in escrow · Waiting for the deal to close · Your position" (it says "You invested" only once the deal has closed), and the button becomes **Add to your position**. There is no gold Begin investment for someone already in.
 - The only gold button on the page is **Begin investment**.
 
 ### 4.4 Illustrative scenarios (flagged, see section 8)
@@ -149,7 +155,7 @@ Angle: "Sign today, and your spot is held for ten days. Your money goes to escro
 
 ### 4.6 Portfolio (rebuilt)
 
-- **One plain sentence first**: "You put in $168,000. It is worth $159,300 today and $51,000 has been paid back to you. Together that is 1.25 times what you put in." Then an **as-of date** and "marks are reported quarterly and are unaudited".
+- **One plain sentence first**: "You put in $143,000. It is worth $134,300 today and $51,000 has been paid back to you. Together that is 1.30 times what you put in. Another $25,000 is in escrow, waiting for its deal to close." Then an **as-of date** and "marks are reported quarterly and are unaudited". Under the capital account, one quiet row: "Aurelia Labs · $25,000 · In escrow, awaiting close". Your position on an escrowed deal lands on that row.
 - **The capital account**: Invested, Fair value, Realized, TVPI, Net IRR, Largest position. The jargon labels **open Spot** with the definition.
 - **A jump row** to every section.
 - **Performance over time**: 1Y, 2Y, All; Invested and Paid back layers that switch on and off; guide lines; three figures for the window (Change in value, You put in, Paid back to you). Change in value excludes money the member added.
@@ -241,6 +247,7 @@ Beats worth a line of narration each: counted demand before sourcing; escrow in 
 5. **The ACA portfolio-construction figures** in the Terminal piece "Twenty positions, equal weight".
 6. **The offering memorandum's business description** is still counsel's specimen text with the names swapped; the pane carries a specimen notice. Do not zoom into the document body.
 7. Named counterparties (administrator, escrow agent, counsel) in deal terms: not built, waiting on legal.
+8. **The manager entity's legal name.** Documents and the memorandum cover say "AltSpot Capital, LLC". The structure has a manager subsidiary whose legal name is not recorded anywhere in the platform. Counsel to confirm before any document is shown in close-up.
 
 ---
 

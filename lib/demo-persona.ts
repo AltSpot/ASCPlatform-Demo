@@ -44,7 +44,7 @@ export const DEMO_PERSONA = {
   },
 
   bank: {
-    institution: 'Chase',
+    institution: 'National bank',
     mask: '8021',
     type: 'Checking',
   },

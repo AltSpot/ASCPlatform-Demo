@@ -345,7 +345,7 @@ export function gateCopy(
     case 'under_review':
       return {
         title: 'Your questionnaire is under review.',
-        body: 'An AltSpot team member will reach out to talk through your experience. Offerings open once your questionnaire is approved and a cooling-off period has passed.',
+        body: 'An AltSpot team member will reach out to talk through your experience. Offerings open the moment your questionnaire is approved.',
         action: null,
       };
     case 'declined':
@@ -357,7 +357,7 @@ export function gateCopy(
     default:
       return {
         title: 'Offerings are for members.',
-        body: 'Every offering on AltSpot is private. Offerings open to you once your investor questionnaire is approved and a short cooling-off period has passed.',
+        body: 'Every offering on AltSpot is private. Offerings open to you the moment your investor questionnaire is approved.',
         action: { href: questionnaireHref, label: 'Start your questionnaire' },
       };
   }

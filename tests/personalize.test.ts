@@ -13,7 +13,7 @@ import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
 import { BINDER } from '../lib/documents/registry';
-import { personalizeDocument, personalizeText } from '../lib/documents/personalize';
+import { partyFor, personalizeDocument, personalizeText } from '../lib/documents/personalize';
 import type { LegalDocument } from '../lib/documents/types';
 
 const PARTY = { entity: 'ASC OpenAI SPV, LLC', company: 'OpenAI' };
@@ -126,5 +126,22 @@ describe('the binder as delivered', () => {
       personalizeDocument(ppm.document, PARTY).contentHash,
       ppm.document.contentHash,
     );
+  });
+});
+
+describe('the cover names the deal it belongs to', () => {
+  test('the round and the size come from the deal', () => {
+    const party = partyFor({ entity: 'ASC Calder I, LLC', name: 'Calder Grid', tag: 'AltSpot-led · Series A', allocationTotal: 2_000_000 });
+    assert.equal(party.round, 'Series A');
+    assert.equal(party.allocation, 2_000_000);
+    assert.equal(
+      personalizeText('Up to $588,235 in Class B Common Units · Series Seed Preferred Stock Financing', party),
+      'Up to $2,000,000 in Class B Common Units · Series A Preferred Stock Financing',
+    );
+  });
+
+  test('a round that is not a lettered series keeps the specimen wording', () => {
+    assert.equal(partyFor({ entity: 'ASC Aurelia SPV, LLC', name: 'Aurelia Labs', tag: 'Late-stage secondary', allocationTotal: 3_000_000 }).round, undefined);
+    assert.equal(partyFor({ entity: 'ASC Harrow I, LLC', name: 'Harrow Labs', tag: 'AltSpot-led · Seed', allocationTotal: 240_000 }).round, 'Series Seed');
   });
 });

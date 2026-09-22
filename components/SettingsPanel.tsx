@@ -13,7 +13,6 @@ import AppearanceCard from '@/components/settings/AppearanceCard';
 import InviteCard from '@/components/settings/InviteCard';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
-import { PARTNERS } from '@/lib/config';
 
 /**
  * Tax document delivery is `required`: an investor cannot opt out of receiving
@@ -156,7 +155,7 @@ export default function SettingsPanel({
           <div className="card">
             <h3 style={{ marginBottom: 4 }}>Notifications</h3>
             <p className="small" style={{ marginBottom: 14 }}>
-              Delivered by email in production ({PARTNERS.email}).
+              Delivered by email.
             </p>
             {NOTIFICATIONS.map(({ label, required }, i) => (
               <label

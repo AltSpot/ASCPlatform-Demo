@@ -121,6 +121,39 @@ Concretely:
   other section, and the bell on the rail (`components/NotificationBell`,
   fed by `lib/repositories/needs-you.ts` from the portal shell), which
   opens the same rows in the side panel on any page (Tyler, 2026-09-17).
+- **The book is closed deals only** (Tyler, 2026-09-21). `BOOK_STATES`
+  (accepted, closed) in `lib/domain.ts` is what `ledgerBook` totals.
+  Money in escrow (`funded`) is the member's money waiting on a deal that
+  may still miss its minimum and hand it back, so it is never "invested":
+  `ledgerBook` reports it beside the book as `inEscrow`, Portfolio adds
+  one sentence and one quiet row for it (the row carries the
+  `position-<deal>` id Your position links to), the dashboard hero shows
+  "In escrow" as its own figure, and the statement leaves it out. A card or
+  a deal page says "In escrow" for a deal that has not closed and "You
+  invested" only for one that has. Pass the whole subscription list to
+  `ledgerBook`; it filters. HELD_STATES still means "has a stake in this
+  deal" (the tour, the marketplace's amount in a deal).
+- **No real vendor, bank or custodian on a member-facing screen.**
+  `PARTNERS` in `lib/config.ts` is for code and comments only; copy says
+  "an escrow account in the SPV's own name at a U.S. bank", "a secure bank
+  link", "a regulated e-signature provider". The persona's bank is
+  "National bank", and the setup step offers kinds of institution.
+  `tests/public-surfaces.test.ts` fails on a vendor or bank name in any
+  component.
+- **A share price is a secondary's fact.** A Radar name's details show the
+  price strip (target band and market) only for `assetClass: 'secondary'`.
+  A venture or growth name shows **The round**: last round, post-money at
+  the last round, and the round AltSpot would source (`nextRoundLabel` in
+  `lib/terminal/radar.ts`).
+- **Spot never suggests a topic whose figures are off.** `questionsFor`
+  drops `carry-mechanics` while `SHOW_CARRY_TERMS` is off; Spot still
+  answers it if asked.
+- **The binder's cover names the deal.** `partyFor(deal)` in
+  `lib/documents/personalize.ts` is the one builder for the document party
+  (the pane and the executed record both use it) and adds the round (a
+  lettered series only) and the allocation, which replace the specimen's
+  "Series Seed" and "588,235" everywhere. The specimen's economics in the
+  body stay under the specimen notice.
 - **A page never totals positions on its own.** `ledgerBook` in
   `lib/portfolio-metrics.ts` is the one place a book is summed, and both
   the dashboard and Portfolio read it; `tests/portfolio-metrics.test.ts`

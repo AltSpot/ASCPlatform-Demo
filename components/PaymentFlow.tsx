@@ -28,7 +28,7 @@ import StationRail from '@/components/invest/StationRail';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import { announceNeedsYouChanged } from '@/lib/needs-you';
-import { PARTNERS, SHOW_FEE_TERMS } from '@/lib/config';
+import { SHOW_FEE_TERMS } from '@/lib/config';
 import type { BankView, DealView, SubscriptionView } from '@/lib/domain';
 import { feeBreakdown } from '@/lib/fees';
 import { dateStr, money } from '@/lib/format';
@@ -151,16 +151,15 @@ export default function PaymentFlow({
             {bank ? (
               <>
                 <p className="small" style={{ marginBottom: 16 }}>
-                  From your linked account to the SPV&rsquo;s escrow account. In production
-                  this settles through {PARTNERS.payments}{' '}to an escrow account in the
-                  SPV&rsquo;s name at {PARTNERS.custody}, never through an AltSpot account.
+                  From your linked account to an escrow account in the SPV&rsquo;s own name
+                  at a U.S. bank, never through an AltSpot account.
                 </p>
                 <div className="choice sel" style={{ marginBottom: 16 }}>
                   <b>
                     {bank.institution} · {bank.type} ····{bank.mask}
                   </b>
                   <span>
-                    Linked {dateStr(bank.linkedAt)} · verified via {PARTNERS.banking}
+                    Linked {dateStr(bank.linkedAt)} · verified through a secure bank link
                   </span>
                 </div>
                 <button className="btn btn-gold btn-block" onClick={send} disabled={busy}>

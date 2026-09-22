@@ -43,6 +43,36 @@ export interface DocumentParty {
   entity: string;
   /** The portfolio company, e.g. "Calder Grid". `Deal.name`. */
   company: string;
+  /**
+   * The round the SPV buys into, e.g. "Series A" (2026-09-21). The
+   * specimen says "Series Seed" on its cover and throughout. Bound only
+   * when the deal's round is a lettered series; a secondary or a fund has
+   * no equivalent and keeps the specimen wording under the specimen notice.
+   */
+  round?: string;
+  /** The most the SPV raises, integer dollars. The specimen's is 588,235. */
+  allocation?: number;
+}
+
+/**
+ * The party for a deal: the names, plus the round and size where the deal
+ * has them. One builder, used by the on-screen pane and by the executed
+ * record, so the two cannot disagree.
+ */
+export function partyFor(deal: {
+  entity: string;
+  name: string;
+  tag: string;
+  allocationTotal: number;
+}): DocumentParty {
+  const round = deal.tag.replace(/^(AltSpot-led|Partner-led|AltSpot fund)\s*·\s*/i, '').trim();
+  const lettered = /^Series [A-Z]$/.test(round) ? round : /^Seed$/i.test(round) ? 'Series Seed' : undefined;
+  return {
+    entity: deal.entity,
+    company: deal.name,
+    round: lettered,
+    allocation: deal.allocationTotal > 0 ? deal.allocationTotal : undefined,
+  };
 }
 
 /** The vehicle name without its suffix, for prose that omits ", LLC". */
@@ -60,6 +90,12 @@ const RULES: [RegExp, (party: DocumentParty) => string][] = [
      example.com is IANA-reserved for documentation, so it reads as the
      placeholder it is rather than as a half-finished substitution. */
   [/synthera\.ai/gi, () => 'example.com'],
+
+  /* The cover's two deal facts (2026-09-21): the round and the size. Units
+     are $1.00 each in the specimen, so the unit count and the dollar cap
+     are the same number. */
+  [/Series Seed/g, (p) => p.round ?? 'Series Seed'],
+  [/588,235/g, (p) => (p.allocation ? p.allocation.toLocaleString('en-US') : '588,235')],
 
   [/ASC SYNTHERA II, LLC/g, (p) => p.entity.toUpperCase()],
   [/ASC Synthera II, LLC/g, (p) => p.entity],

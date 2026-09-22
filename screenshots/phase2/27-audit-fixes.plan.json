@@ -1,0 +1,233 @@
+{
+  "out": "screenshots/phase2/27-audit-fixes",
+  "sizes": [
+    [
+      1600,
+      1000
+    ]
+  ],
+  "keepGoing": true,
+  "shots": [
+    {
+      "name": "01-radar-orrery-venture",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1900
+        },
+        {
+          "eval": "(() => { const a = [...document.querySelectorAll('article')].find(x => /Orrery/.test(x.textContent)); a.scrollIntoView({ block: 'center', behavior: 'instant' }); [...a.querySelectorAll('button')].find(b => /details/i.test(b.textContent)).click(); })()"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "(() => { const t = document.querySelector('dialog[open]').innerText; if (/our target|market $/i.test(t)) throw new Error('a venture name still shows a price target'); if (!/what we would source/i.test(t)) throw new Error('no round picture'); if (!/Series C/.test(t)) throw new Error('next round is not Series C'); })()"
+        }
+      ]
+    },
+    {
+      "name": "02-radar-cinder-secondary",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace%3Fview%3Dradar"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1900
+        },
+        {
+          "eval": "(() => { const a = [...document.querySelectorAll('article')].find(x => /Cinder/.test(x.textContent)); a.scrollIntoView({ block: 'center', behavior: 'instant' }); [...a.querySelectorAll('button')].find(b => /details/i.test(b.textContent)).click(); })()"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "(() => { if (!/our target/i.test(document.querySelector('dialog[open]').innerText)) throw new Error('a secondary lost its price strip'); })()"
+        }
+      ]
+    },
+    {
+      "name": "03-dashboard-ferrule-overview",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const s = [...document.querySelectorAll('h2')].find(x => /Your votes/.test(x.textContent)).closest('section'); s.scrollIntoView({ block: 'start', behavior: 'instant' }); s.querySelector('button[aria-label^=\"Ferrule\"]').click(); })()"
+        },
+        {
+          "wait": 1000
+        },
+        {
+          "eval": "(() => { const t = document.querySelector('dialog[open]').innerText; if (/our target|market $/i.test(t)) throw new Error('Ferrule overview still shows a price target'); })()"
+        }
+      ]
+    },
+    {
+      "name": "04-portfolio-book",
+      "steps": [
+        {
+          "go": "/reshoot?to=/portfolio"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (!t.includes('You put in $143,000')) throw new Error('invested is not 143,000'); if (!t.includes('Another $25,000 is in escrow')) throw new Error('escrow is not stated beside the book'); })()"
+        }
+      ]
+    },
+    {
+      "name": "05-dashboard-hero",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { const h = [...document.querySelectorAll('h2')].find(x => x.textContent.includes('Your investments')); h.scrollIntoView({ block: 'start', behavior: 'instant' }); const t = h.closest('section').innerText.split(String.fromCharCode(10)).join(' '); if (!t.includes('on $143,000 you put in')) throw new Error('dashboard hero is not on 143,000'); if (!t.includes('In escrow $25,000')) throw new Error('no In escrow figure'); })()"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "06-marketplace-aurelia-card",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "(() => { const c = [...document.querySelectorAll('.deal-card')].find(x => /Aurelia/.test(x.querySelector('h3')?.textContent || '')); const t = c.innerText; if (/you invested/i.test(t)) throw new Error('Aurelia (in escrow) still says You invested'); if (!/25,000 in escrow/i.test(t)) throw new Error('band does not say in escrow'); })()"
+        }
+      ]
+    },
+    {
+      "name": "07-escrow-screen",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1400
+        },
+        {
+          "eval": "(() => { const row = [...document.querySelectorAll('tr')].find(r => /Tessellate/.test(r.textContent)); [...row.querySelectorAll('button')].find(x => /^Steps$/.test(x.textContent.trim())).click(); })()"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "eval": "location.href = document.querySelector('a[href^=\"/payment/\"]').getAttribute('href')"
+        },
+        {
+          "wait": 2400
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; for (const n of ['Plaid', 'Modern Treasury', 'J.P. Morgan', 'Chase']) if (t.includes(n)) throw new Error('escrow screen names ' + n); })()"
+        }
+      ]
+    },
+    {
+      "name": "08-read-step-header",
+      "steps": [
+        {
+          "go": "/reshoot?to=/invest/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "[...document.querySelectorAll('button')].find(x => /continue to documents/i.test(x.textContent)).click()"
+        },
+        {
+          "wait": 2800
+        },
+        {
+          "eval": "(() => { const t = document.body.innerText; if (/Series Seed/.test(t)) throw new Error('the memorandum still says Series Seed'); if (/588,235/.test(t)) throw new Error('the memorandum still says 588,235'); if (!/2,000,000/.test(t)) throw new Error('the memorandum does not state the allocation'); })()"
+        }
+      ]
+    },
+    {
+      "name": "09-gate-no-cooling-off",
+      "steps": [
+        {
+          "go": "/reshoot?as=new&to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "(() => { if (/cooling-off/i.test(document.body.innerText)) throw new Error('the gate still mentions a cooling-off period'); })()"
+        }
+      ]
+    },
+    {
+      "name": "10-spot-fee-no-carry",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/calder"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "eval": "window.dispatchEvent(new CustomEvent('asc:spot', { detail: { question: 'What are the fees?' } }))"
+        },
+        {
+          "wait": 2600
+        },
+        {
+          "eval": "(() => { if ([...document.querySelectorAll('button')].some(b => /carried interest/i.test(b.textContent))) throw new Error('Spot still offers a carried interest question'); })()"
+        }
+      ]
+    }
+  ]
+}

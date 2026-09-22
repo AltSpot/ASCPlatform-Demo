@@ -72,3 +72,31 @@ describe('logged-out surfaces', () => {
     assert.match(layout, /openGraph/);
   });
 });
+
+describe('no real vendor or bank on a member-facing screen', () => {
+  const NAMES = ['Plaid', 'Modern Treasury', 'J.P. Morgan', 'JPMorgan', 'Anvil', 'Postmark', 'Chase', 'Bank of America', 'Wells Fargo', 'Charles Schwab', 'Mercury'];
+  const walk = (dir: string, out: string[] = []): string[] => {
+    for (const entry of readdirSync(dir)) {
+      if (entry === 'node_modules' || entry === '.next') continue;
+      const full = path.join(dir, entry);
+      if (statSync(full).isDirectory()) walk(full, out);
+      else if (entry.endsWith('.tsx')) out.push(full);
+    }
+    return out;
+  };
+  test('no component renders a vendor name, and PARTNERS is never interpolated into copy', () => {
+    const offenders: string[] = [];
+    for (const file of [...walk('components'), ...walk('app')]) {
+      /* Strip comments and identifiers: only rendered text and string literals matter. */
+      const src = readFileSync(file, 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/[^\n]*/g, '')
+        .replace(/\b(Plaid[A-Z]\w*|\w+Plaid\w*)\b/g, '');
+      if (/\{PARTNERS\./.test(src)) offenders.push(`${file}: interpolates PARTNERS`);
+      for (const name of NAMES) {
+        if (new RegExp(`[>'"\`\\s]${name.replace('.', '\\.')}[<'"\`\\s,.]`).test(src)) offenders.push(`${file}: ${name}`);
+      }
+    }
+    assert.deepEqual(offenders, []);
+  });
+});

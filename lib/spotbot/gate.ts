@@ -167,7 +167,7 @@ const REFUSALS: Record<RefusalReason, { body: string; followUps: string[] }> = {
   performance_prediction: {
     body:
       'I cannot forecast returns, and you should be wary of anything that does. Any projections belong to the operator and live in the offering documents, stated alongside the assumptions they depend on. What I can explain is the economics you are actually signing: when the management fee is charged, how carried interest is calculated, and what has to happen for capital to come back at all.',
-    followUps: ['fees', 'carry-mechanics', 'illiquidity'],
+    followUps: ['fees', 'no-capital-calls', 'illiquidity'],
   },
   position_sizing: {
     body:

@@ -71,6 +71,14 @@ export const SESSION_TTL_DAYS = 30;
  * self-certification questionnaire AltSpot evaluates itself, so there is
  * no verification vendor.
  */
+/**
+ * The integration vendors, for code and comments. NEVER RENDERED (Tyler,
+ * 2026-09-21): a member-facing screen names no real company, vendor or
+ * bank, the same rule as the shelf. Copy says "a secure bank link", "an
+ * escrow account in the SPV's name at a U.S. bank", "an e-signature
+ * provider". tests/public-surfaces.test.ts fails if a component renders
+ * one of these names.
+ */
 export const PARTNERS = {
   banking: 'Plaid',
   payments: 'Modern Treasury',
