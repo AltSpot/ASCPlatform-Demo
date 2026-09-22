@@ -23,6 +23,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 import CompanyLogo from '@/components/CompanyLogo';
+import { bandIsLight } from '@/lib/brand';
 
 import s from './PopularCarousel.module.css';
 
@@ -84,7 +85,12 @@ export default function PopularCarousel({ items }: { items: PopularItem[] }) {
             data-kind={item.kind}
             style={{ ['--i' as string]: index }}
           >
-            <span className={s.art} style={{ background: item.art }} aria-hidden="true">
+            <span
+              className={s.art}
+              style={{ background: item.art }}
+              data-light={bandIsLight(item.id) ? 'true' : undefined}
+              aria-hidden="true"
+            >
               {item.logoUrl ? (
                 <CompanyLogo className={s.mark} slug={item.id} logoUrl={item.logoUrl} scale={0.68} />
               ) : (

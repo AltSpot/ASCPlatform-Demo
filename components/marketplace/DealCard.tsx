@@ -39,6 +39,7 @@ import WatchStar from '@/components/marketplace/WatchStar';
 import type { DealShelfItem, SubscriptionView } from '@/lib/domain';
 import { ACCREDITATION_STEP } from '@/lib/domain';
 import { compact, money } from '@/lib/format';
+import { bandIsLight } from '@/lib/brand';
 import { positionHref, type PositionStageView } from '@/lib/position-stage';
 import { dealLead, dealRound, isJustOpened, STAGE_RUNGS, stageRung } from '@/lib/funding';
 
@@ -164,7 +165,11 @@ export default function DealCard({
       data-voted={fromRadar ? 'true' : undefined}
       data-in={inDeal ? 'true' : undefined}
     >
-      <div className={`thumb ${s.art}`} style={{ background: deal.art }}>
+      <div
+        className={`thumb ${s.art}`}
+        style={{ background: deal.art }}
+        data-light={bandIsLight(deal.id) ? 'true' : undefined}
+      >
         {status ? (
           <span className={s.status} data-tone={status.tone} title={status.title}>
             <status.icon size={11} strokeWidth={2} aria-hidden="true" />

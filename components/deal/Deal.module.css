@@ -2166,3 +2166,11 @@
   background: var(--control-fill-hover);
   box-shadow: inset 0 0 0 1px var(--control-rim-hover);
 }
+
+/* A light band keeps its light, and its label is dark. */
+.filmEmpty[data-light='true']::after {
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0), rgba(10, 8, 6, 0.1));
+}
+.filmEmpty[data-light='true'] .filmLabel {
+  color: rgba(10, 8, 6, 0.72);
+}

@@ -1052,6 +1052,7 @@ label.field>span{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background:linear-gradient(180deg,rgba(10,8,6,.10),rgba(10,8,6,0) 34%,rgba(10,8,6,0) 64%,rgba(10,8,6,.16));
 }
+.thumb[data-light='true']::after{background:linear-gradient(180deg,rgba(10,8,6,0) 60%,rgba(10,8,6,.06))}
 /* On artwork, so it takes the on-media ink rather than the page accent:
    the scrim is dark in both themes, and Daylight's deep gold on it is
    dark on dark. */

@@ -1015,8 +1015,17 @@ keep voting. Concretely (`components/marketplace/MarketplaceLanes.tsx`,
   word, a symbol over small capitals, or a symbol alone, set in SYSTEM type
   stacks (`LOGO_FONTS` in `lib/brand.ts`) because a logo is the one thing
   on the platform that must not be set in the platform's type. **The art
-  band** (`brandArt`) is the company's deep colour laid nearly flat, no
-  radial bloom; it is stored on the deal, so a change needs `npm run
+  band** (`brandArt`) takes the company's own style (`bandStyle` in the
+  JSON, Tyler 2026-09-21: "the colours do not have to be so dull"): deep
+  (the company's colour nearly flat), vivid (the hue at full strength with
+  one soft light), light (the tint), or a faint pattern in the tint over
+  the deep colour (stripes, grid, dots, columns, rings). On the shelf today
+  that is three vivid, one light, four patterned and three deep, so no two
+  neighbours match. Pure CSS, no images. `bandIsLight` decides the ink:
+  on a light or bright band the logo word is dark (the company's hue,
+  deepened, via `bandInk`), the art overlays fade to a whisper and the deal
+  hero's label goes dark; every art element carries `data-light`. No
+  radial bloom on a deep band; it is stored on the deal, so a change needs `npm run
   db:seed`. **A Radar card** carries a tenth of the hue in one corner and
   nothing more. No component rounds, clips or box-shadows a mark: it keeps
   the shape it was drawn with (`filter: drop-shadow` follows the artwork).

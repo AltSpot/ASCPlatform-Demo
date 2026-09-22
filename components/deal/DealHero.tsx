@@ -32,6 +32,7 @@ import BackerMark from '@/components/BackerMark';
 import FundingProgress from '@/components/FundingProgress';
 import Term from '@/components/Term';
 import { SHOW_SPONSOR_ALIGNMENT } from '@/lib/config';
+import { bandIsLight } from '@/lib/brand';
 import type { DealView } from '@/lib/domain';
 import { money } from '@/lib/format';
 import { dealChip } from '@/lib/funding';
@@ -60,7 +61,11 @@ export default function DealHero({
           {deal.videoUrl ? (
             <video className={s.filmVideo} src={deal.videoUrl} controls playsInline />
           ) : (
-            <div className={s.filmEmpty} style={{ background: deal.art }}>
+            <div
+              className={s.filmEmpty}
+              style={{ background: deal.art }}
+              data-light={bandIsLight(deal.id) ? 'true' : undefined}
+            >
               {deal.logoUrl && (
                 <CompanyLogo className={s.filmMark} slug={deal.id} logoUrl={deal.logoUrl} scale={2.1} />
               )}

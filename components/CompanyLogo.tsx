@@ -17,7 +17,7 @@
  * so nothing here paints colour or type inline. Decorative: the company's
  * name is always printed beside it as text. No hooks; server or client.
  */
-import { LOGO_FONTS, LOGO_PAPER, brandOf } from '@/lib/brand';
+import { LOGO_FONTS, LOGO_PAPER, bandInk, bandIsLight, brandOf } from '@/lib/brand';
 
 import s from './CompanyLogo.module.css';
 
@@ -48,7 +48,12 @@ export default function CompanyLogo({
           ['--logo-tracking' as string]: `${logo.tracking}em`,
           ['--logo-size' as string]: `${logo.size}px`,
           ['--logo-style' as string]: logo.italic ? 'italic' : 'normal',
-          ['--logo-ink' as string]: logo.color === 'tint' && brand ? brand.light : LOGO_PAPER,
+          /* On a light or bright band the word is dark, in the company's own hue. */
+          ['--logo-ink' as string]: bandIsLight(slug)
+            ? bandInk(slug)
+            : logo.color === 'tint' && brand
+              ? brand.light
+              : LOGO_PAPER,
         }
       : {}),
   };

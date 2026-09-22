@@ -1,0 +1,142 @@
+{
+  "out": "screenshots/phase2/28-band-colour",
+  "sizes": [
+    [
+      1600,
+      1000
+    ]
+  ],
+  "shots": [
+    {
+      "name": "01-shelf-ember",
+      "full": true,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "01-shelf-daylight",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','light'); document.documentElement.setAttribute('data-theme','light')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "01-shelf-ice",
+      "full": false,
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','ice'); document.documentElement.setAttribute('data-theme','ice')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "scroll": "#open-now"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "02-shelf-row-two",
+      "steps": [
+        {
+          "go": "/reshoot?to=/marketplace"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1800
+        },
+        {
+          "eval": "document.querySelectorAll('.deal-card')[4].scrollIntoView({ block: 'start', behavior: 'instant' })"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "03-dashboard-carousel",
+      "steps": [
+        {
+          "go": "/reshoot?to=/dashboard"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        },
+        {
+          "eval": "[...document.querySelectorAll('h2')].find(x => /Most popular/.test(x.textContent)).scrollIntoView({ block: 'start', behavior: 'instant' })"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    {
+      "name": "04-deal-meridel-light",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/meridel"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    },
+    {
+      "name": "05-deal-ferrule-vivid",
+      "steps": [
+        {
+          "go": "/reshoot?to=/deals/ferrule"
+        },
+        {
+          "eval": "localStorage.setItem('asc.theme','dark'); document.documentElement.removeAttribute('data-theme')"
+        },
+        {
+          "wait": 1700
+        }
+      ]
+    }
+  ]
+}

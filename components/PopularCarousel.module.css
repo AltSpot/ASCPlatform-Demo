@@ -256,3 +256,8 @@
 :global(html[data-theme='light']) .navBtn:hover {
   background: var(--btn-primary-bg-hover);
 }
+
+/* A light band keeps its light. */
+.art[data-light='true']::after {
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0), rgba(10, 8, 6, 0.06));
+}
