@@ -185,7 +185,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  padding: 1.5px;
+  padding: 1px;
   border-radius: inherit;
   background: var(--select-ring);
   -webkit-mask:
@@ -381,7 +381,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  padding: 1.5px;
+  padding: 1px;
   border-radius: inherit;
   background: var(--select-ring);
   -webkit-mask:
@@ -809,4 +809,92 @@
 }
 :global(html[data-theme='light']) .rungs span[data-on='true'] {
   background: var(--as-gold-deep);
+}
+
+/* ---------- the quiet bar (Tyler, 2026-09-21: "the design is too loud") ----------
+   Every item was its own filled pill with spaced capitals, a count and a
+   bright ring. Now: sentence-case labels with no ground of their own,
+   three groups (where, mine, filter) parted by hairlines, and one soft
+   raised thumb under whatever is chosen. The chosen item's glyph is the
+   only gold on the bar. Same controls, same results. */
+.bar {
+  gap: 10px 6px;
+  padding: 8px 10px;
+}
+.barDivider {
+  flex: none;
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: var(--hair);
+}
+.lanes {
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-well);
+}
+.lanePill {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  gap: 7px;
+  padding: 6px 14px;
+}
+.laneCount {
+  font-family: var(--font-figure);
+  font-size: 12px;
+  font-weight: var(--w-regular, 400);
+  color: var(--as-text-muted);
+  opacity: 1;
+}
+.lanePill[data-on='true'] .laneCount {
+  color: var(--as-text-muted);
+}
+.laneIndicator {
+  box-shadow: var(--select-lift);
+  transition:
+    transform 0.42s cubic-bezier(0.32, 0.72, 0, 1),
+    width 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.yours {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  gap: 7px;
+  padding: 7px 12px;
+  background: transparent;
+  transition:
+    background 0.24s ease,
+    color 0.2s ease,
+    box-shadow 0.24s ease;
+}
+.yours svg {
+  stroke: var(--as-text-muted);
+  transition: stroke 0.2s ease, fill 0.2s ease;
+}
+.yours:hover {
+  background: var(--surface-1);
+}
+.yours[aria-pressed='true'],
+.yours[aria-pressed='true']:hover {
+  background: var(--select-fill);
+  box-shadow: var(--select-lift);
+}
+.yours[aria-pressed='true'] svg {
+  stroke: var(--as-gold);
+  fill: var(--as-gold);
+}
+.yours[aria-pressed='true'] .laneCount {
+  color: var(--as-text-muted);
+}
+:global(html[data-theme='light']) .yours:not([aria-pressed='true']) {
+  background: transparent;
+  box-shadow: none;
+}
+:global(html[data-theme='light']) .yours:not([aria-pressed='true']):hover {
+  background: var(--control-fill);
 }

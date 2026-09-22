@@ -297,6 +297,7 @@ export default function MarketplaceLanes({
             Radar <span className={s.laneCount}>{companies.length}</span>
           </button>
         </div>
+        <span className={s.barDivider} aria-hidden="true" />
         <button
           type="button"
           className={s.yours}
@@ -320,6 +321,7 @@ export default function MarketplaceLanes({
           </button>
         ) : null}
         </div>
+        <span className={s.barDivider} aria-hidden="true" />
         <TaxonomyFilters
           counts={counts}
           industries={industries}

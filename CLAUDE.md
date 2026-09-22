@@ -943,15 +943,18 @@ otherwise it goes. What that removed, so it is not quietly put back:
   measures the child marked `data-active`). The industry menu sits on the
   same line. On the marketplace bar (`collapsible`) the classes fold behind
   one Asset class pill on the bar's own line that unrolls them to the right
-  (a grid column animating 0fr to 1fr, chips staggered), shrinks to its
-  glyph while open, hides the industry menu while open, wears the chosen
-  class when closed, and rolls up on a press outside or Escape.
-  The marketplace bar's Open now / Radar pills use the same
-  gliding outline, and Yours / For you light with it. **A chosen option
-  is never a solid pill**: it is `--select-fill` under a hairline in
-  `--select-ring` (a `::before` masked to a 1.5px border; 1px let the dark through), with the word in
-  page ink, because a filled champagne pill turned its word white on
-  hover. Restated for Daylight in bronze.
+  (the drawer animates to its measured width), shrinks to its glyph while
+  open, wears the chosen class when closed, carries no per-class counts
+  while unrolled, and rolls up on a press outside or Escape.
+  **The bar is quiet** (Tyler, 2026-09-21: "the design is too loud"):
+  sentence-case labels with no ground of their own, three groups (where:
+  Open now / Radar; mine: Yours, For you; filter: Asset class, Industry)
+  parted by hairlines (`.barDivider`), and one soft raised thumb under
+  whatever is chosen: `--select-fill` with `--select-lift` and a 1px lit
+  hairline in `--select-ring`, all neutral, restated for Daylight as a
+  white thumb. No gold ring, no spaced capitals, no solid pill. The chosen
+  item's glyph is the only gold on the bar. The Radar's Order control and
+  every `pill` Select follow the same rules.
 - **Category colour is a key, on a glyph.** The `--as-cat-*` tints appear
   on the Portfolio exposure legend and its bars, and (Tyler, 2026-09-21) on
   the asset-class glyph only: the filter chips and `components/AssetClassTag`

@@ -804,3 +804,40 @@
 .card[data-pressable='true'] {
   cursor: pointer;
 }
+
+/* ---------- the quiet order control (Tyler, 2026-09-21: "too loud") ----------
+   One well, text options, the same soft thumb as the marketplace bar for
+   the chosen order. No gold ring. */
+.sortRow {
+  gap: 2px;
+}
+.sortKey {
+  margin-right: 10px;
+}
+.sortPill {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 6px 12px;
+  background: transparent;
+  box-shadow: none;
+}
+.sortPill:hover {
+  background: var(--surface-1);
+}
+.sortPill[aria-pressed='true'],
+.sortPill[aria-pressed='true']:hover {
+  background: var(--select-fill);
+  box-shadow: inset 0 0 0 1px var(--hair), var(--select-lift);
+  color: var(--as-text);
+}
+:global(html[data-theme='light']) .sortPill:not([aria-pressed='true']) {
+  background: transparent;
+  box-shadow: none;
+}
+:global(html[data-theme='light']) .sortPill:not([aria-pressed='true']):hover {
+  background: var(--control-fill);
+  box-shadow: none;
+}

@@ -107,7 +107,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  padding: 1.5px;
+  padding: 1px;
   border-radius: inherit;
   background: var(--select-ring);
   -webkit-mask:
@@ -257,4 +257,41 @@
 /* A bar dropdown lists long names (industries); give them room. */
 .root[data-variant='pill'] .panel {
   min-width: 300px;
+}
+
+/* ---------- the quiet pill (Tyler, 2026-09-21: "too loud") ----------
+   On a bar the dropdown is a label on the bar, not a pill: no ground at
+   rest, sentence case, the soft thumb once it is narrowing something. */
+.root[data-variant='pill'] .trigger {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  min-height: 32px;
+  padding: 0 10px 0 12px;
+  background: transparent;
+}
+.root[data-variant='pill'] .trigger:hover,
+.root[data-variant='pill'] .trigger[aria-expanded='true'] {
+  background: var(--surface-1);
+}
+.root[data-variant='pill'] .trigger[data-chosen] {
+  background: var(--select-fill);
+  box-shadow: var(--select-lift);
+}
+.root[data-variant='pill'] .icon {
+  stroke: var(--as-text-muted);
+}
+.root[data-variant='pill'] .trigger[data-chosen] .icon {
+  stroke: var(--as-gold);
+}
+:global(html[data-theme='light']) .root[data-variant='pill'] .trigger:not([data-chosen]) {
+  background: transparent;
+  box-shadow: none;
+}
+:global(html[data-theme='light']) .root[data-variant='pill'] .trigger:not([data-chosen]):hover,
+:global(html[data-theme='light']) .root[data-variant='pill'] .trigger[aria-expanded='true']:not([data-chosen]) {
+  background: var(--control-fill);
+  box-shadow: none;
 }

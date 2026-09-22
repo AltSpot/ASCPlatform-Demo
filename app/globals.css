@@ -363,12 +363,14 @@
 
   /* ============ GRADIENTS (named and reserved) ============ */
   --as-cta-gradient:linear-gradient(135deg,#C79A4B,#F39807);
-  /* A chosen option in a bar of options (2026-09-21): an outline in the
-     warm ramp and a breath of fill, never a solid pill, so the word on it
-     stays page ink and reads the same at rest and on hover. */
-  --select-ring:linear-gradient(120deg,#F2D68E 0%,#F7A93A 50%,#F58A2E 100%);
-  --select-fill:rgba(243,152,7,.09);
-  --select-fill-hover:rgba(243,152,7,.12);
+  /* A chosen option in a bar of options (Tyler, 2026-09-21: "too loud").
+     A soft raised thumb with a lit hairline, the way a native segmented
+     control marks its choice: no colour, no glow. The word stays page ink
+     and the chosen item's glyph is the only gold. */
+  --select-ring:linear-gradient(180deg,rgba(255,255,255,.17) 0%,rgba(255,255,255,.06) 100%);
+  --select-fill:rgba(255,255,255,.075);
+  --select-fill-hover:rgba(255,255,255,.1);
+  --select-lift:0 1px 2px rgba(0,0,0,.28),0 4px 12px rgba(0,0,0,.18);
   /* The dropdown panel (components/ui/Select): opaque on every canvas. */
   --surface-menu:#15110D;
   --as-tri-gradient:linear-gradient(90deg,#C79A4B,#F39807,#E5661A);
@@ -1447,9 +1449,10 @@ html[data-theme='light']{
   --as-cat-growth:#C06405;
   --as-cat-fund:#7E5FC4;
 
-  --select-ring:linear-gradient(120deg,#9A7029 0%,#B8620A 60%,#A8461A 100%);
-  --select-fill:rgba(154,112,41,.08);
-  --select-fill-hover:rgba(154,112,41,.14);
+  --select-ring:linear-gradient(180deg,rgba(60,40,14,.14) 0%,rgba(60,40,14,.2) 100%);
+  --select-fill:rgba(255,255,255,.92);
+  --select-fill-hover:rgba(255,255,255,1);
+  --select-lift:0 1px 2px rgba(90,60,20,.12),0 3px 10px rgba(90,60,20,.08);
   --surface-menu:#FCF8F2;
 
   --as-ind-1:#9A7029;   --as-ind-2:#C06405;   --as-ind-3:#A8461A;

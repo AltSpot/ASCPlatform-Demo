@@ -58,7 +58,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  padding: 1.5px;
+  padding: 1px;
   border-radius: inherit;
   background: var(--select-ring);
   -webkit-mask:
@@ -265,7 +265,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  padding: 1.5px;
+  padding: 1px;
   border-radius: inherit;
   background: var(--select-ring);
   -webkit-mask:
@@ -352,4 +352,91 @@
 :global(html[data-theme='light']) .drawerToggle:not([data-chosen='true'][aria-expanded='false']) {
   background: var(--control-fill);
   box-shadow: inset 0 0 0 1px var(--control-rim);
+}
+
+/* ---------- the quiet bar (Tyler, 2026-09-21: "too loud") ----------
+   On the marketplace bar the classes read as text on the bar itself: no
+   ground on the pill or the chips at rest, sentence case, and the same
+   soft thumb as every other choice sliding under the chosen class. Its
+   glyph keeps a whisper of the category tint; the chosen one is full. */
+.drawerToggle {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  background: transparent;
+}
+.drawerToggle:hover,
+.drawerToggle[aria-expanded='true'] {
+  background: var(--surface-1);
+}
+.drawerToggle[data-chosen='true'][aria-expanded='false'] {
+  background: var(--select-fill);
+  box-shadow: var(--select-lift);
+}
+.drawer .filterChip {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--w-medium);
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 6px 12px;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.drawer .filterChip:hover {
+  background: var(--surface-1);
+  border-color: transparent;
+}
+.drawer .filterChip[aria-checked='true'],
+.drawer .filterChip[aria-checked='true']:hover {
+  background: transparent;
+}
+.drawer .filterCount {
+  margin-left: 2px;
+  font-family: var(--font-figure);
+  font-size: 12px;
+  color: var(--as-text-muted);
+}
+.drawer .filterChip[aria-checked='true'] .filterCount {
+  color: var(--as-text-muted);
+}
+.drawer .chipGlyph {
+  opacity: 0.55;
+}
+.drawer .filterChip:hover .chipGlyph,
+.drawer .filterChip[aria-checked='true'] .chipGlyph {
+  opacity: 1;
+}
+.drawer .indicator {
+  box-shadow: var(--select-lift);
+}
+.indicator {
+  transition:
+    transform 0.42s cubic-bezier(0.32, 0.72, 0, 1),
+    width 0.42s cubic-bezier(0.32, 0.72, 0, 1),
+    height 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+}
+:global(html[data-theme='light']) .drawerToggle:not([data-chosen='true'][aria-expanded='false']) {
+  background: transparent;
+  box-shadow: none;
+}
+:global(html[data-theme='light']) .drawerToggle:not([data-chosen='true'][aria-expanded='false']):hover,
+:global(html[data-theme='light']) .drawerToggle[aria-expanded='true'] {
+  background: var(--control-fill);
+}
+:global(html[data-theme='light']) .drawer .filterChip:not([aria-checked='true']) {
+  background: transparent;
+  box-shadow: none;
+}
+:global(html[data-theme='light']) .drawer .filterChip:not([aria-checked='true']):hover {
+  background: var(--control-fill);
+}
+
+/* Unrolled on the bar, the classes carry no counts: the lanes and the
+   industry menu already count, and the quieter row fits the bar's line. */
+.drawer .filterCount {
+  display: none;
 }
