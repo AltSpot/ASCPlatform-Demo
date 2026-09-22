@@ -259,3 +259,43 @@
   background: var(--control-fill-hover);
   box-shadow: inset 0 0 0 1px var(--control-rim-hover);
 }
+
+/* ---------- in escrow, beside the book (2026-09-21) ---------- */
+.escrow {
+  list-style: none;
+  margin: -12px 0 22px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.escrowRow {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--inset-edge);
+  font-size: var(--fs-meta);
+  color: var(--as-text-muted);
+  scroll-margin-top: 140px;
+}
+.escrowRow[data-arrived='true'] {
+  box-shadow: inset 0 0 0 1px var(--hair-gold-active), inset 3px 0 0 var(--as-gold);
+}
+.escrowName {
+  font-size: 14px;
+  font-weight: var(--w-medium);
+  color: var(--as-text);
+}
+.escrowAmount {
+  font-family: var(--font-figure);
+  font-variant-numeric: tabular-nums;
+  color: var(--as-text);
+}
+.escrowState {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-text);
+}

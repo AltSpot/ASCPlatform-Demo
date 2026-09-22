@@ -37,7 +37,7 @@ import PositionReturns, { type PositionReturn } from '@/components/portfolio/Pos
 import ValueCurve from '@/components/portfolio/ValueCurve';
 import FeesPaid, { type FeeLine } from '@/components/portfolio/FeesPaid';
 import { requireUser } from '@/lib/auth';
-import { HELD_STATES, isLivePosition } from '@/lib/domain';
+import { BOOK_STATES, isLivePosition } from '@/lib/domain';
 import { CARRY_PERCENT, FEE_TERMS, SHOW_CARRY_TERMS, SHOW_FEE_TERMS } from '@/lib/config';
 import { carryOn, feeBreakdown, reservePercent } from '@/lib/fees';
 import { irr, ledgerBook, positionFlows } from '@/lib/portfolio-metrics';
@@ -79,14 +79,19 @@ export default async function PortfolioPage() {
     listExternal(user.id),
   ]);
 
-  const held = subscriptions.filter((sub) => HELD_STATES.includes(sub.state));
-  const deals = await getDealsByIds([...new Set(held.map((sub) => sub.dealId))]);
+  /* Positions in closed deals. Escrow is shown beside them, not among them. */
+  const held = subscriptions.filter((sub) => BOOK_STATES.includes(sub.state));
+  const escrowed = subscriptions.filter((sub) => sub.state === 'funded');
+  const deals = await getDealsByIds([
+    ...new Set([...held, ...escrowed].map((sub) => sub.dealId)),
+  ]);
 
   /* The book totals through lib/portfolio-metrics, the same call the
      dashboard makes, so a figure here cannot disagree with one there.
      Invested counts every dollar that ever went to work, realized
      positions included; fair value counts only what is still held. */
-  const book = ledgerBook(held, distributions.items);
+  /* The whole list: ledgerBook keeps closed deals in the book and totals escrow beside it. */
+  const book = ledgerBook(subscriptions, distributions.items);
   const { invested, liveCost, fairValue: value, realized: returned } = book;
   const { dpi, tvpi, unrealized } = book;
 
@@ -425,6 +430,13 @@ export default async function PortfolioPage() {
         ) : null}
         . Together that is{' '}
         <b className={tvpi >= 1 ? s.up : s.down}>{tvpi.toFixed(2)} times</b> what you put in.
+        {book.inEscrow > 0 ? (
+          <>
+            {' '}
+            Another <b>{money(book.inEscrow)}</b> is in escrow, waiting for{' '}
+            {book.inEscrowCount === 1 ? 'its deal' : 'those deals'} to close.
+          </>
+        ) : null}
         <span className={s.asOf}>
           As of {asOfLabel}. Marks are reported by each vehicle, quarterly, and are unaudited.
         </span>
@@ -476,6 +488,20 @@ export default async function PortfolioPage() {
           d="Share of invested capital"
         />
       </div>
+
+      {/* In escrow: the member's money, not yet a position. Each row carries
+          the id "Your position" links to, so the link lands here. */}
+      {escrowed.length > 0 ? (
+        <ul className={s.escrow}>
+          {escrowed.map((sub) => (
+            <li className={s.escrowRow} id={`position-${sub.dealId}`} key={sub.id}>
+              <span className={s.escrowName}>{deals.get(sub.dealId)?.name ?? sub.dealId}</span>
+              <span className={s.escrowAmount}>{money(sub.amount)}</span>
+              <span className={s.escrowState}>In escrow · awaiting close</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
       <nav className={s.jump} aria-label="On this page">
         {series.length >= 2 ? <a href="#p-curve">Over time</a> : null}

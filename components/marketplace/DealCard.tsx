@@ -145,7 +145,9 @@ export default function DealCard({
           : 'You started this investment. Finish signing to reserve your spot.',
       }
     : deal.youAreIn
-    ? { tone: 'in', icon: CircleCheck, label: 'You invested', title: 'Your subscription is in this SPV' }
+    ? deal.status === 'closed'
+      ? { tone: 'in', icon: CircleCheck, label: 'You invested', title: 'You are in this SPV' }
+      : { tone: 'in', icon: CircleCheck, label: 'In escrow', title: 'Your money is in escrow until the deal closes' }
     : viewOnly
     ? { tone: 'quiet', icon: Eye, label: 'View only', title: 'Opened before you joined' }
     : full
@@ -236,15 +238,23 @@ export default function DealCard({
           <p className={s.inBand}>
             <CircleCheck size={15} strokeWidth={1.9} aria-hidden="true" />
             <span>
-              {investedAmount ? (
+              {deal.status === 'closed' ? (
+                investedAmount ? (
+                  <>
+                    You invested <b>{money(investedAmount)}</b>
+                  </>
+                ) : (
+                  'You are invested in this deal'
+                )
+              ) : investedAmount ? (
                 <>
-                  You invested <b>{money(investedAmount)}</b>
+                  <b>{money(investedAmount)}</b> in escrow
                 </>
               ) : (
-                'You are invested in this deal'
+                'Your money is in escrow'
               )}
             </span>
-            <small>{deal.status === 'closed' ? 'Closed' : 'In escrow until close'}</small>
+            <small>{deal.status === 'closed' ? 'Closed' : 'Until the deal closes'}</small>
           </p>
         ) : null}
 

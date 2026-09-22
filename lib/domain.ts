@@ -82,6 +82,16 @@ export function assertTransition(from: string, to: SubscriptionState): void {
 }
 
 /** States that represent capital actually held in a deal. */
+/**
+ * Money in a vehicle that has closed (Tyler, 2026-09-21). This, not
+ * HELD_STATES, is what a book of investments totals. A subscription in
+ * escrow is the member's money waiting for a deal that may yet miss its
+ * minimum and hand it back; counting it as invested put $25,000 of escrow
+ * into a $168,000 "invested" that was $143,000 of positions. Escrow is
+ * reported beside the book, never inside it.
+ */
+export const BOOK_STATES: readonly SubscriptionState[] = ['accepted', 'closed'];
+
 export const HELD_STATES: readonly SubscriptionState[] = [
   'funded',
   'accepted',

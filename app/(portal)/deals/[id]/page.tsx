@@ -195,8 +195,12 @@ export default async function DealPage({
         <span className={s.investedBand}>
           <CircleCheck size={17} strokeWidth={1.9} aria-hidden="true" />
           <span className={s.investedText}>
-            <b>You invested {investedAmount > 0 ? money(investedAmount) : 'in this deal'}</b>
-            <small>{deal.status === 'closed' ? 'This deal has closed' : 'In escrow until the deal closes'}</small>
+            <b>
+              {deal.status === 'closed'
+                ? `You invested ${investedAmount > 0 ? money(investedAmount) : 'in this deal'}`
+                : `${investedAmount > 0 ? money(investedAmount) : 'Your money'} in escrow`}
+            </b>
+            <small>{deal.status === 'closed' ? 'This deal has closed' : 'Waiting for the deal to close'}</small>
           </span>
           <Link className={s.investedLink} href={positionHref(deal.id)}>
             Your position →

@@ -237,8 +237,10 @@ describe('positionFlows', () => {
 describe('the ledger', () => {
   const SUBS = [
     { id: 'a', state: 'closed', amount: 50_000, currentValue: 58_400, realizedAt: null },
-    { id: 'b', state: 'funded', amount: 30_000, currentValue: 24_900, realizedAt: null },
+    { id: 'b', state: 'accepted', amount: 30_000, currentValue: 24_900, realizedAt: null },
     { id: 'c', state: 'closed', amount: 18_000, currentValue: 18_000, realizedAt: '2026-03-31' },
+    /* In escrow for a deal that has not closed: beside the book, not in it. */
+    { id: 'f', state: 'funded', amount: 25_000, currentValue: null, realizedAt: null },
     /* Signed, not yet funded: a reservation, not capital. */
     { id: 'd', state: 'docs_signed', amount: 50_000, currentValue: null, realizedAt: null },
     { id: 'e', state: 'expired', amount: 25_000, currentValue: null, realizedAt: null },
@@ -263,9 +265,16 @@ describe('the ledger', () => {
     assert.equal(m.totalValue, 132_500);
   });
 
+  test('money in escrow is reported beside the book, never counted as invested', () => {
+    const m = ledgerBook(SUBS, DISTRIBUTIONS);
+    assert.equal(m.inEscrow, 25_000);
+    assert.equal(m.inEscrowCount, 1);
+    assert.equal(m.invested, 98_000);
+  });
+
   test('a position with no mark yet is carried at cost', () => {
     const m = ledgerBook(
-      [{ id: 'x', state: 'funded', amount: 10_000, currentValue: null, realizedAt: null }],
+      [{ id: 'x', state: 'closed', amount: 10_000, currentValue: null, realizedAt: null }],
       [],
     );
     assert.equal(m.fairValue, 10_000);

@@ -18,7 +18,7 @@ import Link from 'next/link';
 
 import PrintButton from '@/components/PrintButton';
 import { requireUser } from '@/lib/auth';
-import { HELD_STATES } from '@/lib/domain';
+import { BOOK_STATES } from '@/lib/domain';
 import { EMPTY, dateStr, money, percent } from '@/lib/format';
 import { irr, ledgerBook } from '@/lib/portfolio-metrics';
 import { getDealsByIds } from '@/lib/repositories/deals';
@@ -36,7 +36,8 @@ export default async function StatementPage() {
     getDistributions(user.id),
   ]);
 
-  const held = subscriptions.filter((sub) => HELD_STATES.includes(sub.state));
+  /* A capital account statement lists capital in closed vehicles. */
+  const held = subscriptions.filter((sub) => BOOK_STATES.includes(sub.state));
   const deals = await getDealsByIds([...new Set(held.map((sub) => sub.dealId))]);
   const book = ledgerBook(held, distributions.items);
 
@@ -73,7 +74,7 @@ export default async function StatementPage() {
         realized,
         total: fair + realized,
         multiple: sub.amount ? (fair + realized) / sub.amount : 0,
-        status: exited ? 'Exited' : sub.state === 'funded' ? 'In escrow' : 'Held',
+        status: exited ? 'Exited' : 'Held',
       };
     })
     .sort((a, b) => b.invested - a.invested);
@@ -206,7 +207,7 @@ export default async function StatementPage() {
           </p>
           <p>
             Holdings entered under Held elsewhere are self-reported and are not part of this
-            statement. This is not a tax document; Schedule K-1s are filed in Docs. Private
+            statement, and neither is money in escrow for a deal that has not closed. This is not a tax document; Schedule K-1s are filed in Docs. Private
             investments are illiquid and can lose all of their value. Demo environment: every
             position here is seeded and no figure describes a real outcome.
           </p>

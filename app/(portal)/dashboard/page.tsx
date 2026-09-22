@@ -48,7 +48,8 @@ import { requireUser } from '@/lib/auth';
 import {
   type DealShelfItem,
   evaluateInvestGate,
-  HELD_STATES,
+  BOOK_STATES,
+
   isLivePosition,
 } from '@/lib/domain';
 import { compact, daysLeft, EMPTY, money } from '@/lib/format';
@@ -360,7 +361,7 @@ export default async function DashboardPage() {
    */
   const chartPoints: PortfolioPoint[] = buildPortfolioSeries(
     subscriptions
-      .filter((s) => HELD_STATES.includes(s.state))
+      .filter((s) => BOOK_STATES.includes(s.state))
       .map((s) => ({
         id: s.id,
         amount: s.amount,
@@ -482,6 +483,12 @@ export default async function DashboardPage() {
               <span className={d.heroKey}>Cash paid back to you</span>
               <span className={d.heroValue}>{money(book.realized)}</span>
             </span>
+            {book.inEscrow > 0 ? (
+              <span className={d.heroFig}>
+                <span className={d.heroKey}>In escrow</span>
+                <span className={d.heroValue}>{money(book.inEscrow)}</span>
+              </span>
+            ) : null}
             <span className={d.heroFig}>
               <span className={d.heroKey}>Waiting on you</span>
               <span className={d.heroValue}>{money(pendingAmount)}</span>

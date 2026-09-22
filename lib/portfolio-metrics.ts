@@ -32,7 +32,7 @@
  * passed in, so the server and the browser cannot disagree.
  */
 
-import { HELD_STATES, type SubscriptionState } from '@/lib/domain';
+import { BOOK_STATES, type SubscriptionState } from '@/lib/domain';
 
 /** One position, reduced to the four figures every metric is built on. */
 export interface PositionEconomics {
@@ -136,6 +136,10 @@ export interface LedgerBook extends BookMetrics {
   liveCount: number;
   /** Positions that have exited. */
   realizedCount: number;
+  /** Money in escrow for deals that have not closed. Beside the book, never in it. */
+  inEscrow: number;
+  /** How many subscriptions that escrow figure covers. */
+  inEscrowCount: number;
 }
 
 /**
@@ -143,8 +147,10 @@ export interface LedgerBook extends BookMetrics {
  *
  * THE ONE PLACE A PAGE TOTALS A MEMBER'S POSITIONS. The dashboard and
  * Portfolio both call this, which is what stops "Invested" meaning one
- * number on one page and a different number on the next. Only held
- * subscriptions count: a signed commitment is a reservation, not capital.
+ * number on one page and a different number on the next. Only money in a
+ * closed vehicle counts (BOOK_STATES): a signed commitment is a
+ * reservation, and money in escrow is waiting on a deal that may yet hand
+ * it back, so both stay out. Escrow is totalled separately as `inEscrow`.
  * An exited position keeps its cost in invested and contributes nothing
  * to fair value; its mark, if one is still on the row, is ignored.
  */
@@ -161,8 +167,9 @@ export function ledgerBook(
   }
 
   const held = subscriptions.filter((s) =>
-    HELD_STATES.includes(s.state as SubscriptionState),
+    BOOK_STATES.includes(s.state as SubscriptionState),
   );
+  const escrowed = subscriptions.filter((s) => s.state === 'funded');
   const positions: PositionEconomics[] = held.map((s) => {
     const exited = s.realizedAt !== null;
     return {
@@ -178,6 +185,8 @@ export function ledgerBook(
     ...bookMetrics(positions),
     liveCount: positions.length - realizedCount,
     realizedCount,
+    inEscrow: escrowed.reduce((sum, s) => sum + s.amount, 0),
+    inEscrowCount: escrowed.length,
   };
 }
 

@@ -24,7 +24,7 @@ import MonitorBoard from '@/components/terminal/MonitorBoard';
 import Tape from '@/components/terminal/Tape';
 import WireBoard from '@/components/terminal/WireBoard';
 import { requireUser } from '@/lib/auth';
-import { HELD_STATES, isLivePosition } from '@/lib/domain';
+import { BOOK_STATES, isLivePosition } from '@/lib/domain';
 import { dateStr } from '@/lib/format';
 import { SLEEVE } from '@/lib/portfolio-plan';
 import { getPreferences } from '@/lib/repositories/preferences';
@@ -63,7 +63,7 @@ export default async function TerminalPage() {
      education chosen from what they voted for, hold and have in flight. */
   /* The same count Portfolio's sleeve shows, so the two pages agree. */
   const held = subscriptions.filter(
-    (sub) => HELD_STATES.includes(sub.state) && isLivePosition(sub),
+    (sub) => BOOK_STATES.includes(sub.state) && isLivePosition(sub),
   );
   const signals: ForYouSignals = {
     classes: [
