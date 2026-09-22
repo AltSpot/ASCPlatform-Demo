@@ -12,6 +12,10 @@
  *
  * `compact` is the card and row form: the bar and one line.
  *
+ * `minInvestment` adds MINIMUM INVESTMENT as the first field (the deal
+ * page, Tyler 2026-09-21). The quick look leaves it off because it has
+ * its own minimum tile, and a figure appears once per screen.
+ *
  * No 'use client'. The rules are lib/funding.ts.
  */
 import { Check, Lock } from 'lucide-react';
@@ -27,7 +31,10 @@ export default function FundingProgress({
   compact = false,
   showAdmissions = false,
   layout = 'grid',
+  minInvestment,
 }: {
+  /** The member's minimum, shown as its own field when given. */
+  minInvestment?: number;
   /** 'row' puts the four fields in one line (a full-width strip). */
   layout?: 'grid' | 'row';
   deal: FundingInput;
@@ -100,6 +107,16 @@ export default function FundingProgress({
   return (
     <div className={s.full} data-layout={layout}>
       <dl className={s.fields}>
+        {minInvestment ? (
+          <div className={s.field}>
+            <dt>
+              <Term q="What is the minimum investment?" quiet>
+                Minimum investment
+              </Term>
+            </dt>
+            <dd>{money(minInvestment)}</dd>
+          </div>
+        ) : null}
         <div className={s.field}>
           <dt>Raised so far</dt>
           <dd>{money(f.raised)}</dd>

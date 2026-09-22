@@ -25,12 +25,14 @@
  *
  * DETAILS is a labelled button, not a bare info glyph, and it opens the
  * right-hand panel (components/SidePanel, components/radar/RadarDetail)
- * where the vote is also on hand.
+ * where the vote is also on hand. The whole card opens it too (Tyler,
+ * 2026-09-21), except a press on one of its own controls (Vote, the
+ * scale, the pencil), which keep their own jobs.
  */
 import { CircleCheck, PanelRightOpen, Pencil, Users, Vote } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 
-import AssetClassIcon from '@/components/AssetClassIcon';
+import AssetClassTag from '@/components/AssetClassTag';
 import SidePanel from '@/components/SidePanel';
 import { useToast } from '@/components/Toast';
 import { brandOf } from '@/lib/brand';
@@ -151,6 +153,17 @@ export default function RadarCard({
     </span>
   );
 
+  /* A press anywhere on the card opens Details, unless it landed on a
+     control, or inside the panel itself (a portal still bubbles through
+     React, so the DOM check is what tells the two apart). */
+  function openFromCard(event: MouseEvent<HTMLElement>) {
+    const target = event.target as HTMLElement;
+    if (!event.currentTarget.contains(target)) return;
+    if (target.closest('button, a, input, label, select, textarea, [role="slider"]')) return;
+    if (voting || editing) return;
+    setPanel(true);
+  }
+
   const cancel = () => {
     setEditing(false);
     setVoting(false);
@@ -193,6 +206,8 @@ export default function RadarCard({
     <article
       className={s.card}
       data-indicated={voted}
+      data-pressable="true"
+      onClick={openFromCard}
       style={brand ? { ['--brand' as string]: brand.hue } : undefined}
     >
       {/* One masked texture per card, per the V18 card spec, and the
@@ -224,7 +239,7 @@ export default function RadarCard({
         <div className={s.demandTop}>
           <span className={s.demandValue}>{compact(view.interestDollars)}</span>
           <span className={s.demandMeta}>
-            <AssetClassIcon assetClass={view.assetClass} size={12} />
+            <AssetClassTag assetClass={view.assetClass} />
             <span
               className={s.demandWho}
               title={`${view.interestInvestors.toLocaleString('en-US')} members voted`}

@@ -20,7 +20,9 @@ import { Building2, CalendarClock, Landmark, Percent, Receipt, type LucideIcon }
 
 import Term from '@/components/Term';
 import type { DealView } from '@/lib/domain';
-import { NO_CAPITAL_CALLS, dealFeeRows } from '@/lib/fees';
+import { SHOW_FEE_TERMS } from '@/lib/config';
+import { NO_CAPITAL_CALLS, dealFeeRows, feeExampleLines } from '@/lib/fees';
+import { money } from '@/lib/format';
 
 import Section from './Section';
 import s from './Deal.module.css';
@@ -29,7 +31,7 @@ import c from './CostCards.module.css';
 /** The cost cards: a glyph each, and the question Spot is asked. */
 const COST_META: Record<string, { icon: LucideIcon; q: string }> = {
   'Management fee': { icon: CalendarClock, q: 'What are the fees?' },
-  'Formation and administration fee': { icon: Building2, q: 'What are the fees?' },
+  'Admin fee': { icon: Building2, q: 'What are the fees?' },
   'SPV expenses': { icon: Receipt, q: 'What are the fees?' },
   'Escrow interest': { icon: Landmark, q: 'What happens after I send to escrow?' },
   'Carried interest': { icon: Percent, q: 'How does carried interest actually work?' },
@@ -42,6 +44,16 @@ export default function TermsTable({ deal }: { deal: DealView }) {
   ];
 
   const costs = dealFeeRows();
+  /* What the fees come to at this deal's minimum investment (Tyler,
+     2026-09-21), so the figure is in dollars before checkout. */
+  const examples = SHOW_FEE_TERMS
+    ? feeExampleLines(
+        deal.minInvestment,
+        deal.allocationTotal - deal.allocationRemaining,
+        deal.minimumToClose,
+        deal.allocationTotal,
+      )
+    : {};
 
   return (
     <Section eyebrow="Terms" title="What you are agreeing to." id="terms">
@@ -68,12 +80,21 @@ export default function TermsTable({ deal }: { deal: DealView }) {
                   {meta ? <Term q={meta.q} quiet>{row.label}</Term> : row.label}
                 </span>
                 <span className={c.short}>{row.short}</span>
+                {examples[row.label] ? (
+                  <span className={c.example}>{examples[row.label]}</span>
+                ) : null}
                 <p className={c.detail}>{row.detail}</p>
               </li>
             );
           })}
         </ul>
         <p className={s.costNote}>
+          {SHOW_FEE_TERMS ? (
+            <>
+              Both fees come out of your investment, not on top of it. Figures shown at the{' '}
+              {money(deal.minInvestment)} minimum.{' '}
+            </>
+          ) : null}
           <Term q="Will I be asked for more money later?" quiet>
             {NO_CAPITAL_CALLS}
           </Term>

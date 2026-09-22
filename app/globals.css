@@ -363,6 +363,14 @@
 
   /* ============ GRADIENTS (named and reserved) ============ */
   --as-cta-gradient:linear-gradient(135deg,#C79A4B,#F39807);
+  /* A chosen option in a bar of options (2026-09-21): an outline in the
+     warm ramp and a breath of fill, never a solid pill, so the word on it
+     stays page ink and reads the same at rest and on hover. */
+  --select-ring:linear-gradient(120deg,#F2D68E 0%,#F7A93A 50%,#F58A2E 100%);
+  --select-fill:rgba(243,152,7,.09);
+  --select-fill-hover:rgba(243,152,7,.12);
+  /* The dropdown panel (components/ui/Select): opaque on every canvas. */
+  --surface-menu:#15110D;
   --as-tri-gradient:linear-gradient(90deg,#C79A4B,#F39807,#E5661A);
   --as-em-gradient:linear-gradient(100deg,#E6C77A,#FF9E2C 45%,#E5661A);
   /* A lead figure is set in champagne, not hot amber (2026-09-21). Amber
@@ -951,8 +959,8 @@ b,strong{font-weight:var(--w-semi)}
 .btn-sm{padding:8px 14px;font-size:13px}
 
 /* ---------- forms ---------- */
-label.field{display:block;margin-bottom:16px}
-label.field>span{
+label.field,div.field{display:block;margin-bottom:16px}
+label.field>span,div.field>span{
   display:block;font-family:var(--fm);font-size: var(--fs-label);
   font-weight: var(--w-medium);letter-spacing: var(--ls-text);
   text-transform: none;color:var(--soft);margin-bottom:8px;
@@ -1438,6 +1446,11 @@ html[data-theme='light']{
   --as-cat-venture:#9A7029;
   --as-cat-growth:#C06405;
   --as-cat-fund:#7E5FC4;
+
+  --select-ring:linear-gradient(120deg,#9A7029 0%,#B8620A 60%,#A8461A 100%);
+  --select-fill:rgba(154,112,41,.08);
+  --select-fill-hover:rgba(154,112,41,.14);
+  --surface-menu:#FCF8F2;
 
   --as-ind-1:#9A7029;   --as-ind-2:#C06405;   --as-ind-3:#A8461A;
   --as-ind-4:#A8813C;   --as-ind-5:#B5591F;   --as-ind-6:#7A5A1C;

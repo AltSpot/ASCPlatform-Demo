@@ -31,10 +31,47 @@
 }
 
 .filterRow {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
+}
+
+/* The one outline that moves (2026-09-21). It sits under the chips and
+   glides to whichever is chosen: a breath of warm fill and a hairline in
+   the warm ramp, never a solid pill. */
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: var(--r-pill);
+  background: var(--select-fill);
+  pointer-events: none;
+  transition:
+    transform 0.34s cubic-bezier(0.22, 0.8, 0.26, 1),
+    width 0.34s cubic-bezier(0.22, 0.8, 0.26, 1),
+    height 0.34s cubic-bezier(0.22, 0.8, 0.26, 1);
+}
+.indicator::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: var(--select-ring);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    transition: none;
+  }
 }
 
 .filterLabel {
@@ -55,8 +92,11 @@
    chosen. The category tints keep their one real job, the exposure
    legend on Portfolio, where a colour means a slice. */
 .filterChip {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: var(--w-medium);
@@ -78,160 +118,41 @@
   color: var(--as-text);
   border-color: var(--hair-strong);
 }
+/* The class glyph, in its category tint: the row's only colour. All
+   wears the quiet ink. */
+.chipGlyph {
+  flex: none;
+  stroke: var(--chip-tint, var(--as-text-muted));
+  opacity: 0.9;
+  transition: opacity var(--dur-micro) ease;
+}
+.filterChip:hover .chipGlyph,
+.filterChip[aria-checked='true'] .chipGlyph {
+  opacity: 1;
+}
+/* Chosen: the chip gives its ground to the indicator under it and keeps
+   page ink, at rest and on hover alike. */
+.filterChip[aria-checked='true'],
+.filterChip[aria-checked='true']:hover {
+  color: var(--as-text);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.filterChip[aria-checked='true']:hover {
+  background: var(--select-fill);
+}
 .filterChip:focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
-.filterOn {
-  color: var(--fg-on-gold);
-  background: var(--as-champagne);
-  border-color: transparent;
-}
 
 .filterFoot {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-}
-
-/* ---------- the industry menu ----------
-
-   Drawn rather than delegated. A native select cannot be made to match
-   a dark institutional page: the closed state styles, the open list
-   does not. Both halves are here, and the open list is a panel, not a
-   popup: hairline rows, mono labels, a count on the right, a check on
-   the choice. */
-
-.menu {
-  position: relative;
-}
-
-.menuButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 34px;
-  padding: 0 14px;
-  border: 1px solid transparent;
-  border-radius: var(--r-pill);
-  background: var(--surface-1);
-  color: var(--as-text-body);
-  cursor: pointer;
-  transition:
-    border-color var(--dur-micro) ease,
-    background var(--dur-micro) ease;
-}
-.menuButton:hover {
-  border-color: var(--hair-gold-active);
-  background: var(--surface-2);
-}
-.menuButton:focus-visible {
-  outline: 2px solid var(--accent-signal);
-  outline-offset: 2px;
-}
-/* Once a filter is doing work, its control says so on its own edge. */
-.menuButton[data-chosen='true'] {
-  border-color: var(--hair-champagne);
-}
-
-
-.menuValue {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--w-medium);
-  letter-spacing: var(--ls-text);
-  text-transform: none;
-  color: var(--as-text);
-  white-space: nowrap;
-}
-
-.menuChev {
-  flex: none;
-  color: var(--as-text-muted);
-  transition: transform var(--dur-1) var(--ease-out);
-}
-.menuButton[aria-expanded='true'] .menuChev {
-  transform: rotate(180deg);
-}
-
-.menuList {
-  position: absolute;
-  z-index: 40;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 264px;
-  max-height: 320px;
-  overflow-y: auto;
-  margin: 0;
-  padding: 6px;
-  list-style: none;
-  border: 1px solid var(--hair-champagne);
-  border-radius: var(--r-md);
-  /* Opaque, not translucent. A filter list that lets the board show
-     through is a decoration; this one is being read. The toast surface
-     is the one opaque panel token, and it follows the theme. */
-  background: var(--surface-toast);
-  box-shadow:
-    0 1px 0 var(--edge-top) inset,
-    var(--shadow-lg);
-  animation: menuIn 0.16s var(--ease-out);
-}
-
-@keyframes menuIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.menuRow {
-  display: grid;
-  grid-template-columns: 16px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 10px;
-  border-radius: var(--r-sm);
-  cursor: pointer;
-  color: var(--as-text-muted);
-  transition:
-    background var(--dur-micro) ease,
-    color var(--dur-micro) ease;
-}
-.menuRow:hover,
-.menuRow:focus-visible {
-  outline: none;
-  background: var(--surface-2);
-  color: var(--as-text);
-}
-.menuRow[data-chosen='true'] {
-  color: var(--as-text);
-}
-
-.menuCheck {
-  display: grid;
-  place-items: center;
-  color: var(--accent-quiet);
-}
-
-.menuName {
-  font-size: 13px;
-  line-height: 1.3;
-}
-
-/* Counts right-aligned in mono, so the column reads as a column even
-   though the names beside it are proportional. */
-.menuCount {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: 0.1em;
-  color: var(--as-text-muted);
-  font-variant-numeric: tabular-nums;
 }
 
 .srOnly {
@@ -274,44 +195,161 @@
   font-variant-numeric: tabular-nums;
   color: var(--as-text-muted);
 }
-.filterOn .filterCount {
-  color: inherit;
-  opacity: 0.7;
-}
-
-.menuList {
-  transform-origin: top left;
-  animation: menu-in 0.24s cubic-bezier(0.22, 0.8, 0.26, 1);
-}
-@keyframes menu-in {
-  from {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.98);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .menuList {
-    animation: none;
-  }
+.filterChip[aria-checked='true'] .filterCount {
+  color: var(--accent);
 }
 
 /* ---------- Daylight controls (2026-09-19) ----------
    White glass on a cream page is a control nobody can find. In Daylight a
    control is an ink tint with an ink hairline (--control-* in globals.css);
    its selected state keeps the fill it paints for itself. */
-:global(html[data-theme='light']) .filterChip:not(.filterOn) {
+:global(html[data-theme='light']) .filterChip:not([aria-checked='true']) {
   background: var(--control-fill);
   box-shadow: inset 0 0 0 1px var(--control-rim);
 }
-:global(html[data-theme='light']) .filterChip:not(.filterOn):hover {
+:global(html[data-theme='light']) .filterChip:not([aria-checked='true']):hover {
   background: var(--control-fill-hover);
   box-shadow: inset 0 0 0 1px var(--control-rim-hover);
 }
-:global(html[data-theme='light']) .menuButton:not([data-chosen='true']) {
+
+/* ---------- the folded classes, on the marketplace bar (2026-09-21) ----------
+   One pill; pressed, the options unroll to its right like a scroll
+   opening. The drawer's width goes from 0 to its measured width in
+   pixels on one long, soft curve, the chips fade and slide in one after
+   another on the same curve, and the chosen outline arrives last. The
+   wrapper is display: contents, so the pill, the drawer and the industry
+   menu are each items on the bar's own line: nothing hides, and the menu
+   drops to a second line only when the bar runs out of room. */
+.filters[data-collapsible] {
+  display: contents;
+}
+.drawerToggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  padding: 8px 12px 8px 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-well);
+  color: var(--as-text-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color var(--dur-micro) ease,
+    background var(--dur-micro) ease,
+    padding 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.drawerToggle:hover,
+.drawerToggle[aria-expanded='true'] {
+  color: var(--as-text);
+  background: var(--surface-2);
+}
+.drawerToggle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+/* A class is chosen and the options are rolled up: the pill wears the
+   choice, outlined like every chosen option. */
+.drawerToggle[data-chosen='true'][aria-expanded='false'] {
+  color: var(--as-text);
+  background: var(--select-fill);
+}
+.drawerToggle[data-chosen='true'][aria-expanded='false']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: var(--select-ring);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.drawerChev {
+  flex: none;
+  color: var(--as-text-muted);
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), color var(--dur-micro) ease;
+}
+.drawerToggle[aria-expanded='true'] .drawerChev {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+/* Open, the pill shrinks to its glyph and chevron so the options fit. */
+.drawerToggle[aria-expanded='true'] {
+  padding: 8px 10px;
+  gap: 5px;
+}
+
+.drawer {
+  flex: none;
+  overflow: hidden;
+  /* the bar's gap would double beside a closed drawer */
+  margin-inline-start: -8px;
+  /* room for the outline, which the clip would otherwise shave */
+  padding: 2px 0;
+  margin-block: -2px;
+  transition:
+    width 0.52s cubic-bezier(0.32, 0.72, 0, 1),
+    margin-inline-start 0.52s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: width;
+}
+.filters[data-open='true'] .drawer {
+  margin-inline-start: 0;
+}
+.drawer > .filterRow {
+  width: max-content;
+  flex-wrap: nowrap;
+}
+.drawer .filterChip {
+  padding: 8px 12px;
+  opacity: 0;
+  transform: translateX(-14px);
+  transition:
+    opacity 0.28s ease,
+    transform 0.46s cubic-bezier(0.32, 0.72, 0, 1),
+    color var(--dur-micro) ease,
+    border-color var(--dur-micro) ease,
+    background var(--dur-micro) ease;
+}
+.filters[data-open='true'] .drawer .filterChip {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--chip-i, 0) * 38ms + 60ms), calc(var(--chip-i, 0) * 38ms + 60ms), 0s, 0s, 0s;
+}
+/* Rolling up, the chips leave together and quickly. */
+.filters[data-open='false'] .drawer .filterChip {
+  transition-duration: 0.16s, 0.24s, var(--dur-micro), var(--dur-micro), var(--dur-micro);
+}
+.drawer .indicator {
+  opacity: 0;
+  transition-property: transform, width, height, opacity;
+}
+.filters[data-open='true'] .drawer .indicator {
+  opacity: 1;
+  transition-delay: 0s, 0s, 0s, 0.28s;
+}
+.filters[data-collapsible] .filterFoot {
+  flex: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .drawer .filterChip,
+  .drawerChev,
+  .drawerToggle {
+    transition: none;
+  }
+}
+:global(html[data-theme='light']) .drawerToggle:not([data-chosen='true'][aria-expanded='false']) {
   background: var(--control-fill);
   box-shadow: inset 0 0 0 1px var(--control-rim);
-}
-:global(html[data-theme='light']) .menuButton:not([data-chosen='true']):hover {
-  background: var(--control-fill-hover);
-  box-shadow: inset 0 0 0 1px var(--control-rim-hover);
 }

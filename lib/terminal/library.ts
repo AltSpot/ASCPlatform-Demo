@@ -222,14 +222,14 @@ const LIBRARY: LibraryItem[] = [
         type: 'p',
         text: 'When you subscribe, your money goes to escrow, in an account in the SPV\'s name, never to an AltSpot account. The deal closes only when its minimum is met by the closing date. If it is not, escrow returns what you sent.',
       },
-      { type: 'h', text: 'At closing, a flat fee and a reserve' },
+      { type: 'h', text: 'At closing, out of the investment' },
       {
         type: 'p',
-        text: 'Each SPV pays a flat fee to be organized, the same for every vehicle whatever its size. The management fee is an annual rate on committed capital for an assumed term, funded once at closing as a reserve. It is drawn down as it is earned, and anything unearned comes back to members.',
+        text: 'Each vehicle pays one flat admin fee for its lifetime, the same whatever its size, shared pro rata across its investors. The management fee is an annual rate on committed capital, with an assumed term reserved at closing. Both come out of the investment, not on top of it: you send your investment and nothing more. The reserve is drawn down as it is earned, and anything unearned comes back to members.',
       },
       {
         type: 'note',
-        text: 'Funding the reserve at closing is what lets us promise no capital calls. Nothing is billed annually and no one is asked for more money later.',
+        text: 'Reserving the fee at closing is what lets us promise no capital calls. Nothing is billed annually and no one is asked for more money later.',
       },
       { type: 'h', text: 'At exit, a share of profit' },
       {
@@ -240,7 +240,7 @@ const LIBRARY: LibraryItem[] = [
         type: 'list',
         items: [
           'Money waits in escrow until the minimum is met.',
-          'A flat fee per SPV, and a management fee reserve funded once at closing.',
+          'A flat admin fee per vehicle, and the management fee reserved at closing, both out of the investment.',
           'Carried interest on profits at exit only.',
           'The exact terms are in each deal\'s memorandum. No capital calls.',
         ],

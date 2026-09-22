@@ -24,9 +24,11 @@
  *                                     applied only to pass-through expenses.
  *
  * Nothing anywhere is priced as a percentage of capital raised or paid per
- * investor (counsel: broker-dealer line). A member funds their subscription
- * plus the reserve, which is additive by construction. No capital calls,
- * nothing billed annually.
+ * investor (counsel: broker-dealer line). THE RESERVE COMES OUT OF THE
+ * INVESTMENT (Tyler, 2026-09-21): a member sends their investment to
+ * escrow and nothing more; at closing the management fee reserve and their
+ * share of the flat fee are taken from it, and the rest goes to work in
+ * the company. No capital calls, nothing billed annually.
  *
  * Carried interest is CARRY_PERCENT of profits at exit.
  *
@@ -49,12 +51,16 @@ export interface FeeTerms {
 }
 
 export interface FeeBreakdown {
-  /** The subscription. */
+  /** The investment: what the member sends to escrow, all of it. */
   amount: number;
-  /** The management fee reserve funded at closing, integer dollars. */
+  /** The management fee reserve, taken from the investment at closing. */
   reserve: number;
-  /** Subscription plus reserve: what goes to escrow. */
+  /** One year of the management fee on this investment. */
+  annual: number;
+  /** What goes to escrow. The same as the investment: nothing is added. */
   allIn: number;
+  /** The investment less the reserve, before the flat fee share. */
+  afterReserve: number;
 }
 
 /** The reserve as a percent of a subscription (1% a year for 5 years: 5). */
@@ -65,7 +71,8 @@ export function reservePercent(terms: FeeTerms = FEE_TERMS): number {
 export function feeBreakdown(amount: number, terms: FeeTerms = FEE_TERMS): FeeBreakdown {
   const safe = Number.isFinite(amount) && amount > 0 ? Math.round(amount) : 0;
   const reserve = Math.round((safe * reservePercent(terms)) / 100);
-  return { amount: safe, reserve, allIn: safe + reserve };
+  const annual = Math.round((safe * terms.annualPercent) / 100);
+  return { amount: safe, reserve, annual, allIn: safe, afterReserve: safe - reserve };
 }
 
 /**
@@ -99,6 +106,29 @@ export function flatFeeShareRange(
   return {
     atMinimum: flatFeeShare(amount, floor, terms),
     atAllocation: flatFeeShare(amount, ceiling, terms),
+  };
+}
+
+/**
+ * The member's share of the flat fee as an estimate, and at cap. The
+ * estimate assumes the SPV closes at what is already raised plus this
+ * investment, held between the minimum and the allocation; at cap is the
+ * share if the allocation fills, the smallest it can be. The share at the
+ * minimum is not shown as a headline: on a small vehicle it reads as a
+ * worst case the raise has usually passed.
+ */
+export function adminFeeEstimate(
+  amount: number,
+  raised: number,
+  minimumToClose: number,
+  allocationTotal: number,
+  terms: FeeTerms = FEE_TERMS,
+): { estimate: number; atCap: number } {
+  const ceiling = Math.max(allocationTotal, minimumToClose, amount);
+  const expected = Math.min(ceiling, Math.max(minimumToClose, Math.max(0, raised) + amount));
+  return {
+    estimate: flatFeeShare(amount, expected, terms),
+    atCap: flatFeeShare(amount, ceiling, terms),
   };
 }
 
@@ -159,13 +189,13 @@ export function dealFeeRows(
     ? [
         {
           label: 'Management fee',
-          short: `${terms.annualPercent}% a year, ${terms.termYears} years funded at close`,
-          detail: `${terms.annualPercent}% per year of committed capital, ${terms.termYears} years funded once at closing (${reservePercent(terms)}% of your subscription). ${halves}`,
+          short: `${terms.annualPercent}% a year, reserved up front`,
+          detail: `${terms.annualPercent}% per year of committed capital. ${terms.termYears} years (${reservePercent(terms)}%) are reserved from your investment at closing, not added to it. ${halves}`,
         },
         {
-          label: 'Formation and administration fee',
-          short: `${money(terms.flatPerSpv)} per SPV, shared pro rata`,
-          detail: `A flat ${money(terms.flatPerSpv)} per SPV, disclosed in the memorandum. The SPV pays it once; your share is pro rata to your capital committed, settled at close.`,
+          label: 'Admin fee',
+          short: `${money(terms.flatPerSpv)} per vehicle, pro rata`,
+          detail: `A flat ${money(terms.flatPerSpv)} formation and administration fee per vehicle, for its lifetime, disclosed in the memorandum. It is shared pro rata across every investor by capital committed and taken from the investment at close.`,
         },
         { label: 'SPV expenses', short: 'At cost', detail: PASS_THROUGH_LINE },
         { label: 'Escrow interest', short: 'Yours', detail: ESCROW_INTEREST_LINE },
@@ -174,12 +204,37 @@ export function dealFeeRows(
         {
           label: 'Management fee',
           short: 'In the memorandum',
-          detail: `Funded once at close, disclosed in the memorandum. ${halves} ${PASS_THROUGH_LINE}`,
+          detail: `Reserved from the investment at close, disclosed in the memorandum. ${halves} ${PASS_THROUGH_LINE}`,
         },
       ];
 
   const carry = carryRow(showCarry);
   return carry ? [...rows, carry] : rows;
+}
+
+/**
+ * What the fees come to on one amount, for the deal page's cost cards:
+ * the management fee a year and in total reserved, and the admin fee in
+ * words, with no figure taken off (Tyler, 2026-09-21: explained, not
+ * subtracted, while the share depends on the final size). Keyed by the
+ * row label.
+ */
+export function feeExampleLines(
+  amount: number,
+  raised: number,
+  minimumToClose: number,
+  allocationTotal: number,
+  terms: FeeTerms = FEE_TERMS,
+): Record<string, string> {
+  if (!(amount > 0)) return {};
+  void raised;
+  void minimumToClose;
+  void allocationTotal;
+  const b = feeBreakdown(amount, terms);
+  return {
+    'Management fee': `${money(b.annual)} a year on ${money(b.amount)}, ${money(b.reserve)} reserved`,
+    'Admin fee': 'Your share settles at close',
+  };
 }
 
 /** The carry row (work order screen 7), or nothing at all when off. */
@@ -197,8 +252,8 @@ export function feeSentence(
 ): string {
   const halves = managementFeeHalves(showCarry);
   const fee = showFees
-    ? `A management fee of ${terms.annualPercent}% per year of committed capital, ${terms.termYears} years funded once at closing as a reserve of ${reservePercent(terms)}% of your subscription and drawn as earned. ${halves} Plus a flat ${money(terms.flatPerSpv)} formation and administration fee per SPV, disclosed in the memorandum, which the SPV pays once and members bear pro rata to capital committed. ${PASS_THROUGH_LINE} ${ESCROW_INTEREST_LINE}`
-    : `A management fee funded once at closing, set out in the memorandum. ${halves} ${PASS_THROUGH_LINE}`;
+    ? `A management fee of ${terms.annualPercent}% per year of committed capital, with ${terms.termYears} years (${reservePercent(terms)}%) reserved from the investment at closing, not added to it, and drawn as earned. ${halves} And a flat ${money(terms.flatPerSpv)} lifetime formation and administration fee per vehicle, disclosed in the memorandum and shared pro rata across its investors by capital committed. ${PASS_THROUGH_LINE} ${ESCROW_INTEREST_LINE}`
+    : `A management fee reserved from the investment at closing, set out in the memorandum. ${halves} ${PASS_THROUGH_LINE}`;
   const carry = showCarry ? ` ${CARRY_PERCENT}% carried interest on profits at exit.` : '';
   return `${fee}${carry} ${NO_CAPITAL_CALLS}`;
 }

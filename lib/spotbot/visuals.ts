@@ -30,7 +30,7 @@ import {
   SHOW_CARRY_TERMS,
   SHOW_FEE_TERMS,
 } from '../config';
-import { feeBreakdown, reservePercent } from '../fees';
+import { feeBreakdown } from '../fees';
 import { money } from '../format';
 import { chanceOfAtLeastOne, SLEEVE } from '../portfolio-plan';
 import type { SpotVisual } from './types';
@@ -64,33 +64,39 @@ function feesSum(): SpotVisual {
   if (!SHOW_FEE_TERMS) {
     return {
       kind: 'sum',
-      title: 'What goes to escrow',
+      title: 'Where your investment goes',
       rows: [
-        { label: 'Your subscription', value: money(example.amount) },
+        { label: 'You send to escrow', value: money(example.amount) },
         {
-          label: 'Management fee reserve',
+          label: 'Management fee',
           value: 'In the memorandum',
-          note: 'Funded once at close, drawn down as earned, unearned returned.',
+          note: 'Reserved from the investment at close, drawn as earned, unearned returned.',
           tone: 'quiet',
         },
       ],
-      total: { label: 'Sent to escrow', value: 'Subscription + reserve' },
+      total: { label: 'Goes to work', value: 'Investment less fees' },
       caption: `Illustrative, on a ${money(EXAMPLE_SUBSCRIPTION)} subscription. Nothing billed annually. No capital calls.`,
     };
   }
   return {
     kind: 'sum',
-    title: 'What goes to escrow',
+    title: 'Where your investment goes',
     rows: [
-      { label: 'Your subscription', value: money(example.amount) },
+      { label: 'You send to escrow', value: money(example.amount) },
       {
-        label: `Management fee reserve, ${reservePercent()}%`,
-        value: money(example.reserve),
-        note: `${FEE_TERMS.annualPercent}% a year for ${FEE_TERMS.termYears} years, funded once. Unearned fee is returned.`,
+        label: `Management fee, ${FEE_TERMS.annualPercent}% a year`,
+        value: `−${money(example.reserve)}`,
+        note: `${money(example.annual)} a year, ${FEE_TERMS.termYears} years reserved up front. Unearned fee is returned.`,
+      },
+      {
+        label: 'Admin fee',
+        value: 'At close',
+        note: `${money(FEE_TERMS.flatPerSpv)} per vehicle, shared pro rata across its investors. Your share comes out of the investment once the final size is known.`,
+        tone: 'quiet',
       },
     ],
-    total: { label: 'Sent to escrow', value: money(example.allIn) },
-    caption: `Illustrative, on a ${money(EXAMPLE_SUBSCRIPTION)} subscription. The SPV also pays a flat ${money(FEE_TERMS.flatPerSpv)}, disclosed in the memorandum. Nothing billed annually. No capital calls.`,
+    total: { label: 'Goes to work, before the admin fee', value: money(example.afterReserve) },
+    caption: `Illustrative, on a ${money(EXAMPLE_SUBSCRIPTION)} investment. The fees come out of it, not on top of it. Nothing billed annually. No capital calls.`,
   };
 }
 

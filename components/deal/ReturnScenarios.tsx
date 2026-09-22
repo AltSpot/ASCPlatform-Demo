@@ -108,7 +108,7 @@ export default function ReturnScenarios({
         <span className={s.startKey}>You send to escrow</span>
         <span className={s.startValue}>{money(sent)}</span>
         <span className={s.startNote}>
-          {money(example)} investment plus the management fee reserve
+          Your investment. The fees come out of it, not on top of it.
         </span>
       </div>
 

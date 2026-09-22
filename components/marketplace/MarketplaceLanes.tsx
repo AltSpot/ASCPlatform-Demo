@@ -36,6 +36,7 @@
 import { Clock, Radar, Sparkles, Star, Store, Users, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useSlidingIndicator } from '@/components/ui/useSlidingIndicator';
 import TaxonomyFilters, {
   type TaxonomyFilterState,
 } from '@/components/filters/TaxonomyFilters';
@@ -115,6 +116,10 @@ export default function MarketplaceLanes({
     stage: initialFilter.stage,
   });
   const [lane, setLane] = useState<Lane>(initialView === 'radar' ? 'radar' : 'invest');
+  /* One outline glides between the two lanes as the page scrolls or a
+     pill is pressed (components/ui/useSlidingIndicator). */
+  const lanesRef = useRef<HTMLDivElement>(null);
+  const laneBox = useSlidingIndicator(lanesRef, lane);
   const [mineOnly, setMineOnly] = useState(false);
   const [forYouOnly, setForYouOnly] = useState(false);
   const [savedIds, setSavedIds] = useState(watched);
@@ -259,11 +264,24 @@ export default function MarketplaceLanes({
           Radar is one press away from anywhere on the page. */}
       <div className={s.bar}>
         <div className={s.barStart}>
-        <div className={s.lanes} role="group" aria-label="Jump to">
+        <div className={s.lanes} role="group" aria-label="Jump to" ref={lanesRef}>
+          {laneBox ? (
+            <span
+              className={s.laneIndicator}
+              aria-hidden="true"
+              style={{
+                width: laneBox.width,
+                height: laneBox.height,
+                transform: `translate(${laneBox.x}px, ${laneBox.y}px)`,
+              }}
+            />
+          ) : null}
           <button
             type="button"
             className={s.lanePill}
             data-on={lane === 'invest'}
+            data-active={lane === 'invest'}
+            aria-current={lane === 'invest' ? 'true' : undefined}
             onClick={() => jump('invest')}
           >
             Open now{locked ? null : <span className={s.laneCount}>{deals.length}</span>}
@@ -272,6 +290,8 @@ export default function MarketplaceLanes({
             type="button"
             className={s.lanePill}
             data-on={lane === 'radar'}
+            data-active={lane === 'radar'}
+            aria-current={lane === 'radar' ? 'true' : undefined}
             onClick={() => jump('radar')}
           >
             Radar <span className={s.laneCount}>{companies.length}</span>
@@ -308,6 +328,7 @@ export default function MarketplaceLanes({
           onChange={setFilter}
           badges={dealCounts}
           inline
+          collapsible
         />
         {shelfOnly.lead || shelfOnly.stage ? (
           <div className={s.quickPills}>

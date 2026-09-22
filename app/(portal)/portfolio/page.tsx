@@ -270,9 +270,9 @@ export default async function PortfolioPage() {
       ? [
           {
             key: 'management',
-            label: 'Management fee reserves funded',
+            label: 'Management fee reserved',
             amount: Math.round(managementPaid),
-            note: `${reservePercent()}% of each commitment (${FEE_TERMS.annualPercent}% a year for ${FEE_TERMS.termYears} years), funded once at closing across ${held.length} position${held.length === 1 ? '' : 's'}. Unearned amounts come back to you.`,
+            note: `${reservePercent()}% of each commitment (${FEE_TERMS.annualPercent}% a year for ${FEE_TERMS.termYears} years), reserved from each investment at closing across ${held.length} position${held.length === 1 ? '' : 's'}. Unearned amounts come back to you.`,
           },
         ]
       : []),

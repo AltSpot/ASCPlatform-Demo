@@ -30,6 +30,7 @@ import { announceNeedsYouChanged } from '@/lib/needs-you';
 
 import styles from './InvestFlow.module.css';
 import { useToast } from '@/components/Toast';
+import Select from '@/components/ui/Select';
 import { api } from '@/lib/client/api';
 import type {
   DealView,
@@ -525,20 +526,15 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 {showNewProfile && (
                   <div style={{ marginTop: 14 }}>
                     <div className="form-row">
-                      <label className="field">
+                      <div className="field">
                         <span>Type</span>
-                        <select
-                          className="input"
+                        <Select
+                          label="Profile type"
                           value={newProfile.type}
-                          onChange={(e) =>
-                            setNewProfile((p) => ({ ...p, type: e.target.value }))
-                          }
-                        >
-                          <option>Personal</option>
-                          <option>Entity</option>
-                          <option>IRA / 401(k)</option>
-                        </select>
-                      </label>
+                          options={[{ value: 'Personal', label: 'Personal' }, { value: 'Entity', label: 'Entity', note: 'A trust, LLC or company' }, { value: 'IRA / 401(k)', label: 'IRA / 401(k)', note: 'Retirement money, held by a custodian' }]}
+                          onChange={(type) => setNewProfile((p) => ({ ...p, type }))}
+                        />
+                      </div>
                       <label className="field">
                         <span>Name</span>
                         <input
@@ -566,6 +562,8 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                 targetClose={deal.targetClose}
                 minimumToClose={deal.minimumToClose}
                 allocationTotal={deal.allocationTotal}
+                allocationRemaining={deal.allocationRemaining}
+                company={deal.name}
               />
 
               <button
@@ -648,6 +646,8 @@ h4{text-align:center;text-transform:uppercase;letter-spacing:.06em}.docsub{text-
                   targetClose={deal.targetClose}
                   minimumToClose={deal.minimumToClose}
                   allocationTotal={deal.allocationTotal}
+                  allocationRemaining={deal.allocationRemaining}
+                  company={deal.name}
                 />
                   )}
                 </ConfirmPanel>

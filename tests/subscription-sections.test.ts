@@ -387,7 +387,7 @@ describe('the document states the fee model lib/fees.ts computes', () => {
     const clause = section.points.find((p) => p.lead === 'What you pay');
     assert.ok(clause, 'the executed agreement no longer states what the investor pays');
     assert.equal(clause.text, feeSentence());
-    assert.match(clause.text, /once at closing/);
+    assert.match(clause.text, /reserved from the investment at closing, not added to it/);
     assert.match(clause.text, /No capital calls/);
     assert.doesNotMatch(clause.text, /ten percent|10% carr/i);
   });

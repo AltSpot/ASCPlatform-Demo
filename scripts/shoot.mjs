@@ -217,6 +217,13 @@ async function run() {
           throw new Error(`${shot.name}: GET ${step.get} returned ${result.status}, expected ${step.expect}`);
         }
         console.log(`  ${shot.name}: GET ${step.get} -> ${result.status} ${result.text.slice(0, 120)}`);
+      } else if (step.hover) {
+        /* Move the real pointer over an element, so :hover styles show. */
+        const at = await evaluate(
+          `(() => { const el = document.querySelector(${JSON.stringify(step.hover)}); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`,
+        );
+        if (!at) throw new Error(`${shot.name}: nothing to hover at ${step.hover}`);
+        await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y });
       } else if (step.eval) {
         await evaluate(step.eval);
       } else if (step.scroll) {

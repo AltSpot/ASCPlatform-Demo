@@ -113,8 +113,9 @@ export const SHOW_SPONSOR_ALIGNMENT = process.env.ASC_SHOW_SPONSOR_ALIGNMENT !==
 /**
  * The fee (section 15, decided Sept 16): a flat fee per SPV, plus an
  * annualized management fee on committed capital for an assumed term,
- * funded at closing as a reserve, drawn down as earned, with anything
- * unearned refunded. Integer dollars and whole percents.
+ * reserved at closing out of the investment (never added to it), drawn
+ * down as earned, with anything unearned refunded. Integer dollars and
+ * whole percents.
  */
 export const FEE_TERMS = {
   /** Charged to the SPV once. Disclosed in the memorandum, not per member. */

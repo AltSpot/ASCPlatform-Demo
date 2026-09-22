@@ -65,6 +65,16 @@
   color: var(--as-text);
 }
 
+/* What the fee comes to at the minimum, in dollars. */
+.example {
+  grid-column: 2;
+  margin-top: 4px;
+  font-family: var(--font-figure);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  color: var(--accent);
+}
+
 .detail {
   grid-column: 1 / -1;
   margin: 12px 0 0;

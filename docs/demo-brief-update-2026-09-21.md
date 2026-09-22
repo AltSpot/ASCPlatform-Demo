@@ -43,6 +43,7 @@ House rules for any copy you write: no em dashes (use commas, periods, colons), 
 | 15 | The approval gate mentions a cooling-off period. | **Removed.** It reads "Offerings open the moment your questionnaire is approved." |
 | 16 | Spot suggests "How does carried interest actually work?" after a fee answer. | **Removed** while carry is switched off. Spot still answers it if asked directly. |
 | 17 | The memorandum's cover says "Series Seed Preferred Stock Financing" and "Up to $588,235". | **Bound to the deal.** On Calder the cover and every reference now read **Series A** and **$2,000,000**. The body still carries the specimen's economics (share price, share count, the specimen's round size) under the specimen notice, so **frame the Read step on the right-hand confirmation panel**, not the document body. "Managed by AltSpot Capital, LLC" is unchanged: the manager subsidiary's legal name is counsel's to confirm (see section 8). |
+| 18 | The management fee reserve is added on top: "$25,000 + $1,250 reserve = $26,250 to escrow." | **Changed 2026-09-21: the fees come out of the investment, never on top of it.** A member sends $25,000 and nothing more. Checkout reads: Your investment, sent to escrow **$25,000**; Management fee, 1% a year ($250 a year), reserved up front **-$1,250**; Admin fee, $10,000 per vehicle, shared pro rata across its investors, **At close** (explained in words, no figure taken off for now); **Goes to work in Calder Grid, before the admin fee, about $23,750**. The admin fee is $10,000 per vehicle for its lifetime; each member's share comes out of the investment at close, once the final size is known. If the vehicle exits before five years the unused management fee is returned; if it runs longer, the fee after year five is paid from distributions. The payment button reads "Send $25,000 to escrow". |
 
 ---
 
@@ -125,15 +126,17 @@ The order is fixed for every member: greeting, Needs you, Most popular, Watchlis
 - **Card states.** One status per card: Just opened; **In escrow** for a deal the member has funded that has not closed (a quiet chip, and a band "$25,000 in escrow · until the deal closes" with a **Your position** button); **You invested** only once a deal has closed; Signed · complete it (with the orange **Complete investment →** button); View only; SPV full. Chips for Saved and "You voted $25K".
 - **Quick look.** A side panel on any card: the raise, four facts, three reasons, who is behind it, the risk line, Ask Spot. It now opens on the member's own stage in that deal and its button is the next real step.
 - **The Radar lane.** Sort by **Featured** (default), Most voted, Rising, New. Featured deliberately rotates quiet names to the top each day so nothing is stuck at the bottom. Each card: demand in dollars, voter count, **Details** panel, **Vote**. Once voted, a gold band "You voted $25K" with a pencil; **Remove vote** is in the edit control.
-- **Yours** and **For you** filters on the sticky bar, plus class and industry filters.
+- **The sticky bar, redesigned 2026-09-21.** Open now and Radar are one choice with an outline in the warm ramp that glides between them as you scroll or press. **Yours** and **For you** light with the same outline. The asset classes fold into one **Asset class** pill on the same line; press it and the options unroll to the right like a scroll opening (the industry menu steps aside while they are open), and once a class is chosen the pill wears it, outlined. Inside: **All** leads, each class carries its glyph in a faint category tint, and the outline slides from the old choice to the new one; pressing the chosen class again goes back to All. Nothing selected is a solid pill any more, so the word stays readable on hover. Industry is one menu beside them.
+- **Asset class on every card.** Shelf cards carry it at the end of the stage row ("Venture", "Growth equity", "Secondaries", "Funds") with the same glyph and tint as the filter; Radar cards carry it beside the voter count.
+- **A whole Radar card opens Details.** Press anywhere on a Radar card except its own controls (Vote, the scale, the pencil) and the details panel opens.
 
 Angle for the whole page: "Members vote. We source what the votes point at. By the time a deal opens, the demand is already counted."
 
 ### 4.3 Deal page
 
 - **Hero** with the company's logo at size on its own colour, the headline, deal type chip, "Organized and advised by AltSpot".
-- **The funding header**: Raised so far, Minimum to close, Closing date, Escrow status, a bar measured against the minimum with a labelled marker, admissions close date, members against the cap.
-- **What it costs, as cards** (no sideways scroll): the management fee, the SPV fee and the member's share of it, what passes through at cost, and "No capital calls."
+- **The funding header**: **Minimum investment** (new, first), Raised so far, Minimum to close, Closing date, Escrow status, a bar measured against the minimum with a labelled marker, admissions close date, members against the cap.
+- **What it costs, as cards** (no sideways scroll): Management fee "1% a year, reserved up front" with "$250 a year on $25,000, $1,250 reserved"; Admin fee "$10,000 per vehicle, pro rata" with "Your share settles at close" (no figure); SPV expenses at cost; escrow interest is yours. Under them: "Both fees come out of your investment, not on top of it. Figures shown at the $25,000 minimum. Nothing billed annually. No capital calls."
 - **The minimum, explained** by the rule that set it.
 - **The SPV today**: members against the investor cap, retirement money against the 20% and 25% marks, live.
 - **Underlined terms open Spot** with that exact question.
@@ -146,7 +149,7 @@ On each open deal with an entry valuation: three or more cases with the **total 
 
 ### 4.5 Checkout: Amount, Read, Sign, Escrow
 
-- **Amount is one question**: "How much do you want to invest?", quick amounts, invest-as profile, and on the right **What you send** in three lines (investment, management fee reserve, total to escrow) with the member's share of the SPV fee as a range and "How the fees work" folded. Example on Calder: $25,000 + $1,250 reserve = **$26,250 to escrow**, share of the $10,000 SPV fee $125 to $250.
+- **Amount is one question**: "How much do you want to invest?", quick amounts, invest-as profile, and on the right **What you send**: your investment (sent to escrow), the management fee reserved up front with what one year comes to, the admin fee explained in words (settled at close, no figure taken off), and **Goes to work in the company, before the admin fee**, with "The fees come out of your investment, not on top of it" and "How the fees work" folded. Calder at $25,000: -$1,250, **about $23,750 goes to work before the admin fee**; **$25,000 to escrow**.
 - **Read**: confirm each section; the page scrolls smoothly to the next part.
 - **Sign**, then **Escrow**.
 - **"Your allocation is reserved."** New design: **You signed [date] · Send by [date] · Days left 3 of 10**, a ten-segment bar, one sentence that the deal itself keeps admitting members until its own later date. Send to escrow by Same-Day ACH from the linked bank, or "I'll send later".
@@ -217,7 +220,7 @@ Adjust to the target length. Click paths are exact.
 4. **Your votes as a pool.** Adjust all, plus on Orrery, watch the total, the bar and "Saved". Done. Press a row to open the company overview.
 5. **A deal page (Calder Grid).** Hero, funding header, What it costs, the minimum, the SPV today. Press an underlined term, Spot answers with a picture.
 6. **Scenarios** (only if signed off). Scenario A first.
-7. **Invest.** Begin investment: Amount ($25,000, $26,250 to escrow), Read (auto-scroll), Sign, then **Your allocation is reserved** with the ten-day clock. Send to escrow.
+7. **Invest.** Begin investment: Amount ($25,000 to escrow; fees come out of it, about $23,750 goes to work before the admin fee), Read (auto-scroll), Sign, then **Your allocation is reserved** with the ten-day clock. Send to escrow.
 8. **Finish one that is waiting.** Back on the dashboard, Tessellate Data: Steps, "3 of 10", Complete investment.
 9. **Portfolio.** The plain sentence, the capital account, 1Y on the curve, Percent to Dollars on the position chart (let the loss be seen), then **Download statement** and the paper page.
 10. **Terminal.** For you with its reasons, Media and content, open one piece.

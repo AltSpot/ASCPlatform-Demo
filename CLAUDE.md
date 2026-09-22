@@ -935,15 +935,42 @@ The sweep of 2026-09-14 set the bar every surface is held to: a control or
 a mark earns its place by changing what a member can do or understand, and
 otherwise it goes. What that removed, so it is not quietly put back:
 
-- **Filters are one quiet line.** `components/filters/TaxonomyFilters` shows
-  only the classes present, as neutral chips with the word and nothing else,
-  one lit when chosen, with the industry menu on the same line. No icons, no
-  counts, no per-class colour, no count line beneath. The same row serves the
-  shelf, Radar and both Terminal filter rows.
-- **Category colour means a slice, nothing else.** The `--as-cat-*` tints
-  appear on the Portfolio exposure legend and its bars, where a colour is a
-  key. They are not on chips, tags or filters. `components/filters/classes.ts`
-  is gone with them.
+- **Filters are one quiet line, and the classes are one choice** (revised
+  Tyler, 2026-09-21). `components/filters/TaxonomyFilters` shows only the
+  classes present, led by **All**, as a radio group (arrows, Home, End):
+  exactly one is chosen, pressing the chosen class returns to All, and one
+  outline glides to the choice (`components/ui/useSlidingIndicator`, which
+  measures the child marked `data-active`). The industry menu sits on the
+  same line. On the marketplace bar (`collapsible`) the classes fold behind
+  one Asset class pill on the bar's own line that unrolls them to the right
+  (a grid column animating 0fr to 1fr, chips staggered), shrinks to its
+  glyph while open, hides the industry menu while open, wears the chosen
+  class when closed, and rolls up on a press outside or Escape.
+  The marketplace bar's Open now / Radar pills use the same
+  gliding outline, and Yours / For you light with it. **A chosen option
+  is never a solid pill**: it is `--select-fill` under a hairline in
+  `--select-ring` (a `::before` masked to a 1.5px border; 1px let the dark through), with the word in
+  page ink, because a filled champagne pill turned its word white on
+  hover. Restated for Daylight in bronze.
+- **Category colour is a key, on a glyph.** The `--as-cat-*` tints appear
+  on the Portfolio exposure legend and its bars, and (Tyler, 2026-09-21) on
+  the asset-class glyph only: the filter chips and `components/AssetClassTag`
+  (glyph plus word, on every shelf card's stage row and beside a Radar
+  card's voter count). Never a fill, a border or a word in a tint.
+- **One dropdown** (Tyler, 2026-09-21). `components/ui/Select` is every
+  dropdown on the platform: a `field` trigger in forms, a `pill` trigger on
+  bars (the industry filter, the positions sort), and one opaque panel
+  (`--surface-menu`, restated for Daylight) with a heading, counts, notes,
+  a gold check, typeahead and the listbox keyboard. It flips up near the
+  foot of the window. Wrap it in `<div className="field">`, never a
+  `<label>`. `tests/dropdowns.test.ts` fails on a native `<select>` or a
+  Select inside a label. The marketplace bar's folded classes are
+  `display: contents`, so the pill, the drawer (animated to its measured
+  width in pixels) and the industry menu are each items on the bar's line;
+  the menu never hides and drops to a second line only when there is no room.
+- **A whole Radar card opens Details** (Tyler, 2026-09-21), except a press
+  on its own controls; `RadarCard` checks the DOM target so a press inside
+  the portalled panel does not re-open it.
 - **A figure appears once per screen.** The deal-specific strip under the
   eight standard indicators drops any value already on a card.
 - **Wire stories carry a neutral tag sized to its word**, not a coloured bar.
@@ -1116,7 +1143,20 @@ These are the claims the product makes. Do not let a change quietly break them.
   (`FEE_TERMS.flatPerSpv`, $10,000) plus an annualized management fee
   (`FEE_TERMS.annualPercent` a year for `termYears`, 1% for 5) funded once
   at closing as a reserve, drawn down as earned, unearned amounts refunded.
-  The reserve is additive: escrow receives subscription plus reserve.
+  **The fees come out of the investment, never on top of it** (Tyler,
+  2026-09-21): escrow receives the investment and nothing more; at close
+  the reserve (`feeBreakdown(...).reserve`) and the member's share of the
+  flat fee (`adminFeeEstimate`: an estimate on what is raised plus this
+  investment, held between the minimum and the allocation, and the
+  smaller figure if the vehicle fills) are taken from it, and the rest
+  goes to work. Checkout reads: investment sent to escrow, Management fee
+  1% a year ($X a year) reserved up front, Admin fee in words ("$10,000 per
+  vehicle, shared pro rata", "At close": **explained, never subtracted as a
+  figure for now**, Tyler 2026-09-21), Goes to work before the admin fee.
+  `adminFeeEstimate` stays in lib/fees.ts, tested and unused on screen. The deal page's cost cards add the same figures
+  at the deal's minimum (`feeExampleLines`), and the hero's funding strip
+  leads with MINIMUM INVESTMENT. The member-facing name of the flat fee is
+  **Admin fee**; its detail still says formation and administration.
   **Never a percentage of capital raised** (counsel: broker-dealer line).
 - **Carry** is `CARRY_PERCENT` (20%) of profits at exit. No 10% anywhere.
 - **The minimum investment** (Tyler, 2026-09-17, after the deck) is
@@ -1150,8 +1190,10 @@ These are the claims the product makes. Do not let a change quietly break them.
   disclosure is one-sided). The flat $10,000 is a formation and
   administration fee per SPV for enumerated services: the SPV pays it
   once and each member bears a **pro rata share by capital committed,
-  settled at close**; checkout shows that share as the range it can land
-  in between the minimum and the allocation (`flatFeeShareRange`). Blue
+  settled at close**; checkout and the deal page explain the share in words
+  and do not subtract it as a figure for now (`adminFeeEstimate` is ready
+  for when they do: an estimate on what is raised, and the figure if the
+  vehicle fills, never the at-minimum worst case as a headline). Blue
   sky, tax, K-1 and other SPV expenses pass through at cost. Escrow
   interest belongs to investors; float applies only to pass-throughs.
   Nothing is priced as a percentage of capital raised or per investor.
@@ -1189,7 +1231,7 @@ These are the claims the product makes. Do not let a change quietly break them.
 - **Every deal raises into escrow and closes when its minimum is met.** The
   funding bar measures raised against `Deal.minimumToClose`, never against the
   allocation (`components/FundingProgress.tsx`); every deal header shows
-  RAISED SO FAR, MINIMUM TO CLOSE, CLOSING DATE and ESCROW STATUS, the deal
+  MINIMUM INVESTMENT, RAISED SO FAR, MINIMUM TO CLOSE, CLOSING DATE and ESCROW STATUS, the deal
   type (`Deal.leadType`, AltSpot-led or Partner-led), and "Organized and
   advised by AltSpot"
 - **`docs/structure-decisions-sept-2026.md` is the source of truth for the

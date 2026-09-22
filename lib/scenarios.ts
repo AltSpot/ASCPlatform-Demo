@@ -132,16 +132,17 @@ export function evaluateCase(
   const grossProceeds = ownershipAtExit(inputs) * c.exitValuation;
   const grossMultiple = grossProceeds / R;
 
-  /* Net: the flat fee comes off what is deployed, carry off the profit,
-     and the reserve is part of what the member paid in. */
-  const deployed = Math.max(0, R - terms.flatPerSpv);
+  /* Net: members send R and nothing more (Tyler, 2026-09-21). The
+     management fee reserve and the flat fee come out of R at close, so
+     less is deployed; carry comes off the profit; any unearned reserve
+     comes back at exit. */
+  const reserve = R * (reservePercent(terms) / 100);
+  const deployed = Math.max(0, R - reserve - terms.flatPerSpv);
   const proceeds = ownershipAtExit(inputs, deployed) * c.exitValuation;
   const carry = Math.max(0, proceeds - R) * (carryPercent / 100);
-  const reserve = R * (reservePercent(terms) / 100);
   const unearned = R * (Math.max(0, terms.termYears - years) * terms.annualPercent) / 100;
   const toMembers = proceeds - carry + Math.min(reserve, unearned);
-  const allIn = R + reserve;
-  const netMultiple = allIn > 0 ? Math.max(0, toMembers / allIn) : 0;
+  const netMultiple = R > 0 ? Math.max(0, toMembers / R) : 0;
 
   return {
     label: c.label,

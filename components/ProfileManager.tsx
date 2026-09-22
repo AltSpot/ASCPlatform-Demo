@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { useToast } from '@/components/Toast';
+import Select from '@/components/ui/Select';
 import { api } from '@/lib/client/api';
 import type { BankView, ProfileView, VaultView } from '@/lib/domain';
 import { EMPTY, maskTin } from '@/lib/format';
@@ -94,18 +95,15 @@ export default function ProfileManager({
         {adding && (
           <div style={{ marginBottom: 16 }}>
             <div className="form-row">
-              <label className="field">
+              <div className="field">
                 <span>Type</span>
-                <select
-                  className="input"
+                <Select
+                  label="Profile type"
                   value={draft.type}
-                  onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value }))}
-                >
-                  <option>Personal</option>
-                  <option>Entity</option>
-                  <option>IRA / 401(k)</option>
-                </select>
-              </label>
+                  options={[{ value: 'Personal', label: 'Personal' }, { value: 'Entity', label: 'Entity', note: 'A trust, LLC or company' }, { value: 'IRA / 401(k)', label: 'IRA / 401(k)', note: 'Retirement money, held by a custodian' }]}
+                  onChange={(type) => setDraft((d) => ({ ...d, type }))}
+                />
+              </div>
               <label className="field">
                 <span>Name</span>
                 <input

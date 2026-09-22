@@ -14,7 +14,7 @@ import { ArrowLeftRight, Building2, Layers, Sprout, TrendingUp, type LucideIcon 
 
 import { ASSET_CLASSES, isAssetClass, type AssetClass } from '@/lib/taxonomy';
 
-const GLYPH: Record<AssetClass, LucideIcon> = {
+export const ASSET_CLASS_GLYPH: Record<AssetClass, LucideIcon> = {
   venture: Sprout,
   growth: TrendingUp,
   secondary: ArrowLeftRight,
@@ -32,7 +32,7 @@ export default function AssetClassIcon({
   className?: string;
 }) {
   if (!isAssetClass(assetClass)) return null;
-  const Glyph = GLYPH[assetClass];
+  const Glyph = ASSET_CLASS_GLYPH[assetClass];
   const { label } = ASSET_CLASSES[assetClass];
 
   return (

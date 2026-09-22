@@ -22,7 +22,9 @@ import {
   carryOn,
   carryRow,
   dealFeeRows,
+  adminFeeEstimate,
   feeBreakdown,
+  feeExampleLines,
   feeSentence,
   reservePercent,
 } from '@/lib/fees';
@@ -45,29 +47,54 @@ describe('the model', () => {
 });
 
 describe('feeBreakdown', () => {
-  test('the reserve is additive: escrow receives subscription plus reserve, nothing else', () => {
+  test('the reserve comes out of the investment: escrow receives the investment, nothing added', () => {
     const b = feeBreakdown(25_000);
-    assert.deepEqual(Object.keys(b).sort(), ['allIn', 'amount', 'reserve']);
+    assert.deepEqual(Object.keys(b).sort(), ['afterReserve', 'allIn', 'amount', 'annual', 'reserve']);
     assert.equal(b.reserve, 1_250);
-    assert.equal(b.allIn, 26_250);
+    assert.equal(b.annual, 250);
+    assert.equal(b.allIn, 25_000);
+    assert.equal(b.afterReserve, 23_750);
   });
 
   test('money stays in integer dollars', () => {
     for (const amount of [10_000, 10_001, 33_333, 1_234_567]) {
       const b = feeBreakdown(amount);
       assert.ok(Number.isInteger(b.reserve));
-      assert.equal(b.allIn, b.amount + b.reserve);
+      assert.equal(b.allIn, b.amount);
+      assert.equal(b.afterReserve, b.amount - b.reserve);
     }
   });
 
   test('a missing, negative or non-finite amount is zero, not a charge', () => {
     for (const amount of [0, -5_000, Number.NaN, Number.POSITIVE_INFINITY]) {
-      assert.deepEqual(feeBreakdown(amount), { amount: 0, reserve: 0, allIn: 0 });
+      assert.deepEqual(feeBreakdown(amount), { amount: 0, reserve: 0, annual: 0, allIn: 0, afterReserve: 0 });
     }
   });
 
   test('the reserve follows the terms it is given', () => {
     assert.equal(feeBreakdown(100_000, { flatPerSpv: 0, annualPercent: 2, termYears: 3 }).reserve, 6_000);
+  });
+});
+
+describe('adminFeeEstimate', () => {
+  test('estimates on what is raised plus this investment, held between the minimum and the allocation', () => {
+    // $2M allocation, $500K minimum, $1.2M raised: expected $1.225M.
+    const e = adminFeeEstimate(25_000, 1_200_000, 500_000, 2_000_000);
+    assert.equal(e.estimate, Math.ceil((10_000 * 25_000) / 1_225_000));
+    assert.equal(e.atCap, 125);
+    assert.ok(e.atCap <= e.estimate);
+  });
+
+  test('never estimates below the minimum or above the allocation', () => {
+    assert.equal(adminFeeEstimate(25_000, 0, 500_000, 2_000_000).estimate, 500);
+    assert.equal(adminFeeEstimate(25_000, 3_000_000, 500_000, 2_000_000).estimate, 125);
+  });
+
+  test('the deal page lines say the figures in dollars', () => {
+    const lines = feeExampleLines(25_000, 2_000_000, 500_000, 2_000_000);
+    assert.equal(lines['Management fee'], '$250 a year on $25,000, $1,250 reserved');
+    assert.equal(lines['Admin fee'], 'Your share settles at close');
+    assert.doesNotMatch(lines['Admin fee'], /\$/);
   });
 });
 
@@ -95,13 +122,13 @@ describe('the words', () => {
 
   test('on: the figures come from config', () => {
     const detail = dealFeeRows(true, true).map((r) => r.detail).join(' ');
-    assert.match(detail, /1% per year of committed capital, 5 years/);
+    assert.match(detail, /1% per year of committed capital\. 5 years \(5%\) are reserved from your investment at closing, not added to it/);
     assert.match(detail, /ends early.*returned/);
     assert.match(detail, /runs longer.*accrue.*distributions before carried interest/);
     assert.match(detail, /pro rata/);
     assert.match(detail, /pass through at cost/);
     assert.match(detail, /escrow belongs to investors/i);
-    assert.match(detail, /\$10,000 per SPV/);
+    assert.match(detail, /\$10,000 formation and administration fee per vehicle/);
     assert.match(detail, /20% of profits at exit/);
   });
 

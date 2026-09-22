@@ -65,6 +65,7 @@ import { Fragment, useState } from 'react';
 
 import CompanyMark from '@/components/CompanyMark';
 import PositionTimeline, { type OpenPosition } from '@/components/PositionTimeline';
+import Select from '@/components/ui/Select';
 import { dateStr, EMPTY, money } from '@/lib/format';
 import { moic, totalValue, unrealized } from '@/lib/portfolio-metrics';
 
@@ -219,21 +220,14 @@ export default function PositionsTable({
             ))}
           </div>
 
-          <label className={s.sort}>
-            <ArrowDownUp size={12} strokeWidth={1.6} aria-hidden="true" />
-            <span className={s.srOnly}>Sort positions</span>
-            <select
-              className={s.sortSelect}
-              value={sort}
-              onChange={(event) => setSort(event.target.value as Sort)}
-            >
-              {SORTS.map((o) => (
-                <option key={o.key} value={o.key}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Select
+            variant="pill"
+            label="Sort positions"
+            icon={ArrowDownUp}
+            value={sort}
+            options={SORTS.map((o) => ({ value: o.key, label: o.label }))}
+            onChange={(next) => setSort(next as Sort)}
+          />
         </div>
       )}
 

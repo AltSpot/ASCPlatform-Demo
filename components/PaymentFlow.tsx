@@ -13,9 +13,8 @@
  * a set number of hours before the wire, and a signed subscription not
  * in escrow by then lapses with no penalty.
  *
- * With SHOW_FEE_TERMS off the transfer states the subscription and says
- * the fee reserve is set out in the memorandum; with it on, it states
- * subscription plus reserve. lib/fees.ts is the one source of both.
+ * The transfer is the investment and nothing more: the fees come out of
+ * it at closing (Tyler, 2026-09-21). lib/fees.ts is the one source.
  */
 import { Landmark, Lock } from 'lucide-react';
 import Link from 'next/link';
@@ -28,7 +27,6 @@ import StationRail from '@/components/invest/StationRail';
 import { useToast } from '@/components/Toast';
 import { api } from '@/lib/client/api';
 import { announceNeedsYouChanged } from '@/lib/needs-you';
-import { SHOW_FEE_TERMS } from '@/lib/config';
 import type { BankView, DealView, SubscriptionView } from '@/lib/domain';
 import { feeBreakdown } from '@/lib/fees';
 import { dateStr, money } from '@/lib/format';
@@ -52,9 +50,9 @@ export default function PaymentFlow({
   const [state, setState] = useState(subscription.state);
   const [busy, setBusy] = useState(false);
 
-  const fees = feeBreakdown(subscription.amount);
-  /* What the button says moves. The money is the same either way. */
-  const transfer = SHOW_FEE_TERMS ? fees.allIn : fees.amount;
+  /* What the button says moves: the investment, and nothing added to it.
+     The fees come out of it at closing (lib/fees.ts). */
+  const transfer = feeBreakdown(subscription.amount).allIn;
   const cutoff = subscription.fundingDeadline ?? admissionCutoff(deal.targetClose);
 
   async function send() {
@@ -202,11 +200,9 @@ export default function PaymentFlow({
                 </button>
               </>
             )}
-            {!SHOW_FEE_TERMS ? (
-              <p className="tiny" style={{ marginTop: 10 }}>
-                Plus the management fee reserve set out in the memorandum.
-              </p>
-            ) : null}
+            <p className="tiny" style={{ marginTop: 10 }}>
+              Fees come out of this amount at closing, as the memorandum sets out. Nothing is added.
+            </p>
           </div>
 
           {/* The member's own ten days, not the deal's closing calendar. */}
@@ -253,6 +249,8 @@ export default function PaymentFlow({
             targetClose={deal.targetClose}
             minimumToClose={deal.minimumToClose}
             allocationTotal={deal.allocationTotal}
+            allocationRemaining={deal.allocationRemaining}
+            company={deal.name}
           />
           <div className="hr" />
           <p className="tiny" style={{ display: 'flex', gap: 6 }}>

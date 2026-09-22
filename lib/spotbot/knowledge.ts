@@ -205,7 +205,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'two and twenty',
     ],
     answer:
-      `AltSpot organizes and advises every SPV, and this is how it is paid. ${feeSentence()} The full terms are in each deal's memorandum, and the invest page shows what goes to escrow before you sign.`,
+      `AltSpot organizes and advises every SPV, and this is how it is paid. ${feeSentence()} The full terms are in each deal's memorandum, and the invest page shows, in dollars, what comes out of your investment and what goes to work before you sign.`,
     source: 'AltSpot fee schedule and the subscription agreement',
     related: ['carry-mechanics', 'no-capital-calls', 'confirmations'],
   },
@@ -584,7 +584,7 @@ export const KNOWLEDGE: readonly KnowledgeTopic[] = [
       'distributions',
     ],
     answer:
-      'Your money waits in escrow until the round closes. At closing the minimum has been met, the SPV takes in every admitted subscription, the management fee reserve is funded, and the SPV buys its position. The position then appears on your dashboard at cost. After that you get periodic updates from the operator, a K-1 for the SPV each tax season filed into Docs, and distributions to your linked account if and when the deal produces them. The final outcome is settled at exit, which is where any carried interest applies.',
+      'Your money waits in escrow until the round closes. At closing the minimum has been met, the SPV takes in every admitted subscription, the management fee reserve and the admin fee share for each member are taken from it, and the SPV buys its position with the rest. The position then appears on your dashboard at cost. After that you get periodic updates from the operator, a K-1 for the SPV each tax season filed into Docs, and distributions to your linked account if and when the deal produces them. The final outcome is settled at exit, which is where any carried interest applies.',
     source: 'AltSpot platform guide, subscription lifecycle',
     related: ['position-value', 'carry-mechanics', 'documents'],
   },

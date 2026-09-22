@@ -26,6 +26,7 @@ import { Pencil, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 
 import { useToast } from '@/components/Toast';
+import Select from '@/components/ui/Select';
 import { api } from '@/lib/client/api';
 import { dateStr, money } from '@/lib/format';
 import { moic } from '@/lib/portfolio-metrics';
@@ -214,36 +215,28 @@ export default function ExternalHoldings({
               />
             </label>
 
-            <label className={s.field}>
+            <div className={s.field}>
               <span>Asset class</span>
-              <select
-                className="input"
+              <Select
+                label="Asset class"
                 value={draft.assetClass}
-                onChange={(e) => set('assetClass', e.target.value)}
-              >
-                {ASSET_CLASS_KEYS.map((key) => (
-                  <option key={key} value={key}>
-                    {ASSET_CLASSES[key].label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                options={ASSET_CLASS_KEYS.map((key) => ({ value: key as string, label: ASSET_CLASSES[key].label }))}
+                onChange={(next) => set('assetClass', next)}
+              />
+            </div>
 
-            <label className={s.field}>
+            <div className={s.field}>
               <span>Industry</span>
-              <select
-                className="input"
-                value={draft.industry}
-                onChange={(e) => set('industry', e.target.value)}
-              >
-                <option value="">Not specified</option>
-                {INDUSTRY_KEYS.map((key) => (
-                  <option key={key} value={key}>
-                    {INDUSTRIES[key]}
-                  </option>
-                ))}
-              </select>
-            </label>
+              <Select
+                label="Industry"
+                value={draft.industry || 'none'}
+                options={[
+                  { value: 'none', label: 'Not specified' },
+                  ...INDUSTRY_KEYS.map((key) => ({ value: key as string, label: INDUSTRIES[key] })),
+                ]}
+                onChange={(next) => set('industry', next === 'none' ? '' : next)}
+              />
+            </div>
 
             <label className={s.field}>
               <span>Invested</span>

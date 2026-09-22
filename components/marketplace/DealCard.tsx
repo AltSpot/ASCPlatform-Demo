@@ -33,6 +33,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import CompanyLogo from '@/components/CompanyLogo';
+import AssetClassTag from '@/components/AssetClassTag';
 import FundingProgress from '@/components/FundingProgress';
 import DealPeek from '@/components/marketplace/DealPeek';
 import WatchStar from '@/components/marketplace/WatchStar';
@@ -234,6 +235,9 @@ export default function DealCard({
               </span>
             ) : null}
             <span className={s.meta}>{dealLead(deal)}</span>
+            <span className={s.classTag}>
+              <AssetClassTag assetClass={deal.assetClass} />
+            </span>
           </span>
         </div>
 

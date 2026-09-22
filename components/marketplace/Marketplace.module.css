@@ -116,8 +116,8 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px 18px;
+  justify-content: flex-start;
+  gap: 12px 8px;
   flex-wrap: wrap;
   padding: 10px 12px;
   margin-bottom: 40px;
@@ -127,6 +127,7 @@
   box-shadow: var(--card-lift);
 }
 .lanes {
+  position: relative;
   display: flex;
   gap: 3px;
   padding: 3px;
@@ -154,10 +155,50 @@
 .lanePill:hover {
   color: var(--as-text);
 }
-.lanePill[data-on='true'] {
-  background: var(--as-cta-gradient);
-  color: var(--fg-on-gold);
-  box-shadow: var(--shadow-cta);
+/* Chosen lane (2026-09-21): outlined in the warm ramp by the indicator
+   that glides under the two pills, the word in page ink. */
+.lanePill {
+  position: relative;
+  z-index: 1;
+}
+.lanePill[data-on='true'],
+.lanePill[data-on='true']:hover {
+  color: var(--as-text);
+}
+.lanePill[data-on='true'] .laneCount {
+  color: var(--accent);
+  opacity: 1;
+}
+.laneIndicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: var(--r-pill);
+  background: var(--select-fill);
+  pointer-events: none;
+  transition:
+    transform 0.36s cubic-bezier(0.22, 0.8, 0.26, 1),
+    width 0.36s cubic-bezier(0.22, 0.8, 0.26, 1);
+}
+.laneIndicator::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: var(--select-ring);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .laneIndicator {
+    transition: none;
+  }
 }
 .lanePill:focus-visible {
   outline: 2px solid var(--focus-ring);
@@ -307,6 +348,7 @@
 }
 
 .yours {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -328,14 +370,33 @@
 .yours:hover {
   color: var(--as-text);
 }
-.yours[aria-pressed='true'] {
-  background: var(--as-cta-gradient);
-  color: var(--fg-on-gold);
-  box-shadow: var(--shadow-cta);
+/* A toggle that is on: the same warm outline as a chosen lane, the word
+   in page ink, the star filled gold. */
+.yours[aria-pressed='true'],
+.yours[aria-pressed='true']:hover {
+  background: var(--select-fill);
+  color: var(--as-text);
+}
+.yours[aria-pressed='true']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: var(--select-ring);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 .yours[aria-pressed='true'] svg {
-  stroke: var(--fg-on-gold);
-  fill: var(--fg-on-gold);
+  fill: var(--as-gold);
+}
+.yours[aria-pressed='true'] .laneCount {
+  color: var(--accent);
+  opacity: 1;
 }
 .yours:focus-visible {
   outline: 2px solid var(--focus-ring);
@@ -697,6 +758,11 @@
   gap: 10px;
   min-width: 0;
   margin-top: 4px;
+}
+/* The asset class, at the far end of the stage row (2026-09-21). */
+.classTag {
+  margin-left: auto;
+  display: inline-flex;
 }
 .stagePill {
   display: inline-flex;

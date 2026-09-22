@@ -1,0 +1,17 @@
+/* The class in words, the tint on the glyph only. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-text);
+  color: var(--as-text-muted);
+  white-space: nowrap;
+}
+.tag svg {
+  flex: none;
+  stroke: var(--tag-tint, currentColor);
+}

@@ -122,7 +122,7 @@ export default function DealHero({
 
       {/* The funding picture, across the full width of the cover. */}
       <div className={s.heroFunding}>
-        <FundingProgress deal={deal} showAdmissions layout="row" />
+        <FundingProgress deal={deal} showAdmissions layout="row" minInvestment={deal.minInvestment} />
         <div className={s.heroRole}>
           <span className={s.organized}>
             <ShieldCheck size={13} strokeWidth={1.7} aria-hidden="true" />

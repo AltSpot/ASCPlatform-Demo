@@ -4,11 +4,13 @@
  * What a subscription costs, and where the money waits. Work order
  * screen 8, on the fee counsel confirmed 2026-09-17 (lib/fees.ts).
  *
- * THREE LINES AND A TOTAL (Tyler, 2026-09-19: "as easy to digest as
- * possible"). What a member reads at a glance is the sum: their
- * investment, the management fee reserve, and what goes to escrow. One
- * quiet line under it gives their share of the flat SPV fee as the range
- * it can land in. Everything else counsel's wording requires, both halves
+ * THE FEES COME OFF THE TOP (Tyler, 2026-09-21). A member sends their
+ * investment to escrow and nothing more. The table reads down from it:
+ * the management fee reserved up front (with what one year comes to),
+ * the admin fee in words (Tyler, 2026-09-21: explained, not subtracted,
+ * for now: the share depends on the vehicle's final size), and what goes
+ * to work in the company after the reserve. Everything else counsel's
+ * wording requires, both halves
  * of the management fee, how the flat fee is shared pro rata, pass-
  * throughs at cost, escrow interest, is one press away under "How the
  * fees work", in full, never trimmed. With SHOW_FEE_TERMS off the fee
@@ -26,7 +28,6 @@ import {
   NOT_A_PERCENT_OF_RAISE,
   PASS_THROUGH_LINE,
   feeBreakdown,
-  flatFeeShareRange,
   reservePercent,
 } from '@/lib/fees';
 import { dateStr, money } from '@/lib/format';
@@ -37,29 +38,30 @@ import s from './FeeTable.module.css';
 export default function FeeTable({
   amount,
   targetClose,
-  minimumToClose,
-  allocationTotal,
+  company,
 }: {
   amount: number;
   /** The deal's closing date, for the admission cut-off. */
   targetClose: string;
-  /** The SPV's smallest and largest final size, for the pro rata share. */
+  /** The vehicle's size, kept for when the admin share is shown as a figure again. */
   minimumToClose: number;
   allocationTotal: number;
+  /** What is left of the allocation, for how much is raised already. */
+  allocationRemaining?: number;
+  /** The company the money goes to work in. */
+  company?: string;
 }) {
   const breakdown = feeBreakdown(amount);
   const cutoff = admissionCutoff(targetClose);
-  const share = flatFeeShareRange(amount, minimumToClose, allocationTotal);
-  const shareText =
-    share.atAllocation === share.atMinimum
-      ? money(share.atMinimum)
-      : `${money(share.atAllocation)} to ${money(share.atMinimum)}`;
-  const investedPct = breakdown.allIn > 0 ? (breakdown.amount / breakdown.allIn) * 100 : 100;
+  const atWork = breakdown.afterReserve;
+  const atWorkPct = breakdown.amount > 0 ? (atWork / breakdown.amount) * 100 : 100;
 
   return (
     <div className={s.table}>
       <div className={s.row}>
-        <span>Your investment</span>
+        <span>
+          Your investment <small>sent to escrow</small>
+        </span>
         <span className={s.figure}>{money(breakdown.amount)}</span>
       </div>
 
@@ -68,26 +70,43 @@ export default function FeeTable({
           <div className={s.row}>
             <span>
               <Term q="What are the fees?" quiet>
-                Management fee reserve
+                Management fee
               </Term>{' '}
-              <small>{reservePercent()}%, once</small>
+              <small>
+                {FEE_TERMS.annualPercent}% a year ({money(breakdown.annual)} a year), reserved up
+                front
+              </small>
             </span>
-            <span className={s.figure}>{money(breakdown.reserve)}</span>
+            <span className={s.figure}>&minus;{money(breakdown.reserve)}</span>
+          </div>
+
+          <div className={s.row}>
+            <span>
+              Admin fee{' '}
+              <small>
+                {money(FEE_TERMS.flatPerSpv)} per vehicle, shared pro rata across its investors
+              </small>
+            </span>
+            <span className={s.figure}>At close</span>
           </div>
 
           <div className={`${s.row} ${s.total}`}>
-            <span>You send to escrow</span>
-            <span className={s.figure}>{money(breakdown.allIn)}</span>
+            <span>
+              Goes to work{company ? <> in {company}</> : null} <small>before the admin fee</small>
+            </span>
+            <span className={s.figure}>&asymp; {money(atWork)}</span>
           </div>
-          {/* The sum as a shape: almost all of it is the investment. */}
+          {/* The sum as a shape: almost all of it goes to work. */}
           <div className={s.split} aria-hidden="true">
-            <span style={{ width: `${investedPct}%` }} />
+            <span style={{ width: `${atWorkPct}%` }} />
             <span />
           </div>
 
           <p className={s.quiet}>
-            Your share of the {money(FEE_TERMS.flatPerSpv)} SPV fee, settled at close:{' '}
-            <b>{shareText}</b>
+            The fees come out of your investment, not on top of it. You send{' '}
+            <b>{money(breakdown.amount)}</b>{' '}
+            and nothing more. Your share of the admin fee
+            also comes out of it at close, once the vehicle&rsquo;s final size is known.
           </p>
 
           <details className={s.more}>
@@ -99,18 +118,19 @@ export default function FeeTable({
               <div>
                 <dt>Management fee</dt>
                 <dd>
-                  {FEE_TERMS.annualPercent}% a year of what you commit, {FEE_TERMS.termYears} years
-                  funded once at closing and drawn as it is earned. {managementFeeHalves()}
+                  {FEE_TERMS.annualPercent}% a year of what you commit. {FEE_TERMS.termYears} years
+                  ({reservePercent()}%, {money(breakdown.reserve)} here) are reserved from your
+                  investment at closing and drawn as earned. {managementFeeHalves()}
                 </dd>
               </div>
               <div>
-                <dt>Formation and administration fee</dt>
+                <dt>Admin fee</dt>
                 <dd>
-                  A flat {money(FEE_TERMS.flatPerSpv)} per SPV, paid once by the SPV and disclosed
-                  in the memorandum. Your share is pro rata to your capital committed and settled
-                  at close, so it depends on the SPV&rsquo;s final size: {money(share.atAllocation)}{' '}
-                  if the round fills to {money(allocationTotal)}, {money(share.atMinimum)} if it
-                  closes at its {money(minimumToClose)} minimum. Not charged to you separately.
+                  A flat {money(FEE_TERMS.flatPerSpv)} formation and administration fee per
+                  vehicle, for its lifetime, disclosed in the memorandum. It is shared pro rata
+                  across every investor by capital committed and settled at close, so your share
+                  depends on the vehicle&rsquo;s final size: the larger the vehicle, the smaller
+                  each share. Taken from your investment, never billed separately.
                 </dd>
               </div>
               <div>

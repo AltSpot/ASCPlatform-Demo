@@ -10,6 +10,7 @@
 import { useState } from 'react';
 
 import { useToast } from '@/components/Toast';
+import Select from '@/components/ui/Select';
 import { api } from '@/lib/client/api';
 import type { VaultView, WizardView } from '@/lib/domain';
 
@@ -99,18 +100,15 @@ export default function StepInfo({
               />
             </label>
           </div>
-          <label className="field">
+          <div className="field">
             <span>Federal tax classification</span>
-            <select
-              className="input"
+            <Select
+              label="Federal tax classification"
               value={form.taxClass}
-              onChange={(e) => set('taxClass')(e.target.value)}
-            >
-              {TAX_CLASSES.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
-          </label>
+              options={TAX_CLASSES.map((c) => ({ value: c, label: c }))}
+              onChange={(c) => set('taxClass')(c)}
+            />
+          </div>
         </div>
 
         <div className="card" style={{ marginBottom: 16 }}>
